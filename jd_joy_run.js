@@ -54,7 +54,7 @@ const jdCookieNode = $.isNode() ? require('./jdCookie.js') : {};
 let invite_pins = ['胡滕宇,jd_rfdfcuhKaWwa,jd_5bb16d6462414,jd_7399bee01a89e,jd_6e0cd5023b791,13536765947_p,jd_LyVyYIZjfyOm,15022052312_p'];
 let run_pins = invite_pins;
 //friendsArr内置太多会导致IOS端部分软件重启,可PR过来(此处目的:帮别人助力可得30g狗粮)
-let friendsArr = invite_pins.split(',')
+let friendsArr = invite_pins[0].split(',')
 
 
 //IOS等用户直接用NobyDa的jd cookie
