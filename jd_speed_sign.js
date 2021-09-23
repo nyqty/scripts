@@ -99,7 +99,6 @@ async function jdGlobal() {
     if ($.canhelp) {
       console.log(`\n京东账号${$.index}开始助力【atyvcn】邀请有礼，感谢！\n`);
       await invite()
-      await invite2()
     }
     $.score = 0
     $.total = 0
@@ -724,40 +723,13 @@ function taskGetUrl(function_id, body) {
   }
 }
 
-function invite2() {
-  let t = +new Date()
-  let inviterId = [
-    "Y1J%2B%2BFA6%2BwKsvX%2BR2C2bDw%3D%3D",
-    "v7PbDLcmaFqxlAPSec3fHg%3D%3D"
-  ][Math.floor((Math.random() * 4))]
-  let headers = {
-    'Host': 'api.m.jd.com',
-    'accept': 'application/json, text/plain, */*',
-    'content-type': 'application/x-www-form-urlencoded',
-    'origin': 'https://assignment.jd.com',
-    'accept-language': 'zh-cn',
-    'user-agent': $.isNode() ? (process.env.JS_USER_AGENT ? process.env.JS_USER_AGENT : (require('./JS_USER_AGENTS').USER_AGENT)) : ($.getdata('JSUA') ? $.getdata('JSUA') : "'jdltapp;iPad;3.1.0;14.4;network/wifi;Mozilla/5.0 (iPad; CPU OS 14_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1"),
-    'referer': `https://assignment.jd.com/?inviterId=${inviterId}`,
-    'Cookie': cookie
-  }
 
-  let dataString = `functionId=TaskInviteService&body={"method":"participateInviteTask","data":{"channel":"1","encryptionInviterPin":"${encodeURIComponent(inviterId)}","type":1}}&appid=market-task-h5&uuid=&_t=${t}`;
-
-  var options = {
-    url: 'https://api.m.jd.com/',
-    headers: headers,
-    body: dataString
-  }
-  $.post(options, (err, resp, data) => {
-    // console.log(data)
-  })
-}
 function invite() {
   let t = +new Date()
   let inviterId = [
     "Y1J%2B%2BFA6%2BwKsvX%2BR2C2bDw%3D%3D",
     "v7PbDLcmaFqxlAPSec3fHg%3D%3D"
-  ][Math.floor((Math.random() * 7))]
+  ][Math.floor((Math.random() * 2))]
   var headers = {
     'Host': 'api.m.jd.com',
     'accept': 'application/json, text/plain, */*',

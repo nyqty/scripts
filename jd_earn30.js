@@ -4,7 +4,7 @@
 入口：我的-赚30
 备注：赚30元每日签到红包、天降红包助力，在earn30Pins环境变量中填入需要签到和接受助力的账号。
 技巧：每月可以提现100元，但需要邀请一个新人下首单。可以用已注册手机号重新注册为新人账号，切换ip可以提高成功率。
-助力逻辑：优先账号内互助，再帮zero205助力
+助力逻辑：优先账号内互助，再帮atyvcn助力
 TG学习交流群：https://t.me/cdles
 3 1,6 * * * https://raw.githubusercontent.com/cdle/jd_study/main/jd_earn30.js
 */
@@ -102,9 +102,9 @@ var tools = [];
      if ($.isNode()) {
           tools = tools_temp;
           await getCode()
-          if ($.zero205 && $.zero205.length) {
-               console.log(`内部互助已完成，开始帮【zero205】助力，感谢！`)
-               for (let help of $.zero205) {
+          if ($.atyvcn && $.atyvcn.length) {
+               console.log(`内部互助已完成，开始帮【atyvcn】助力，感谢！`)
+               for (let help of $.atyvcn) {
                     while (tools.length) {
                          var tool = tools.pop()
                          var data = await requestApi('splitRedPacket', tool.cookie, { shareCode: help.shareCode, groupCode: help.redPacketId });
@@ -195,7 +195,7 @@ function randomString(e) {
 function getCode() {
      return new Promise(resolve => {
          $.get({
-             url: "https://raw.fastgit.org/zero205/updateTeam/main/shareCodes/30.json",
+             url: "https://raw.fastgit.org/atyvcn/updateTeam/master/shareCodes/jd_30.json",
              headers: {
                  "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1 Edg/87.0.4280.88"
              }
@@ -205,7 +205,7 @@ function getCode() {
                      console.log(`${JSON.stringify(err)}`);
                      console.log(`${$.name} API请求失败，请检查网路重试`);
                  } else {
-                     $.zero205 = JSON.parse(data);
+                     $.atyvcn = JSON.parse(data);
                  }
              } catch (e) {
                  $.logErr(e, resp)

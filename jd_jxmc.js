@@ -60,7 +60,7 @@ let token ='';
     await $.wait(2000);
   }
   console.log('\n##################开始账号内互助(红包)#################\n');
-  await getShareCode('jxmc_hb.json')
+  await getShareCode('jd_jxmc_hb.json')
   $.inviteCodeList_hb = [...($.inviteCodeList_hb || []), ...($.shareCode || [])]
   for(let i = 0;i<$.helpCkList.length;i++){
     $.can_help = true
@@ -79,7 +79,7 @@ let token ='';
   }
   console.log('\n##################开始账号内互助#################\n');
   $.shareCode = undefined
-  await getShareCode('jxmc.json')
+  await getShareCode('jd_jxmc.json')
   let newCookiesArr = [];
   for(let i = 0;i<$.helpCkList.length;i+=4){
     newCookiesArr.push($.helpCkList.slice(i,i+4))
@@ -127,7 +127,7 @@ let token ='';
 function getShareCode(name) {
   return new Promise(resolve => {
     $.get({
-      url: "https://raw.fastgit.org/zero205/updateTeam/main/shareCodes/"+name,
+      url: "https://raw.fastgit.org/atyvcn/updateTeam/master/shareCodes/"+name,
       headers: {
         "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1 Edg/87.0.4280.88"
       }
@@ -137,7 +137,7 @@ function getShareCode(name) {
           console.log(`${JSON.stringify(err)}`);
           console.log(`${$.name} API请求失败，请检查网路重试`);
         } else {
-          console.log(`优先账号内部互助，有剩余助力次数再帮【zero205】助力`);
+          console.log(`优先账号内部互助，有剩余助力次数再帮【atyvcn】助力`);
           $.shareCode = JSON.parse(data);
         }
       } catch (e) {

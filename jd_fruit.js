@@ -683,7 +683,7 @@ async function masterHelpShare() {
   let helpSuccessPeoples = '';//成功助力好友
   // console.log(`格式化后的助力码::${JSON.stringify(newShareCodes)}\n`);
   // if ($.isNode() && !process.env.FRUITSHARECODES) {
-  //   console.log(`您未填写助力码变量，开始账号内互助，再帮【zero205】助力`);
+  //   console.log(`您未填写助力码变量，开始账号内互助，再帮【atyvcn】助力`);
   //   $.newShareCode = [...(jdFruitShareArr || []), ...(newShareCodes || [])]
   // } else {
   //   $.newShareCode = newShareCodes
@@ -1388,7 +1388,7 @@ function shareCodesFormat() {
       newShareCodes = shareCodes[tempIndex].split('@');
     }
     if ($.isNode() && !process.env.FRUITSHARECODES) {
-      console.log(`您未填写助力码变量，优先进行账号内互助，再帮【zero205】助力`);
+      console.log(`您未填写助力码变量，优先进行账号内互助，再帮【atyvcn】助力`);
       newShareCodes = [...(jdFruitShareArr || []), ...(newShareCodes || [])]
     }
     if (!ZLC) {

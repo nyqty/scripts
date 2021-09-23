@@ -260,13 +260,13 @@ function shareCodesFormat() {
   return new Promise(async resolve => {
     $.newShareCodes = [];
     let inviteCodes = [
-      't_7LVGP8mopofh8AG0Q7E8AdoUJQ3Dik@zExA7lNc3HrJrbVuG3xRVMAdoUJQ3Dik@cvwWiz9o2evNHFdNk0oNbMAdoUJQ3Dik@8MQ6wrd9H0IAujNGUqzTAA@0IzWPVQGlmepafqlqgOSXw',
-      't_7LVGP8mopofh8AG0Q7E8AdoUJQ3Dik@zExA7lNc3HrJrbVuG3xRVMAdoUJQ3Dik@cvwWiz9o2evNHFdNk0oNbMAdoUJQ3Dik@8MQ6wrd9H0IAujNGUqzTAA@0IzWPVQGlmepafqlqgOSXw'
+      'n1b7TuiU7ESorlIfqZj5Eg@ApdC3AEd8X4Di17vYewBFQ',
+      'n1b7TuiU7ESorlIfqZj5Eg@ApdC3AEd8X4Di17vYewBFQ'
     ];
     if ($.shareCodesArr[$.index - 1]) {
       $.newShareCodes = $.shareCodesArr[$.index - 1].split('@');
     } else {
-      console.log(`由于您第${$.index}个京东账号未提供shareCode,将为本脚本作者【zero205】助力\n`)
+      console.log(`由于您第${$.index}个京东账号未提供shareCode,将为本脚本作者【atyvcn】助力\n`)
       const tempIndex = $.index > inviteCodes.length ? (inviteCodes.length - 1) : ($.index - 1);
       $.newShareCodes = inviteCodes[tempIndex].split('@');
     }

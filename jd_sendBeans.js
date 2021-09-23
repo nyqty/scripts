@@ -6,14 +6,14 @@
 ============Quantumultx===============
 [task_local]
 #送豆得豆
-45 1,12 * * * https://raw.githubusercontent.com/Aaron-lv/sync/jd_scripts/jd_sendBeans.js, tag=送豆得豆, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
+5 0,12 * * * https://raw.githubusercontent.com/Aaron-lv/sync/jd_scripts/jd_sendBeans.js, tag=送豆得豆, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
 ================Loon==============
 [Script]
-cron "45 1,12 * * *" script-path=https://raw.githubusercontent.com/Aaron-lv/sync/jd_scripts/jd_sendBeans.js,tag=送豆得豆
+cron "5 0,12 * * *" script-path=https://raw.githubusercontent.com/Aaron-lv/sync/jd_scripts/jd_sendBeans.js,tag=送豆得豆
 ===============Surge=================
-送豆得豆 = type=cron,cronexp="45 1,12 * * *",wake-system=1,timeout=3600,script-path=https://raw.githubusercontent.com/Aaron-lv/sync/jd_scripts/jd_sendBeans.js
+送豆得豆 = type=cron,cronexp="5 0,12 * * *",wake-system=1,timeout=3600,script-path=https://raw.githubusercontent.com/Aaron-lv/sync/jd_scripts/jd_sendBeans.js
 ============小火箭=========
-送豆得豆 = type=cron,script-path=https://raw.githubusercontent.com/Aaron-lv/sync/jd_scripts/jd_sendBeans.js, cronexpr="45 1,12 * * *", timeout=3600, enable=true
+送豆得豆 = type=cron,script-path=https://raw.githubusercontent.com/Aaron-lv/sync/jd_scripts/jd_sendBeans.js, cronexpr="5 0,12 * * *", timeout=3600, enable=true
  */
 const $ = new Env('送豆得豆');
 const notify = $.isNode() ? require('./sendNotify') : '';
@@ -85,35 +85,6 @@ if ($.isNode()) {
     }
     await helpMain();
   }
-  await getAuthorShareCode()
-  if ($.authorCode && $.authorCode.length) {
-    console.log(`\n开始帮【atyvcn】助力，感谢！\n`);
-    for (let i = 0; i < cookiesArr.length && i < $.authorCode.length; i++) {
-      cookie = cookiesArr[i];
-      $.UserName = decodeURIComponent($.cookie.match(/pt_pin=(.+?);/) && $.cookie.match(/pt_pin=(.+?);/)[1])
-      $.index = i + 1;
-      $.isLogin = true;
-      $.canHelp = true;
-      $.oneTuanInfo = $.authorCode[i];
-      if ($.oneTuanInfo['completed']) {
-        continue;
-      }
-      console.log(`${$.UserName}去助力${$.oneTuanInfo['user']}`);
-      $.detail = {};
-      $.rewardRecordId = '';
-      await getActivityDetail();
-      if (JSON.stringify($.detail) === '{}') {
-        console.log(`获取活动详情失败`);
-        return;
-      } else {
-        $.rewardRecordId = $.detail.rewardRecordId;
-        console.log(`获取活动详情成功`);
-      }
-      await $.wait(3000);
-      await help();
-      await $.wait(2000);
-    }
-  }
   console.log(`\n开始领取奖励\n`);
   for (let i = 0; i < cookiesArr.length && i < openCount; i++) {
     $.cookie = cookiesArr[i];
@@ -136,31 +107,6 @@ if ($.isNode()) {
     await myReward()
   }
 })().catch((e) => {$.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')}).finally(() => {$.done();});
-
-async function getAuthorShareCode() {
-    return new Promise(resolve => {
-        $.get({
-            url: "https://raw.fastgit.org/atyvcn/updateTeam/master/shareCodes/jd_sddd.json",
-            headers: {
-                "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1 Edg/87.0.4280.88"
-            }
-        }, async (err, resp, data) => {
-            try {
-                if (err) {
-                    console.log(`${JSON.stringify(err)}`);
-                    console.log(`${$.name} API请求失败，请检查网路重试`);
-                } else {
-                    $.authorCode = JSON.parse(data)
-                    $.authorCode = $.authorCode.sort(() => 0.5 - Math.random())
-                }
-            } catch (e) {
-                $.logErr(e, resp)
-            } finally {
-                resolve();
-            }
-        })
-    })
-}
 
 async function getActivityInfo(){
   $.activityList = [];
@@ -217,7 +163,7 @@ async function myReward(){
           let canReward = false
           for (let key of Object.keys(data.datas)) {
             let vo = data.datas[key]
-            if (vo.status === 3 && vo.type === 1) {
+            if (vo.status === 3 && vo.type === 2) {
               canReward = true
               $.rewardRecordId = vo.id
               await rewardBean()
@@ -434,7 +380,7 @@ async function help() {
           }else if(res.data.result === 0 || res.data.result === 1){
             $.canHelp = false;
           }
-          console.log(res.data.desc);
+          console.log(JSON.stringify(res));
         }
       } catch (e) {
         console.log(e);

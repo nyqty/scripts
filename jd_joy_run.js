@@ -51,7 +51,7 @@ const JD_BASE_API = `https://draw.jdfcloud.com//pet`;
 //Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : {};
 //下面给出好友邀请助力的示例填写规则
-let invite_pins = ['胡滕宇,jd_rfdfcuhKaWwa,jd_5bb16d6462414,jd_7399bee01a89e,jd_6e0cd5023b791,13536765947_p,jd_LyVyYIZjfyOm,15022052312_p'];
+let invite_pins = ['胡滕宇,jd_rfdfcuhKaWwa'];
 let run_pins = invite_pins;
 //friendsArr内置太多会导致IOS端部分软件重启,可PR过来(此处目的:帮别人助力可得30g狗粮)
 let friendsArr = invite_pins[0].split(',')
@@ -132,7 +132,7 @@ async function main() {
   }
   // await getFriendPins();
   if ($.isNode()) {
-    console.log(`\n赛跑会先给账号内部助力,如您当前账户有剩下助力机会则为zero205助力\n`)
+    console.log(`\n赛跑会先给账号内部助力,如您当前账户有剩下助力机会则为atyvcn助力\n`)
     let my_run_pins = [];
     Object.values(jdCookieNode).filter(item => item.match(/pt_pin=([^; ]+)(?=;?)/)).map(item => my_run_pins.push(decodeURIComponent(item.match(/pt_pin=([^; ]+)(?=;?)/)[1])))
     run_pins = [...new Set(my_run_pins), [...getRandomArrayElements([...run_pins[0].split(',')], [...run_pins[0].split(',')].length)]];

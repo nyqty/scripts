@@ -44,7 +44,7 @@ const BASE_URL = 'https://wq.jd.com/cubeactive/steprewardv3'
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
     return;
   }
-  console.log('京喜领88元红包\n'+'活动入口：京喜app -> 我的 -> 领88元红包\n'+'助力逻辑：优先账号内部互助，有剩余助力次数再帮【zero205】助力\n')
+  console.log('京喜领88元红包\n'+'活动入口：京喜app -> 我的 -> 领88元红包\n'+'助力逻辑：优先账号内部互助，有剩余助力次数再帮【atyvcn】助力\n')
   let res = await getAuthorShareCode() || [];
   $.authorMyShareIds = [...(res || [])];
   //开启红包,获取互助码
@@ -73,7 +73,7 @@ const BASE_URL = 'https://wq.jd.com/cubeactive/steprewardv3'
        await $.wait(2500);
      }
     if ($.canHelp) {
-      console.log(`\n【${$.UserName}】有剩余助力机会，开始助力【zero205】\n`)
+      console.log(`\n【${$.UserName}】有剩余助力机会，开始助力【atyvcn】\n`)
       for (let item of $.authorMyShareIds) {
         if (!item) continue;
         if (!$.canHelp) break
@@ -235,7 +235,7 @@ function openRedPack(strPin, grade) {
   })
 }
 
-function getAuthorShareCode(url = "https://raw.fastgit.org/zero205/updateTeam/main/shareCodes/jxhb.json") {
+function getAuthorShareCode(url = "https://raw.fastgit.org/atyvcn/updateTeam/master/shareCodes/jd_jxhb.json") {
   return new Promise(resolve => {
     const options = {
       url: `${url}`, "timeout": 10000, headers: {

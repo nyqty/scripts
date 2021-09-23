@@ -91,7 +91,7 @@ const JD_API_HOST = `https://api.m.jd.com`;
                 cookie = cookiesArr[i];
                 $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
                 $.canRun = true
-                console.log(`\n${$.UserName} 去助力【zero205】\n`)
+                console.log(`\n${$.UserName} 去助力【atyvcn】\n`)
                 for (let j = 0; j < $.authorCode.length; j++) {
                     let item = $.authorCode[j];
                     await help(item.redEnvelopeId, item.inviter, 1)
@@ -311,7 +311,7 @@ function help(rid, inviter, type) {
 function getAuthorShareCode() {
     return new Promise(resolve => {
         $.get({
-            url: "https://raw.fastgit.org/zero205/updateTeam/main/shareCodes/dyj.json",
+            url: "https://raw.fastgit.org/atyvcn/updateTeam/master/shareCodes/jd_fcdyj.json",
             headers: {
                 "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1 Edg/87.0.4280.88"
             }

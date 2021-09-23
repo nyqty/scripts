@@ -52,7 +52,7 @@ if ($.isNode()) {
 }
 let wantProduct = ``;//心仪商品名称
 const JD_API_HOST = 'https://api.m.jd.com/client.action';
-const inviteCodes = ['T0225KkcRUxL9FKDJh7ylvMLcACjVWnYaS5kRrbA@T0225KkcRx0Q_AaCdRr1xf8DIQCjVWnYaS5kRrbA@T0225KkcRksZpgDSIBj3xvADdQCjVWnYaS5kRrbA@T018v_52Qxge81HeJB2b1ACjVWnYaS5kRrbA@T0205KkcPFd_vD2uSkCi3YhXCjVWnYaS5kRrbA@T018v_hzQhwZ8FbUIRib1ACjVWnYaS5kRrbA'];
+const inviteCodes = ['T012Zk7ilpW8IMpgCjVWnYaS5kRrbA'];
 let myInviteCode;
 $.newShareCode = [];
 const ZLC = !(process.env.JD_JOIN_ZLC && process.env.JD_JOIN_ZLC === 'false')
@@ -263,7 +263,7 @@ async function algorithm() {
 }
 async function helpFriends() {
   if ($.isNode() && !process.env.DDFACTORY_SHARECODES) {
-    console.log(`您未填写助力码变量，开始账号内互助，再帮【zero205】助力`);
+    console.log(`您未填写助力码变量，开始账号内互助，再帮【atyvcn】助力`);
     $.newShareCode = [...(jdFactoryShareArr || []), ...(newShareCodes || [])]
   } else {
     $.newShareCode = newShareCodes
