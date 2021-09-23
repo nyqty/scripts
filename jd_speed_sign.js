@@ -97,7 +97,7 @@ async function jdGlobal() {
     //   await cashout()
     // }
     if ($.canhelp) {
-      console.log(`\n京东账号${$.index}开始助力【zero205】邀请有礼，感谢！\n`);
+      console.log(`\n京东账号${$.index}开始助力【atyvcn】邀请有礼，感谢！\n`);
       await invite()
       await invite2()
     }
@@ -727,10 +727,8 @@ function taskGetUrl(function_id, body) {
 function invite2() {
   let t = +new Date()
   let inviterId = [
-    "/eNHdfn6fP+TFwVda3ipjWwvTFqeKBZaRG38adWABKk=",
-    "R+eeS9UrTadw7yIF7ubkxBOARQK0BNXiQLVF0TyAf4Q=",
-    "Cg7WMrLsk/PPSHaOd9q2ULzDByNly0QecJ4K7QiZhLk=",
-    "Sev6JWjut6GyaEHJIWpSQQ=="
+    "Y1J%2B%2BFA6%2BwKsvX%2BR2C2bDw%3D%3D",
+    "v7PbDLcmaFqxlAPSec3fHg%3D%3D"
   ][Math.floor((Math.random() * 4))]
   let headers = {
     'Host': 'api.m.jd.com',
@@ -739,7 +737,7 @@ function invite2() {
     'origin': 'https://assignment.jd.com',
     'accept-language': 'zh-cn',
     'user-agent': $.isNode() ? (process.env.JS_USER_AGENT ? process.env.JS_USER_AGENT : (require('./JS_USER_AGENTS').USER_AGENT)) : ($.getdata('JSUA') ? $.getdata('JSUA') : "'jdltapp;iPad;3.1.0;14.4;network/wifi;Mozilla/5.0 (iPad; CPU OS 14_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1"),
-    'referer': `https://assignment.jd.com/?inviterId=${encodeURIComponent(inviterId)}`,
+    'referer': `https://assignment.jd.com/?inviterId=${inviterId}`,
     'Cookie': cookie
   }
 
@@ -754,17 +752,11 @@ function invite2() {
     // console.log(data)
   })
 }
-
 function invite() {
   let t = +new Date()
   let inviterId = [
-    "/eNHdfn6fP+TFwVda3ipjWwvTFqeKBZaRG38adWABKk=",
-    "R+eeS9UrTadw7yIF7ubkxBOARQK0BNXiQLVF0TyAf4Q=",
-    "Cg7WMrLsk/PPSHaOd9q2ULzDByNly0QecJ4K7QiZhLk=",
-    "4OAzIinjvoFYHDImve1/VA==",
-    "N0xw0OCPJTUt8xzWZPWs3w==",
-    "z///voP4pDo+KI13j5As9g==",
-    "Sev6JWjut6GyaEHJIWpSQQ=="
+    "Y1J%2B%2BFA6%2BwKsvX%2BR2C2bDw%3D%3D",
+    "v7PbDLcmaFqxlAPSec3fHg%3D%3D"
   ][Math.floor((Math.random() * 7))]
   var headers = {
     'Host': 'api.m.jd.com',
@@ -776,8 +768,8 @@ function invite() {
     'referer': 'https://invite-reward.jd.com/',
     'Cookie': cookie
   };
-
-  var dataString = `functionId=InviteFriendChangeAssertsService&body={"method":"attendInviteActivity","data":{"inviterPin":"${encodeURIComponent(inviterId)}","channel":1,"token":"","frontendInitStatus":""}}&referer=-1&eid=eidIf3dd8121b7sdmiBLGdxRR46OlWyh62kFAZogTJFnYqqRkwgr63%2BdGmMlcv7EQJ5v0HBic81xHXzXLwKM6fh3i963zIa7Ym2v5ehnwo2B7uDN92Q0&aid=&client=ios&clientVersion=14.4&networkType=wifi&fp=-1&appid=market-task-h5&_t=${t}`;
+	//encodeURIComponent(
+  var dataString = `functionId=InviteFriendChangeAssertsService&body={"method":"attendInviteActivity","data":{"inviterPin":"${inviterId}","channel":1,"token":"","frontendInitStatus":""}}&referer=-1&eid=eidIf3dd8121b7sdmiBLGdxRR46OlWyh62kFAZogTJFnYqqRkwgr63%2BdGmMlcv7EQJ5v0HBic81xHXzXLwKM6fh3i963zIa7Ym2v5ehnwo2B7uDN92Q0&aid=&client=ios&clientVersion=14.4&networkType=wifi&fp=-1&appid=market-task-h5&_t=${t}`;
   var options = {
     url: `https://api.m.jd.com/?t=${+new Date()}`,
     headers: headers,
