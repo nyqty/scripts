@@ -47,6 +47,15 @@ const BASE_URL = 'https://wq.jd.com/cubeactive/steprewardv3'
   console.log('京喜领88元红包\n'+'活动入口：京喜app -> 我的 -> 领88元红包\n'+'助力逻辑：优先账号内部互助，有剩余助力次数再帮【atyvcn】助力\n')
   let res = await getAuthorShareCode() || [];
   $.authorMyShareIds = [...(res || [])];
+  if ($.authorMyShareIds && $.authorMyShareIds.length) {
+    for (let i = 0; i < $.authorMyShareIds.length; i++) {
+      console.log(`\n将会助力【atyvcn】${$.authorMyShareIds.length}个账号\n`)
+      $.packetIdArr.push({
+        strUserPin: $.authorMyShareIds[i],
+        userName: "atyvcn"+(i+1)
+      })
+    }
+  }
   //开启红包,获取互助码
   for (let i = 0; i < cookiesArr.length; i++) {
     $.index = i + 1;
@@ -72,6 +81,7 @@ const BASE_URL = 'https://wq.jd.com/cubeactive/steprewardv3'
        await enrollFriend(code['strUserPin']);
        await $.wait(2500);
      }
+     /*
     if ($.canHelp && $.authorMyShareIds && $.authorMyShareIds.length) {
       console.log(`\n【${$.UserName}】有剩余助力机会，开始助力【atyvcn】\n`)
       for (let item of $.authorMyShareIds) {
@@ -80,7 +90,7 @@ const BASE_URL = 'https://wq.jd.com/cubeactive/steprewardv3'
         await enrollFriend(item);
         await $.wait(2500);
       }
-    }
+    }*/
   }
   //拆红包
   for (let i = 0; i < cookiesArr.length; i++) {
