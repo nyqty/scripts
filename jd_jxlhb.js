@@ -72,7 +72,7 @@ const BASE_URL = 'https://wq.jd.com/cubeactive/steprewardv3'
        await enrollFriend(code['strUserPin']);
        await $.wait(2500);
      }
-    if ($.canHelp) {
+    if ($.canHelp && $.authorMyShareIds && $.authorMyShareIds.length) {
       console.log(`\n【${$.UserName}】有剩余助力机会，开始助力【atyvcn】\n`)
       for (let item of $.authorMyShareIds) {
         if (!item) continue;
