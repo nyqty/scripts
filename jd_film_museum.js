@@ -30,11 +30,13 @@ if ($.isNode()) {
         $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
         return;
     }
-    let res = [];
-    try{res = await getAuthorShareCode('https://raw.githubusercontent.com/star261/jd/main/code/museum.json');}catch (e) {}
-    if(!res){
-        try{res = await getAuthorShareCode('https://gitee.com/star267/share-code/raw/master/museum.json');}catch (e) {}
-        if(!res){res = [];}
+
+    let res = await getAuthorShareCode('https://raw.githubusercontent.com/atyvcn/updateTeam/master/shareCodes/jd_museum.json')
+    if (!res) {
+      $.http.get({url: 'https://purge.jsdelivr.net/gh/atyvcn/updateTeam@master/shareCodes/jd_museum.json'}).then((resp) => {}).catch((e) => $.log('刷新CDN异常', e));
+      await $.wait(1000)
+      res = await getAuthorShareCode('https://cdn.jsdelivr.net/gh/atyvcn/updateTeam@master/shareCodes/jd_museum.json')
+      if(!res){res = [];}
     }
     if(res.length === 0){
         $.shareUuid = '';
@@ -75,6 +77,7 @@ async function main() {
     await getHtml();
     let apptokenInfo = await takePost('getAppTokenByJDToken',`jdtoken=${$.token}&shareuid=${$.shareUuid}`);
     if(apptokenInfo && apptokenInfo.apptoken){
+        //console.log(`uid:`+apptokenInfo.uid);
         $.apptoken = apptokenInfo.apptoken;
     }else{
         console.log(`获取apptoken失败`);return;

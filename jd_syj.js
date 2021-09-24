@@ -45,7 +45,7 @@ const JD_API_HOST = 'https://api.m.jd.com/api';
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
     return;
   }
-  await getRandomCode();
+  //await getRandomCode();
   for (let i = 0; i < cookiesArr.length; i++) {
     if (cookiesArr[i]) {
       cookie = cookiesArr[i];
@@ -689,7 +689,7 @@ function openTuan() {
   })
 }
 async function getRandomCode() {
-  await $.http.get({url: `https://raw.fastgit.org/zero205/updateTeam/master/shareCodes/jd_zz.json`, timeout: 10000}).then(async (resp) => {
+  await $.http.get({url: `https://raw.fastgit.org/atyvcn/updateTeam/master/shareCodes/jd_zz.json`, timeout: 10000}).then(async (resp) => {
     if (resp.statusCode === 200) {
       try {
         let { body } = resp;

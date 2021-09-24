@@ -21,12 +21,7 @@ if ($.isNode()) {
         ...$.toObj($.getdata("CookiesJD") || "[]").map((item) => item.cookie)].filter((item) => !!item);
 }
 !(async () => {
-    let res = ['d3202be8a8a74fac8b98ae613f75495d'];
-    try{res = await getAuthorShareCode('https://raw.githubusercontent.com/star261/jd/main/code/xinxiangyin.json');}catch (e) {}
-    if(!res){
-        try{res = await getAuthorShareCode('https://gitee.com/star267/share-code/raw/master/xinxiangyin.json');}catch (e) {}
-        if(!res){res = ['d3202be8a8a74fac8b98ae613f75495d'];}
-    }
+    let res = ['d3202be8a8a74fac8b98ae613f75495d'];//getAuthorShareCode
     if (!cookiesArr[0]) {
         $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
         return;
