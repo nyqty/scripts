@@ -35,7 +35,7 @@ let shareCodes = [ // IOS本地脚本用户这个列表填入你要助力的好�
    //账号一的好友shareCode,不同好友的shareCode中间用@符号隔开
   'MTEzMzI1MTE4NTAwMDAwMDA1Mzc0NTAwOQ==@MTE5MzEwNTEzODAwMDAwMDA1NDIzNjc0Mw==',
   //账号二的好友shareCode,不同好友的shareCode中间用@符号隔开
-  'MTEzMzI1MTE4NTAwMDAwMDA1Mzc0NTAwOQ==@MTE5MzEwNTEzODAwMDAwMDA1NDIzNjc0Mw==',
+  'MTEzMzI1MTE4NTAwMDAwMDA1Mzc0NTAwOQ==@MTE5MzEwNTEzODAwMDAwMDA1NDIzNjc0Mw=='
 ]
 const ZLC = !(process.env.JD_JOIN_ZLC && process.env.JD_JOIN_ZLC === 'false')
 let message = '', subTitle = '', option = {};
