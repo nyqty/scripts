@@ -148,7 +148,7 @@ message = ""
           }
         } else if (task.taskType === 'SHARE_INVITE') {
           for (let j = 0; j < 5; j++) {
-            let resp = await apTaskDrawAward(167, 'SHARE_INVITE');
+            let resp = await apTaskDrawAward(261, 'SHARE_INVITE');
 
             if (!resp.success) {
               break
@@ -166,7 +166,7 @@ message = ""
     }
   }
 
-  $.log("\n======汪汪乐园开始内部互助======\n======有剩余助力次数则帮zero205助力======\n")
+  $.log("\n======汪汪乐园开始内部互助======\n======有剩余助力次数则帮atyvcn助力======\n")
   for (let i = 0; i < cookiesArr.length; i++) {
     cookie = cookiesArr[i];
     if (cookie) {
