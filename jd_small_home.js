@@ -77,26 +77,6 @@ const JD_API_HOST = 'https://lkyl.dianpusoft.cn/api';
       await smallHome();
     }
   }
-  // $.inviteCodes = await getAuthorShareCode('https://raw.githubusercontent.com/zero205/updateTeam/main/shareCodes/jd_updateSmallHomeInviteCode.json')
-  // if (!$.inviteCodes) {
-  //   $.http.get({url: 'https://purge.jsdelivr.net/gh/zero205/updateTeam@main/shareCodes/jd_updateSmallHomeInviteCode.json'}).then((resp) => {}).catch((e) => $.log('刷新CDN异常', e));
-  //   await $.wait(1000)
-  //   $.inviteCodes = await getAuthorShareCode('https://cdn.jsdelivr.net/gh/zero205/updateTeam@main/shareCodes/jd_updateSmallHomeInviteCode.json')
-  // }
-  // for (let i = 0; i < cookiesArr.length; i++) {
-  //   if (cookiesArr[i]) {
-  //     cookie = cookiesArr[i];
-  //     $.token = $.helpToken[i];
-  //     $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
-  //     if ($.newShareCodes.length > 1) {
-  //       // console.log('----', (i + 1) % $.newShareCodes.length)
-  //       let code = $.newShareCodes[(i + 1) % $.newShareCodes.length]['code']
-  //       console.log(`\n${$.UserName} 去给自己的下一账号 ${decodeURIComponent($.newShareCodes[(i + 1) % $.newShareCodes.length]['cookie'].match(/pt_pin=([^; ]+)(?=;?)/) && $.newShareCodes[(i + 1) % $.newShareCodes.length]['cookie'].match(/pt_pin=([^; ]+)(?=;?)/)[1])}助力，助力码为 ${code}`)
-  //       await createAssistUser(code, $.createAssistUserID);
-  //     }
-  //     await helpFriends();
-  //   }
-  // }
 })()
     .catch((e) => {
       $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
