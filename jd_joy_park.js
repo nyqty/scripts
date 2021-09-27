@@ -87,11 +87,11 @@ message = ""
         } else {
           await getShareCode()
           if ($.kgw_invitePin && $.kgw_invitePin.length) {
-            $.log("开始帮【zero205】助力开工位\n");
+            $.log("开始帮【atyvcn】助力开工位\n");
             $.kgw_invitePin = [...($.kgw_invitePin || [])][Math.floor((Math.random() * $.kgw_invitePin.length))];
             let resp = await getJoyBaseInfo(undefined, 2, $.kgw_invitePin);
             if (resp.helpState && resp.helpState === 1) {
-              $.log("帮【zero205】开工位成功，感谢！\n");
+              $.log("帮【atyvcn】开工位成功，感谢！\n");
             } else if (resp.helpState && resp.helpState === 3) {
               $.log("你不是新用户！跳过开工位助力\n");
             } else if (resp.helpState && resp.helpState === 2) {

@@ -65,6 +65,10 @@ const BASE_URL = 'https://wq.jd.com/cubeactive/steprewardv3'
     await TotalBean();
     console.log(`\n*****开始【京东账号${$.index}】${$.nickName || $.UserName}*****\n`);
     await main();
+    if( $.index>=5 ){
+      console.log(`\n只获取前五个的助码,因为每个账号最多助力五次。\n`);
+      break;
+    }
   }
   //互助
   for (let i = 0; i < cookiesArr.length; i++) {
