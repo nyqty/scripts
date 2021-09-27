@@ -31,11 +31,11 @@ if ($.isNode()) {
         return;
     }
 
-    let res = await getAuthorShareCode('https://raw.githubusercontent.com/atyvcn/updateTeam/master/shareCodes/jd_museum.json')
+    let res = await getAuthorShareCode('https://raw.githubusercontent.com/atyvcn/updateTeam/master/shareCodes/jd/museum.json')
     if (!res) {
-      $.http.get({url: 'https://purge.jsdelivr.net/gh/atyvcn/updateTeam@master/shareCodes/jd_museum.json'}).then((resp) => {}).catch((e) => $.log('刷新CDN异常', e));
+      $.http.get({url: 'https://purge.jsdelivr.net/gh/atyvcn/updateTeam@master/shareCodes/jd/museum.json'}).then((resp) => {}).catch((e) => $.log('刷新CDN异常', e));
       await $.wait(1000)
-      res = await getAuthorShareCode('https://cdn.jsdelivr.net/gh/atyvcn/updateTeam@master/shareCodes/jd_museum.json')
+      res = await getAuthorShareCode('https://cdn.jsdelivr.net/gh/atyvcn/updateTeam@master/shareCodes/jd/museum.json')
       if(!res){res = [];}
     }
     if(res.length === 0){

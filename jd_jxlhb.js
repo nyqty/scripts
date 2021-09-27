@@ -245,7 +245,7 @@ function openRedPack(strPin, grade) {
   })
 }
 
-function getAuthorShareCode(url = "https://raw.fastgit.org/atyvcn/updateTeam/master/shareCodes/jd_jxhb.json") {
+function getAuthorShareCode(url = "https://raw.fastgit.org/atyvcn/updateTeam/master/shareCodes/jd/jxhb.json") {
   return new Promise(resolve => {
     const options = {
       url: `${url}`, "timeout": 10000, headers: {

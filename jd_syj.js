@@ -689,7 +689,7 @@ function openTuan() {
   })
 }
 async function getRandomCode() {
-  await $.http.get({url: `https://raw.fastgit.org/atyvcn/updateTeam/master/shareCodes/jd_zz.json`, timeout: 10000}).then(async (resp) => {
+  await $.http.get({url: `https://raw.fastgit.org/atyvcn/updateTeam/master/shareCodes/jd/zz.json`, timeout: 10000}).then(async (resp) => {
     if (resp.statusCode === 200) {
       try {
         let { body } = resp;

@@ -23,11 +23,11 @@ if ($.isNode()) {
         $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
         return;
     }
-    let res = await getAuthorShareCode('https://raw.githubusercontent.com/atyvcn/updateTeam/master/shareCodes/jd_decompression.json')
+    let res = await getAuthorShareCode('https://raw.githubusercontent.com/atyvcn/updateTeam/master/shareCodes/jd/decompression.json')
     if (!res) {
-      $.http.get({url: 'https://purge.jsdelivr.net/gh/atyvcn/updateTeam@master/shareCodes/jd_decompression.json'}).then((resp) => {}).catch((e) => $.log('刷新CDN异常', e));
+      $.http.get({url: 'https://purge.jsdelivr.net/gh/atyvcn/updateTeam@master/shareCodes/jd/decompression.json'}).then((resp) => {}).catch((e) => $.log('刷新CDN异常', e));
       await $.wait(1000)
-      res = await getAuthorShareCode('https://cdn.jsdelivr.net/gh/atyvcn/updateTeam@master/shareCodes/jd_decompression.json')
+      res = await getAuthorShareCode('https://cdn.jsdelivr.net/gh/atyvcn/updateTeam@master/shareCodes/jd/decompression.json')
     }
     if(res.length > 0){
         $.shareUuid = getRandomArrayElements(res,1)[0];

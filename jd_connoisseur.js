@@ -65,10 +65,10 @@ let allMessage = '';
       await jdConnoisseur()
     }
   }
-  let res2 = await getAuthorShareCode('https://raw.githubusercontent.com/atyvcn/updateTeam/master/shareCodes/jd_connoisseur.json')
+  let res2 = await getAuthorShareCode('https://raw.githubusercontent.com/atyvcn/updateTeam/master/shareCodes/jd/connoisseur.json')
   if (!res2) {
     await $.wait(1000)
-    res2 = await getAuthorShareCode('https://raw.fastgit.org/atyvcn/updateTeam/master/shareCodes/jd_connoisseur.json')
+    res2 = await getAuthorShareCode('https://raw.fastgit.org/atyvcn/updateTeam/master/shareCodes/jd/connoisseur.json')
   }
   $.shareCodes = [...$.shareCodes,...(res2 || [])]
   for (let i = 0; i < cookiesArr.length; i++) {
