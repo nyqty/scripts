@@ -20,7 +20,7 @@ cron "4 10,16,21 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/mas
 京喜领88元红包 = type=cron,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_jxlhb.js, cronexpr="4 10,16,21 * * *", timeout=3600, enable=true
  */
 const $ = new Env('京喜领88元红包');
-const notify = $.isNode() ? require('./sendNotify') : {};
+//const notify = $.isNode() ? require('./sendNotify') : {};
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : {};
 let cookiesArr = [], cookie = '';
 if ($.isNode()) {
