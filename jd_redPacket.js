@@ -47,7 +47,7 @@ const JD_API_HOST = 'https://api.m.jd.com/api';
     await $.wait(1000)
     res = await getAuthorShareCode('https://cdn.jsdelivr.net/gh/atyvcn/updateTeam@master/shareCodes/jd/red.json')
   }
-  $.authorMyShareIds = [...(res && [res[Math.floor((Math.random() * res.length))]] || [])];
+  $.authorMyShareIds = [...(res && res || [])];
   for (let i = 0; i < cookiesArr.length; i++) {
     if (cookiesArr[i]) {
       cookie = cookiesArr[i];
