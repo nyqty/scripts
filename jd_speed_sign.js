@@ -202,7 +202,7 @@ async function cashout() {
             if (safeGet(data)) {
               data = JSON.parse(data);
               if (data.subCode === 0 && data.data.cashOutSuccess === true) {
-                console.log(`红包兑换成功，剩余${data.data.cashDrawAmount}元`)s
+                console.log(`红包兑换成功，剩余${data.data.cashDrawAmount}元`)
                 if ($.isNode()) {
                   await notify.sendNotify(`${$.name}`, `【京东账号${$.index}】 ${$.nickName}\n兑换红包成功，请尽快使用`);
                 }
