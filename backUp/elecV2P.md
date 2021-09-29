@@ -24,4 +24,4 @@
 * 登录elecV2P后台，选择`TASK`，选择添加订阅任务，输入上面的订阅地址，点击获取内容，点击全部添加即可  
 
 #### elecV2P 通知方式
-* [点此查看](https://github.com/zero205/JD_tencent_scf/issues/15)
+* [点此查看](https://github.com/atyvcn/jd_scripts/issues/15)
