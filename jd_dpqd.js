@@ -6,9 +6,9 @@ cron 0 0 * * * jd_dpqd.js
 DPQDTK: token1&token2
 仓库不再提供token
 */
-const token = []
+let token = []
 if (process.env.DPQDTK) {
-  token = process.env.DPQDTK.split('&')
+  token = [...process.env.DPQDTK.split('&'),...token]
 }
 if (!token.length) {
   console.log('无店铺签到token,不执行.')
