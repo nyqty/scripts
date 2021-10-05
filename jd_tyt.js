@@ -41,7 +41,7 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
     return;
   }
-  console.log(`\n******北京时间15点后会助力【atyvcn】，介意请勿运行******\n`);
+
   for (let i = 0; i < cookiesArr.length; i++) {
     if (cookiesArr[i]) {
       cookie = cookiesArr[i];
@@ -77,9 +77,10 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
     }
   }
   // nowTimes = new Date(new Date().getTime() + new Date().getTimezoneOffset() * 60 * 1000 + 8 * 60 * 60 * 1000)
-  if (new Date().getHours() >= 15) {
+
     await getAuthorShareCode()
     if ($.authorCode && $.authorCode.length) {
+      console.log(`\n******会助力【atyvcn】，介意请勿运行******\n`);
       for (let i = 0; i < cookiesArr.length; i++) {
         if (cookiesArr[i]) {
           cookie = cookiesArr[i];
@@ -93,7 +94,6 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
         }
       }
     }
-  }
 })()
   .catch((e) => {
     $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')

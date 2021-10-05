@@ -2,7 +2,7 @@
 活动入口： 京东极速版-我的-发财大赢家
  * /
  * 基于温某人大佬的脚本修改
- * 助力逻辑：优先助力互助码环境变量，中午10点之后再给我助力
+ * 发财大赢家助力逻辑：优先助力填写的互助码环境变量，没有就自动获取第一个账号，然后给第一个账号助力，之后再给我助力
  * TG交流群：https://t.me/jd_zero205
  * TG通知频道：https://t.me/jd_zero205_tz
  * /
@@ -47,7 +47,7 @@ const JD_API_HOST = `https://api.m.jd.com`;
         });
         return;
     }
-    console.log(`\n发财大赢家助力逻辑：优先助力填写的互助码环境变量，中午10点之后再给我助力\n`)
+    console.log(`\n发财大赢家助力逻辑：优先助力填写的互助码环境变量，没有就自动获取第一个账号，然后给第一个账号助力，之后再给我助力\n`)
     message = ''
     $.helptype = 1
     $.needhelp = true
@@ -84,7 +84,7 @@ const JD_API_HOST = `https://api.m.jd.com`;
             }
         }
     }
-    if (new Date().getHours() >= 10) {
+
         await getAuthorShareCode()
         if ($.authorCode && $.authorCode.length) {
             for (let i = 0; i < cookiesArr.length; i++) {
@@ -103,7 +103,7 @@ const JD_API_HOST = `https://api.m.jd.com`;
                 }
             }
         }
-    }
+
     for (let i = 0; i < cookiesArr.length; i++) {
         cookie = cookiesArr[i];
         $.canWx = true
@@ -189,6 +189,10 @@ function getid() {
                     console.log(data.data.state)
                     if (data.data.state !== 0) {
                         if (data.success && data.data) {
+                            if( !dyjCode && data.data.redEnvelopeId && data.data.markedPin ){
+                                console.log(`\n已设置【京东账号${$.index}】助力码\n`)
+                                dyjCode =`${data.data.redEnvelopeId}@${data.data.markedPin}`
+                            }
                             console.log(`\n【您的redEnvelopeId】：${data.data.redEnvelopeId}`)
                             console.log(`\n【您的markPin】：${data.data.markedPin}`)
                         } else {
