@@ -61,6 +61,8 @@
     "jx_sign": [8, 13],
     "jd_ddworld": [9, 19],
     "jd_fruit":[6, 12 ,18],
+    "jd_zsign":[10],
+    "jd_genz":[13],
     "jd_ddgame": [13,17,21],
     "jd_decompression": [9,19],
     "jd_jmf": [9,21],
@@ -69,6 +71,7 @@
     "jd_try": [4],
     "jd_unsubscribe": [23],
     "jd_fan": [0],
+    "jd_cfd_loop": [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23],
     "params":
     {
         "global":
@@ -81,7 +84,7 @@
         },
         "jd_speed_sign":
         {
-            "timeout": 60
+            "timeout": 55
         }
     }
 }
