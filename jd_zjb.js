@@ -148,7 +148,7 @@ function help2(name,code) {
         "Cookie": cookie,
       }
     }
-    console.log(options['body'])
+    //console.log(options['body'])
     $.post(options, async (err, resp, data) => {
       try {
         const reust = JSON.parse(data)
