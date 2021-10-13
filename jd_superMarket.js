@@ -89,6 +89,7 @@ async function jdSuperMarket() {
     try {
         // await receiveGoldCoin();//收金币
         // await businessCircleActivity();//商圈活动
+        await smtg_shopIndex()
         await receiveBlueCoin(); //收蓝币（小费）
         // await receiveLimitProductBlueCoin();//收限时商品的蓝币
         await daySign(); //每日签到
@@ -101,8 +102,7 @@ async function jdSuperMarket() {
         // await upgrade();//升级货架和商品
         // await manageProduct();
         // await limitTimeProduct();
-        await smtg_shopIndex();
-        await smtg_newHome_xh();
+        // await smtg_newHome_xh();
         await receiveUserUpgradeBlue()
         // await smtgHome();
         // await Home();
@@ -476,14 +476,16 @@ function receiveBlueCoin(timeout = 0) {
     return new Promise((resolve) => {
         setTimeout(() => {
             $.get(taskUrl('smtg_receiveCoin', {
-                "type": 2,
-                "channel": "18"
+                "type": 4,
+                "channel": "1",
+                "shopId":$.shopId
             }), async (err, resp, data) => {
                 try {
                     if (err) {
                         console.log('\n东东超市: API查询请求失败 ‼️‼️')
                         console.log(JSON.stringify(err));
                     } else {
+                        console.debug('receiveBlueCoin:',data)
                         data = JSON.parse(data);
                         $.data = data;
                         if ($.data.data.bizCode !== 0 && $.data.data.bizCode !== 809) {
@@ -495,7 +497,7 @@ function receiveBlueCoin(timeout = 0) {
                         if ($.data.data.bizCode === 0) {
                             $.coincount += $.data.data.result.receivedBlue;
                             $.blueCionTimes++;
-                            console.log(`【京东账号${$.index}】${$.nickName} 第${$.blueCionTimes}次领蓝币成功，获得${$.data.data.result.receivedBlue}个\n`)
+                            console.log(`【京东账号${$.index}】${$.nickName} 第${$.blueCionTimes}次领蓝币成功，获得${$.data.data.result.receivedTurnover}个\n`)
                             if (!$.data.data.result.isNextReceived) {
                                 message += `【收取小费】${$.coincount}个\n`;
                                 return
@@ -1044,6 +1046,7 @@ function smtg_newHome_xh() {
                     console.log('\n东东超市: API查询请求失败 ‼️‼️')
                     console.log(JSON.stringify(err));
                 } else {
+                    console.debug('smtg_newHome_xh:',data)
                     data = JSON.parse(data);
                     if (data && data.data['bizCode'] === 0) {
                         $.userUpgradeBlueVos = data.data.result.userUpgradeBlueVos;
@@ -1114,6 +1117,7 @@ function smtg_shopIndex() {
                             merchandiseList,
                             level
                         } = data.data['result'];
+                        $.shopId = shopId
                         message += `【店铺等级】${level}\n`;
                         if (shelfList && shelfList.length > 0) {
                             for (let item of shelfList) {
@@ -2059,6 +2063,121 @@ function jsonParse(str) {
         }
     }
 }
+//==========================以下是给作者助力 免费拿,省钱大赢家等活动======================
+// async function helpAuthor() {
+//   await barGain();//免费拿
+//   await bigWinner();//省钱大赢家
+// }
+// async function barGain() {
+//   let res = await getAuthorShareCode2('https://raw.githubusercontent.com/zero205/updateTeam/main/shareCodes/jd_barGain.json')
+//   if (!res) {
+//     $.http.get({url: 'https://purge.jsdelivr.net/gh/zero205/updateTeam@main/shareCodes/jd_barGain.json'}).then((resp) => {}).catch((e) => $.log('刷新CDN异常', e));
+//     await $.wait(1000)
+//     res = await getAuthorShareCode2('https://cdn.jsdelivr.net/gh/zero205/updateTeam@main/shareCodes/jd_barGain.json')
+//   }
+//   $.inBargaining = [...(res && res['inBargaining'] || [])]
+//   $.inBargaining = getRandomArrayElements($.inBargaining, $.inBargaining.length > 3 ? 6 : $.inBargaining.length);
+//   for (let item of $.inBargaining) {
+//     if (!item['activityId']) continue;
+//     const options = {
+//       url: `https://api.m.jd.com/client.action`,
+//       headers: {
+//         'Host': 'api.m.jd.com',
+//         'Content-Type': 'application/x-www-form-urlencoded',
+//         'Origin': 'https://h5.m.jd.com',
+//         'Accept-Encoding': 'gzip, deflate, br',
+//         'Cookie': cookie,
+//         'Connection': 'keep-alive',
+//         'Accept': 'application/json, text/plain, */*',
+//         'User-Agent': 'jdapp;iPhone;9.4.0;14.3;;network/wifi;ADID/;supportApplePay/0;hasUPPay/0;hasOCPay/0;model/iPhone10,3;addressid/;supportBestPay/0;appBuild/167541;jdSupportDarkMode/0;Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1',
+//         'Referer': `https://h5.m.jd.com/babelDiy/Zeus/4ZK4ZpvoSreRB92RRo8bpJAQNoTq/index.html`,
+//         'Accept-Language': 'zh-cn',
+//       },
+//       body: `functionId=cutPriceByUser&body={"activityId": ${item['activityId']},"userName":"","followShop":1,"shopId": ${item['shopId']},"userPic":""}&client=wh5&clientVersion=1.0.0`
+//     };
+//     await $.post(options, (err, ersp, data) => {})
+//   }
+// }
+
+// async function bigWinner() {
+//   let res = await getAuthorShareCode2('https://raw.githubusercontent.com/zero205/updateTeam/main/shareCodes/dyj.json')
+//   if (!res) {
+//     $.http.get({url: 'https://purge.jsdelivr.net/gh/zero205/updateTeam@main/shareCodes/dyj.json'}).then((resp) => {}).catch((e) => $.log('刷新CDN异常', e));
+//     await $.wait(1000)
+//     res = await getAuthorShareCode2('https://cdn.jsdelivr.net/gh/zero205/updateTeam@main/shareCodes/dyj.json')
+//   }
+//   $.codeList = getRandomArrayElements([...(res || [])], [...(res || [])].length);
+//   for (let vo of $.codeList) {
+//     if (!vo['inviter']) continue
+//     await _618(vo['redEnvelopeId'], vo['inviter'], '1');
+//     await _618(vo['redEnvelopeId'],vo['inviter'], '2')
+//   }
+// }
+
+// function _618(redEnvelopeId, inviter, helpType = '1', linkId = 'yMVR-_QKRd2Mq27xguJG-w') {
+//   return new Promise(resolve => {
+//     $.get({
+//       url: `https://api.m.jd.com/?functionId=openRedEnvelopeInteract&body={%22linkId%22:%22${linkId}%22,%22redEnvelopeId%22:%22${redEnvelopeId}%22,%22inviter%22:%22${inviter}%22,%22helpType%22:%22${helpType}%22}&t=${+new Date()}&appid=activities_platform&clientVersion=3.5.0`,
+//       headers: {
+//         'Host': 'api.m.jd.com',
+//         'accept': 'application/json, text/plain, */*',
+//         'origin': 'https://618redpacket.jd.com',
+//         'user-agent': 'jdltapp;iPhone;3.5.0;14.2;network/wifi;hasUPPay/0;pushNoticeIsOpen/0;lang/zh_CN;model/iPhone10,2;hasOCPay/0;appBuild/1066;supportBestPay/0;pv/7.0;apprpd/;Mozilla/5.0 (iPhone; CPU iPhone OS 14_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1',
+//         'accept-language': 'zh-cn',
+//         'referer': `https://618redpacket.jd.com/?activityId=yMVR-_QKRd2Mq27xguJG-w&redEnvelopeId=${redEnvelopeId}&inviterId=${inviter}&helpType=1&lng=&lat=&sid=`,
+//         'Cookie': cookie
+//       }
+//     }, (err, resp, data) => {
+//       resolve()
+//     })
+//   })
+// }
+// function getAuthorShareCode2(url) {
+//   return new Promise(async resolve => {
+//     const options = {
+//       url: `${url}?${new Date()}`, "timeout": 10000, headers: {
+//         "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1 Edg/87.0.4280.88"
+//       }
+//     };
+//     if ($.isNode() && process.env.TG_PROXY_HOST && process.env.TG_PROXY_PORT) {
+//       const tunnel = require("tunnel");
+//       const agent = {
+//         https: tunnel.httpsOverHttp({
+//           proxy: {
+//             host: process.env.TG_PROXY_HOST,
+//             port: process.env.TG_PROXY_PORT * 1
+//           }
+//         })
+//       }
+//       Object.assign(options, { agent })
+//     }
+//     $.get(options, async (err, resp, data) => {
+//       try {
+//         if (err) {
+//         } else {
+//           if (data) data = JSON.parse(data)
+//         }
+//       } catch (e) {
+//         // $.logErr(e, resp)
+//       } finally {
+//         resolve(data);
+//       }
+//     })
+//     await $.wait(10000)
+//     resolve();
+//   })
+// }
+// function getRandomArrayElements(arr, count) {
+//   let shuffled = arr.slice(0), i = arr.length, min = i - count, temp, index;
+//   while (i-- > min) {
+//     index = Math.floor((i + 1) * Math.random());
+//     temp = shuffled[index];
+//     shuffled[index] = shuffled[i];
+//     shuffled[i] = temp;
+//   }
+//   return shuffled.slice(min);
+// }
+// prettier-ignore
 function Env(t, e) {
     "undefined" != typeof process && JSON.stringify(process.env).indexOf("GITHUB") > -1 && process.exit(0);
     class s {
