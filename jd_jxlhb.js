@@ -47,9 +47,10 @@ const BASE_URL = 'https://wq.jd.com/cubeactive/steprewardv3'
   console.log('京喜领88元红包\n'+'活动入口：京喜app -> 我的 -> 领88元红包\n'+'助力逻辑：优先账号内部互助，有剩余助力次数再帮【atyvcn】助力\n')
   let res = await getAuthorShareCode() || [];
   $.authorMyShareIds = [...(res || [])];
-  if ($.authorMyShareIds && $.authorMyShareIds.length) {
-    for (let i = 0; i < $.authorMyShareIds.length; i++) {
-      console.log(`\n将会助力【atyvcn】${$.authorMyShareIds.length}个账号\n`)
+  if( $.authorMyShareIds && $.authorMyShareIds.length ) {
+    console.log(`\n将会助力【atyvcn】${$.authorMyShareIds.length}个账号\n`)
+    if( $.authorMyShareIds[0]["userName"] ) $.packetIdArr=$.authorMyShareIds;
+    else for (let i = 0; i < $.authorMyShareIds.length; i++) {
       $.packetIdArr.push({
         strUserPin: $.authorMyShareIds[i],
         userName: "atyvcn"+(i+1)
@@ -71,6 +72,12 @@ const BASE_URL = 'https://wq.jd.com/cubeactive/steprewardv3'
     }
   }
   //互助
+  var tmp = {};//根据userName去除$.packetIdArr重复内容
+  $.packetIdArr = $.packetIdArr.reduce(function(init, item){
+    tmp[item.userName]?'':( tmp[item.userName] = true && init.push(item) );
+    return init; 
+  },[])
+
   for (let i = 0; i < cookiesArr.length; i++) {
     cookie = cookiesArr[i];
     $.canHelp = true;
@@ -78,7 +85,7 @@ const BASE_URL = 'https://wq.jd.com/cubeactive/steprewardv3'
     $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1]);
      for (let code of $.packetIdArr) {
        if (!code) continue;
-       if ($.UserName === code['userName']) continue;
+       if ( $.UserName === code['userName'] ) continue;
        if (!$.canHelp) break
        if ($.max) break
        console.log(`【${$.UserName}】去助力【${code['userName']}】`);
