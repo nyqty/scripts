@@ -24,7 +24,7 @@ const dailyEggUrl = "https://active.jd.com/forever/btgoose/?channelLv=yxjh&jrcon
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 const { JSDOM } = $.isNode() ? require('jsdom') : '';
 const { window } = new JSDOM(``, { url: dailyEggUrl, runScripts: "outside-only", pretentToBeVisual: true, resources: "usable" })
-const Faker = require('./JDSignValidator.js')
+const Faker = require('./utils/JDSignValidator.js')
 function oc(fn, defaultVal) {//optioanl chaining
   try {
     return fn()

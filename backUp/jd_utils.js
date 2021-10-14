@@ -1,7 +1,7 @@
 // @grant require
 // elecV2P 用户专用
 // 抄姐姐 @CenBoMin的脚本
-// github仓库：https://github.com/zero205/JD_tencent_scf
+// github仓库：https://github.com/atyvcn/jd_scripts
 
 const $ = new Env('安装依赖文件')
 
@@ -21,20 +21,20 @@ const $ = new Env('安装依赖文件')
 //++++++++++++++++++++++++++++++++++++++++
 async function JDJS_utils() {
   //////////////////////////////  基础脚本  /////////////////////////////
-  await downloadJS("jdCookie", "https://ghproxy.com/https://raw.githubusercontent.com/zero205/JD_tencent_scf/main/jdCookie.js", "./script/JSFile")
+  await downloadJS("jdCookie", "https://ghproxy.com/https://raw.githubusercontent.com/atyvcn/jd_scripts/main/jdCookie.js", "./script")
 
-  await downloadJS("sendNotify", "https://ghproxy.com/https://raw.githubusercontent.com/zero205/JD_tencent_scf/main/sendNotify.js", "./script/JSFile")
+  //await downloadJS("sendNotify", "https://ghproxy.com/https://raw.githubusercontent.com/atyvcn/jd_scripts/main/sendNotify.js", "./script")
 
-  await downloadJS("JDJRValidator_Aaron", "https://ghproxy.com/https://raw.githubusercontent.com/zero205/JD_tencent_scf/main/JDJRValidator_Aaron.js", "./script/JSFile")
+  await downloadJS("JDJRValidator_Aaron", "https://ghproxy.com/https://raw.githubusercontent.com/atyvcn/jd_scripts/main/JDJRValidator_Aaron.js", "./script/utils")
 
-  await downloadJS("JDJRValidator_Smiek", "https://ghproxy.com/https://raw.githubusercontent.com/zero205/JD_tencent_scf/main/JDJRValidator_Smiek.js", "./script/JSFile")
+  await downloadJS("JDJRValidator_Smiek", "https://ghproxy.com/https://raw.githubusercontent.com/atyvcn/jd_scripts/main/JDJRValidator_Smiek.js", "./script/utils")
 
-  await downloadJS("sign_graphics_validate", "https://ghproxy.com/https://raw.githubusercontent.com/zero205/JD_tencent_scf/main/sign_graphics_validate.js", "./script/JSFile")
+  await downloadJS("sign_graphics_validate", "https://ghproxy.com/https://raw.githubusercontent.com/atyvcn/jd_scripts/main/sign_graphics_validate.js", "./script/utils")
 
   ////////////////////////////   USER_AGENTS  //////////////////////////////////////
-  await downloadJS("USER_AGENTS", "https://ghproxy.com/https://raw.githubusercontent.com/zero205/JD_tencent_scf/main/USER_AGENTS.js", "./script/JSFile")
+  await downloadJS("USER_AGENTS", "https://ghproxy.com/https://raw.githubusercontent.com/atyvcn/jd_scripts/main/USER_AGENTS.js", "./script/")
 
-  await downloadJS("JS_USER_AGENTS", "https://ghproxy.com/https://raw.githubusercontent.com/zero205/JD_tencent_scf/main/JS_USER_AGENTS.js", "./script/JSFile")
+  await downloadJS("JS_USER_AGENTS", "https://ghproxy.com/https://raw.githubusercontent.com/atyvcn/jd_scripts/main/JS_USER_AGENTS.js", "./script/")
 
 }
 
