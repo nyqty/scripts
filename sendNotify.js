@@ -243,7 +243,7 @@
    return "";
  }
  
- async function sendNotify(text, desp, params = {}, author) {
+ async function sendNotify(text, desp, params = {}, author="") {
    //提供6种通知
    if(end_txt) author = author + '\n\n' + end_txt
    desp += author;//增加作者信息，防止被贩卖等
