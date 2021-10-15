@@ -190,9 +190,9 @@ if (process.env.TG_ONLY) {
 }
 
 function GetUserName() {
-  if ($.UserName !== undefined) {
+  if ( typeof($.UserName) != "undefined" ) {
     return $.UserName;
-  } else if (cookie !== undefined) {
+  } else if ( typeof(cookie) != "undefined" ) {
     //cookie = cookiesArr[i];
     return decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
   }
