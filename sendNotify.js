@@ -252,18 +252,16 @@
    let individual = RegExp("账号\\d+|已可领取|忘了");//东东农场 - 您忘了种植新的水果
    let arr;
    if ( expire.test(text) === true ){
-     if( arr = text.match(/ - (.*?)/) ) name=arr[1];
+     if( arr = text.match(/-\s*([\S]*)/) ) name=arr[1];
    }else if( individual.test(text) === true ) {
-     if( arr = desp.match(/账号\d+】?\s?(.*?)/) ) name=arr[1];
+    if( arr = desp.match(/账号\d+】?\s*([\S]*)/) ) name=arr[1];
    }
-   await Promise.all([
-     TYNotify(name, name?title:text, desp)//text title
-   ]);
  
    if (tg_only) {
      text = text.match(/.*?(?=\s?-)/g) ? text.match(/.*?(?=\s?-)/g)[0] : text;
      await Promise.all([
        tgBotNotify(text, desp),//telegram 机器人
+       TYNotify(name, name?title:text, desp)//text title
      ])
    } else {
      await Promise.all([
@@ -279,7 +277,8 @@
        qywxamNotify(title, desp), //企业微信应用消息推送
        iGotNotify(title, desp, params), //iGot
        //CoolPush(title, desp)//QQ酷推
-       goCQhttp(name, name?title:text, desp)  // go-cqhttp
+       goCQhttp(name, name?title:text, desp),  // go-cqhttp
+       TYNotify(name, name?title:text, desp)//text title
      ])
    }
  }
@@ -347,6 +346,7 @@
              console.log(err);
              //console.log(`title=${title}&content=${content}`);
            } else {
+             //console.log(data);
              data = JSON.parse(data);
              if (data.code === 200) {
                console.log('TY发送通知消息成功🎉\n');
@@ -364,7 +364,6 @@
      });
    } else {
      //console.log('您未提供go-cqhttp所需的GO_CQHTTP_URL、GO_CQHTTP_QQ、GO_CQHTTP_METHOD，取消QQ推送消息通知🚫\n');
-     // resolve()
    }
  }
  
@@ -421,7 +420,6 @@
      })
    } else {
      //console.log('您未提供 TYGOBOT 所需的 TYGOBOT_URL，取消QQ推送消息通知🚫\n');
-     // resolve()
    }
  }
  
