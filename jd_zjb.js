@@ -62,10 +62,11 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
       await info()
       if (InviterPin.length != 0) {
         await help()
-      } else {
+      }
         await help2("atyvcn","Y1J%2B%2BFA6%2BwKsvX%2BR2C2bDw%3D%3D")
         await help2("atyvcn","v7PbDLcmaFqxlAPSec3fHg%3D%3D")
-      }
+        await help2("atyvcn","SaveVDJCvnKSTZVZW4mnNA%3D%3D")
+        await help2("atyvcn","7y9P4S8R8ehEq3XYf7UxBw%3D%3D")
     }
   }
 })()
