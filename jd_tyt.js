@@ -1,6 +1,6 @@
 /*
 update date ：2021.07.15
-#自定义互助码变量，仅支持单个互助码
+#自定义互助码变量，支持多个互助码@分隔
 export TYT_PACKETID=""
  [task_local]
 #柠檬推一推
@@ -24,6 +24,11 @@ let tytpacketId = '';
 tytpacketId = $.getdata('TYT_PACKETID') ? $.getdata('TYT_PACKETID') : '';
 if ($.isNode() && process.env.TYT_PACKETID) {
   tytpacketId = process.env.TYT_PACKETID;
+}
+
+let tytpacketId_Array=[];
+if( tytpacketId ){
+  tytpacketId_Array=tytpacketId.split('@');
 }
 
 if ($.isNode()) {
@@ -70,8 +75,11 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
         await $.wait(1000)
         await helpCoinDozer(packetId)
         await $.wait(500)
-        if (tytpacketId !== '') {
+        for (let j = 0; j < tytpacketId_Array.length; j++) {
+          let tytpacketId = tytpacketId_Array[j];
+          console.log(`\n去助力助力码:${tytpacketId}`)
           await tythelp(tytpacketId)
+          await $.wait(1000)
         }
       }
     }
