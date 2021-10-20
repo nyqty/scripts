@@ -109,6 +109,8 @@ $.appId = 10028;
           continue
         }
       }
+    } else {
+      break
     }
   }
   await showMsg();
@@ -135,13 +137,15 @@ async function cfd() {
 
     // 寻宝
     console.log(`寻宝`)
-    let XBDetail = beginInfo.XbStatus.XBDetail.filter((x) => x.dwRemainCnt !== 0 && x.dwRemainCnt !== 2)
+    let XBDetail = beginInfo.XbStatus.XBDetail.filter((x) => x.dwRemainCnt !== 0)
     if (XBDetail.length !== 0) {
       console.log(`开始寻宝`)
+      $.break = false
       for (let key of Object.keys(XBDetail)) {
         let vo = XBDetail[key]
         await $.wait(2000)
         await TreasureHunt(vo.strIndex)
+        if ($.break) break
       }
     } else {
       console.log(`暂无宝物`)
@@ -302,6 +306,7 @@ function TreasureHunt(strIndex) {
             }
           } else {
             console.log(`寻宝失败：${data.sErrMsg}`)
+            $.break = true
           }
         }
       } catch (e) {
