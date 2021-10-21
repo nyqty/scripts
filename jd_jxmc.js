@@ -140,7 +140,7 @@ function getShareCode(name) {
           console.log(`${JSON.stringify(err)}`);
           console.log(`${$.name} API请求失败，请检查网路重试`);
         } else {
-          console.log(`优先账号内部互助，有剩余助力次数再帮【zero205】助力`);
+          console.log(`优先账号内部互助，有剩余助力次数再帮【atyvcn】助力`);
           $.shareCode = JSON.parse(data);
         }
       } catch (e) {
@@ -156,7 +156,7 @@ async function get_rp(){
     if (rpInfo.ret === 0) {
         if(rpInfo.data.sharekey){
             console.log(`红包邀请码:${rpInfo.data.sharekey}`);
-            $.inviteCodeList_hb.push({'use':$.UserName,'code':rpInfo.data.sharekey,'max':false,'activeid':activeid});
+            $.inviteCodeList_rp.push({'use':$.UserName,'code':rpInfo.data.sharekey,'max':false,'activeid':activeid});
         }
     } else if(rpInfo.ret === 2704){
         console.log('红包今天领完了,跳过红包相关')

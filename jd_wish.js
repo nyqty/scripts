@@ -25,8 +25,8 @@ let message = '', allMessage = '';
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '';
 const JD_API_HOST = 'https://api.m.jd.com/client.action';
-let appIdArr = ['1E1NXxq0'];
-let appNameArr = ['众筹许愿池'];
+let appIdArr = ['1E1NXxq0', '1FV1VwKc'];
+let appNameArr = ['众筹许愿池', '惊喜大作战'];
 let appId, appName;
 $.shareCode = [];
 if ($.isNode()) {
@@ -68,13 +68,12 @@ if ($.isNode()) {
       }
     }
   }
-  let res = await getAuthorShareCode('https://raw.githubusercontent.com/atyvcn/updateTeam/master/shareCodes/jd/wish.json')
-  if (!res) {
-    $.http.get({url: 'https://purge.jsdelivr.net/gh/atyvcn/updateTeam@master/shareCodes/jd/wish.json'}).then((resp) => {}).catch((e) => console.log('刷新CDN异常', e));
+  let res2 = await getAuthorShareCode('https://raw.githubusercontent.com/atyvcn/updateTeam/master/shareCodes/jd/wish.json')
+  if (!res2) {
     await $.wait(1000)
-    res = await getAuthorShareCode('https://cdn.jsdelivr.net/gh/atyvcn/updateTeam@master/shareCodes/jd/wish.json')
+    res2 = await getAuthorShareCode('https://raw.fastgit.org/atyvcn/updateTeam/master/shareCodes/jd/wish.json')
   }
-  $.shareCode = [...$.shareCode, ...(res || [])]
+  $.shareCode = [...$.shareCode, ...(res2 || [])]
   for (let i = 0; i < cookiesArr.length; i++) {
     if (cookiesArr[i]) {
       cookie = cookiesArr[i];

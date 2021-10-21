@@ -26,6 +26,7 @@ let jdNotify = true;//是否关闭通知，false打开通知推送，true关闭�
 let cookiesArr = [], cookie = '', message;
 let uuid
 $.shareCodes = []
+let hotInfo = {}
 if ($.isNode()) {
   Object.keys(jdCookieNode).forEach((item) => {
     cookiesArr.push(jdCookieNode[item])
@@ -41,12 +42,6 @@ let allMessage = '';
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
     return;
   }
-  // $.authorCode = await getAuthorShareCode('https://raw.githubusercontent.com/Aaron-lv/updateTeam/master/shareCodes/jd_updateCash.json')
-  // if (!$.authorCode) {
-  //   $.http.get({url: 'https://purge.jsdelivr.net/gh/Aaron-lv/updateTeam@master/shareCodes/jd_updateCash.json'}).then((resp) => {}).catch((e) => $.log('刷新CDN异常', e));
-  //   await $.wait(1000)
-  //   $.authorCode = await getAuthorShareCode('https://cdn.jsdelivr.net/gh/Aaron-lv/updateTeam@master/shareCodes/jd_updateCash.json') || []
-  // }
   for (let i = 0; i < cookiesArr.length; i++) {
     if (cookiesArr[i]) {
       cookie = cookiesArr[i];
@@ -66,14 +61,17 @@ let allMessage = '';
         continue
       }
       $.sku = []
+      $.hot = false
       uuid = randomString(40)
       await jdMofang()
+      hotInfo[$.UserName] = $.hot
     }
   }
   for (let i = 0; i < cookiesArr.length; i++) {
     cookie = cookiesArr[i];
     $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
     $.canHelp = true
+    if (hotInfo[$.UserName]) continue
     if ($.shareCodes && $.shareCodes.length) {
       console.log(`\n开始内部助力`)
       for (let j = 0; j < $.shareCodes.length && $.canHelp; j++) {
@@ -104,8 +102,8 @@ let allMessage = '';
 async function jdMofang() {
   console.log(`集魔方 赢大奖`)
   await getInteractionHomeInfo()
-  // console.log(`\n集魔方 抽京豆 赢新品`)
-  // await getInteractionInfo()
+  console.log(`\n集魔方 抽京豆 赢新品`)
+  await getInteractionInfo()
 }
 
 async function getInteractionHomeInfo() {
@@ -147,6 +145,7 @@ async function queryInteractiveInfo(encryptProjectId, sourceCode) {
                   let signDay = (vo.ext[vo.ext.extraType].signList && vo.ext[vo.ext.extraType].signList.length) || 0
                   $.type = vo.rewards[signDay].rewardType
                   await doInteractiveAssignment(vo.ext.extraType, encryptProjectId, sourceCode, vo.encryptAssignmentId, vo.ext[vo.ext.extraType].itemId)
+                  if ($.hot) return
                 } else {
                   console.log(`今日已签到`)
                 }
@@ -239,6 +238,11 @@ function doInteractiveAssignment(extraType, encryptProjectId, sourceCode, encryp
         } else {
           if (safeGet(data)) {
             data = JSON.parse(data)
+            if (data.subCode === "1403") {
+              $.hot = true
+              console.log(`活动太火爆了，还是去买买买吧！！！`)
+              return
+            }
             if (extraType === "assistTaskDetail") {
               if (data.msg === "已达助力上限" || data.subCode === "108") {
                 $.canHelp = false
@@ -333,7 +337,7 @@ async function getInteractionInfo(type = true) {
 }
 function queryPanamaPage(groupId) {
   return new Promise((resolve) => {
-    $.post(taskPostUrl("queryPanamaPage", {"activityId":"2umkvbpZCUtyN6gcymN88ew8WLeU","dynamicParam":{},"geo":{"lng":"","lat":""},"previewTime":""}), (err, resp, data) => {
+    $.post(taskPostUrl("queryPanamaPage", {"activityId":"3v2Wu9KsgwzW92931wj7sYCRjueP","dynamicParam":{},"geo":{"lng":"","lat":""},"previewTime":""}), (err, resp, data) => {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
