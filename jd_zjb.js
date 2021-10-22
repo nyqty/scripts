@@ -2,6 +2,7 @@
 #柠檬赚金币
 ##入口为极速版 百元生活费 赚金币 邀请好友
 ##第一次运行可不填写邀请码 运行一次查看自己的邀请码
+##支持多个助力“@”分隔
 ##export InviterPin="Y1J%2B%2BFA6%2BwKsvX%2BR2C2bDw%3D%3D"
 ##助力逻辑：填写你的邀请码变量之后会助力你填写的邀请码，未填写则会默认给【atyvcn】助力，介意请勿运行
 
@@ -22,6 +23,13 @@ let InviterPin = '';
 if ($.isNode() && process.env.InviterPin) {
   InviterPin = process.env.InviterPin;
 }
+
+let InviterPin_Array=[];
+if( InviterPin ){
+  InviterPin_Array=InviterPin.split('@');
+}
+
+
 if (InviterPin.length == 0) {
   console.log(`\n您未填写邀请码变量，默认帮【atyvcn】助力\n`);
 }
@@ -60,13 +68,19 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
         continue
       }
       await info()
-      if (InviterPin.length != 0) {
-        await help()
-      }
+
+      if( InviterPin_Array.length ){
+        for (let j = 0; j < InviterPin_Array.length; j++) {
+          InviterPin = InviterPin_Array[j];
+          await help()
+          await $.wait(1000)
+        }
+      }else{
         await help2("atyvcn","Y1J%2B%2BFA6%2BwKsvX%2BR2C2bDw%3D%3D")
         await help2("atyvcn","v7PbDLcmaFqxlAPSec3fHg%3D%3D")
         await help2("atyvcn","SaveVDJCvnKSTZVZW4mnNA%3D%3D")
         await help2("atyvcn","7y9P4S8R8ehEq3XYf7UxBw%3D%3D")
+      }
     }
   }
 })()
