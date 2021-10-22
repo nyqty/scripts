@@ -1,5 +1,5 @@
 /*
-cron "30 * * * *" CheckRpeat.js, tag:脚本重复检测by-TengYu
+cron "10 0,12,17 * * *" CheckRpeat.js, tag:脚本重复检测by-TengYu
  */
 const $ = new Env('脚本重复检测');
 const notify = $.isNode() ? require('./sendNotify') : '';
