@@ -98,10 +98,9 @@ let inviteCodes = ['xDZ0HmcBlJQUMs_WF5h_mmvv-Ep-xFCOB0aPa1RY','RtGKopnzA3HfI9jbY
       uuid = randomString(40)
       await getInfo('',true);
       for (let j = 0; j < shareCodes.length; j++) {
+        if( typeof(shareCodes_success[j])==="undefined" ) shareCodes_success[j]=0;
         console.log( `\n${$.UserName} 开始助力 【${shareCodes[j]}】`)
         await $.wait(1000)
-        if( typeof(shareCodes_success[j])==="undefined" ) shareCodes_success[j]=0;
-        
         let res = await getInfo(shareCodes[j])
         if (res && res['data'] && res['data']['bizCode'] === 0) {
           if (res['data']['result']['toasts'] && res['data']['result']['toasts'][0] && res['data']['result']['toasts'][0]['status'] === '3') {
@@ -149,10 +148,12 @@ let inviteCodes = ['xDZ0HmcBlJQUMs_WF5h_mmvv-Ep-xFCOB0aPa1RY','RtGKopnzA3HfI9jbY
 
       await $.wait(1000)
     }
-  }
 
-  console.log(`shareCodes_success:`);
-  console.log(shareCodes_success);
+    console.log(`\n邀请码成功统计:`);
+    for (let j = 0; j < shareCodes.length; j++) {
+      console.log( `【${shareCodes[j]}】：${shareCodes_success[j]}`) 
+    }
+  }
 
 })()
   .catch((e) => {
