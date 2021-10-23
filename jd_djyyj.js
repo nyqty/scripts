@@ -1,12 +1,7 @@
 /*
-#电竞预言家
-0 14 * * * jd_djyyj.js, tag=电竞预言家, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
-
-tgchannel：https://t.me/Ariszy_Script
-github：https://github.com/Ariszy/script
-boxjs：https://raw.githubusercontent.com/Ariszy/Private-Script/master/Ariszy.boxjs.json
-
-*/
+电竞预言家
+cron 0 14 * * * jd_djyyj.js
+ */
 const $ = Env('电竞预言家');
 const notify = $.isNode() ?require('./sendNotify') : '';
 cookiesArr = []
