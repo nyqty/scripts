@@ -149,9 +149,10 @@ let inviteCodes = ['xDZ0HmcBlJQUMs_WF5h_mmvv-Ep-xFCOB0aPa1RY','RtGKopnzA3HfI9jbY
 
       await $.wait(1000)
     }
-    console.log(`shareCodes_success:`);
-    console.log(shareCodes_success);
   }
+
+  console.log(`shareCodes_success:`);
+  console.log(shareCodes_success);
 
 })()
   .catch((e) => {
