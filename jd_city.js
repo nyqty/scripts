@@ -32,7 +32,8 @@ let exchangeFlag = $.isNode() ? (process.env.JD_CITY_EXCHANGE === "true" ? true 
 let cookiesArr = [], cookie = '', message;
 let uuid;
 $.shareCodes = []
-let shareCodes
+let shareCodes=[]
+let shareCodes_success=[]
 if ($.isNode()) {
   Object.keys(jdCookieNode).forEach((item) => {
     cookiesArr.push(jdCookieNode[item])
@@ -99,8 +100,9 @@ let inviteCodes = ['xDZ0HmcBlJQUMs_WF5h_mmvv-Ep-xFCOB0aPa1RY','RtGKopnzA3HfI9jbY
       for (let j = 0; j < shareCodes.length; j++) {
         console.log( `\n${$.UserName} 开始助力 【${shareCodes[j]}】`)
         await $.wait(1000)
+        if( typeof(shareCodes_success[j])==="undefined" ) shareCodes_success[j]=0;
+        
         let res = await getInfo(shareCodes[j])
-
         if (res && res['data'] && res['data']['bizCode'] === 0) {
           if (res['data']['result']['toasts'] && res['data']['result']['toasts'][0] && res['data']['result']['toasts'][0]['status'] === '3') {
             console.log(`助力次数已耗尽，跳出`)
@@ -108,6 +110,7 @@ let inviteCodes = ['xDZ0HmcBlJQUMs_WF5h_mmvv-Ep-xFCOB0aPa1RY','RtGKopnzA3HfI9jbY
           }
           if (res['data']['result']['toasts']) {
             if (res['data']['result']['toasts'][0]) {
+              shareCodes_success[j]++;
               console.log(`助力 【${shareCodes[j]}】:${res.data.result.toasts[0].msg}`)
             } else {
               console.log(`未知错误，跳出`)
@@ -146,6 +149,8 @@ let inviteCodes = ['xDZ0HmcBlJQUMs_WF5h_mmvv-Ep-xFCOB0aPa1RY','RtGKopnzA3HfI9jbY
 
       await $.wait(1000)
     }
+    console.log(`shareCodes_success:`);
+    console.log(shareCodes_success);
   }
 
 })()
@@ -331,7 +336,9 @@ function city_doTaskByTk(taskId, taskToken, actionType = 0) {
         } else {
           if (safeGet(data)) {
             data = JSON.parse(data);
-            console.log(JSON.stringify(data))
+            if( !(data && data.code===0  &&  data.success) ){
+              console.log(JSON.stringify(data))
+            }
           }
         }
       } catch (e) {
