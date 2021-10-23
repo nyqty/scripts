@@ -148,13 +148,13 @@ let inviteCodes = ['xDZ0HmcBlJQUMs_WF5h_mmvv-Ep-xFCOB0aPa1RY','RtGKopnzA3HfI9jbY
 
       await $.wait(1000)
     }
-
-    console.log(`\n邀请码成功统计:`);
-    for (let j = 0; j < shareCodes.length; j++) {
-      console.log( `【${shareCodes[j]}】：${shareCodes_success[j]}`) 
-    }
   }
 
+  console.log(`\n邀请码成功统计:`);
+  for (let j = 0; j < shareCodes.length; j++) {
+    console.log( `【${shareCodes[j]}】：${shareCodes_success[j]}`) 
+  }
+  
 })()
   .catch((e) => {
     $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
