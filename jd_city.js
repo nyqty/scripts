@@ -54,10 +54,10 @@ let inviteCodes = ['xDZ0HmcBlJQUMs_WF5h_mmvv-Ep-xFCOB0aPa1RY','RtGKopnzA3HfI9jbY
   
   if ($.isNode()) {
     if (process.env.CITY_SHARECODES) {
-        shareCodes = process.env.CITY_SHARECODES.split(process.env.CITY_SHARECODES.indexOf('&') > -1?'&':'@');
-        Object.keys().forEach((item) => {
-          if (shareCodes[item]) {
-            $.shareCodesArr.push(shareCodes[item])
+        let CITY_SHARECODES = process.env.CITY_SHARECODES.split(process.env.CITY_SHARECODES.indexOf('&') > -1?'&':'@');
+        Object.keys(CITY_SHARECODES).forEach((item) => {
+          if (CITY_SHARECODES[item]) {
+            $.shareCodesArr.push(CITY_SHARECODES[item])
           }
       })
     }
