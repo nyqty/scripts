@@ -1,6 +1,17 @@
 /*
 电竞预言家
-cron 0 14 * * * jd_djyyj.js
+cron 0 14 * * * jd_djyyj.js, tag:京东电竞预言家
+============Quantumultx===============
+[task_local]
+#电竞预言家
+0 14 * * * https://raw.githubusercontent.com/atyvcn/jd_scripts/main/jd_djyyj.js, tag=电竞预言家, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jxcfd.png, enabled=true
+================Loon==============
+[Script]
+cron "0 14 * * *" script-path=https://raw.githubusercontent.com/atyvcn/jd_scripts/main/jd_djyyj.js,tag=电竞预言家
+===============Surge=================
+电竞预言家 = type=cron,cronexp="0 14 * * *",wake-system=1,timeout=3600,script-path=https://raw.githubusercontent.com/atyvcn/jd_scripts/main/jd_djyyj.js
+============小火箭=========
+电竞预言家 = type=cron,script-path=https://raw.githubusercontent.com/atyvcn/jd_scripts/main/jd_djyyj.js, cronexpr="0 14 * * *", timeout=3600, enable=true
  */
 const $ = Env('电竞预言家');
 const notify = $.isNode() ?require('./sendNotify') : '';
