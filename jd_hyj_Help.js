@@ -57,7 +57,6 @@ let inviteIdArr = []
             inviteId = $.newShareCodes[u]
             console.log(`开始助力 【${inviteId}】`)
             let res = await travel_collectScore(inviteId)
-
             if ( res && res['code']===0 && res['data'] ) {
                 let bizCode = res['data']['bizCode'];
                 if(  bizCode === 0 ){
@@ -76,6 +75,7 @@ let inviteIdArr = []
                 }else if( bizCode === -202 ){
                     //今天已经帮助过TA了
                 }else if( bizCode === -1002 || bizCode === -5001 ){
+                    //await get_secretp(inviteId)
                     //啊哦，活动太火爆了~ 
                 }else console.log(res)
                 console.log(`助力 【${inviteId}】:${res.data.bizMsg}`)
