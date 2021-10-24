@@ -5,7 +5,7 @@
 没填指定助力码默认给作者助力，填了先给你填的助力，剩余助力给作者
 自动抽奖 JD_CITY_EXCHANGE="true"
 指定助力码 JD_CITY_SHARECODES="xDZ0HmcBlJQUMs_WF5h_mmvv-Ep-xFCOB0aPa1RY"
-是否跑任务 指定助力码 JD_CITY_SHARECODES="xDZ0HmcBlJQUMs_WF5h_mmvv-Ep-xFCOB0aPa1RY"
+是否跑任务 JD_CITY_TASK="true"
 末尾添加邀请码成功统计,脚本结束后可看日志末尾
 多个@或者&分割
 如果你填的助力码超过了每个人助力的次数后面的也不会得到助力，作者的也得不到。因为你的优先在前。
