@@ -1,6 +1,7 @@
 /**
  环游记助力
  cron 0 11 * * * https://raw.githubusercontent.com/atyvcn/jd_scripts/main/jd_hyj_Help.js
+ By、梦创星河
  */
 const $ = new Env('环游记助力');
 //Node.js用户请在jdCookie.js处填写京东ck;
