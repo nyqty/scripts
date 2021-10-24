@@ -4,7 +4,9 @@
 脚本兼容: QuantumultX, Surge,Loon, JSBox, Node.js
 没填指定助力码默认给作者助力，填了先给你填的助力，剩余助力给作者
 自动抽奖 JD_CITY_EXCHANGE="true"
-指定助力码 CITY_SHARECODES="xDZ0HmcBlJQUMs_WF5h_mmvv-Ep-xFCOB0aPa1RY"
+指定助力码 JD_CITY_SHARECODES="xDZ0HmcBlJQUMs_WF5h_mmvv-Ep-xFCOB0aPa1RY"
+是否跑任务 指定助力码 JD_CITY_SHARECODES="xDZ0HmcBlJQUMs_WF5h_mmvv-Ep-xFCOB0aPa1RY"
+末尾添加邀请码成功统计,脚本结束后可看日志末尾
 多个@或者&分割
 如果你填的助力码超过了每个人助力的次数后面的也不会得到助力，作者的也得不到。因为你的优先在前。
 =================================Quantumultx=========================
@@ -28,12 +30,15 @@ const notify = $.isNode() ? require('./sendNotify') : '';
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 //自动抽奖 ，环境变量  JD_CITY_EXCHANGE
 let exchangeFlag = $.isNode() ? (process.env.JD_CITY_EXCHANGE === "true" ? true : false) : ($.getdata('jdJxdExchange') === "true" ? true : false)  //是否开启自动抽奖，建议活动快结束开启，默认关闭
+//是否跑任务 环境变量  JD_CITY_TASK
+let JD_CITY_TASK = process.env.JD_CITY_TASK === "true" ? true : false   //是否开启自动跑任务，默认关闭
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '', message;
 let uuid;
 $.shareCodes = []
 let shareCodes=[]
 let shareCodes_success=[]
+
 if ($.isNode()) {
   Object.keys(jdCookieNode).forEach((item) => {
     cookiesArr.push(jdCookieNode[item])
@@ -53,11 +58,11 @@ let inviteCodes = ['xDZ0HmcBlJQUMs_WF5h_mmvv-Ep-xFCOB0aPa1RY','RtGKopnzA3HfI9jbY
   $.shareCodesArr = [];
   
   if ($.isNode()) {
-    if (process.env.CITY_SHARECODES) {
-        let CITY_SHARECODES = process.env.CITY_SHARECODES.split(process.env.CITY_SHARECODES.indexOf('&') > -1?'&':'@');
-        Object.keys(CITY_SHARECODES).forEach((item) => {
-          if (CITY_SHARECODES[item]) {
-            $.shareCodesArr.push(CITY_SHARECODES[item])
+    if (process.env.JD_CITY_SHARECODES) {
+        let JD_CITY_SHARECODES = process.env.JD_CITY_SHARECODES.split(process.env.JD_CITY_SHARECODES.indexOf('&') > -1?'&':'@');
+        Object.keys(JD_CITY_SHARECODES).forEach((item) => {
+          if (JD_CITY_SHARECODES[item]) {
+            $.shareCodesArr.push(JD_CITY_SHARECODES[item])
           }
       })
     }
@@ -66,16 +71,21 @@ let inviteCodes = ['xDZ0HmcBlJQUMs_WF5h_mmvv-Ep-xFCOB0aPa1RY','RtGKopnzA3HfI9jbY
   if( $.shareCodesArr.length  ){
     console.log(`您提供了${$.shareCodesArr.length}个账号的${$.name}助力码，优先给你助力，如有剩余给作者\n`);
   }else{
-    console.log(`你没填指定助力码默认给作者助力\n变量名 CITY_SHARECODES\n多个@或者&分隔，如果你填的助力码超过了每个人助力的次数后面的也不会得到助力，作者的也得不到。因为你的优先在前。\n`);
+    console.log(`你没填指定助力码默认给作者助力\n变量名 JD_CITY_SHARECODES\n多个@或者&分隔，如果你填的助力码超过了每个人助力的次数后面的也不会得到助力，作者的也得不到。因为你的优先在前。\n`);
   }
 
   if (exchangeFlag) {
     console.log(`脚本自动抽奖`)
   } else {
-    console.log(`脚本不会自动抽奖，建议活动快结束开启，默认关闭(在10.29日自动开启抽奖),如需自动抽奖请设置环境变量  JD_CITY_EXCHANGE 为true`);
+    console.log(`脚本不会自动抽奖，建议活动快结束开启，默认关闭(在10.29日自动开启抽奖),如需自动抽奖请设置环境变量  JD_CITY_EXCHANGE 为 true`);
+  }
+  if( JD_CITY_TASK ){
+    console.log(`脚本自动跑任务`)
+  }else{
+    console.log(`脚本不会跑任务，如果需要跑任务 JD_CITY_TASK 为 true`);
   }
   shareCodes = [...new Set([...$.shareCodesArr, ...inviteCodes])];
-  console.log(`\n您将要助力的好友${JSON.stringify(shareCodes)}`)
+  console.log(`\n末尾添加邀请码成功统计,脚本结束后可看日志末尾\n您将要助力的好友${JSON.stringify(shareCodes)}`)
 
   for (let i = 0; i < cookiesArr.length; i++) {
     if (cookiesArr[i]) {
@@ -96,9 +106,10 @@ let inviteCodes = ['xDZ0HmcBlJQUMs_WF5h_mmvv-Ep-xFCOB0aPa1RY','RtGKopnzA3HfI9jbY
         continue
       }
       uuid = randomString(40)
-      await getInfo('',true);
+      if( JD_CITY_TASK ) await getInfo('',true);
+
       for (let j = 0; j < shareCodes.length; j++) {
-        if( typeof(shareCodes_success[j])==="undefined" ) shareCodes_success[j]=0;
+        if( typeof(shareCodes_success[j]) == "undefined" ) shareCodes_success[j]=0;
         console.log( `\n${$.UserName} 开始助力 【${shareCodes[j]}】`)
         await $.wait(1000)
         let res = await getInfo(shareCodes[j])
