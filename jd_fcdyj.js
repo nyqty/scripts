@@ -27,7 +27,7 @@ cron "1 6-22/3 * * *" script-path=https://raw.githubusercontent.com/Wenmoux/scri
 const $ = new Env('发财大赢家助力');
 //Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
-const dyjCode = $.isNode() ? (process.env.dyjCode ? process.env.dyjCode : null) : null //邀请码变量，不支持多账号，格式：redEnvelopeId@markedPin
+let dyjCode = $.isNode() ? (process.env.dyjCode ? process.env.dyjCode : null) : null //邀请码变量，不支持多账号，格式：redEnvelopeId@markedPin
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [],
     cookie = '';
@@ -64,11 +64,7 @@ const JD_API_HOST = `https://api.m.jd.com`;
             $.message = `【京东账号${$.index}】${$.UserName}\n`
             console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
         }
-        if (!dyjCode) {
-            console.log(`\n环境变量中没有检测到助力码,开始获取【京东账号${$.index}】助力码\n`)
-            await open()
-            await getid()
-        } else {
+        if ( dyjCode ) {
             dyjStr = dyjCode.split("@")
             if (dyjStr[0]) {
                 $.rid = dyjStr[0]
@@ -82,6 +78,10 @@ const JD_API_HOST = `https://api.m.jd.com`;
                 await $.wait(1000)
                 await help($.rid, $.inviter, 2)
             }
+        } else {
+            console.log(`\n环境变量中没有检测到助力码,开始获取【京东账号${$.index}】助力码\n`)
+            await open()
+            await getid()
         }
     }
 
@@ -189,9 +189,11 @@ function getid() {
                     console.log(data.data.state)
                     if (data.data.state !== 0) {
                         if (data.success && data.data) {
-                            if( !dyjCode && data.data.redEnvelopeId && data.data.markedPin ){
-                                console.log(`\n已设置【京东账号${$.index}】助力码\n`)
-                                dyjCode =`${data.data.redEnvelopeId}@${data.data.markedPin}`
+                            if( !dyjCode ){
+                                if( data.data.redEnvelopeId && data.data.markedPin ){
+                                    console.log(`\n已设置【京东账号${$.index}】助力码\n`)
+                                    dyjCode =`${data.data.redEnvelopeId}@${data.data.markedPin}`
+                                }
                             }
                             console.log(`\n【您的redEnvelopeId】：${data.data.redEnvelopeId}`)
                             console.log(`\n【您的markPin】：${data.data.markedPin}`)
