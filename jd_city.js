@@ -142,7 +142,7 @@ let inviteCodes = ['xDZ0HmcBlJQUMs_WF5h_mmvv-Ep-xFCOB0aPa1RY','RtGKopnzA3HfI9jbY
               console.log(`助力 【${shareCodes[j]}】:${res.data.result.toasts[0].msg}`)
             } else {
               console.log(`未知错误，跳出：err`)
-              console.log(`${JSON.stringify(res)}`)
+              //console.log(`${JSON.stringify(res)}`)
               break
             }
           }
