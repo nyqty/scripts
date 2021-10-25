@@ -73,7 +73,7 @@ function travel_collectAtuoScore() {
 }
 
 function get_secretp(inviteId = "") {
-    let body = inviteId?{}:{"inviteId":inviteId};
+    let body = inviteId?{"inviteId":inviteId}:{};
     return new Promise((resolve) => {
         $.post(taskPostUrl("travel_getHomeData", body), async(err, resp, data) => {
             try {
