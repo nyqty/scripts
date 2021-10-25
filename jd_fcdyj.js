@@ -292,6 +292,10 @@ function help(rid, inviter, type) {
                 } else {
                     data = JSON.parse(data);
                     if (data.data && data.data.helpResult) {
+
+                        //{"success":false,"code":16003,"errMsg":"邀请过期了，送你一个大红包吧","data":null}
+
+
                         console.log(JSON.stringify(data.data.helpResult))
                         if (data.data.helpResult.code === 16005 || data.data.helpResult.code === 16007) {
                             $.needhelp = false
