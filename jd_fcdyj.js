@@ -72,7 +72,7 @@ const JD_API_HOST = `https://api.m.jd.com`;
                 $.canRun = true
                 console.log(`\n检测到您已填助力码${$.rid}，开始助力\n`)
                 await help($.rid, $.inviter, 1)
-                if (!$.canRun) {
+                if ( !$.canRun ) {
                     continue;
                 }
                 await $.wait(1000)
@@ -292,19 +292,26 @@ function help(rid, inviter, type) {
                 } else {
                     data = JSON.parse(data);
                     if (data.data && data.data.helpResult) {
-
-                        //{"success":false,"code":16003,"errMsg":"邀请过期了，送你一个大红包吧","data":null}
-
-
-                        console.log(JSON.stringify(data.data.helpResult))
-                        if (data.data.helpResult.code === 16005 || data.data.helpResult.code === 16007) {
+                        let helpResult = data.data.helpResult
+                        if ( helpResult.code === 0 ) {//恭喜帮好友助力成功
+                            //$.canRun = false;
+                            console.log(helpResult.errMsg);
+                        }else if ( helpResult.code === 16003 ) {//邀请过期了，请使用今日的活动邀请链接
+                            $.needhelp = false
+                            console.log(helpResult.errMsg);
+                        }else if (helpResult.code === 16005 || helpResult.code === 16007) {
                             $.needhelp = false
                             $.canDraw = true
-                        } else if (data.data.helpResult.code === 16011) {
+                        } else if (helpResult.code === 16011) {
                             $.needhelp = false
-                        }
+                        } else if (helpResult.code === 16012) {
+                            //$.canRun = false;
+                            //今日已帮该好友拆过红包
+                        } else if (helpResult.code === 16018) {
+                            //$.canRun = false;
+                        }else console.log("helpResult:"+JSON.stringify(helpResult))
                     } else {
-                        console.log(JSON.stringify(data))
+                        console.log("data:"+JSON.stringify(data))
                         console.log(`【京东账号${$.UserName}】为黑号，跳过助力`)
                         $.canRun = false
                     }
