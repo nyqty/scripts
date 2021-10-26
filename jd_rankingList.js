@@ -61,25 +61,42 @@ const JD_API_HOST = `https://api.m.jd.com/client.action?functionId=`;
 function QueryJDUserInfo(timeout = 0) {
   return new Promise((resolve) => {
     setTimeout( ()=>{
-      let url = {
-        url : `https://wq.jd.com/user/info/QueryJDUserInfo?sceneval=2`,
-        headers : {
-          'Referer' : `https://wqs.jd.com/my/iserinfo.html`,
-          'Cookie' : cookie
+      const options = {
+        url: "https://me-api.jd.com/user_new/info/GetJDUserInfoUnion",
+        headers: {
+          Host: "me-api.jd.com",
+          Accept: "*/*",
+          Connection: "keep-alive",
+          Cookie: cookie,
+          "User-Agent": $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('./USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.4.4;14.3;network/4g;Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1"),
+          "Accept-Language": "zh-cn",
+          "Referer": "https://home.m.jd.com/myJd/newhome.action?sceneval=2&ufc=&",
+          "Accept-Encoding": "gzip, deflate, br"
         }
       }
-      $.get(url, (err, resp, data) => {
+
+      $.get(options, (err, resp, data) => {
         try {
-          data = JSON.parse(data);
-          if (data.retcode === 13) {
-            merge.enabled = false
-            return
+          if (err) {
+            $.logErr(err)
+          } else {
+            if (data) {
+              data = JSON.parse(data);
+              if (data['retcode'] === "1001") {
+                merge.enabled = false
+                return;
+              }
+              if (data['retcode'] === "0" && data.data && data.data.hasOwnProperty("userInfo")) {
+                merge.nickname = data.data.userInfo.baseInfo.nickname?data.data.userInfo.baseInfo.nickname:data.data.userInfo.baseInfo.curPin;
+              }
+            } else {
+              console.log('京东服务器返回空数据');
+            }
           }
-          merge.nickname = data.base.nickname;
         } catch (e) {
-          $.logErr(e, resp);
+          $.logErr(e)
         } finally {
-          resolve()
+          resolve();
         }
       })
     },timeout)
