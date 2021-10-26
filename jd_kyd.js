@@ -6,14 +6,14 @@ export first="false"
 
 怎么获取launchid？
 去选择一个商品之后 设置first="true" 就可以查看第一个账号的 launchid了
+脚本兼容: QuantumultX, Surge, Loon, JSBox, Node.js
+================QuantumultX==================
 [task_local]
 #柠檬是兄弟就砍我2
 0 17,21 * * * http://nm66.top/jd_kanjia2.js, tag=柠檬是兄弟就砍我2, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jd_redPacket.png, enabled=true
 ===================Loon==============
 [Script]
 cron "0 17,21 * * * " script-path=http://nm66.top/jd_kanjia2.js, tag=柠檬是兄弟就砍我2
-===============Surge===============
-
 */
 const $ = new Env('柠檬是兄弟就砍我2');
 const notify = $.isNode() ? require('./sendNotify') : '';
