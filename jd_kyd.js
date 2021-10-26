@@ -1,13 +1,11 @@
 /*
 #柠檬是兄弟就砍我2
 ##惊喜欢乐砍 自定义变量 入口惊喜APP我的 惊喜欢乐砍
-export launchid="bd06ca2ff9b232de525f912ab73a023c" ##你的邀请码
-export first="false" ##第一次参加变量设置为true查看商品ID 填写商品ID后自动获取邀请码邀请  如果只助力 变量设置为false
-export active="" ##商品ID
+export launchid="3c3c61549218c6c729b983ec8ed584a1" ##你的邀请码
+export first="false"
 
-其他:
-我还在研究怎么用....好像还不好使.推上来测试一下
-
+怎么获取launchid？
+去选择一个商品之后 设置first="true" 就可以查看第一个账号的 launchid了
 [task_local]
 #柠檬是兄弟就砍我2
 0 17,21 * * * http://nm66.top/jd_kanjia2.js, tag=柠檬是兄弟就砍我2, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
@@ -21,13 +19,13 @@ const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 let cookiesArr = [],
     cookie = '',
     message;
-const active = '';
-let first = false; //第一次参加变量设置为true查看商品ID 填写商品ID后自动获取邀请码邀请  如果只助力 变量设置为false
+// let active = '';
+let first = false;
 let launchid
 
-if (process.env.active) {
-    active = process.env.active;
-}
+// if (process.env.active) {
+//     active = process.env.active;
+// }
 
 if (process.env.first) {
     first = true;
@@ -44,7 +42,6 @@ if ($.isNode()) {
 const JD_API_HOST = 'https://api.m.jd.com/client.action';
 
 !(async () => {
-    console.debug('正在测试,别着急!!!,可能会在群内抽奖')
     if (!cookiesArr[0]) {
         $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
         return;

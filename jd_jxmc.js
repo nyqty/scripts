@@ -36,8 +36,7 @@ if ($.isNode()) {
         $.getdata("CookieJD2"),
         ...$.toObj($.getdata("CookiesJD") || "[]").map((item) => item.cookie)].filter((item) => !!item);
 }
-
-let cookie=''
+let cookie
 
 !(async () => {
     $.CryptoJS = $.isNode() ? require('crypto-js') : CryptoJS;
@@ -49,10 +48,10 @@ let cookie=''
     $.fingerprint = '';$.token = '';
     for (let i = 0; i < cookiesArr.length; i++) {
         $.index = i + 1;
-        cookie = cookiesArr[i];
+        cookie = $.cookie = cookiesArr[i];
         $.isLogin = true;
         $.nickName = '';
-        $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1]);
+        $.UserName = decodeURIComponent($.cookie.match(/pt_pin=([^; ]+)(?=;?)/) && $.cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1]);
         await TotalBean();
         console.log(`\n*****开始【京东账号${$.index}】${$.nickName || $.UserName}*****\n`);
         if (!$.isLogin) {
@@ -78,8 +77,8 @@ let cookie=''
         await getShareCode('jxmc_hb.json')
         $.inviteCodeList_rp = [...($.inviteCodeList_rp || []), ...($.shareCode || [])]
         for (let j = 0; j < cookiesArr.length; j++) {
-            cookie = cookiesArr[j];
-            $.UserName = decodeURIComponent(cookie.match(/pt_pin=(.+?);/) && cookie.match(/pt_pin=(.+?);/)[1]);
+            $.cookie = cookiesArr[j];
+            $.UserName = decodeURIComponent($.cookie.match(/pt_pin=(.+?);/) && $.cookie.match(/pt_pin=(.+?);/)[1]);
             token = await getJxToken();
             $.canHelp = true;
             for (let k = 0; k < $.inviteCodeList_rp.length; k++) {
@@ -102,8 +101,8 @@ let cookie=''
     await getShareCode('jxmc.json')
     $.inviteCodeList = [...($.inviteCodeList || []), ...($.shareCode || [])]
     for (let j = 0; j < cookiesArr.length; j++) {
-        cookie = cookiesArr[j];
-        $.UserName = decodeURIComponent(cookie.match(/pt_pin=(.+?);/) && cookie.match(/pt_pin=(.+?);/)[1]);
+        $.cookie = cookiesArr[j];
+        $.UserName = decodeURIComponent($.cookie.match(/pt_pin=(.+?);/) && $.cookie.match(/pt_pin=(.+?);/)[1]);
         token = await getJxToken();
         $.canHelp = true;
         for (let k = 0; k < $.inviteCodeList.length; k++) {
@@ -133,7 +132,7 @@ let cookie=''
 function getShareCode(name) {
   return new Promise(resolve => {
     $.get({
-      url: "https://raw.fastgit.org/atyvcn/updateTeam/master/shareCodes/jd/"+name,
+      url: "https://raw.fastgit.org/zero205/updateTeam/main/shareCodes/"+name,
       headers: {
         "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1 Edg/87.0.4280.88"
       }
@@ -143,7 +142,7 @@ function getShareCode(name) {
           console.log(`${JSON.stringify(err)}`);
           console.log(`${$.name} API请求失败，请检查网路重试`);
         } else {
-          console.log(`优先账号内部互助，有剩余助力次数再帮【atyvcn】助力`);
+          console.log(`优先账号内部互助，有剩余助力次数再帮【zero205】助力`);
           $.shareCode = JSON.parse(data);
         }
       } catch (e) {
@@ -518,7 +517,7 @@ async function takeRequest(type,functionId,info,stk='activeid%2Cactivekey%2Cchan
         url: url,
         headers: {
             'Origin': `https://st.jingxi.com`,
-            'Cookie': cookie,
+            'Cookie': $.cookie,
             'Connection': `keep-alive`,
             'Accept': `application/json`,
             'Referer': `https://st.jingxi.com/pingou/jxmc/index.html`,
@@ -563,6 +562,7 @@ function randomWord(randomFlag, min, max){
     }
     return str;
 }
+
 function TotalBean() {
     return new Promise(async resolve => {
         const options = {
