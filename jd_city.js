@@ -35,7 +35,7 @@ let exchangeFlag = $.isNode() ? (process.env.JD_CITY_EXCHANGE === "true" ? true 
 let JD_CITY_TASK = process.env.JD_CITY_TASK === "true" ? true : false   //是否开启自动跑任务，默认关闭
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '', message;
-let uuid;
+let uuid, UA;
 $.shareCodes = []//用户获取的互助码
 
 let shareCodes = []
@@ -120,7 +120,8 @@ let inviteCodes = ['xDZ0HmcBlJQUMs_WF5h_mmvv-Ep-xFCOB0aPa1RY','RtGKopnzA3HfI9jbY
         }
         continue
       }
-      uuid = randomString(40)
+      UA = `jdapp;iPhone;10.2.0;13.1.2;${randomString(40)};M/5.0;network/wifi;ADID/;model/iPhone8,1;addressid/2308460611;appBuild/167853;jdSupportDarkMode/0;Mozilla/5.0 (iPhone; CPU iPhone OS 13_1_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1;`
+      uuid = UA.split(';')[4]
       if (JD_CITY_TASK) await getInfo('', true);
 
       for (let j = 0; j < shareCodes.length; j++) {
@@ -194,7 +195,7 @@ let inviteCodes = ['xDZ0HmcBlJQUMs_WF5h_mmvv-Ep-xFCOB0aPa1RY','RtGKopnzA3HfI9jbY
   })
 
 function getInfo(inviteId, flag = false) {
-  let body = { "lbsCity": "19", "realLbsCity": "1601", "inviteId": inviteId, "headImg": "", "userName": "", "taskChannel": "1" }
+  let body = { "lbsCity": "1", "realLbsCity": "2953", "inviteId": inviteId, "headImg": "", "userName": "", "taskChannel": "1" }
   return new Promise((resolve) => {
     $.post(taskPostUrl("city_getHomeData", body), async (err, resp, data) => {
       try {
@@ -220,7 +221,7 @@ function getInfo(inviteId, flag = false) {
                   const { taskDetailResultVo } = data.data.result.taskInfo;
                   const { lotteryTaskVos, taskVos } = taskDetailResultVo;
                   for (let lotteryTask of lotteryTaskVos) {
-                    if (lotteryTask.maxTimes === lotteryTask.times && lotteryTask.times !== undefined) {
+                    if (lotteryTask.times >= lotteryTask.maxTimes && lotteryTask.times !== undefined) {
                       for (let lo of lotteryTask?.badgeAwardVos || []) {
                         if (lo.status === 3) {
                           await receiveCash("", "6");
@@ -228,28 +229,28 @@ function getInfo(inviteId, flag = false) {
                       }
                     }
                   }
-                  for (let task of taskVos || []) {
-                    const t = Date.now();
-                    if (task.status === 1 && t >= task.taskBeginTime && t < task.taskEndTime) {
-                      const id = task.taskId, max = task.maxTimes;
-                      const waitDuration = task.waitDuration || 0;
-                      let time = task?.times || 0;
-                      for (let ltask of task.shoppingActivityVos) {
-                        if (ltask.status === 1) {
-                          console.log(`去做任务：${ltask.title}`);
-                          if (waitDuration) {
-                            await $.wait(1500);
-                            await city_doTaskByTk(id, ltask.taskToken, 1);
-                            await $.wait(waitDuration * 1000);
-                          }
-                          await city_doTaskByTk(id, ltask.taskToken);
-                          time++;
-                          if (time >= max) break;
-                        }
-                      }
-                      await $.wait(2500);
-                    }
-                  }
+                  // for (let task of taskVos || []) {
+                  //   const t = Date.now();
+                  //   if (task.status === 1 && t >= task.taskBeginTime && t < task.taskEndTime) {
+                  //     const id = task.taskId, max = task.maxTimes;
+                  //     const waitDuration = task.waitDuration || 0;
+                  //     let time = task?.times || 0;
+                  //     for (let ltask of task.shoppingActivityVos) {
+                  //       if (ltask.status === 1) {
+                  //         console.log(`去做任务：${ltask.title}`);
+                  //         if (waitDuration) {
+                  //           await $.wait(1500);
+                  //           await city_doTaskByTk(id, ltask.taskToken, 1);
+                  //           await $.wait(waitDuration * 1000);
+                  //         }
+                  //         await city_doTaskByTk(id, ltask.taskToken);
+                  //         time++;
+                  //         if (time >= max) break;
+                  //       }
+                  //     }
+                  //     await $.wait(2500);
+                  //   }
+                  // }
                 }
                 for (let vo of data.data.result && data.data.result.mainInfos || []) {
                   if (vo && vo.remaingAssistNum === 0 && vo.status === "1") {
@@ -290,7 +291,7 @@ function receiveCash(roundNum, type = '') {
           console.log(`${$.name} API请求失败，请检查网路重试`)
         } else {
           if (safeGet(data)) {
-            //console.log(`领红包结果${data}`);
+            console.log(`领红包结果${data}`);
             data = JSON.parse(data);
             if (data['data']['bizCode'] === 0) {
               console.log(`获得 ${data.data.result.currentTimeCash} 元，共计 ${data.data.result.totalCash} 元`)
@@ -368,9 +369,8 @@ function city_doTaskByTk(taskId, taskToken, actionType = 0) {
         } else {
           if (safeGet(data)) {
             data = JSON.parse(data);
-            if (!(data && data.code === 0 && data.success)) {
-              console.log(JSON.stringify(data))
-            }
+            //if (!(data && data.code === 0 && data.success))
+	    	console.log(JSON.stringify(data))
           }
         }
       } catch (e) {
@@ -392,7 +392,7 @@ function taskPostUrl(functionId, body) {
       "Content-Type": "application/x-www-form-urlencoded",
       "Origin": "https://bunearth.m.jd.com",
       "Accept-Language": "zh-CN,zh-Hans;q=0.9",
-      "User-Agent": $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('./USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.4.4;14.3;network/4g;Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1"),
+      "User-Agent":UA,
       "Referer": "https://bunearth.m.jd.com/",
       "Accept-Encoding": "gzip, deflate, br",
       "Cookie": cookie
