@@ -39,9 +39,10 @@ const JD_API_HOST = `https://api.m.jd.com/client.action?functionId=`;
   for (let i = 0; i < cookiesArr.length; i++) {
     cookie = cookiesArr[i];
     if (cookie) {
-      if (i) console.log(`\n***************开始京东账号${i + 1}***************`)
+
       initial();
       await  QueryJDUserInfo();
+      console.log(`\n******开始【京东账号${i + 1}】${merge.nickname}*********\n`);
       if (!merge.enabled)  //cookie不可用
       {
         $.setdata('', `CookieJD${i ? i + 1 : "" }`);//cookie失效，故清空cookie。
