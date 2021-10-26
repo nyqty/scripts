@@ -36,6 +36,9 @@ if ($.isNode()) {
         $.getdata("CookieJD2"),
         ...$.toObj($.getdata("CookiesJD") || "[]").map((item) => item.cookie)].filter((item) => !!item);
 }
+
+let cookie=''
+
 !(async () => {
     $.CryptoJS = $.isNode() ? require('crypto-js') : CryptoJS;
     await requestAlgo();
@@ -46,10 +49,10 @@ if ($.isNode()) {
     $.fingerprint = '';$.token = '';
     for (let i = 0; i < cookiesArr.length; i++) {
         $.index = i + 1;
-        $.cookie = cookiesArr[i];
+        cookie = cookiesArr[i];
         $.isLogin = true;
         $.nickName = '';
-        $.UserName = decodeURIComponent($.cookie.match(/pt_pin=([^; ]+)(?=;?)/) && $.cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1]);
+        $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1]);
         await TotalBean();
         console.log(`\n*****开始【京东账号${$.index}】${$.nickName || $.UserName}*****\n`);
         if (!$.isLogin) {
@@ -75,8 +78,8 @@ if ($.isNode()) {
         await getShareCode('jxmc_hb.json')
         $.inviteCodeList_rp = [...($.inviteCodeList_rp || []), ...($.shareCode || [])]
         for (let j = 0; j < cookiesArr.length; j++) {
-            $.cookie = cookiesArr[j];
-            $.UserName = decodeURIComponent($.cookie.match(/pt_pin=(.+?);/) && $.cookie.match(/pt_pin=(.+?);/)[1]);
+            cookie = cookiesArr[j];
+            $.UserName = decodeURIComponent(cookie.match(/pt_pin=(.+?);/) && cookie.match(/pt_pin=(.+?);/)[1]);
             token = await getJxToken();
             $.canHelp = true;
             for (let k = 0; k < $.inviteCodeList_rp.length; k++) {
@@ -99,8 +102,8 @@ if ($.isNode()) {
     await getShareCode('jxmc.json')
     $.inviteCodeList = [...($.inviteCodeList || []), ...($.shareCode || [])]
     for (let j = 0; j < cookiesArr.length; j++) {
-        $.cookie = cookiesArr[j];
-        $.UserName = decodeURIComponent($.cookie.match(/pt_pin=(.+?);/) && $.cookie.match(/pt_pin=(.+?);/)[1]);
+        cookie = cookiesArr[j];
+        $.UserName = decodeURIComponent(cookie.match(/pt_pin=(.+?);/) && cookie.match(/pt_pin=(.+?);/)[1]);
         token = await getJxToken();
         $.canHelp = true;
         for (let k = 0; k < $.inviteCodeList.length; k++) {
@@ -515,7 +518,7 @@ async function takeRequest(type,functionId,info,stk='activeid%2Cactivekey%2Cchan
         url: url,
         headers: {
             'Origin': `https://st.jingxi.com`,
-            'Cookie': $.cookie,
+            'Cookie': cookie,
             'Connection': `keep-alive`,
             'Accept': `application/json`,
             'Referer': `https://st.jingxi.com/pingou/jxmc/index.html`,
