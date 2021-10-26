@@ -1,10 +1,14 @@
-/**
- 环游记组队加队
- cron 0 8 * * * https://raw.githubusercontent.com/atyvcn/jd_scripts/main/jd_hyj_sjb.js
- By、梦创星河
- 地址：https://wbbny.m.jd.com/babelDiy/Zeus/2vVU4E7JLH9gKYfLQ5EVW6eN2P7B/index.html
- 默认第一个创建队伍其他人加队，因为加队容易火爆就不弄其他的什么每三十人组队加队了！
- */
+/*
+环游记组队加队
+By、梦创星河
+地址：https://wbbny.m.jd.com/babelDiy/Zeus/2vVU4E7JLH9gKYfLQ5EVW6eN2P7B/index.html
+默认第一个创建队伍其他人加队，因为加队容易火爆就不弄其他的什么每三十人组队加队了！
+
+============Quantumultx===============
+[task_local]
+#环游记组队加队
+cron 0 8 * * * https://raw.githubusercontent.com/atyvcn/jd_scripts/main/jd_travel_pk_joinGroup.js, tag=环游记组队加队, enabled=true
+*/
 const $ = new Env('环游记组队加队');
 //Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';

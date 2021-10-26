@@ -1,8 +1,11 @@
-/**
- 环游记自动收金币
- cron 0 0-23/2 * * * https://raw.githubusercontent.com/atyvcn/jd_scripts/main/jd_hyj_sjb.js
- By、梦创星河
- */
+/*
+环游记自动收金币
+By、梦创星河
+============Quantumultx===============
+[task_local]
+#环游记自动收金币
+cron 0 0-23/2 * * * https://raw.githubusercontent.com/atyvcn/jd_scripts/main/jd_travel_collectAtuoScore.js, tag=环游记自动收金币, enabled=true
+*/
 const $ = new Env('环游记自动收金币');
 //Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';

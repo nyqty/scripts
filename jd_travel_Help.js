@@ -1,12 +1,15 @@
-/**
- 环游记助力
- cron 0 11 * * * https://raw.githubusercontent.com/atyvcn/jd_scripts/main/jd_hyj_Help.js
- By、梦创星河
- */
+/*
+环游记助力
+By、梦创星河
+
+============Quantumultx===============
+[task_local]
+#环游记助力
+cron 0 11 * * * https://raw.githubusercontent.com/atyvcn/jd_scripts/main/jd_travel_Help.js, tag=环游记助力, enabled=true
+*/
 const $ = new Env('环游记助力');
 //Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
-const dyjCode = $.isNode() ? (process.env.dyjCode ? process.env.dyjCode : null) : null //邀请码变量，不支持多账号，格式：redEnvelopeId@markedPin
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [],
     cookie = '';
