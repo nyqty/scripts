@@ -8,7 +8,12 @@ export first="false"
 去选择一个商品之后 设置first="true" 就可以查看第一个账号的 launchid了
 [task_local]
 #柠檬是兄弟就砍我2
-0 17,21 * * * http://nm66.top/jd_kanjia2.js, tag=柠檬是兄弟就砍我2, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
+0 17,21 * * * http://nm66.top/jd_kanjia2.js, tag=柠檬是兄弟就砍我2, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jd_redPacket.png, enabled=true
+===================Loon==============
+[Script]
+cron "0 17,21 * * * " script-path=http://nm66.top/jd_kanjia2.js, tag=柠檬是兄弟就砍我2
+===============Surge===============
+
 */
 const $ = new Env('柠檬是兄弟就砍我2');
 const notify = $.isNode() ? require('./sendNotify') : '';
@@ -295,20 +300,16 @@ function help() {
 
         $.get(options, async (err, resp, data) => {
             try {
-
                 data = data.match(/(\{[^()]+\}.+)/)[1]
-
                 // console.debug(data)
                 const reust = JSON.parse(data)
                 //console.log(reust)
                 if (reust.errcode == 0) {
+                    //{"data":{"guestinfo":{"appflag":0,"contenttips":"我已经拿走了螺滔滔正宗香辣螺蛳粉，|你也可以选个商品拿走，快来挑选吧～","drawhbinfo":{"discount":"","drawstatus":0,"endtime":0},"guesterhlkinfo":{"a":1},"guideapptips":{"a":1},"guidetoapp":0,"hbwall":0,"helpstate":3,"hlkmode":2,"hongbaoqiang":{"a":1},"isappenv":1,"masternick":"梦创星河","masterpict":"http://thirdwx.qlogo.cn/mmopen/SK8AmUjzyJlficvvcaLVMZ0SibyO8wGuKxnyx9icPCLWVhrOa8oqYQVOsDRlbcx7HWmVWWhaiapclVfXKUw3mOjV9ic3JeNwflHBL/132","ongoinghlk":0,"showmoving":0},"isjxn":0,"ismaster":1,"masterinfo":{"firstdaoinfo":{"a":1},"helplist":[],"leavehelp":{"onehelp":{"a":1}},"skuinfo":{"a":1},"stateinfo":{"popslist":[]}},"ppms":{"appCmdConfig":[{"keyContent":"我正在京喜砍价拿好货，超简单就能拿到手～！\n\n快打开京喜App帮我砍一刀～","keyId":"//wq.jd.com/cube/front/activePublish/jxhlkv2/486449.html?ptag=139022.1.2","keyImg":"//img12.360buyimg.com/img/s1162x638_jfs/t1/156943/23/20252/66021/606d7cc8E2ca4cd72/38a9abeb41520384.jpg","keyTitle":"我正在砍价拿好货，快来帮我砍一刀～"}],"appShareType":"2","banner":[],"facetoface":"","frontEndConfig":[{"commonhbbg":"//img11.360buyimg.com/img/s750x920_jfs/t1/177922/13/4109/93240/609e3966E752455f1/0f1005fabd1bc000.png","guideNewUserH5Link":"//st.jingxi.com/sns/202103/20/jxhlk/record.html","guideNewUserImg":"//img12.360buyimg.com/img/s650x759_jfs/t1/183977/33/3439/94915/609a3f0aE5f81b0d6/10e1cc32475556d0.png","guideNewUserSwitch":"0","guideNewUserWxappLink":"/pages/jxhlk/record/record","pageGuideLink":"//wqs.jd.com/hbwall/comm_goods.html?_f=jxhbqiang&ptag=139224.14","pageGuideTxt":"牛牛赚大钱，带你走上致富之路 >>","ppmsItemId":40,"ppms_itemName":"前端用","promoteLogo":"//img20.360buyimg.com/img/s148x119_jfs/t1/196794/40/4085/2115/60a630c0Ef7ba6d95/3961b07109950ded.png","showPromoteLogo":"0"}],"h5InviteShare":[{"shareContent":"京喜欢乐砍","sharePic":"//img12.360buyimg.com/img/s80x80_jfs/t1/156378/23/6275/5286/6001587dE82917e6f/276d4e2915a90889.jpg","shareTitle":"我正在京喜砍{prize}，快来帮我砍一刀，只差你啦～"}],"h5Share":[{"shareContent":"海量好货轻松砍，全场商品带回家～","sharePic":"//img12.360buyimg.com/img/s80x80_jfs/t1/167104/3/2795/5286/600158a3E45d0a258/fa7ecfaba8a899ba.jpg","shareTitle":"京喜欢乐砍"}],"helpBgColor":"fea613","helpBgImg":"//img12.360buyimg.com/img/jfs/t1/173525/24/4321/49154/6077e1eaE0660b97e/b0545f92dcde3598.png","homeBgColor":"FEA613","homeBgImg":"//img12.360buyimg.com/img/jfs/t1/173525/24/4321/49154/6077e1eaE0660b97e/b0545f92dcde3598.png","isAutoScrollMobile":"1","isAutoScrollWxapp":"0","listConfig":[{"lowTitle":"//img12.360buyimg.com/img/s232x71_jfs/t1/174119/17/6028/4304/60822841E3aa88b15/c383d4a868378b56.png","zeroTitle":"//img20.360buyimg.com/img/jfs/t1/161338/3/18975/4578/6077b2ceE4b150166/4871923b32bad609.png"}],"listPageLeaveTime":"6","myRecordConfig":[{"lowIcon":"//img11.360buyimg.com/img/s116x134_jfs/t1/173722/1/1108/4667/6062a0a3E5fad796d/50414c06cd44dfe6.png","zeroIcon":"//img30.360buyimg.com/img/s116x134_jfs/t1/161203/16/15615/4831/60629f1fE95e8ad1a/697678985b500ed4.png"}],"mypageTitle":"优选好货轻松砍","newShareObj":[{"h5InviteShare":[{"ppmsItemId":38,"ppms_itemName":"主分享图文-h5","shareContent":"京喜欢乐砍","sharePic":"//img12.360buyimg.com/img/s80x80_jfs/t1/156378/23/6275/5286/6001587dE82917e6f/276d4e2915a90889.jpg","shareTitle":"我正在京喜砍{prize}，快来帮我砍一刀，只差你啦～"}],"h5Share":[{"ppmsItemId":36,"ppms_itemName":"分享图文-h5","shareContent":"海量好货轻松砍，全场商品带回家～","sharePic":"//img12.360buyimg.com/img/s80x80_jfs/t1/167104/3/2795/5286/600158a3E45d0a258/fa7ecfaba8a899ba.jpg","shareTitle":"京喜欢乐砍"}],"ppmsItemId":27,"ppms_itemName":"0元砍分享配置","wxappInviteShare":[{"ppmsItemId":37,"ppms_itemName":"主分享图文","sharePic":"//img12.360buyimg.com/img/s630x504_jfs/t1/175849/31/2383/36927/606d210aE5cd61c2a/f882168d7e823e7d.png","shareTitle":"我正在京喜免费拿{prize}，快来帮我砍一刀，只差你啦～"}],"wxappShare":[{"ppmsItemId":35,"ppms_itemName":"分享图文","sharePic":"//img12.360buyimg.com/img/s630x504_jfs/t1/164258/14/16647/36927/606d20b0E3aae373e/5b147446e30238bf.png","shareTitle":"海量好货轻松砍，全场商品带回家～"}]},{"h5InviteShare":[{"ppmsItemId":33,"ppms_itemName":"主分享图文-h5","shareContent":"京喜欢乐砍","sharePic":"//img12.360buyimg.com/img/s80x80_jfs/t1/156378/23/6275/5286/6001587dE82917e6f/276d4e2915a90889.jpg","shareTitle":"我正在京喜砍{prize}，快来帮我砍一刀，只差你啦～"}],"h5Share":[{"ppmsItemId":31,"ppms_itemName":"分享图文-h5","shareContent":"海量好货轻松砍，全场商品带回家～","sharePic":"//img12.360buyimg.com/img/s80x80_jfs/t1/167104/3/2795/5286/600158a3E45d0a258/fa7ecfaba8a899ba.jpg","shareTitle":"京喜欢乐砍"}],"ppmsItemId":29,"ppms_itemName":"底价砍分享配置","wxappInviteShare":[{"ppmsItemId":32,"ppms_itemName":"主分享图文","sharePic":"//img12.360buyimg.com/img/s630x504_jfs/t1/175849/31/2383/36927/606d210aE5cd61c2a/f882168d7e823e7d.png","shareTitle":"我正在京喜拿{prize}，快来帮我砍一刀，只差你啦～"}],"wxappShare":[{"ppmsItemId":30,"ppms_itemName":"分享图文","sharePic":"//img12.360buyimg.com/img/s630x504_jfs/t1/164258/14/16647/36927/606d20b0E3aae373e/5b147446e30238bf.png","shareTitle":"海量好货轻松砍，全场商品带回家～"}]}],"notappBgImg":"//img12.360buyimg.com/img/s750x492_jfs/t1/169561/11/855/38796/5ff2bf10Ebfae9abd/1076b17418794fe8.png","notappColor":"linear-gradient(180deg, rgba(255,65,66,1) 0%,rgba(255,127,0,1) 100%)","shareSwitch":"2","subtitleText":"海量好货 0元砍回家","subtitleText2":"海量好货 1折砍回家","wxaShareType":"1","wxappInviteShare":[{"sharePic":"//img12.360buyimg.com/img/s630x504_jfs/t1/175849/31/2383/36927/606d210aE5cd61c2a/f882168d7e823e7d.png","shareTitle":"我正在拿{prize}，快来帮我砍一刀，只差你啦～"}],"wxappShare":[{"sharePic":"//img12.360buyimg.com/img/s630x504_jfs/t1/164258/14/16647/36927/606d20b0E3aae373e/5b147446e30238bf.png","shareTitle":"海量好货轻松砍，全场商品带回家～"}]}},"errcode":0,"msg":""}
                     //$.launchid=restlt.launchid
                     $.log(`\n${reust.data.guestinfo.contenttips}`)
-
                     // }
-                } else
-
-                    console.log(data.msg)
+                } else console.log(data.msg)
             } catch (e) {
                 $.logErr(e, resp);
             } finally {
