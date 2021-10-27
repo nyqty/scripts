@@ -1,13 +1,11 @@
 /*
 环游记组队加队
-By、梦创星河
 地址：https://wbbny.m.jd.com/babelDiy/Zeus/2vVU4E7JLH9gKYfLQ5EVW6eN2P7B/index.html
 默认第一个创建队伍其他人加队，因为加队容易火爆就不弄其他的什么每三十人组队加队了！
 
-============Quantumultx===============
 [task_local]
-#环游记组队加队
-cron 0 8 * * * https://raw.githubusercontent.com/atyvcn/jd_scripts/main/jd_travel_pk_joinGroup.js, tag=环游记组队加队, enabled=true
+#环游记助力
+cron 0 8 * * * https://raw.githubusercontent.com/atyvcn/jd_scripts/main/jd_travel_pk_joinGroup.js, tag=环游记助力, enabled=true
 */
 const $ = new Env('环游记组队加队');
 //Node.js用户请在jdCookie.js处填写京东ck;
@@ -26,16 +24,27 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
 let secretp = ''
 let uuid = ''
 let groupJoinInviteIdArr = []
-let res,result;
+let res, result;
 
 !(async () => {
+
+    cookiesArr = []
+    let res = await getCookie()
+    if (res && res["code"] == 200 && res["data"]) {
+        res["data"].forEach((item) => {
+            cookiesArr.push(item["value"])
+        })
+    } else console.log(res);
+
     if (!cookiesArr[0]) {
         $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {
             "open-url": "https://bean.m.jd.com/bean/signIndex.action"
         });
         return;
     }
-    await getUA()
+
+    console.log(`共${cookiesArr.length}个京东账号`)
+
 
     let duizhang_I = 1;
     let inviteId;
@@ -44,56 +53,58 @@ let res,result;
         cookie = cookiesArr[i];
         $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
         $.index = i + 1;
-        if( $.index>duizhang_I ){
+        await getUA()
+        if (duizhang_I > i) {
+
             console.log(`\n开始获取【京东账号${$.index}】${$.nickName || $.UserName}入队码\n`)
             //await get_secretp()
             //队长组队
             //{"code":0,"data":{"bizCode":0,"bizMsg":"success","result":{"autoProduceInfo":{"produceScore":"0","teamProduceScore":"0"},"groupInfo":{"groupJoinInviteId":"E7unasWZnHYBKn9l5xNOl4z-CG50-vL-RZbNtSHAeg","groupLoginInviteId":"FbupbdeZCB0jbSJLl1hnT4lkE8gxL7zuKgZu1-GrnFQ","groupName":"回笑看今朝的队伍","groupNum":1,"memberList":[{"leader":1,"myself":1,"userImage":"https://storage.360buyimg.com/i.imageUpload/bafaebf8d3ee31353336313433373839363534_big.jpg","userNickName":"回笑看今朝…"}],"newGroup":1},"groupPkInfo":{"lastDay":0,"period":1,"remainTime":34472109},"jdCipher":1,"mainBtnStatus":1,"nowTime":1635125127891,"secretp":"kVdv4gJwkVsnsLiMfg","shareMiniprogramSwitch":0,"userImg":"https://storage.360buyimg.com/i.imageUpload/bafaebf8d3ee31353336313433373839363534_big.jpg","userMasterGuestMode":1,"votInfo":{"groupPercentA":"79.5","groupPercentB":"20.5","optionA":"https://m.360buyimg.com/babel/jfs/t1/157977/38/23524/18725/61600bf8E179fbac5/0357325b9646eb4e.png","optionAText":"真爱必胜","optionB":"https://m.360buyimg.com/babel/jfs/t1/208433/10/4190/18043/61600be9Ed62f2c41/041a706c895dd26b.png","optionBText":"可太难了","packageA":"900000","packageB":"300000","question":"好朋友开启了长期异地恋，你觉得____","status":1},"votNum":5},"success":true},"msg":"调用成功"}
             res = await travel_pk_getHomeData()
-            if( res && res["code"]===0 && res["data"] && res["data"]["bizCode"]===0 ){
+            if (res && res["code"] === 0 && res["data"] && res["data"]["bizCode"] === 0) {
                 //res["success"]===true "bizMsg":"success",
                 result = res["data"]["result"];
-                if( result ){
+                if (result) {
                     secretp = result["secretp"];
-                    let groupInfo=result["groupInfo"];
-                    if( groupInfo["newGroup"] ){
+                    let groupInfo = result["groupInfo"];
+                    if (groupInfo["newGroup"]) {
                         console.log("创建成功")
-                    }else if( groupInfo["groupNum"]>=30 ){
+                    } else if (groupInfo["groupNum"] >= 30) {
                         console.log("你的队伍已经满了")
                         continue
-                    }else console.log("已经创建了")
-                    if ( groupInfo["groupJoinInviteId"] ) {
-                        groupJoinInviteIdArr.push( groupInfo["groupJoinInviteId"] )
-                        console.log(`入队码：${groupInfo["groupJoinInviteId"] }`)
+                    } else console.log("已经创建了")
+                    if (groupInfo["groupJoinInviteId"]) {
+                        groupJoinInviteIdArr.push(groupInfo["groupJoinInviteId"])
+                        console.log(`入队码：${groupInfo["groupJoinInviteId"]}`)
                     }
                 }
             }
-        }else{
-            if( !groupJoinInviteIdArr.length ) break;
+        } else {
+            if (!groupJoinInviteIdArr.length) break;
             console.log(`\n【京东账号${$.index}】${$.nickName || $.UserName}入队情况\n`)
             inviteId = groupJoinInviteIdArr[0];
             console.log(`inviteId ${inviteId}`)
             res = await travel_pk_getHomeData(inviteId)
             //{"code":0,"data":{"bizCode":0,"bizMsg":"success","result":{"groupGuestInfo":{"inviteType":1,"masterUserImg":"https://storage.360buyimg.com/i.imageUpload/bafaebf8d3ee31353336313433373839363534_big.jpg","masterUserName":"回***朝"},"nowTime":1635127651815,"secretp":"kVdv4gJwkVsnsLiMfg","userMasterGuestMode":2},"success":true},"msg":"调用成功"}
             //console.log( JSON.stringify(res) )
-            if( res && res["code"]===0 && res["data"] && res["data"]["bizCode"]===0 ){
+            if (res && res["code"] === 0 && res["data"] && res["data"]["bizCode"] === 0) {
                 //res["success"]===true "bizMsg":"success",
                 result = res["data"]["result"];
-                if( result ){
+                if (result) {
                     secretp = result["secretp"];
                 }
                 await $.wait(1000)
                 res = await travel_pk_joinGroup(inviteId);
-                if( res && res["code"]===0 && res["data"] ){
+                if (res && res["code"] === 0 && res["data"]) {
                     let bizCode = res["data"]["bizCode"]
-                    if( bizCode===0 ) console.log(`入队成功`)
-                    else if( bizCode===-3 ){
+                    if (bizCode === 0) console.log(`入队成功`)
+                    else if (bizCode === -3) {
                         groupJoinInviteIdArr.splice(0, 1)
                         i--
                         console.log("加满了")
                         continue
-                    }else console.log(res["data"]["bizCode"] +" "+ res["data"]["bizMsg"])
-                }else console.log(res)
+                    } else console.log(res["data"]["bizCode"] + " " + res["data"]["bizMsg"])
+                } else console.log(res)
             }
         }
         await $.wait(1000)
@@ -108,9 +119,9 @@ let res,result;
     })
 
 function travel_pk_getHomeData(inviteId = "") {
-    let body = inviteId?{"inviteId":inviteId}:{};
+    let body = inviteId ? { "inviteId": inviteId } : {};
     return new Promise((resolve) => {
-        $.post(taskPostUrl("travel_pk_getHomeData", body), async(err, resp, data) => {
+        $.post(taskPostUrl("travel_pk_getHomeData", body), async (err, resp, data) => {
             try {
                 if (err) {
                     console.log(`${JSON.stringify(err)}`)
@@ -131,9 +142,9 @@ function travel_pk_getHomeData(inviteId = "") {
 }
 
 function travel_pk_joinGroup(inviteId) {
-    let body = {"inviteId":inviteId,"confirmFlag":"1","ss": JSON.stringify({"extraData":{"log":"","sceneid":"HYGJZYh5"},"secretp":secretp,"random":randomNum(8)})}
+    let body = { "inviteId": inviteId, "confirmFlag": "1", "ss": JSON.stringify({ "extraData": { "log": "", "sceneid": "HYGJZYh5" }, "secretp": secretp, "random": randomNum(8) }) }
     return new Promise((resolve) => {
-        $.post(taskPostUrl("travel_pk_joinGroup", body), async(err, resp, data) => {
+        $.post(taskPostUrl("travel_pk_joinGroup", body), async (err, resp, data) => {
             try {
                 if (err) {
                     console.log(`${JSON.stringify(err)}`)
