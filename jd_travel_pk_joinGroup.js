@@ -27,25 +27,12 @@ let groupJoinInviteIdArr = []
 let res, result;
 
 !(async () => {
-
-    cookiesArr = []
-    let res = await getCookie()
-    if (res && res["code"] == 200 && res["data"]) {
-        res["data"].forEach((item) => {
-            cookiesArr.push(item["value"])
-        })
-    } else console.log(res);
-
     if (!cookiesArr[0]) {
         $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {
             "open-url": "https://bean.m.jd.com/bean/signIndex.action"
         });
         return;
     }
-
-    console.log(`共${cookiesArr.length}个京东账号`)
-
-
     let duizhang_I = 1;
     let inviteId;
 
