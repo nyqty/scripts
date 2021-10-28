@@ -57,6 +57,7 @@ const JD_API_HOST = `https://api.m.jd.com`;
     //开红包查询
     for (let i = 0; i < cookiesArr.length && $.needhelp; i++) {
         cookie = cookiesArr[i];
+        $.hotFlag = false;
         if (cookie) {
             $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
             $.index = i + 1;
@@ -81,7 +82,7 @@ const JD_API_HOST = `https://api.m.jd.com`;
         } else {
             console.log(`\n环境变量中没有检测到助力码,开始获取【京东账号${$.index}】助力码\n`)
             await open()
-	    if ($.hotFlag) continue;
+            if ($.hotFlag) continue;
             await getid()
         }
     }

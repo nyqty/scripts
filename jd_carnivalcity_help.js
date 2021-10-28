@@ -74,7 +74,7 @@ const JD_API_HOST = 'https://api.m.jd.com/api';
       await $.wait(1000)
     }
   }
-  await shareCodesFormat();
+
   for (let i = 0; i < cookiesArr.length; i++) {
     if (cookiesArr[i]) {
       cookie = cookiesArr[i];
@@ -251,43 +251,6 @@ function getAuthorShareCode(url) {
       }
     })
     await $.wait(10000)
-    resolve();
-  })
-}
-
-function readShareCode() {
-  return new Promise(async resolve => {
-    $.get({url: `http://transfer.nz.lu/carnivalcity`, 'timeout': 20000}, (err, resp, data) => {
-      try {
-        if (err) {
-          console.log(`${JSON.stringify(err)}`)
-          console.log(`${$.name} API请求失败，请检查网路重试`)
-        } else {
-          if (data) {
-            data = JSON.parse(data);
-          }
-        }
-      } catch (e) {
-        $.logErr(e, resp)
-      } finally {
-        resolve(data);
-      }
-    })
-    await $.wait(20000);
-    resolve()
-  })
-}
-//格式化助力码
-function shareCodesFormat() {
-  return new Promise(async resolve => {
-    $.newShareCodes = [];
-    const readShareCodeRes = await readShareCode();
-    if (readShareCodeRes && readShareCodeRes.code === 200) {
-      $.newShareCodes = [...new Set([...$.shareCodes, ...$.updatePkActivityIdRes, ...(readShareCodeRes.data || [])])];
-    } else {
-      $.newShareCodes = [...new Set([...$.shareCodes, ...$.updatePkActivityIdRes])];
-    }
-    console.log(`\n\n您将要助力的好友${JSON.stringify($.newShareCodes)}`)
     resolve();
   })
 }
