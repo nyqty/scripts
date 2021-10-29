@@ -1,12 +1,12 @@
-/**
+/*
 全民抢京豆
-cron 23 0-23/3 * * * jd_qjd.js
- * Date: 2021/8/6 下午15:12
- * 全民抢京豆（10月29日~11月12日期间可参与）
- * 活动入口，京东APP首页，领京豆：https://h5.m.jd.com/rn/3MQXMdRUTeat9xqBSZDSCCAE9Eqz/index.html?has_native=0
- * 每个用户目前只能助力3次不同的用户。
- * 助力逻辑：优先账号内互助，再给我助力
- **/
+cron 0 0 * * * jd_qjd.js
+Date: 2021/8/6 下午15:12
+全民抢京豆（10月29日~11月12日期间可参与）
+活动入口，京东APP首页，领京豆：https://h5.m.jd.com/rn/3MQXMdRUTeat9xqBSZDSCCAE9Eqz/index.html?has_native=0
+每个用户目前只能助力3次不同的用户。
+助力逻辑：优先账号内互助，再给我助力
+*/
 const $ = new Env('全民抢京豆');
 const notify = $.isNode() ? require('./sendNotify') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
