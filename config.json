@@ -1,6 +1,6 @@
 {
+    "jd_super_redrain": 1,
     "jd_carnivalcity": 6,
-    "jd_city":8,
     "jd_fruit":[6, 12 ,18],
     "jx_sign": [8, 13],
     "jd_bean_sign": [0],
@@ -26,7 +26,7 @@
     "jd_joy_run": [14, 19],
     "jd_jxlhb": [3, 21],
     "jd_jxmc": [6, 9, 12, 15, 18, 21],
-    "jd_kd": [0],
+    "jd_kd": [3],
     "jd_live": [12, 13, 14],
     "jd_lsj": [6, 8, 10, 12, 14, 16, 18, 20, 22],
     "jd_mohe": 4,
@@ -63,7 +63,6 @@
     "jd_daily_egg": 1,
     "jd_xsqjd":[10,23],
     "jd_ys":[2,3],
-    "jd_jxdzz":[3],
     "jd_selectionOfficer": [10],
     "jd_carnivalcity_help": [2,10],
     "jd_lol": [10],
@@ -78,7 +77,6 @@
     "jd_cfd_loop": [8, 16],
     "jd_price": [23],
     "jd_joy_steal": 3,
-    "jd_kyd": [17, 21],
     "params":
     {
         "global":
