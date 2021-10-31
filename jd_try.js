@@ -142,6 +142,7 @@ let args_xh = {
     sendNum: process.env.JD_TRY_SENDNUM * 1 || 4,
 }
 //上面很重要，遇到问题请把上面注释看一遍再来问
+let cookie
 !(async() => {
     console.log('X1a0He留：遇到问题请把脚本内的注释看一遍再来问，谢谢')
     console.log('X1a0He留：遇到问题请把脚本内的注释看一遍再来问，谢谢')
@@ -158,7 +159,7 @@ let args_xh = {
     }
     for(let i = 0; i < $.cookiesArr.length; i++){
         if($.cookiesArr[i]){
-            $.cookie = $.cookiesArr[i];
+            cookie = $.cookie = $.cookiesArr[i];
             $.UserName = decodeURIComponent($.cookie.match(/pt_pin=(.+?);/) && $.cookie.match(/pt_pin=(.+?);/)[1])
             $.index = i + 1;
             $.isLogin = true;
