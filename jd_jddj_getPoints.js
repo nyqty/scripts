@@ -13,7 +13,7 @@
 //cron "7 */1 * * *" script-path=https://raw.githubusercontent.com/passerby-b/JDDJ/main/jddj_getPoints.js,tag=京东到家鲜豆庄园收水滴
 
 
-const $ = new API("jddj_getPoints");
+const $ = new API("京东到家鲜豆庄园收水滴");
 let ckPath = './jdCookie.js';//ck路径,环境变量:JDDJ_CKPATH
 let cookies = [];
 let thiscookie = '', deviceid = '', nickname = '';
