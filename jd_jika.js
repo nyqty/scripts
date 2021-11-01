@@ -144,7 +144,7 @@ async function takeGetRequest(type) {
         case 'necklacecard_taskList':
         case 'necklacecard_openCard':
         case 'necklacecard_openGroup':
-            body = `body={"activityKey":"${activityKey}"}`;
+            body = `body={"activityKey":"${activityKey}","random":"${randomWord(false,8,8)}"}`;
             break;
         case 'necklacecard_taskReport':
             body = `body={"activityKey":"${activityKey}","encryptTaskId":"${$.oneTaskInfo.encryptTaskId}","itemId":"${$.oneTaskInfo.itemId}"}`;
