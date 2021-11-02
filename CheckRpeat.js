@@ -122,23 +122,27 @@ async function delScripts(filename){
 			i++
 			continue
 		}
+		msg=`检测到重复任务名称：${crons[i].name}`;
 		arr=filename[i].split("_");
 		arr2[0]=arr[arr.length-1];
 		arr=filename[i-1].split("_");
 		arr2[1]=arr[arr.length-1];
+		msg+=`\n对比：${arr2[0]}|${arr2[1]}`;
 		if( arr2[0]!=arr2[1] ){
 			i++
+			msg+="=不相等，跳过"
 			continue
 		}
+		msg+="=相等"
 		n=filename[i].substr(0,atyvcn.length)==atyvcn?i-1:i;
 		if( crons[n].isDisabled ){
 			i++
+			msg+="\n已禁用，跳过"
 			continue
 		}
-		//console.log(crons[n]);
-		msg=`检测到重复任务：${crons[n].name} 禁用`;
 		try {
 			json=DisableCrons(crons[n]._id)
+			msg+="\n禁用"
 			//msg+=json.code==DisableCrons(crons[n]._id)?"成功":"失败"
 			if( DeleteTask=="true" ){
 				json=delCrons(crons[n]._id)
