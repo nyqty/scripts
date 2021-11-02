@@ -7,6 +7,7 @@ const notify = $.isNode() ? require('./sendNotify') : '';
 /*
 是否删除重复任务 默认"false""  export CheckRpeat_DeleteTask="true"
 是否删除重复脚本文件 默认"false""  export CheckRpeat_DeleteFile="true"
+根据名称以及脚本路径名称判断重复性！
 */
 
 const got = require('got');
@@ -114,54 +115,52 @@ async function delScripts(filename){
 	}
 	crons.sort((a, b)=> a.name.localeCompare(b.name, 'zh')); //a~z 排序  
 	//console.log(crons); 	
-	for (let i = 0,arr=[],n,filename,msg,json={}; i < crons.length;) {
-		if( !i ){
+	for (let i = 0,arr=[],arr2=[],n,filename=[],msg,json={}; i < crons.length;) {
+		arr = crons[i].command.split(" ");
+		filename[i]=arr && arr.length>1?arr[1]:"";
+		if( !i || crons[i].name==crons[i-1].name ){
 			i++
 			continue
 		}
-		if ( i-1>=0 && crons[i].name==crons[i-1].name ){
-			//task atyvcn_jd_scripts_jd_city.js
-			arr = crons[i].command.split(" ");
-			if( arr && arr.length>1 ) filename=arr[1];
-			if( filename.substr(0,atyvcn.length)==atyvcn ){
-				n=i-1
-			}else n=i
-			if( crons[n].isDisabled ){
-				i++
-				continue
+		arr=filename[i].split("_");
+		arr2[0]=arr[arr.length-1];
+		arr=filename[i-1].split("_");
+		arr2[1]=arr[arr.length-1];
+		if( arr2[0]!=arr2[1] ){
+			i++
+			continue
+		}
+		n=filename[i].substr(0,atyvcn.length)==atyvcn?i-1:i;
+		if( crons[n].isDisabled ){
+			i++
+			continue
+		}
+		//console.log(crons[n]);
+		msg=`检测到重复任务：${crons[n].name} 禁用`;
+		try {
+			json=DisableCrons(crons[n]._id)
+			//msg+=json.code==DisableCrons(crons[n]._id)?"成功":"失败"
+			if( DeleteTask=="true" ){
+				json=delCrons(crons[n]._id)
+				msg+=`\n删除任务_id：${crons[n]._id}`;
+				//msg+=json.code==200?"成功":"失败"
 			}
-			//console.log(crons[n]);
-			msg=`检测到重复任务：${crons[n].name} 禁用`;
-            try {
-				json=DisableCrons(crons[n]._id)
-				//msg+=json.code==DisableCrons(crons[n]._id)?"成功":"失败"
-				if( DeleteTask=="true" ){
-					json=delCrons(crons[n]._id)
-					msg+=`\n删除任务_id：${crons[n]._id}`;
+			if( DeleteFile=="true" ){
+				if(filename[n]){
+					json=delScripts(filename[n])
+					msg+=`\n删除脚本：${filename[n]}`;
 					//msg+=json.code==200?"成功":"失败"
 				}
-				if( DeleteFile=="true" ){
-					if( n!=i ){
-						arr = crons[n].command.split(" ");
-						filename=(arr && arr.length>1)?arr[1]:"";
-					}
-					if(filename){
-						json=delScripts(filename)
-						msg+=`\n删除脚本：${filename}`;
-						//msg+=json.code==200?"成功":"失败"
-					}
-				}
-            } catch (e) {
-				console.log(e);
-            } finally {
-            }
-			console.log(msg);
-			crons.splice(n,1)
-			console.log(`等待1秒.......	\n`);
-			await $.wait(1 * 1000)
-		}else{
-			i++
+			}
+		} catch (e) {
+			console.log(e);
+		} finally {
 		}
+		console.log(msg);
+		filename.splice(n,1)
+		crons.splice(n,1)
+		console.log(`等待1秒.......	\n`);
+		await $.wait(1 * 1000)
 	}
 })()
 .catch((e) => $.logErr(e))
