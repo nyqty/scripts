@@ -1,14 +1,16 @@
 /*
 双十一无门槛红包
+cron 0 0,12,18 * * *  jd_redEnvelopes.js
+整点跑 红包几率大点
 ck1助力 作者
 其余助力ck1
 https://u.jd.com/ywbVdvq
 跳转到app 可查看助力情况
-1 0,12,18 * * * jd_RedEnvelope.js
-cron 1 0,12,18 * * * jd_RedEnvelope.js
-返利变量：JD_redEnvelope_rebateCode，默认给脚本作者返利，若需要返利给自己，请自己修改返利变量 JD_redEnvelope_rebateCode
-例：JD_redEnvelope_rebateCode="你的返利code"
+
+返利变量：gua_redEnvelope_rebateCode，默认给脚本作者返利，若需要返利给自己，请自己修改返利变量gua_redEnvelope_rebateCode
+例：gua_redEnvelope_rebateCode="你的返利code"
 */
+
 let rebateCodes = ''
 
 const $ = new Env('双十一无门槛红包');
@@ -26,7 +28,7 @@ if ($.isNode()) {
 } else {
   cookiesArr = [$.getdata('CookieJD'), $.getdata('CookieJD2'), ...jsonParse($.getdata('CookiesJD') || "[]").map(item => item.cookie)].filter(item => !!item);
 }
-rebateCodes = $.isNode() ? (process.env.JD_redEnvelope_rebateCode ? process.env.JD_redEnvelope_rebateCode : `${rebateCodes}`) : ($.getdata('JD_redEnvelope_rebateCode') ? $.getdata('JD_redEnvelope_rebateCode') : `${rebateCodes}`);
+rebateCodes = $.isNode() ? (process.env.gua_redEnvelope_rebateCode ? process.env.gua_redEnvelope_rebateCode : `${rebateCodes}`) : ($.getdata('gua_redEnvelope_rebateCode') ? $.getdata('gua_redEnvelope_rebateCode') : `${rebateCodes}`);
 
 rebateCode = ''
 message = ''
@@ -47,6 +49,7 @@ let nowTime = new Date().getTime() + new Date().getTimezoneOffset()*60*1000 + 8*
     if ($.isNode()) await notify.sendNotify($.name + '活动已结束', `请删除此脚本\n咱江湖再见`);
     return
   }
+  console.log('整点跑 红包几率大点\n0点 12点')
   $.shareCode = '5Iueo'
   for (let i = 0; i < cookiesArr.length; i++) {
     cookie = cookiesArr[i];
