@@ -142,7 +142,7 @@ async function delScripts(filename){
 		}
 		try {
 			json=DisableCrons(crons[n]._id)
-			msg+="\n禁用"
+			msg+="\n禁用"+filename[n]
 			//msg+=json.code==DisableCrons(crons[n]._id)?"成功":"失败"
 			if( DeleteTask=="true" ){
 				json=delCrons(crons[n]._id)
