@@ -163,8 +163,8 @@ async function delScripts(filename){
 		console.log(msg);
 		filename.splice(n,1)
 		crons.splice(n,1)
-		console.log(`等待1秒.......	\n`);
-		await $.wait(1 * 1000)
+		//console.log(`等待1秒.......	\n`);
+		//await $.wait(1 * 1000)
 	}
 })()
 .catch((e) => $.logErr(e))
