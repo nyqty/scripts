@@ -65,14 +65,12 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
         }
         continue
       }
-
-      await list()
-     
-     await $.wait(10000)
-     
-     if( packetId && actId ) await kanjia()
-     
-
+      if( packetId && actId ){
+        await kanjia()
+      }else{
+        await list()
+      }
+      await $.wait(2000)
     }
   }
 })()
