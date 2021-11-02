@@ -118,7 +118,7 @@ async function delScripts(filename){
 	for (let i = 0,arr=[],arr2=[],n,filename=[],msg,json={}; i < crons.length;) {
 		arr = crons[i].command.split(" ");
 		filename[i]=arr && arr.length>1?arr[1]:"";
-		if( !i || crons[i].name==crons[i-1].name ){
+		if( !i || crons[i].name!=crons[i-1].name ){
 			i++
 			continue
 		}
