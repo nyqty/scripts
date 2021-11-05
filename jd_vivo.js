@@ -15,20 +15,11 @@ let token = '',LZ_TOKEN_KEY = '',LZ_TOKEN_VALUE = '',Referer = '',nickname = '';
 let Host = '', venderId = ``,shopId = ``,pin =  ``,lz_jdpin_token = ``;
 let hotFlag = false;
 let attrTouXiang = '';
-$.shareUuid = '';
+$.shareUuid = "74ec20de4bb64ced8a3ced201b8c1c7c";
 !(async () => {
     if (!cookiesArr[0]) {
         $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
         return;
-    }
-    let res = [];
-    try{res = await getAuthorShareCode('https://raw.githubusercontent.com/lsh26/share_code/main/vivo.json');}catch (e) {}
-    if(!res){
-        try{res = await getAuthorShareCode('https://cdn.jsdelivr.net/gh/lsh26/share_code@main/vivo.json');}catch (e) {}
-        if(!res){res = [];}
-    }
-    if(res.length > 0){
-        $.shareUuid = getRandomArrayElements(res,1)[0];
     }
     let activityList = [{'id':'dz2110100000406501','endTime':'1638287999000'},];
     for (let i = 0; i < cookiesArr.length; i++) {
