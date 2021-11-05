@@ -2,10 +2,11 @@
 活动入口：首页 -> 领券 -> 集卡赢大奖
 cron 10 7,18 * * * jd_jika.js
  */
+// https://h5.m.jd.com/babelDiy/Zeus/3Ck6vd8Tz4sJFme5keU9KifFM3aW/index.html?groupId=7605903&activityKey=eeba19c6edc3dfe4f1548e33faaf2abc
 const $ = new Env('集魔力卡召唤大奖');
 const notify = $.isNode() ? require('./sendNotify') : '';
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
-const activityKey = '53275a405ec3cba14b28662e05f6c53b';
+const activityKey = 'eeba19c6edc3dfe4f1548e33faaf2abc';
 $.inviteList = [];
 let cookiesArr = [];
 if ($.isNode()) {
@@ -19,6 +20,8 @@ if ($.isNode()) {
         $.getdata("CookieJD2"),
         ...$.toObj($.getdata("CookiesJD") || "[]").map((item) => item.cookie)].filter((item) => !!item);
 }
+
+process.env.JD_USER_AGENT = "jdapp;android;10.1.6;11;2363365383133353-0336231636668336;network/UNKNOWN;model/M2006J10C;addressid/3210928933;aid/26c581350c2acf8c;oaid/540e6a2cffe0dbb0;osVer/30;appBuild/90532;partner/xiaomi001;eufv/1;jdSupportDarkMode/0;Mozilla/5.0 (Linux; Android 11; M2006J10C Build/RP1A.200720.011; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/77.0.3865.120 MQQBrowser/6.2 TBS/045709 Mobile Safari/537.36"
 !(async () => {
 	console.log('部分账号会提示“非法请求”')
 	console.log('活动入口：首页 -> 领券 -> 集卡赢大奖')
@@ -46,6 +49,7 @@ if ($.isNode()) {
         }catch (e) {
             console.log(JSON.stringify(e));
         }
+        if( $.index>5 ) break
     }
     cookiesArr = getRandomArrayElements(cookiesArr,cookiesArr.length);
     for (let i = 0; i < cookiesArr.length ; i++) {
@@ -72,18 +76,20 @@ async function main() {
         console.log(`获取活动失败`);
         return ;
     }
+    //await  takeGetRequest('necklacecard_getCarousels');
+
     console.log(`获取活动成功，已有卡片【${$.activityDetail.collectedCardsNum}】张，总共需要卡片【${$.activityDetail.totalCardsNum}】张`);
     await $.wait(2000);
     $.taskInfo = {};
     $.runFlag = false;
     $.updateFlag = false;
     let time = 0;
-    do{
+    //do{
         await takeGetRequest('necklacecard_taskList');
         await $.wait(2000);
         await doTask($.taskInfo.componentTaskInfo);
         time++;
-    }while ($.runFlag && time <5)
+    //}while ($.runFlag && time <5)
     $.assistTaskInfo = $.taskInfo.assistTaskInfo;
     if($.assistTaskInfo.assistDetails.length === $.assistTaskInfo.maxAssistedTimes){
         console.log(`助力已满`);
@@ -141,16 +147,19 @@ async function takeGetRequest(type) {
     let myRequest = ``;
     switch (type) {
         case 'necklacecard_cardHomePage':
+        case 'necklacecard_getCarousels':
         case 'necklacecard_taskList':
         case 'necklacecard_openCard':
         case 'necklacecard_openGroup':
             body = `body={"activityKey":"${activityKey}","random":"${randomWord(false,8,8)}"}`;
             break;
         case 'necklacecard_taskReport':
-            body = `body={"activityKey":"${activityKey}","encryptTaskId":"${$.oneTaskInfo.encryptTaskId}","itemId":"${$.oneTaskInfo.itemId}"}`;
+            //specialComponentTaskPid componentTaskPid
+            body = `body={"extraData":{"log":"","sceneid":"JKhPageh5"},"activityKey":"${activityKey}","encryptTaskId":"${$.oneTaskInfo.encryptTaskId}","itemId":"${$.oneTaskInfo.itemId}","encryptProjectId":"${$.taskInfo.componentTaskPid}","random":"${randomWord(false,8,8)}"}`;
+            console.log(body);
             break;
         case 'necklacecard_assist':
-            body = `body={"activityKey":"${activityKey}","groupId":"${$.oneInvite.groupId}","uuid":"${randomWord(false,40,40)}"}`;
+            body = `body={"extraData":{"log":"","sceneid":"JKhPageh5"},"activityKey":"${activityKey}","groupId":"${$.oneInvite.groupId}","uuid":"${randomWord(false,40,40)}"}`;
             break;
         default:
             console.log(`错误${type}`);
@@ -244,7 +253,7 @@ function getPostRequest(url,body) {
         'Host' : `api.m.jd.com`,
         'Connection' : `keep-alive`,
         "User-Agent": $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('./USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.4.4;14.3;network/4g;Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1"),
-        'Referer' : `https://h5.m.jd.com/babelDiy/Zeus/3Ck6vd8Tz4sJFme5keU9KifFM3aW/index.html`,
+        'Referer' : `https://h5.m.jd.com/babelDiy/Zeus/3Ck6vd8Tz4sJFme5keU9KifFM3aW/index.html?activityKey=${activityKey}`,
         'Accept-Language' : `zh-cn`
     };
     return  {url: url, method: method, headers: headers, body: body};
