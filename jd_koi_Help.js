@@ -14,6 +14,8 @@ cron "1 0,20 * * *" script-path=https://raw.githubusercontent.com/KingRan/JDJB/m
 锦鲤红包互助 = type=cron,cronexp="1 0,20 * * *",wake-system=1,timeout=3600,script-path=https://raw.githubusercontent.com/KingRan/JDJB/main/jd_koi_Help.js
 ============小火箭=========
 锦鲤红包互助 = type=cron,script-path=https://raw.githubusercontent.com/KingRan/JDJB/main/jd_koi_Help.js, cronexpr="1 0,20 * * *", timeout=3600, enable=true
+TY二次修改 满了删除助力码
+给作者助力一次
 */
 
 const $ = new Env("锦鲤红包互助")
@@ -64,9 +66,19 @@ async function help(){
       $.index = i + 1;
       $.nickName = '';
       for (let j = 0; j < shareCodes.length; j++){
-        let result = await requestApi('jinli_h5assist', {"redPacketId":shareCodes[j],"followShop":0,"random":random(000000, 999999),"log":"42588613~8,~0iuxyee","sceneid":"JLHBhPageh5"})
-        console.log(`账号【${$.index}】 助力: ${shareCodes[j]}\n${result.data.result.statusDesc}\n`);
-        if (result.data.result.status == 3) {break;}
+        let data = await requestApi('jinli_h5assist', {"redPacketId":shareCodes[j],"followShop":0,"random":random(000000, 999999),"log":"42588613~8,~0iuxyee","sceneid":"JLHBhPageh5"})
+        if (data && data.data && data.data.biz_code === 0) {
+            let result = result.data.result
+            // status ,0:助力成功，1:不能重复助力，3:助力次数耗尽，8:不能为自己助力
+            console.log(`账号【${$.index}】 助力: ${shareCodes[j]}\n${result.status} ${result.statusDesc}\n`);
+            if (result.status === 2){
+                shareCodes.splice(j, 1)
+                j--
+                continue
+            }else if ( result.status === 3 || result.status === 9 ) break;
+        } else {
+            console.log(`助力异常：${JSON.stringify(data)}`);
+        }
         await $.wait(1500);
       }
     } 
@@ -111,6 +123,15 @@ function requireConfig() {
         } else {
             cookiesArr = [$.getdata('CookieJD'), $.getdata('CookieJD2'), ...jsonParse($.getdata('CookiesJD') || "[]").map(item => item.cookie)].filter(item => !!item);
         }
+
+        let res = await getAuthorShareCode('https://raw.githubusercontent.com/atyvcn/updateTeam/master/shareCodes/jd/red.json')
+        if (!res) {
+          $.http.get({url: 'https://purge.jsdelivr.net/gh/atyvcn/updateTeam@master/shareCodes/jd/red.json'}).then((resp) => {}).catch((e) => $.log('刷新CDN异常', e));
+          await $.wait(1000)
+          res = await getAuthorShareCode('https://cdn.jsdelivr.net/gh/atyvcn/updateTeam@master/shareCodes/jd/red.json')
+        }
+        shareCodes = [...(res && res || [])];
+
         console.log(`共${cookiesArr.length}个京东账号\n`)
         resolve()
     })
@@ -135,6 +156,41 @@ function randomString(e) {
     for (i = 0; i < e; i++)
         n += t.charAt(Math.floor(Math.random() * a));
     return n
+}
+
+
+function getAuthorShareCode(url) {
+    return new Promise(resolve => {
+        const options = {
+            url: `${url}?${new Date()}`, "timeout": 10000, headers: {
+                "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1 Edg/87.0.4280.88"
+            }
+        };
+        if ($.isNode() && process.env.TG_PROXY_HOST && process.env.TG_PROXY_PORT) {
+            const tunnel = require("tunnel");
+            const agent = {
+                https: tunnel.httpsOverHttp({
+                    proxy: {
+                        host: process.env.TG_PROXY_HOST,
+                        port: process.env.TG_PROXY_PORT * 1
+                    }
+                })
+            }
+            Object.assign(options, { agent })
+        }
+        $.get(options, async (err, resp, data) => {
+            try {
+                if (err) {
+                } else {
+                    if (data) data = JSON.parse(data)
+                }
+            } catch (e) {
+                // $.logErr(e, resp)
+            } finally {
+                resolve(data);
+            }
+        })
+    })
 }
 
 // prettier-ignore
