@@ -74,8 +74,8 @@ if ($.isNode()) {
 function helpme() {
   return new Promise(async (resolve) => {
     let options = {
-      url: `https://api.m.jd.com/?t=1623066557140`,
-      body: `functionId=InviteFriendChangeAssertsService&body={"method":"attendInviteActivity","data":{"inviterPin":"${yqm}","channel":1,"token":"","frontendInitStatus":""}}&referer=-1&eid=eidIc2ff812158s1ARLLPvIBQjyII7trmiE3BQESzLTXqSC9s3TX28oQv3zQuaY%2B15FedjhWtgYfTsUSkl9FEDNBP8LQRrRx5GwEA93H4jSPYNJ1OvNs&aid=&client=ios&clientVersion=14.3&networkType=wifi&fp=-1&uuid=75aeceef3046d8ce11d354ff89af9517a2e4aa18&osVersion=14.3&d_brand=iPhone&d_model=iPhone9,2&agent=-1&pageClickKey=-1&screen=414*736&platform=3&lang=zh_CN&appid=market-task-h5&_t=1623066557140`,
+      url: `https://api.m.jd.com/?t=${new Date()}`,
+      body: `functionId=InviteFriendChangeAssertsService&body={"method":"attendInviteActivity","data":{"inviterPin":"${yqm}","channel":1,"token":"","frontendInitStatus":""}}&referer=-1&eid=eidIc2ff812158s1ARLLPvIBQjyII7trmiE3BQESzLTXqSC9s3TX28oQv3zQuaY%2B15FedjhWtgYfTsUSkl9FEDNBP8LQRrRx5GwEA93H4jSPYNJ1OvNs&aid=&client=ios&clientVersion=14.3&networkType=wifi&fp=-1&uuid=75aeceef3046d8ce11d354ff89af9517a2e4aa18&osVersion=14.3&d_brand=iPhone&d_model=iPhone9,2&agent=-1&pageClickKey=-1&screen=414*736&platform=3&lang=zh_CN&appid=market-task-h5&_t=${new Date()}`,
       headers: {
         "Origin": "https://618redpacket.jd.com",
         "Host": "api.m.jd.com",
@@ -87,13 +87,19 @@ function helpme() {
       try {
         data = JSON.parse(data);
         //console.log(data)
-        if (data.data.inviteStatus == 1) {
-          console.log(data.data.inviteStatus + "邀请成功")
-
-        } else if (data.data.inviteStatus == 0) {
-
-          console.log(data.data.inviteStatus + "邀请失败")
-        }
+        if( data && data.code===0 ){
+          let inviteStatus = data?.data?.inviteStatus
+          let inviterBaseUserInfo = data?.data?.inviterBaseUserInfo
+          if( inviteStatus !== undefined ){
+            if (inviteStatus == 0) {
+              console.log("邀请失败")
+            }else if (inviteStatus == 1) {
+              console.log("邀请成功")
+            } else if (inviteStatus == 2) {
+              console.log(`已被“${inviterBaseUserInfo.jdNickname}”邀请`)
+            }
+          }else console.log(data?.data)
+        }else console.log(`message ${data?.message}`)
       } catch (e) {
         $.logErr(e, resp);
       } finally {
@@ -106,7 +112,7 @@ function helpme() {
 function tx() {
   return new Promise(async (resolve) => {
     let options = {
-      url: `functionId=InviteFriendApiService&body={"method":"changeWxHongBao","data":{"order":3,"channel":1,"token":"","s":""}}&referer=-1&eid=eidIc2ff812158s1ARLLPvIBQjyII7trmiE3BQESzLTXqSC9s3TX28oQv3zQuaY%2B15FedjhWtgYfTsUSkl9FEDNBP8LQRrRx5GwEA93H4jSPYNJ1OvNs&aid=&client=ios&clientVersion=14.3&networkType=wifi&fp=-1&uuid=75aeceef3046d8ce11d354ff89af9517a2e4aa18&osVersion=14.3&d_brand=iPhone&d_model=iPhone9,2&agent=-1&pageClickKey=-1&screen=414*736&platform=3&lang=zh_CN&appid=market-task-h5&_t=1623066557140`,
+      url: `functionId=InviteFriendApiService&body={"method":"changeWxHongBao","data":{"order":3,"channel":1,"token":"","s":""}}&referer=-1&eid=eidIc2ff812158s1ARLLPvIBQjyII7trmiE3BQESzLTXqSC9s3TX28oQv3zQuaY%2B15FedjhWtgYfTsUSkl9FEDNBP8LQRrRx5GwEA93H4jSPYNJ1OvNs&aid=&client=ios&clientVersion=14.3&networkType=wifi&fp=-1&uuid=75aeceef3046d8ce11d354ff89af9517a2e4aa18&osVersion=14.3&d_brand=iPhone&d_model=iPhone9,2&agent=-1&pageClickKey=-1&screen=414*736&platform=3&lang=zh_CN&appid=market-task-h5&_t=${new Date()}`,
       headers: {
         "Origin": "https://invite-reward.jd.com",
         "Host": "api.m.jd.com",
