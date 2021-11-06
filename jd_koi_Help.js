@@ -48,6 +48,11 @@ let shareCodes = [];
             shareCodes.push(data.data.result.redpacketInfo.id);
         }
         await $.wait(2000)
+
+        if( $.index>=2 ){
+            console.log(`只获取前二的助力码`);
+            break;
+        }
     } 
     await help();
 })()  .catch((e) => {
@@ -59,6 +64,16 @@ let shareCodes = [];
 
 
 async function help(){
+    let res = await getAuthorShareCode('https://raw.githubusercontent.com/atyvcn/updateTeam/master/shareCodes/jd/red.json')
+    if (!res) {
+      $.http.get({url: 'https://purge.jsdelivr.net/gh/atyvcn/updateTeam@master/shareCodes/jd/red.json'}).then((resp) => {}).catch((e) => $.log('刷新CDN异常', e));
+      await $.wait(1000)
+      res = await getAuthorShareCode('https://cdn.jsdelivr.net/gh/atyvcn/updateTeam@master/shareCodes/jd/red.json')
+    }
+    let authorMyShareIds = [...(res && res || [])];
+
+    shareCodes = [...new Set([...authorMyShareIds, ...shareCodes])];
+
     console.log(`\n******开始助力: 内部互助中，******\n`);
     for (let i = 0; i < cookiesArr.length; i++) {
       cookie = cookiesArr[i]
@@ -68,7 +83,7 @@ async function help(){
       for (let j = 0; j < shareCodes.length; j++){
         let data = await requestApi('jinli_h5assist', {"redPacketId":shareCodes[j],"followShop":0,"random":random(000000, 999999),"log":"42588613~8,~0iuxyee","sceneid":"JLHBhPageh5"})
         if (data && data.data && data.data.biz_code === 0) {
-            let result = result.data.result
+            let result = data.data.result
             // status ,0:助力成功，1:不能重复助力，3:助力次数耗尽，8:不能为自己助力
             console.log(`账号【${$.index}】 助力: ${shareCodes[j]}\n${result.status} ${result.statusDesc}\n`);
             if (result.status === 2){
@@ -123,17 +138,42 @@ function requireConfig() {
         } else {
             cookiesArr = [$.getdata('CookieJD'), $.getdata('CookieJD2'), ...jsonParse($.getdata('CookiesJD') || "[]").map(item => item.cookie)].filter(item => !!item);
         }
-
-        let res = await getAuthorShareCode('https://raw.githubusercontent.com/atyvcn/updateTeam/master/shareCodes/jd/red.json')
-        if (!res) {
-          $.http.get({url: 'https://purge.jsdelivr.net/gh/atyvcn/updateTeam@master/shareCodes/jd/red.json'}).then((resp) => {}).catch((e) => $.log('刷新CDN异常', e));
-          await $.wait(1000)
-          res = await getAuthorShareCode('https://cdn.jsdelivr.net/gh/atyvcn/updateTeam@master/shareCodes/jd/red.json')
-        }
-        shareCodes = [...(res && res || [])];
-
         console.log(`共${cookiesArr.length}个京东账号\n`)
         resolve()
+    })
+}
+
+function getAuthorShareCode(url) {
+    return new Promise(resolve => {
+      const options = {
+        url: `${url}?${new Date()}`, "timeout": 10000, headers: {
+          "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1 Edg/87.0.4280.88"
+        }
+      };
+      if ($.isNode() && process.env.TG_PROXY_HOST && process.env.TG_PROXY_PORT) {
+        const tunnel = require("tunnel");
+        const agent = {
+          https: tunnel.httpsOverHttp({
+            proxy: {
+              host: process.env.TG_PROXY_HOST,
+              port: process.env.TG_PROXY_PORT * 1
+            }
+          })
+        }
+        Object.assign(options, { agent })
+      }
+      $.get(options, async (err, resp, data) => {
+        try {
+          if (err) {
+          } else {
+            if (data) data = JSON.parse(data)
+          }
+        } catch (e) {
+          // $.logErr(e, resp)
+        } finally {
+          resolve(data);
+        }
+      })
     })
 }
 
@@ -156,41 +196,6 @@ function randomString(e) {
     for (i = 0; i < e; i++)
         n += t.charAt(Math.floor(Math.random() * a));
     return n
-}
-
-
-function getAuthorShareCode(url) {
-    return new Promise(resolve => {
-        const options = {
-            url: `${url}?${new Date()}`, "timeout": 10000, headers: {
-                "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1 Edg/87.0.4280.88"
-            }
-        };
-        if ($.isNode() && process.env.TG_PROXY_HOST && process.env.TG_PROXY_PORT) {
-            const tunnel = require("tunnel");
-            const agent = {
-                https: tunnel.httpsOverHttp({
-                    proxy: {
-                        host: process.env.TG_PROXY_HOST,
-                        port: process.env.TG_PROXY_PORT * 1
-                    }
-                })
-            }
-            Object.assign(options, { agent })
-        }
-        $.get(options, async (err, resp, data) => {
-            try {
-                if (err) {
-                } else {
-                    if (data) data = JSON.parse(data)
-                }
-            } catch (e) {
-                // $.logErr(e, resp)
-            } finally {
-                resolve(data);
-            }
-        })
-    })
 }
 
 // prettier-ignore
