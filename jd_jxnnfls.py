@@ -400,14 +400,14 @@ def main():
             if drawUserTask(cookie,taskId,taskName_list[f]):
                 UserTaskFinish(cookie,taskId)
 
-        UserSignNew(cookie)
+        # UserSignNew(cookie)
         if get_env('nnfls_Lucky') != 'no':
             LuckyTwistDraw(cookie)
 
-    msg(f'====================助力=========\n')
-    for inviteCode in inviteCode_list:
-        for cookie in cookie_list:
-            helpSign(cookie,inviteCode)
+    # msg(f'====================助力=========\n')
+    # for inviteCode in inviteCode_list:
+    #     for cookie in cookie_list:
+    #         helpSign(cookie,inviteCode)
             
     msg('作者：wuye9999\n')
     msg('地址:https://github.com/wuye999/myScripts')
