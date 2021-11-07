@@ -1,3 +1,8 @@
+"""
+const $ = new Env("京喜财富岛兑换111红包");
+cron:
+59 59 * * * jd_jxcfd_cash111.py
+"""
 import os,re,time,asyncio
 import sys
 sys.path.append(os.path.abspath('../../tmp'))

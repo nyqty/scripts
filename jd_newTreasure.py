@@ -1,7 +1,7 @@
 """
 const $ = new Env("发现新宝藏");
 cron:
-46 9 * * * jd_newTreasure.py
+30 8 * * * jd_newTreasure.py
 """
 # 发现新宝藏
 # 入口>   京东>12.0:/￥J5iAk3pzZUJgE4%，复制口令进入京东APP给我助力，一起瓜分1亿京豆！

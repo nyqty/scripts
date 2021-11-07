@@ -7,7 +7,7 @@ const $ = new Env("发财挖宝");
 export JD_COOKIE="第1个cookie&第2个cookie"
 11/1 12:40 增加ck格式兼容
 cron:
-46 9 * * * jd_wabao.py
+30 6 * * * jd_wabao.py
 """
 
 import os,json,random,time,re,string,functools,asyncio

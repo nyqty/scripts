@@ -1,7 +1,7 @@
 """
 const $ = new Env("星店长");
 cron:
-46 9 * * * jd_xdz.py
+0 9 * * * jd_xdz.py
 """
 # 星店长
 # 入口 复制到京东打开>   12:/￥T8kw4Dip0tI9Hy￥，邀你瓜分百万红包！

@@ -1,7 +1,7 @@
 """
 const $ = new Env("逛好物，赚京豆");
 cron:
-46 9 * * * jd_ghwzjd.py
+30 10 * * * jd_ghwzjd.py
 """
 # 逛好物，赚京豆
 # 入口>   https://ifanli.m.jd.com/rebate/earnBean.html?from=earnbean
