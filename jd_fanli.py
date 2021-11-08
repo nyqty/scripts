@@ -4,7 +4,7 @@ const $ = new Env("京东饭粒");
 活动入口：https://u.jd.com/ytWx4w0
 每天60豆小毛，爱要不要
 cron:
-46 9 * * * jd_fanli.py
+30 2 * * * jd_fanli.py
 """
 
 
