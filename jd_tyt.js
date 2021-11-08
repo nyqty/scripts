@@ -86,7 +86,7 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
             //cookiesArr.splice(i, 1);i--
             break;
           }else if (code == 723) {//帮砍排队
-            await $.wait( getRndInteger(5, 15)  * 1000 )
+            await $.wait( getRndInteger(10000, 20000) )
           }
           await $.wait( getRndInteger(1000, 3000) )
         }
