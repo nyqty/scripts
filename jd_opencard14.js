@@ -1,14 +1,12 @@
 /*
-惠聚11.11  好物乐享不停
-11.1 - 11.12
-https://lzdz1-isv.isvjcloud.com/dingzhi/dz/openCard/activity?activityId=dzlbklzmsk20211101A&shareUuid=83c98a7fb761406f9b9872c0049b2b7c
-
-cron 37 3,19 * * * https://raw.githubusercontent.com/KingRan/JDJB/main/jd_opencard10.js
+大牌宠粉礼，11.11钜惠购
+11.8 - 11.30
+https://lzdz1-isv.isvjcloud.com/dingzhi/dz/openCard/activity?activityId=dzdnwmqr20211108A&shareUuid=d56c22cfa3704079a08d1cfe9bfa1f46
 
 默认执行脚本。如果需要不执行
 环境变量 NO_RUSH=false
 */
-const $ = new Env("11.1 - 11.12 惠聚11.11  好物乐享不停");
+const $ = new Env("11.8 - 11.30 大牌宠粉礼，11.11钜惠购");
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 const notify = $.isNode() ? require('./sendNotify') : '';
 let cookiesArr = [], cookie = '', message = '';
@@ -36,7 +34,6 @@ if (process.env.NO_RUSH && process.env.NO_RUSH != "") {
         $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
         return;
     }
-    
     for (let i = 0; i < cookiesArr.length; i++) {
         if (cookiesArr[i]) {
             cookie = cookiesArr[i]
@@ -58,13 +55,14 @@ if (process.env.NO_RUSH && process.env.NO_RUSH != "") {
             $.bean = 0;
             $.ADID = getUUID('xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx', 1);
             $.UUID = getUUID('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx');
-            $.authorCode = 'ad2018416eef4cf4849dfb3379f9ca4a'
+            // $.authorCode = authorCodeList[random(0, authorCodeList.length)]
+            $.authorCode = '3b86206d0dc448c2bd5b31ced6099fc5'
             $.authorNum = `${random(1000000, 9999999)}`
             $.randomCode = random(1000000, 9999999)
-            $.activityId = 'dzlbklzmsk20211101A'
-            $.activityShopId = '1000004489'
+            $.activityId = 'dzdnwmqr20211108A'
+            $.activityShopId = '1000009621'
             $.activityUrl = `https://lzdz1-isv.isvjd.com/dingzhi/dz/openCard/activity/${$.authorNum}?activityId=${$.activityId}&shareUuid=${encodeURIComponent($.authorCode)}&adsource=null&shareuserid4minipg=null&shopid=${$.activityShopId}&lng=00.000000&lat=00.000000&sid=&un_area=`
-            if (isRush === true) {
+            if (isRush) {
                 console.log("未检测到不执行环境变量，执行任务")
                 await rush();
             } else {
@@ -125,15 +123,13 @@ async function rush() {
             }
             $.log("->->->> 加入店铺会员")
             if ($.openCardStatus) {
-                for (let i = 0; i < ($.openCardStatus.cardList1.length + $.openCardStatus.cardList2.length); i++) {
+                for (let i = 0; i < ($.openCardStatus.cardList1.length); i++) {
                     $.log("模拟上报访问记录")
                     await task('crm/pageVisit/insertCrmPageVisit', `venderId=1000004065&pageId=dz20211013skcnurdk11jhdue84752hp&elementId=${encodeURIComponent(`去开卡${i}`)}&pin=${encodeURIComponent($.secretPin)}`, 1)
                     await $.wait(2000)
                 }
                 t1TaskList = []
                 $.openCardStatus.cardList1.filter((x) => { if (x.status === 0) { t1TaskList.push(x) } })
-                t2TaskList = []
-                $.openCardStatus.cardList2.filter((x) => { if (x.status === 0) { t2TaskList.push(x) } })
                 if (t1TaskList.length < 1) {
                     console.log("    >>>已经完成入会任务")
 
@@ -144,21 +140,15 @@ async function rush() {
                         await bindWithVender({ "venderId": `${vo.value}`, "bindByVerifyCodeFlag": 1, "registerExtend": {}, "writeChildFlag": 0, "activityId": $.openCardActivityId, "channel": 401 }, vo.value)
                         await $.wait(2000)
                     }
-                    for (const vo of t2TaskList) {
-                        $.log(`    >>>${vo.name}`)
-                        await getShopOpenCardInfo({ "venderId": `${vo.value}`, "channel": "401" })
-                        await bindWithVender({ "venderId": `${vo.value}`, "bindByVerifyCodeFlag": 1, "registerExtend": {}, "writeChildFlag": 0, "activityId": $.openCardActivityId, "channel": 401 }, vo.value)
-                        await $.wait(2000)
-                    }
                 }
 
                 await task("taskact/openCardcommon/drawContent", `activityId=${$.activityId}&pin=${encodeURIComponent($.secretPin)}`)
                 await $.wait(2000)
                 await task('dz/openCard/checkOpenCard', `activityId=${$.activityId}&actorUuid=${$.actorUuid}&shareUuid=${$.authorCode}&pin=${encodeURIComponent($.secretPin)}`)
-                await $.wait(2000)
-                await task("dz/openCard/startDraw", `activityId=${$.activityId}&actorUuid=${$.actorUuid}&type=1&pin=${encodeURIComponent($.secretPin)}`)
-                await $.wait(2000)
-                await task("dz/openCard/startDraw", `activityId=${$.activityId}&actorUuid=${$.actorUuid}&type=2&pin=${encodeURIComponent($.secretPin)}`)
+                // await $.wait(2000)
+                // await task("dz/openCard/startDraw", `activityId=${$.activityId}&actorUuid=${$.actorUuid}&type=1&pin=${encodeURIComponent($.secretPin)}`)
+                // await $.wait(2000)
+                // await task("dz/openCard/startDraw", `activityId=${$.activityId}&actorUuid=${$.actorUuid}&type=2&pin=${encodeURIComponent($.secretPin)}`)
 
             } else {
                 $.log("没有获取到对应的任务。\n")
