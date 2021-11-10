@@ -57,7 +57,7 @@ $.activityEnd = false
   $.userId = '10299171'
   $.actId = '398d302ded094bf89b8afa9c9ef13_1106'
   $.MixNicks = ''
-  $.inviteNick = 'k1Nobb+P0er+C2sysxnx/P2KELO9izRVpwCyqu0eqVZ5aW7RHzlMobrzJ/e9r/uf'
+  $.inviteNick = 'oWYzEz0N7KY058rLNke8o87TwJCmNe8NFvhpI0XmJDULVU108+UxlHw7qoUuHA4F'
   for (let i = 0; i < cookiesArr.length; i++) {
     cookie = cookiesArr[i];
     if (cookie) {
@@ -171,7 +171,7 @@ async function run() {
     console.log($.MixNick)
     console.log(`当前助力:${$.inviteNick}`)
     if($.index == 1){
-      $.inviteNick = $.MixNick
+      //$.inviteNick = $.MixNick
       console.log(`后面的号都会助力:${$.inviteNick}`)
     }
     await $.wait(parseInt(Math.random() * 1000 + 5000, 10))

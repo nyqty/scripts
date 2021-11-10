@@ -5,8 +5,7 @@
 如果提示没有养牛 自己手动进去养一只
 活动入口：伊利京东自营旗舰店->伊利牛奶
 https://lzdz-isv.isvjcloud.com/dingzhi/yili/yangniu/activity/5070687?activityId=dz2103100001340201&shareUuid=a7cc9f9c059b4112a4529a26f228f208&adsource=ziying&shareuserid4minipg=u/cWHIy7/x3Ij+HjfbnnePkaL5GGqMTUc8u/otw2E+a7Ak3lgFoFQlZmf45w8Jzw&shopid=1000013402&lng=114.062604&lat=29.541501&sid=6e9bfee3838075a72533536815d8f3ew&un_area=4_48201_54794_0
-
-
+============Quantumultx===============
 [task_local]
 #柠檬伊利养牛记
 0 12 * * * jd_ylynl.js, tag=柠檬伊利养牛记, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
@@ -33,7 +32,7 @@ if ($.isNode()) {
 
 const JD_API_HOST = `https://api.m.jd.com/client.action`;
 message = ""
-$.shareuuid = "a7cc9f9c059b4112a4529a26f228f208" //
+$.shareuuid = "e3f4984033284c8cac42a8a29e8072ff" //
     !(async () => {
         if (!cookiesArr[0]) {
             $.msg($.name, '【提示】请先获取cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/', {
