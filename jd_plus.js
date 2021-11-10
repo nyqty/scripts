@@ -62,23 +62,24 @@ let uuid, UA,cookie,res,result
             if( res && res.code==0 && res?.data?.bizCode==0 ){
                 result = res?.data?.result;
                 let taskVos = result.taskVos
-                console.log(`做任务`);
+                
                 for (let task of taskVos || []) {
                     const t = Date.now();
                     if (task.status === 1 && t >= task.taskBeginTime && t < task.taskEndTime) {
                         const id = task.taskId, max = task.maxTimes;
                         const waitDuration = task.waitDuration || 0;
                         let time = task?.times || 0;
+                        console.log(`去做任务：${task.taskName}`);
                         for (let ltask of task.shoppingActivityVos) {
                             if (ltask.status === 1) {
-                                console.log(`去做任务：${ltask.title}`);
+                                console.log(`去做子任务：${ltask.title}`);
                                 if (waitDuration) {
                                     await $.wait(1500);
                                     await taskPost(taskPostUrl2('harmony_collectScore',{"appId":"1E1xZy6s","taskToken":ltask.taskToken,"taskId":id,"actionType":1}))
                                     console.log(`等待${waitDuration}秒`);
                                     await $.wait(waitDuration * 1000);
                                 }
-                                console.log(`领取任务奖励：${ltask.title}`);
+                                console.log(`领取子任务奖励：${ltask.title}`);
                                 await taskPost(taskPostUrl2('harmony_collectScore',{"appId":"1E1xZy6s","taskToken":ltask.taskToken,"taskId":id,"actionType":0,"safeStr": ""}))
                                 time++;
                                 if (time >= max) break;
@@ -87,6 +88,8 @@ let uuid, UA,cookie,res,result
                             }
                         }
                         await $.wait(2500);
+                    }else if( task.status==2 ){
+                        console.log(`已完成任务：${task.taskName}`);
                     }
                 }
             }else console.log( `healthyDay_getHomeData错误：`+JSON.stringify(res) );
