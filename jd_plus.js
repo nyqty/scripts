@@ -96,8 +96,6 @@ let uuid, UA,cookie,res,result
 
             await $.wait(2000);
         }else console.log(`不是Plus跳过`);
-
-        break;
     }
 })()
     .catch((e) => {
