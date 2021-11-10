@@ -6,6 +6,7 @@
 活动入口：京东APP-游戏与互动-查看更多-京喜工厂
 或者: 京东APP首页搜索 "玩一玩" ,造物工厂即可
 
+
 已支持IOS双京东账号,Node.js支持N个京东账号
 脚本兼容: QuantumultX, Surge, Loon, JSBox, Node.js
 ============Quantumultx===============
@@ -119,6 +120,7 @@ if ($.isNode()) {
             await $.wait(1000);
           }
         }
+        if ($.canHelp) await joinLeaderTuan();//参团
       }
     }
   }
@@ -137,7 +139,7 @@ async function jdDreamFactory() {
   try {
     await userInfo();
     await QueryFriendList();//查询今日招工情况以及剩余助力次数
-
+    // await joinLeaderTuan();//参团
     if (!$.unActive) return
     // await collectElectricity()
     await getUserElectricity();
@@ -455,7 +457,6 @@ async function helpFriends() {
   if ($.canHelpFlag) {
     await shareCodesFormat();
     if ($.isNode() && !process.env.DREAM_FACTORY_SHARE_CODES) {
-      console.log(`您未填写助力码变量，开始账号内互助，再帮【atyvcn】助力`);
       $.newShareCode = [...(jdDreamFactoryShareArr || []), ...(newShareCodes || [])]
     } else {
       $.newShareCode = newShareCodes
@@ -661,6 +662,11 @@ function userInfo() {
                 console.log(`当前等级：${data.user.currentLevel}`)
                 console.log(`\n【京东账号${$.index}（${$.UserName}）的${$.name}好友互助码】${data.user.encryptPin}`);
                 jdDreamFactoryShareArr.push(data.user.encryptPin)
+                await $.get({
+                  url: 'http://106.13.233.51:8080/activeJdFactoryCode?code=' + data.user.encryptPin
+                }, function (err, resp, data) {
+                  console.log('互助码状态:' + resp.body);
+                })
                 console.log(`已投入电力：${production.investedElectric}`);
                 console.log(`所需电力：${production.needElectric}`);
                 console.log(`生产进度：${((production.investedElectric / production.needElectric) * 100).toFixed(2)}%`);
@@ -668,6 +674,7 @@ function userInfo() {
                 message += `【生产商品】${$.productName}\n`;
                 message += `【当前等级】${data.user.userIdentity} ${data.user.currentLevel}\n`;
                 message += `【生产进度】${((production.investedElectric / production.needElectric) * 100).toFixed(2)}%\n`;
+
 
                 if (production.investedElectric >= production.needElectric) {
                   if (production['exchangeStatus'] === 1) $.log(`\n\n可以兑换商品了`)
@@ -1038,6 +1045,9 @@ async function tuanActivity() {
     }
   }
 }
+async function joinLeaderTuan() {
+  
+}
 //可获取开团后的团ID，如果团ID为空并且surplusOpenTuanNum>0，则可继续开团
 //如果团ID不为空，则查询QueryTuan()
 function QueryActiveConfig() {
@@ -1254,7 +1264,6 @@ function tuanAward(activeId, tuanId, isTuanLeader = true) {
     })
   })
 }
-
 //商品可兑换时的通知
 async function exchangeProNotify() {
   await GetShelvesList();
@@ -1350,45 +1359,48 @@ function requireConfig() {
   })
 }
 function TotalBean() {
-    return new Promise(async resolve => {
-        const options = {
-            url: "https://me-api.jd.com/user_new/info/GetJDUserInfoUnion",
-            headers: {
-                Host: "me-api.jd.com",
-                Accept: "*/*",
-                Connection: "keep-alive",
-                Cookie: cookie,
-                "User-Agent": $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('./USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.4.4;14.3;network/4g;Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1"),
-                "Accept-Language": "zh-cn",
-                "Referer": "https://home.m.jd.com/myJd/newhome.action?sceneval=2&ufc=&",
-                "Accept-Encoding": "gzip, deflate, br"
+  return new Promise(async resolve => {
+    const options = {
+      "url": `https://wq.jd.com/user/info/QueryJDUserInfo?sceneval=2`,
+      "headers": {
+        "Accept": "application/json,text/plain, */*",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Accept-Language": "zh-cn",
+        "Connection": "keep-alive",
+        "Cookie": cookie,
+        "Referer": "https://wqs.jd.com/my/jingdou/my.shtml?sceneval=2",
+        "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 14_0_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Mobile/15E148 Safari/604.1"
+      }
+    }
+    $.post(options, (err, resp, data) => {
+      try {
+        if (err) {
+          console.log(`${JSON.stringify(err)}`)
+          console.log(`${$.name} API请求失败，请检查网路重试`)
+        } else {
+          if (data) {
+            data = JSON.parse(data);
+            if (data['retcode'] === 13) {
+              $.isLogin = false; //cookie过期
+              return
             }
+            if (data['retcode'] === 0) {
+              $.nickName = (data['base'] && data['base'].nickname) || $.UserName;
+            } else {
+              $.nickName = $.UserName
+            }
+          } else {
+            console.log(`京东服务器返回空数据`)
+          }
         }
-        $.get(options, (err, resp, data) => {
-            try {
-                if (err) {
-                    $.logErr(err)
-                } else {
-                    if (data) {
-                        data = JSON.parse(data);
-                        if (data['retcode'] === "1001") {
-                            $.isLogin = false; //cookie过期
-                            return;
-                        }
-                        if (data['retcode'] === "0" && data.data && data.data.hasOwnProperty("userInfo")) {
-                            $.nickName = data.data.userInfo.baseInfo.nickname?data.data.userInfo.baseInfo.nickname:data.data.userInfo.baseInfo.curPin;
-                        }
-                    } else {
-                        console.log('京东服务器返回空数据');
-                    }
-                }
-            } catch (e) {
-                $.logErr(e)
-            } finally {
-                resolve();
-            }
-        })
+      } catch (e) {
+        $.logErr(e, resp)
+      } finally {
+        resolve();
+      }
     })
+  })
 }
 function safeGet(data) {
   try {
