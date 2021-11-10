@@ -53,14 +53,12 @@ let uuid, UA,cookie,res,result
                 else if ($.levelName == "铜牌") $.levelName = `🥉铜牌`;
             }
             console.log(`${$.levelName}Plus`);
-/*
-            res = taskPost(taskPostUrl('userSign', {"params":"{\"enActK\":\"9wKIMMJjQLbQFeZ6KQv0JTuO4+GJJJZD2AxPx1Yoqa021Diq5SD+mvS6gJ98oXcPcRRfojzJNzIw\\nF8X/X+dkymBKsGQmBf5kqPCEOFbgUqKQn3z0nJ3Rtpl2et5AeQ0y\",\"isFloatLayer\":false,\"ruleSrv\":\"01055242_64678895_t1\",\"signId\":\"zw0dGv6/OBAaZs/n4coLNw==\"}","riskParam":{"platform":"3","orgType":"2","openId":"-1","pageClickKey":"Babel_Sign","eid":"","fp":"-1","shshshfp":"ce73d5d24ed7b4a599c43dc2650de9d6","shshshfpa":"6e44a707-13c3-7d17-1b54-afe19f45c6e3-1636027834","shshshfpb":"wp vScTBQs0Smdw7jeBd1DA==","childActivityUrl":"https%3A%2F%2Fpro.m.jd.com%2Fmall%2Factive%2F3joSPpr7RgdHMbcuqoRQ8HbcPo9U%2Findex.html%3FbabelChannel%3Dttt1","userArea":"-1","client":"","clientVersion":"","uuid":"","osVersion":"","brand":"","model":"","networkType":"","jda":"-1"},"siteClient":"android","mitemAddrId":"","geo":{"lng":"","lat":""},"addressId":"3210928933","posLng":"105.241173","posLat":"28.29883","focus":"","innerAnchor":"","cv":"2.0","_mkjdcn":"f2c4b530c60cf2ca48edfce32cc1e270"}))
+
+            res = await taskPost(taskPostUrl('userSign', {"params":"{\"enActK\":\"9wKIMMJjQLbQFeZ6KQv0JTuO4+GJJJZD2AxPx1Yoqa021Diq5SD+mvS6gJ98oXcPcRRfojzJNzIw\\nF8X/X+dkymBKsGQmBf5kqPCEOFbgUqKQn3z0nJ3Rtpl2et5AeQ0y\",\"isFloatLayer\":false,\"ruleSrv\":\"01055242_64678895_t1\",\"signId\":\"zw0dGv6/OBAaZs/n4coLNw==\"}","riskParam":{"platform":"3","orgType":"2","openId":"-1","pageClickKey":"Babel_Sign","eid":"","fp":"-1","shshshfp":"ce73d5d24ed7b4a599c43dc2650de9d6","shshshfpa":"6e44a707-13c3-7d17-1b54-afe19f45c6e3-1636027834","shshshfpb":"wp vScTBQs0Smdw7jeBd1DA==","childActivityUrl":"https%3A%2F%2Fpro.m.jd.com%2Fmall%2Factive%2F3joSPpr7RgdHMbcuqoRQ8HbcPo9U%2Findex.html%3FbabelChannel%3Dttt1","userArea":"-1","client":"","clientVersion":"","uuid":"","osVersion":"","brand":"","model":"","networkType":"","jda":"-1"},"siteClient":"android","mitemAddrId":"","geo":{"lng":"","lat":""},"addressId":"3210928933","posLng":"105.241173","posLat":"28.29883","focus":"","innerAnchor":"","cv":"2.0","_mkjdcn":"f2c4b530c60cf2ca48edfce32cc1e270"}))
             //{"msg":"SUCCESS","returnMsg":"SUCCESS","code":"0","btnText":"连续签到1天","signText":"已签到","subCode":"0","subCodeMsg":"SUCCESS","transParam":"","channelPoint":{"babelChannel":"","greytp":"1","rec_broker":"","loginCellularNetwork":0,"pageId":""},"list":[{"text":"连续1天","state":7},{"text":"连续2天","state":5},{"text":"连续3天","state":5},{"text":"连续4天","state":5},{"text":"连续5天","state":5}],"statistics":"连续签到1天","awardList":[{"text":"2京豆","type":2}]}
             console.log(`签到${res.msg} ${res.btnText}`);
-*/
-            res = taskPost(taskPostUrl2('healthyDay_getHomeData',{"appId":"1E1xZy6s","taskToken":"","channelId":1}))
 
-            break
+            res = await taskPost(taskPostUrl2('healthyDay_getHomeData',{"appId":"1E1xZy6s","taskToken":"","channelId":1}))
             if( res && res.code==0 && res?.data?.bizCode==0 ){
                 result = res?.data?.result;
                 let taskVos = result.taskVos
@@ -76,10 +74,10 @@ let uuid, UA,cookie,res,result
                                 console.log(`去做任务：${ltask.title}`);
                                 if (waitDuration) {
                                     await $.wait(1500);
-                                    taskPost(taskPostUrl2('harmony_collectScore',{"appId":"1E1xZy6s","taskToken":ltask.taskToken,"taskId":id,"actionType":1}))
+                                    await taskPost(taskPostUrl2('harmony_collectScore',{"appId":"1E1xZy6s","taskToken":ltask.taskToken,"taskId":id,"actionType":1}))
                                     await $.wait(waitDuration * 1000);
                                 }
-                                taskPost(taskPostUrl2('harmony_collectScore',{"appId":"1E1xZy6s","taskToken":ltask.taskToken,"taskId":id,"actionType":0,"safeStr": ""}))
+                                await taskPost(taskPostUrl2('harmony_collectScore',{"appId":"1E1xZy6s","taskToken":ltask.taskToken,"taskId":id,"actionType":0,"safeStr": ""}))
                                 time++;
                                 if (time >= max) break;
                             }
@@ -87,7 +85,7 @@ let uuid, UA,cookie,res,result
                         await $.wait(2500);
                     }
                 }
-            }else console.log( JSON.stringify(res) );
+            }else console.log( `healthyDay_getHomeData错误：`+JSON.stringify(res) );
 
             await $.wait(2000);
         }else console.log(`不是Plus跳过`);
@@ -110,14 +108,12 @@ function taskPost(option) {
                     console.log(`${JSON.stringify(err)}`)
                     console.log(`${functionId} API请求失败，请检查网路重试`)
                 } else {
-                    if (safeGet(data)) {
-                        data = JSON.parse(data);
-                    }else console.log(data)
+                    if (safeGet(data)) resolve(JSON.parse(data));
                 }
             } catch (e) {
                 $.logErr(e, resp)
             } finally {
-                resolve(data);
+                resolve({});
             }
         })
     })
