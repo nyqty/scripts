@@ -97,8 +97,9 @@ let uuid, UA,cookie,res,result
                 if( res && res.code==0 && res?.data?.bizCode==0 ){
                     result = res?.data?.result;
                     userInfo = result.userInfo;
-                    if(userInfo){
-                        let max=Math.floor(userInfo?.userScore/userInfo?.scorePerLottery); 
+                    let userScore = parseInt(userInfo?.userScore) || 0;
+                    if(userInfo && userScore){
+                        let max=Math.floor(userScore/userInfo?.scorePerLottery); 
                         console.log(`上次抽奖统计：${JSON.stringify(userScore?.wholeTaskStatus)}`);
                         for(let c=0;c<max;c++){
                             res = await taskPost(taskPostUrl2('interact_template_getLotteryResult',{"appId":"1E1xZy6s"}))
