@@ -67,7 +67,7 @@ if ($.isNode()) {
             }
             
             $.bean = 0;
-            $.authorCode = ownCode ? ownCode : '1259ded5bc5a4b2f8a6efac9ad189e77'
+            $.authorCode = '631c3a6cde0d482dbe6b667edf7733fc'
             $.authorNum = `${random(1000000, 9999999)}`
             $.activityId = '7dee74f982034f5496a469ecdb4b05f2'
             $.activityShopId = '1000002527'
