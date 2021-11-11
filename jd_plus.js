@@ -69,17 +69,17 @@ let uuid, UA,cookie,res,result
                         const id = task.taskId, max = task.maxTimes;
                         const waitDuration = task.waitDuration || 0;
                         let time = task?.times || 0;
-                        console.log(`去做任务：${task.taskName}`);
+                        //console.log(`去做任务：${task.taskName}`);
                         for (let ltask of task?.shoppingActivityVos || [] ) {
                             if (ltask.status === 1) {
-                                console.log(`去做子任务：${ltask.title}`);
+                                console.log(`去做任务：${ltask.title}`);
                                 if (waitDuration) {
                                     await $.wait(1500);
                                     await taskPost(taskPostUrl2('harmony_collectScore',{"appId":"1E1xZy6s","taskToken":ltask.taskToken,"taskId":id,"actionType":1}))
                                     console.log(`等待${waitDuration}秒`);
                                     await $.wait(waitDuration * 1000);
                                 }
-                                console.log(`领取子任务奖励：${ltask.title}`);
+                                console.log(`领取任务奖励：${ltask.title}`);
                                 await taskPost(taskPostUrl2('harmony_collectScore',{"appId":"1E1xZy6s","taskToken":ltask.taskToken,"taskId":id,"actionType":0,"safeStr": ""}))
                                 time++;
                                 if (time >= max) break;
