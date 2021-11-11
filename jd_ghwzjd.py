@@ -76,7 +76,7 @@ cookie_list=Judge_env().main_run()
 class Msg(object):
     def getsendNotify(self, a=1):
         try:
-            url = 'https://ghproxy.com/https://raw.githubusercontent.com/wuye999/myScripts/main/sendNotify.py'
+            url = 'https://mirror.ghproxy.com/https://raw.githubusercontent.com/wuye999/myScripts/main/sendNotify.py'
             response = requests.get(url,timeout=3)
             with open('sendNotify.py', "w+", encoding="utf-8") as f:
                 f.write(response.text)
@@ -162,7 +162,7 @@ def taskPostUrl(functionId, body, cookie):
             res=requests.post(url=url,headers=headers,json=data).json()
             return res
         except:
-            if n==3:
+            if n==2:
                 msg('API请求失败，请检查网路重试❗\n')  
 
 
@@ -183,7 +183,7 @@ def taskGetUrl(functionId, cookie):
             res=requests.get(url=url,headers=headers).json()
             return res
         except:
-            if n==3:
+            if n==2:
                 msg('API请求失败，请检查网路重试❗\n')
 
 # 任务列表

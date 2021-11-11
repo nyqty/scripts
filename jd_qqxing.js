@@ -7,8 +7,11 @@
  
 https://lzdz-isv.isvjcloud.com/dingzhi/qqxing/pasture/activity?activityId=90121061401&lng=107.146935&lat=33.255252&sid=cad74d1c843bd47422ae20cadf6fe5aw&un_area=8_573_6627_52446
 更新地址：https://raw.githubusercontent.com/Wenmoux/scripts/wen/jd/jd_ddnc_farmpark.js
+
 【原作者 @Wenmoux】
+
 【二次修改 @zero205】
+
 添加：自动喂食；
 修改：默认不做加购物车任务，优化黑号处理。By:zero205
 需要加购FS_LEVEL=car (或者card,仓库内很多脚本都是这个变量,card=开卡+加购,car=只加购)
@@ -41,7 +44,7 @@ if ($.isNode()) {
 
 const JD_API_HOST = `https://api.m.jd.com/client.action`;
 message = ""
-$.shareuuid = ["8cec00a4917e4af6ae49f8f4f9e7b58d", "f9e36b5518074c85a59abc6451d6216f","2d4ce1b209d7442aaf1a114752277e85"][Math.floor((Math.random() * 3))];
+$.shareuuid = ["eb602b7c548f4161a0cbd2949b959811", "8c20dc3e1bfe456680db9af9063fc795"][Math.floor((Math.random() * 3))];
 !(async () => {
     if (!cookiesArr[0]) {
         $.msg($.name, '【提示】请先获取cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/', {
@@ -50,7 +53,7 @@ $.shareuuid = ["8cec00a4917e4af6ae49f8f4f9e7b58d", "f9e36b5518074c85a59abc6451d6
         return;
     }
     console.log(`\n【原作者 @Wenmoux】\nBy:zero205\n添加：自动喂食\n修改：跳过加购物车任务，优化黑号处理\n`);
-    console.log(`\n活动入口口令：29.0复制整段话 Https:/JXBGWf46qWgzLa 星系牧场养牛牛，可获得DHA专属奶！￥23d9a0N4FTyGv2%祛→【猄〤崬】\n\n【注意】Response code 493 (undefined)报错是正常情况，活动抽风而已，请勿反馈！！！\n`)
+    console.log(`\n活动入口：QQ星儿童牛奶京东自营旗舰店->我的->星系牧场\n\n懒人直达口令：16:/￥PB4H36E5f6NaPa%，星系牧场养牛牛，可获得DHA专属奶！\n\n【注意】Response code 493 (undefined)报错是正常情况，活动抽风而已，请勿反馈！！！\n`)
     for (let i = 0; i < cookiesArr.length; i++) {
         cookie = cookiesArr[i];
         if (cookie) {
@@ -113,6 +116,7 @@ $.shareuuid = ["8cec00a4917e4af6ae49f8f4f9e7b58d", "f9e36b5518074c85a59abc6451d6
                 }
                 await getinfo()
                 await $.wait(3000)
+                if ($.score < 50000) {
                 let th = $.isNode() ? (process.env.CowKeep ? process.env.CowKeep : 100) : ($.getdata("CowKeep") ? $.getdata("CowKeep") : 100)
                 th = Math.max(100,th)
                 console.log(`【准备喂食,当前设置食物>${th}则喂食物,可通过设置环境变量CowKeep进行更改,需要大于100】`)
@@ -123,6 +127,9 @@ $.shareuuid = ["8cec00a4917e4af6ae49f8f4f9e7b58d", "f9e36b5518074c85a59abc6451d6
                     // await getinfo2()
                     // await $.wait(3000)
                 }
+            } else {
+                console.log(`\n【已升至最高等级，无需喂食，攒饲料兑换奖品吧】\n`)
+            }
                 for (k = 0; k < $.drawchance; k++) {
                     await draw()
                     await $.wait(2000)
