@@ -57,7 +57,7 @@ let uuid, UA,cookie,res,result
             "riskParam":{"platform":"3","orgType":"2","openId":"-1","pageClickKey":"Babel_Sign","eid":"","fp":"-1","shshshfp":"ce73d5d24ed7b4a599c43dc2650de9d6","shshshfpa":"6e44a707-13c3-7d17-1b54-afe19f45c6e3-1636027834","shshshfpb":"wp vScTBQs0Smdw7jeBd1DA==","childActivityUrl":"https%3A%2F%2Fpro.m.jd.com%2Fmall%2Factive%2F3joSPpr7RgdHMbcuqoRQ8HbcPo9U%2Findex.html%3FbabelChannel%3Dttt1%26un_area%3D22_2005_36315_36332","userArea":"-1","client":"","clientVersion":"","uuid":"","osVersion":"","brand":"","model":"","networkType":"","jda":"-1"},"siteClient":"android","mitemAddrId":"","geo":{"lng":"","lat":""},"addressId":"3210928933","posLng":"105.241173","posLat":"28.29883","focus":"","innerAnchor":"","cv":"2.0","_mkjdcn":"f2c4b530c60cf2ca48edfce32cc1e270"}
             res = await taskPost(taskPostUrl('userSign', body))
             //{"msg":"SUCCESS","returnMsg":"SUCCESS","code":"0","btnText":"连续签到2天","signText":"签到成功","subCode":"0","subCodeMsg":"SUCCESS","transParam":"","channelPoint":{"babelChannel":"","greytp":"1","rec_broker":"","loginCellularNetwork":0,"pageId":""},"list":[{"text":"连续1天","state":6},{"text":"连续2天","state":7},{"text":"连续3天","state":5},{"text":"连续4天","state":5},{"text":"连续5天","state":5}],"statistics":"连续签到2天","awardList":[{"text":"3京豆","type":2}]}
-            console.log(`签到${res.msg} ${res.signText}`);
+            console.log(`签到${JSON.stringify(res)}`);
             res = await taskPost(taskPostUrl2('healthyDay_getHomeData',{"appId":"1E1xZy6s","taskToken":"","channelId":1}))
             if( res && res.code==0 && res?.data?.bizCode==0 ){
                 result = res?.data?.result;
