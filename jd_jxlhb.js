@@ -79,8 +79,8 @@ const BASE_URL = 'https://m.jingxi.com/cubeactive/steprewardv3'
     }
     token = await getJxToken()
     await main();
-    if( $.packetIdArr.length>=8 ){
-      console.log(`\n只获取前8个的助码,因为每个账号最多助力五次。\n`);
+    if( $.packetIdArr.length>=5 ){
+      console.log(`\n只获取前5个的助码,因为每个账号最多助力五次。\n`);
       break;
     }
   }
@@ -91,9 +91,9 @@ const BASE_URL = 'https://m.jingxi.com/cubeactive/steprewardv3'
   }
 
   //互助
-  var tmp = {};//根据userName去除$.packetIdArr重复内容
+  var tmp = {};//根据strUserPin去除$.packetIdArr重复内容
   $.packetIdArr = $.packetIdArr.reduce(function(init, item){
-    tmp[item.userName]?'':( tmp[item.userName] = true && init.push(item) );
+    tmp[item.strUserPin]?'':( tmp[item.strUserPin] = true && init.push(item) );
     return init; 
   },[])
 
