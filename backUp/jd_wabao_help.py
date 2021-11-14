@@ -2,15 +2,13 @@
 # -*- coding: utf-8 -*-
 '''
 cron: 30 0,15 * * *
-new Env('发财挖宝');
+new Env('发财挖宝只做任务和内部互助');
 活动入口：京东极速版>我的>发财挖宝
-脚本功能为:玩一玩得1血，内部互助，挖宝，提现
+脚本功能为: 玩一玩，内部互助
 由于每个号只有两次助力机会，所以只助力前两个助力码
-当血量剩余 1 时停止挖宝，领取奖励并提现
-环境变量：JD_COOKIE，wabao_spring
+环境变量：JD_COOKIE
 export JD_COOKIE="第1个cookie&第2个cookie"
-export wabao_spring="是否自动领取奖励并提现微信红包，yes或no,不填则默认yes领取奖励并提现微信红包"
-11 13 12:00 添加玩一玩任务，更新linkId
+地址：https://raw.githubusercontent.com/wuye999/myScripts/main/jd/jd_wabao_help.py
 '''
 import os,json,random,time,re,string,functools,asyncio
 import sys
@@ -23,7 +21,7 @@ requests.packages.urllib3.disable_warnings()
 
 
 run_send='yes'          # yes或no, yes则启用通知推送服务
-wabao_spring='yes'      # 是否自动领取奖励并提现,环境变量优先于脚本内部变量
+wabao_spring='yes'      
 linkId="pTTvJeSTrpthgk9ASBVGsw"
 
 
@@ -172,29 +170,6 @@ def taskGetUrl(functionId, body, cookie):
                 msg('API请求失败，请检查网路重试❗\n')   
 
 
-# 开局验证？
-def activity(cookie):
-    url="https://h5speed.m.jd.com/v2/speed/activity?flag=132&sid=f77337204fa0b3cdbc02fa03b6cfb45w&libVer=2.0.0&url=https%3A%2F%2Fbnzf.jd.com%2F&rts=1635613363462&title=%E5%8F%91%E8%B4%A2%E6%8C%96%E5%AE%9D&p1=1&p2=1&p3=1&p4=0&p5=0&p6=10&p7=249&p8=107&p9=7&p10=114&p11=1751&p12=1751&p13=0&p14=1893&p15=377&p16=1516&resources={%22badjs.json?Content=%20%5B%20Sun%20Oct%2031%202021%2001%3A02%3A39%20GMT%2B0800%20(%E5%8C%97%E7%BE%8E%E4%B8%AD%E9%83%A8%E6%A0%87%E5%87%86%E6%97%B6%E9%97%B4)%20%5D%20configCenterAjaxPrame%20Exception&referer=https%3A%2F%2Fimk2.jd.com%2Fauto%2Fopen%2Fliteapp%2FconfigCenter%2Fajax%2Fsuccess%2Fexception%3Fwq&t=0.6081273460492731%22:397,%22preArousal?app=jdliteapp&refer=https%3A%2F%2Fbnzf.jd.com%2F%3FactivityId%3D"+linkId+"%26lng%3D107.648869%26lat%3D30.281194%26sid%3Df77337204fa0b3cdbc02fa03b6cfb45w%26un_area%3D4_134_19915_0&imkUserId=imk2291.330737368482&type=1&msg=configCenterAjaxPrame%20Exception&t=0.1307983996705202%22:407,%22api-getStaticResource%22:392,%22api-apTaskList%22:394,%22api-getStationMarquees%22:373,%22api-happyDigHome%22:432,%22blast.cfc8150d.gif%22:365,%22halo.6d8599b2.gif%22:370,%22crack.0f00e203.gif%22:374,%22exception?data=eyJmbGFnIjoxMzIsInJ0cyI6MTYzNTYxMzM2MDUxMCwibGliVmVyIjoiMi4xLjUiLCJ1cmwiOiJodHRwczovL2JuemYuamQuY29tLyIsInRpdGxlIjoi5Y%2BR6LSi5oyW5a6dIiwiZXJyVHlwZSI6NCwiZXJyQ29kZSI6NzUwLCJlcnJNc2ciOiJKRFBlcmZvcm1hbmNlLnNlbmRSZXNvdXJjZSBpcyBub3QgYSBmdW5jdGlvbiIsImV4Y2VwdGlvbkluZm8iOnsidHlwZSI6IlR5cGVFcnJvciIsInN0YWNrIjpbXX19%22:418,%22eff9a57761a0c45a.png%22:111,%22bbbee650e29a8525.png%22:190,%22hand.1e279b77.gif%22:153,%226e3d0e3f0efa29d3.jpg%22:532,%220af3dbd3ab14a953.jpg%22:695}"
-    headers={
-        'Cookie': cookie,
-        'Host': 'h5speed.m.jd.com',
-        'Connection': 'keep-alive',
-        'referer': f'https://bnzf.jd.com/?activityId={linkId}&lng=107.648869&lat=30.281194&sid=f77337204fa0b3cdbc02fa03b6cfb45w&un_area=4_134_19915_0',
-        'Content-Type': 'application/x-www-form-urlencoded',
-        "User-Agent": ua(),
-        'Accept-Language': 'zh-cn',
-        'Accept-Encoding': 'gzip, deflate, br',
-    } 
-    for n in range(3):
-        try:
-            requests.post(url,headers=headers,data=data).json()
-            return res
-        except:
-            if n==3:
-                msg('API请求失败，请检查网路重试❗\n')   
-
-
-
 # 剩余血量
 def xueliang(cookie):
     body={"linkId":linkId}
@@ -244,7 +219,7 @@ def happyDigHome(cookie):
                 chunks=roundList_n['chunks']                        # 当前池详情list
 
                 a=jinge(cookie,roundid)
-                msg(f'当前池序号为 {roundid} \n当前池规模为 {rows}*{rows}')
+                msg(f'当前池序号为 {roundid} \n当前池规模为 {rows+1}*{rows+1}')
                 msg(f'剩余血量 {a[0]}')
                 msg(f'当前池已得京东红包 {a[2]}\n当前池已得微信红包 {a[1]}\n')
        
@@ -424,16 +399,16 @@ def wecat(cookie,amountid,poolBaseId,prizeGroupId,prizeBaseId):
     
 
 def main():
-    msg('🔔发财挖宝，开始！\n')
+    msg('🔔发财挖宝只做任务和内部互助，开始！\n')
 
     msg('获取助力码\n')
     global inviteCode_1_list,inviteCode_2_list
     inviteCode_1_list=list()
     inviteCode_2_list=list()
     for cookie in cookie_list:
-       inviteCode(cookie) 
+        inviteCode(cookie) 
 
-    msg('互助\n')
+    msg('\n互助\n')
     inviteCode_2_list=inviteCode_2_list[:2]
     for e,fcwbinviter in enumerate(inviteCode_2_list):
         fcwbinviteCode=inviteCode_1_list[e]
@@ -442,20 +417,15 @@ def main():
 
     msg(f'====================共{len(cookie_list)}京东个账号Cookie=========\n')
 
-    tasksss=[]
     for e,cookie in enumerate(cookie_list,start=1):
         msg(f'******开始【账号 {e}】 {get_pin(cookie)} *********\n')
-        activity(cookie)
         apDoTask(cookie)
-        happyDigHome(cookie)
-        if get_env('wabao_spring')=='yes':
-            spring_reward_list(cookie)
-        
-    msg('作者：wuye9999\n')
-    msg('地址:https://github.com/wuye999/myScripts')
+        # happyDigHome(cookie)
+        # if get_env('wabao_spring')=='yes':
+        #     spring_reward_list(cookie)
 
     if run_send=='yes':
-        send('### 发财挖宝 ###')   # 通知服务
+        send('### 发财挖宝只做任务和内部互助 ###')   # 通知服务
 
 
 if __name__ == '__main__':

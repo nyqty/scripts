@@ -41,7 +41,7 @@ if ($.isNode()) {
 }
 
 const JD_API_HOST = 'https://api.m.jd.com/', actCode = 'visa-card-001';
-
+let llAPIError = false
 
 !(async () => {
   if (!cookiesArr[0]) {
@@ -316,6 +316,10 @@ async function taskList() {
                 } else {
                   console.log(`${task.taskInfo.mainTitle}已完成`)
                 }
+                if (llAPIError){
+                  console.error('API请求失败，停止执行')
+                  break
+                }
               }
             }
           }
@@ -338,6 +342,7 @@ async function doTask(taskId) {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
           console.log(`${$.name} API请求失败，请检查网路重试`)
+          llAPIError = true
         } else {
           if (safeGet(data)) {
             data = JSON.parse(data);
@@ -433,6 +438,7 @@ async function queryItem(activeType = 1) {
             } else {
               console.log(`商品任务开启失败，${data.message}`)
               $.canStartNewItem = false
+              llAPIError = true
             }
           }
         }
@@ -461,6 +467,8 @@ async function startItem(activeId, activeType) {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
           console.log(`${$.name} API请求失败，请检查网路重试`)
+          llAPIError = true
+          $.canStartNewItem = false
         } else {
           if (safeGet(data)) {
             data = JSON.parse(data);
@@ -788,7 +796,7 @@ function taskGetUrl(function_id, body) {
 
 function invite2() {
   let t = +new Date()
-  let inviterId = "Y1J%2B%2BFA6%2BwKsvX%2BR2C2bDw%3D%3D"
+  let inviterId = "Y1J++FA6+wKsvX+R2C2bDw=="
   let headers = {
     'Host': 'api.m.jd.com',
     'accept': 'application/json, text/plain, */*',
@@ -796,7 +804,7 @@ function invite2() {
     'origin': 'https://assignment.jd.com',
     'accept-language': 'zh-cn',
     'user-agent': $.isNode() ? (process.env.JS_USER_AGENT ? process.env.JS_USER_AGENT : (require('./JS_USER_AGENTS').USER_AGENT)) : ($.getdata('JSUA') ? $.getdata('JSUA') : "'jdltapp;iPad;3.1.0;14.4;network/wifi;Mozilla/5.0 (iPad; CPU OS 14_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1"),
-    'referer': `https://assignment.jd.com/?inviterId=${inviterId}`,
+    'referer': `https://assignment.jd.com/?inviterId=${encodeURIComponent(inviterId)}`,
     'Cookie': cookie
   }
 
@@ -814,7 +822,7 @@ function invite2() {
 
 function invite() {
   let t = +new Date()
-  let inviterId = "Y1J%2B%2BFA6%2BwKsvX%2BR2C2bDw%3D%3D"
+  let inviterId = "Y1J++FA6+wKsvX+R2C2bDw=="
   var headers = {
     'Host': 'api.m.jd.com',
     'accept': 'application/json, text/plain, */*',
@@ -826,7 +834,7 @@ function invite() {
     'Cookie': cookie
   };
 
-  var dataString = `functionId=InviteFriendChangeAssertsService&body={"method":"attendInviteActivity","data":{"inviterPin":"${inviterId}","channel":1,"token":"","frontendInitStatus":""}}&referer=-1&eid=eidIf3dd8121b7sdmiBLGdxRR46OlWyh62kFAZogTJFnYqqRkwgr63%2BdGmMlcv7EQJ5v0HBic81xHXzXLwKM6fh3i963zIa7Ym2v5ehnwo2B7uDN92Q0&aid=&client=ios&clientVersion=14.4&networkType=wifi&fp=-1&appid=market-task-h5&_t=${t}`;
+  var dataString = `functionId=InviteFriendChangeAssertsService&body={"method":"attendInviteActivity","data":{"inviterPin":"${encodeURIComponent(inviterId)}","channel":1,"token":"","frontendInitStatus":""}}&referer=-1&eid=eidIf3dd8121b7sdmiBLGdxRR46OlWyh62kFAZogTJFnYqqRkwgr63%2BdGmMlcv7EQJ5v0HBic81xHXzXLwKM6fh3i963zIa7Ym2v5ehnwo2B7uDN92Q0&aid=&client=ios&clientVersion=14.4&networkType=wifi&fp=-1&appid=market-task-h5&_t=${t}`;
   var options = {
     url: `https://api.m.jd.com/?t=${+new Date()}`,
     headers: headers,
