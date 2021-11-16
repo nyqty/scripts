@@ -18,8 +18,8 @@
 
 # 使用教程
 
-* > 【青龙】拉取仓库命令：`ql repo https://github.com/atyvcn/jd_scripts.git "jd_|jx_|ty_|CheckRpeat" "backUp|icon" "^jd[^_]|^JD|USER|sendNotify|sign_graphics_validate" "main"`
-  * > 上面命令拉取错误的使用这个：`ql repo https://ghproxy.com/https://github.com/atyvcn/jd_scripts.git "jd_|jx_|ty_|CheckRpeat" "backUp|icon" "^jd[^_]|^JD|USER|sendNotify|sign_graphics_validate" "main"`
+* > 【青龙】拉取仓库命令：`ql repo https://github.com/atyvcn/jd_scripts.git "jd_|jx_|ty_|CheckRpeat" "activity|backUp|icon" "^jd[^_]|^JD|USER|utils|function|^sign|sendNotify"`
+  * > 上面命令拉取错误的使用这个：`ql repo https://ghproxy.com/https://github.com/atyvcn/jd_scripts.git "jd_|jx_|ty_|CheckRpeat" "activity|backUp|icon" "^jd[^_]|^JD|USER|utils|function|^sign|sendNotify"`
 
 * > 腾讯云函数部署建议阅读@hshx123大佬的[教程](https://66ccff.work/teach/jd.html)【推荐】.[旧教程](./backUp/tencentscf.md)【备用】
 
