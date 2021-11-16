@@ -4,6 +4,7 @@ var chetou_number = process.env.CHETOU_NUMBER ? process.env.CHETOU_NUMBER : 0
 var fair_mode = process.env.FAIR_MODE ? true : false
 
 exports.ModCK = function(cks) {
+    console.log(`默认顺序助力，雨露均沾模式（随机打乱助力顺序） fair_mode="true" 或者设置只给前几 chetou_number="填数字"`)
     console.log(`您${fair_mode ? "有" : "没有"}设置雨露均沾模式。`)
     console.log(`您设置了${chetou_number}个车头。`)
     if (cks.length <= chetou_number || !fair_mode) {
