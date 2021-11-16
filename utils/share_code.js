@@ -28,6 +28,9 @@ exports.ModCK = function(cks) {
     return sck
 }
 
+
+
+
 exports.setDefaultShareCodes = function(str) {
     if (!str) {
         return
