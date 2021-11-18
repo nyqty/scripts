@@ -1,22 +1,19 @@
 /*
 发财挖宝
 入口 极速版-发财挖宝
-活动时间：2021-05-25到2021-06-03
-更新时间：2021-05-24 014:55
-脚本兼容: QuantumultX, Surge,Loon, JSBox, Node.js
 =================================Quantumultx=========================
 [task_local]
 #发财挖宝
-6 0-23/1 * * * https://raw.githubusercontent.com/jiulan/platypus/main/scripts/jd_fcwb.js, tag=发财挖宝, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
+22 8,20 * * * https://raw.githubusercontent.com/KingRan/JDJB/main/jd_fcwb.js, tag=发财挖宝, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
 =================================Loon===================================
 [Script]
-cron "6 0-23/1 * * *" script-path=https://raw.githubusercontent.com/jiulan/platypus/main/scripts/jd_fcwb.js,tag=发财挖宝
+cron "22 8,20 * * *" script-path=https://raw.githubusercontent.com/KingRan/JDJB/main/jd_fcwb.js,tag=发财挖宝
 ===================================Surge================================
-发财挖宝 = type=cron,cronexp="6 0-23/1 * * *",wake-system=1,timeout=3600,script-path=https://raw.githubusercontent.com/jiulan/platypus/main/scripts/jd_fcwb.js
+发财挖宝 = type=cron,cronexp="22 8,20 * * *",wake-system=1,timeout=3600,script-path=https://raw.githubusercontent.com/KingRan/JDJB/main/jd_fcwb.js
 ====================================小火箭=============================
-发财挖宝 = type=cron,script-path=https://raw.githubusercontent.com/jiulan/platypus/main/scripts/jd_fcwb.js, cronexpr="6 0-23/1 * * *", timeout=3600, enable=true
+发财挖宝 = type=cron,script-path=https://raw.githubusercontent.com/KingRan/JDJB/main/jd_fcwb.js, cronexpr="22 8,20 * * *", timeout=3600, enable=true
  */
-const $ = new Env('发财挖宝');
+const $ = new Env('极速版-发财挖宝自动版');
 const notify = $.isNode() ? require('./sendNotify') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
@@ -63,6 +60,8 @@ if ($.isNode()) {
                 continue
             }
 
+
+
         }
         roundList = []
         console.log('\n入口 狗东极速版 我的 发财挖宝\n');
@@ -79,8 +78,8 @@ if ($.isNode()) {
         }
     }
 
-/*
-    const url = `https://ghproxy.com/https://raw.githubusercontent.com/jiulan/helpRepository/main/json/fcwb.json`
+
+    const url = `https://gitee.com/KingRan521/JD-Scripts/raw/master/shareCodes/fcwb.json`
     const author = await getAuthorShareCode(url)
     if (author) {
         if (author.fcwbinviteCode && author.fcwbinviter) {
@@ -91,7 +90,6 @@ if ($.isNode()) {
             });
         }
     }
-*/
     console.log('\n##################开始全部助力账号1#################\n');
     for (let i = 0; i < cookiesArr.length; i++) {
         cookie = cookiesArr[i];
@@ -106,6 +104,7 @@ if ($.isNode()) {
             await $.wait(1000)
             let res = await help(code['fcwbinviter'],code['fcwbinviteCode'])
         }
+
     }
 
 
