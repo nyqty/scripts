@@ -79,17 +79,21 @@ async function getinfo() {
     while (isNext) {
         let data = await info(page);
         await $.wait(600)
-        if (!data.data.unUseRedInfo.redList) {
+        if( !data?.data?.unUseRedInfo ){
+            console.log(`账号ck过期`)
+            isNext = false
+        }
+        if ( !data?.data?.unUseRedInfo?.redList ) {
             // console.log(`\n最近六个月累计红包总数:${count} 累计红包总额:${sum.toFixed(2)} 已使用红包总额: ${usedsum.toFixed(2)}`)
             let message = `
-                        \n账号: ${$.index} - ${$.UserName}
-                        \n最近六个月累计红包总数:${count} 累计红包总额:${sum.toFixed(2)} 已使用红包总额: ${usedsum.toFixed(2)}
-                        \n其中：
-                        \n京东商城：总金额${jdsum.toFixed(2)} 已使用：${usedjd.toFixed(2)} 
-                        \n京喜：总金额${jxsum.toFixed(2)} 已使用：${usedjx.toFixed(2)}
-                        \n极速版：总金额${litesum.toFixed(2)} 已使用：${usedlite.toFixed(2)}
-                        \n京东健康：总金额${healthsum.toFixed(2)} 已使用：${usedhealth.toFixed(2)}
-                        \n通用红包：总金额${tysum.toFixed(2)} 已使用：${usedty.toFixed(2)}\n`
+账号: ${$.index} - ${$.UserName}
+最近六个月累计红包总数:${count} 累计红包总额:${sum.toFixed(2)} 已使用红包总额: ${usedsum.toFixed(2)}
+其中：
+京东商城：总金额${jdsum.toFixed(2)} 已使用：${usedjd.toFixed(2)} 
+京喜：总金额${jxsum.toFixed(2)} 已使用：${usedjx.toFixed(2)}
+极速版：总金额${litesum.toFixed(2)} 已使用：${usedlite.toFixed(2)}
+京东健康：总金额${healthsum.toFixed(2)} 已使用：${usedhealth.toFixed(2)}
+通用红包：总金额${tysum.toFixed(2)} 已使用：${usedty.toFixed(2)}\n`
             console.log(`${message}`)
             await notify.sendNotify(`${$.name}`, `${message}`)
             isNext = false
