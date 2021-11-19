@@ -82,6 +82,7 @@ async function getinfo() {
         if( !data?.data?.unUseRedInfo ){
             console.log(`账号ck过期`)
             isNext = false
+            break;
         }
         if ( !data?.data?.unUseRedInfo?.redList ) {
             // console.log(`\n最近六个月累计红包总数:${count} 累计红包总额:${sum.toFixed(2)} 已使用红包总额: ${usedsum.toFixed(2)}`)
