@@ -1,7 +1,6 @@
 /*
-11.13~11.18 联合开卡 [jd_opencardLH14.js]
-新增开卡脚本
-一次性脚本
+11.18~11.23 联合开卡 [jd_opencardLH16.js]
+新增开卡 一次性脚本
 
 1.邀请一人20豆(有可能没有豆
 2.开17张 成功开1张 可能获得5京豆
@@ -13,19 +12,20 @@
 第一个账号助力作者 其他依次助力CK1
 第一个CK失效会退出脚本
 ————————————————
+入口：[ 11.18~11.23 联合开卡 (https://3.cn/103uQ-WTL)]
 
 请求太频繁会被黑ip
 过10分钟再执行
 
-cron:7 0,6 13-18 11 *
+cron:7 3,10 15-20 11 *
 ============Quantumultx===============
 [task_local]
-#11.13~11.18 联合开卡
-7 3,15 13-18 11 * https://raw.githubusercontent.com/KingRan/JDJB/main/jd_opencardLH15.js, tag=11.13~11.18 联合开卡, enabled=true
+#11.18~11.23 联合开卡
+7 3,10 15-20 11 * https://raw.githubusercontent.com/he1pu/JDHelp/main/jd_opencardLH16.js, tag=11.18~11.23 联合开卡, enabled=true
 
 */
 
-const $ = new Env('11.13~11.18 联合开卡');
+const $ = new Env('11.18~11.23 联合开卡');
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 const notify = $.isNode() ? require('./sendNotify') : '';
 
@@ -56,9 +56,9 @@ $.activityEnd = false
   // return
   $.appkey = '51B59BB805903DA4CE513D29EC448375'
   $.userId = '10299171'
-  $.actId = '73853b41ef8848_1113'
+  $.actId = '002sfydcg550d840ce832_1118'
   $.MixNicks = ''
-  $.inviteNick = 'oWYzEz0N7KY058rLNke8o87TwJCmNe8NFvhpI0XmJDULVU108+UxlHw7qoUuHA4F'
+  $.inviteNick = 'k1Nobb+P0er+C2sysxnx/P2KELO9izRVpwCyqu0eqVZ5aW7RHzlMobrzJ/e9r/uf'
   for (let i = 0; i < cookiesArr.length; i++) {
     cookie = cookiesArr[i];
     if (cookie) {

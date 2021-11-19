@@ -44,7 +44,7 @@ if ($.isNode()) {
     return;
   }
   await getShareCode();
-  console.log(`\n【原作者：LXK大佬】\n\nBy：atyvcn\n添加：邀请新用户，大转盘助力，抢粮食\n修改：优化日志输出，自动喂食\n\n默认不抢粮食（成功机率小），需要的请添加变量JD_PIGPET_PK，值填true\n`);
+  console.log(`\n【原作者：LXK大佬】\n\nBy：zero205\n添加：邀请新用户，大转盘助力，抢粮食\n修改：优化日志输出，自动喂食\n\n默认不抢粮食（成功机率小），需要的请添加变量JD_PIGPET_PK，值填true\n`);
   for (let i = 0; i < cookiesArr.length; i++) {
     if (cookiesArr[i]) {
       cookie = cookiesArr[i];
