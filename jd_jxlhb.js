@@ -113,7 +113,7 @@ const BASE_URL = 'https://m.jingxi.com/cubeactive/steprewardv3'
       }
       $.max = false;
       await enrollFriend($.packetIdArr[j].strUserPin);
-      await $.wait(5000);
+      await $.wait(7000);
       if ($.max) {
         $.packetIdArr.splice(j, 1)
         j--
@@ -126,7 +126,7 @@ const BASE_URL = 'https://m.jingxi.com/cubeactive/steprewardv3'
         console.log(`【${$.UserName}】去助力作者的邀请码：${$.authorMyShareIds[j].strUserPin}`);
         $.max = false;
         await enrollFriend($.authorMyShareIds[j].strUserPin);
-        await $.wait(5000);
+        await $.wait(7000);
         if ($.max) {
           $.authorMyShareIds.splice(j, 1)
           j--
