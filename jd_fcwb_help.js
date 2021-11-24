@@ -1,21 +1,24 @@
 /*
 发财挖宝
-入口 极速版-发财挖宝
-活动时间：2021-05-25到2021-06-03
-更新时间：2021-05-24 014:55
-脚本兼容: QuantumultX, Surge,Loon, JSBox, Node.js
-=================================Quantumultx=========================
+更新时间：2021-10-30
+活动入口：极速版-发财挖宝
+脚本兼容: QuantumultX, Surge, Loon, JSBox, Node.js
+============Quantumultx===============
 [task_local]
 #发财挖宝
-6 1,9,12,18 * * * https://raw.githubusercontent.com/jiulan/platypus/main/scripts/jd_fcwb.js, tag=发财挖宝, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
-=================================Loon===================================
+40 6,17 * * * https://raw.githubusercontent.com/KingRan/JDJB/main/jd_fcwb.js, tag=发财挖宝, img-url=https://github.com/58xinian/icon/raw/master/jdgc.png, enabled=true
+
+================Loon==============
 [Script]
-cron "6 1,9,12,18 * * *" script-path=https://raw.githubusercontent.com/jiulan/platypus/main/scripts/jd_fcwb.js,tag=发财挖宝
-===================================Surge================================
-发财挖宝 = type=cron,cronexp="6 1,9,12,18 * * *",wake-system=1,timeout=3600,script-path=https://raw.githubusercontent.com/jiulan/platypus/main/scripts/jd_fcwb.js
-====================================小火箭=============================
-发财挖宝 = type=cron,script-path=https://raw.githubusercontent.com/jiulan/platypus/main/scripts/jd_fcwb.js, cronexpr="6 1,9,12,18 * * *", timeout=3600, enable=true
- */
+cron "40 6,17 * * *" script-path=https://raw.githubusercontent.com/KingRan/JDJB/main/jd_fcwb.js,tag=发财挖宝
+
+===============Surge=================
+发财挖宝 = type=cron,cronexp="40 6,17 * * *",wake-system=1,timeout=3600,script-path=https://raw.githubusercontent.com/KingRan/JDJB/main/jd_fcwb.js
+
+============小火箭=========
+发财挖宝 = type=cron,script-path=https://raw.githubusercontent.com/KingRan/JDJB/main/jd_fcwb.js, cronexpr="40 6,17 * * *", timeout=3600, enable=true
+
+* * */
 const $ = new Env('发财挖宝');
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 const notify = $.isNode() ? require('./sendNotify') : '';
@@ -51,7 +54,7 @@ let curRound = 1
     console.log(`\n注意：本脚本暂时只会执行助力，助力后，请手动进活动进行游戏（发财挖宝: 入口,极速版-》我的-》发财挖宝）\n`)
     let res = [];
 
-    try{res = await getAuthorShareCode('https://ghproxy.com/https://raw.githubusercontent.com/jiulan/helpRepository/main/json/fcwb.json');}catch (e) {}
+    try{res = await getAuthorShareCode('https://gitee.com/KingRan521/JD-Scripts/raw/master/shareCodes/fcwb.json');}catch (e) {}
      if(!res){res = [];}
     
     if(res.length > 0){
