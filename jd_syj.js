@@ -18,6 +18,7 @@ cron "10 1,7,20 * * *" script-path=jd_syj.js, tag=赚京豆
 赚京豆 = type=cron,script-path=jd_syj.js, cronexpr="10 1,7,20 * * *", timeout=3600, enable=true
  */
 const $ = new Env('赚京豆');
+let sc = require("./utils/share_code.js")
 
 const notify = $.isNode() ? require('./sendNotify') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
@@ -45,7 +46,10 @@ const JD_API_HOST = 'https://api.m.jd.com/api';
         $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
         return;
     }
+    
+	//$.authorTuanList = await getAuthorShareCode('https://raw.githubusercontent.com/atyvcn/updateTeam/master/shareCodes/jd/tewu.json');
     $.authorTuanList = [];
+    // await getRandomCode();
     for (let i = 0; i < cookiesArr.length; i++) {
         if (cookiesArr[i]) {
             cookie = cookiesArr[i];
@@ -759,7 +763,26 @@ function getAuthorShareCode(url) {
         })
     })
 }
-
+async function getRandomCode() {
+  await $.http.get({url: ``, timeout: 10000}).then(async (resp) => {
+    if (resp.statusCode === 200) {
+      try {
+        let { body } = resp;
+        body = JSON.parse(body);
+        if (body && body['code'] === 200) {
+      // console.log(`随机取【赚京豆-瓜分京豆】${randomCount}个邀请码成功\n`);
+          $.body = body['data'];
+          $.body1 = [];
+          $.body.map(item => {
+            $.body1.push(JSON.parse(item));
+          })
+        }
+      } catch (e) {
+    //  console.log(`随机取【赚京豆-瓜分京豆】${randomCount}个邀请码异常:${e}`);
+      }
+    }
+  }).catch((e) => console.log(`随机取【赚京豆-瓜分京豆】${randomCount}个邀请码异常:${e}`));
+}
 //======================赚京豆开团===========END=====
 function taskUrl(function_id, body = {}) {
     return {
