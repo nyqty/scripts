@@ -38,7 +38,7 @@ const JD_API_HOST = 'https://hserver.moxigame.cn';
 
   console.log('活动入口：京东APP ==> 我的 ==> 签到领豆 ==> 兑权益 ==> 京豆答题\n' +
       '活动入口地址：https://prodev.m.jd.com/mall/active/2tqdREcm3YLC8pbNPdvofdAwd8te/index.html?tttparams= \n' +
-      '活动时间：2021-05-24至2021-06-20\n' +
+      '活动时间：2021-10-21至2021-12-31\n' +
       '暂时不知道最多能答几次题先只答一次完成任务，答题答案随机选择'
       );
 
@@ -132,14 +132,14 @@ async function operation() {
                 await doCardTask(`{"taskType":27,"value":1,"activeId":"A_8943039_R_6_D_20211015","lkToken":"${$.lkToken}","token":"${$.taskToken}","returnurl":"https://prodev.m.jd.com/mall/active/2tqdREcm3YLC8pbNPdvofdAwd8te/index.html?tttparams=","sid":"","un_area":"","tttparams":"","id":"${$.id}","activeid":"A_8943039_R_6_D_20211015","authcode":"${$.authcode}"}`)
                 await $.wait(sleep * 1000)
             };
-            if ([10].includes($.allTaskList[i].res.eType) && $.allTaskList[i].state.value === 0){
-                $.taskName = $.allTaskList[i].res.sName;
-                let sleep = 1;
-                console.log(`去做${$.taskName}\t等待${sleep}秒`)
-                await $.wait(sleep * 1000);
-                await doLottery(`{"id":"${$.id}","activeid":"A_8943039_R_6_D_20211015","activeId":"A_8943039_R_6_D_20211015","authcode":"${$.authcode}","token":"${$.taskToken}"}`)
-                await $.wait(sleep * 1000);
-            };
+//             if ([10].includes($.allTaskList[i].res.eType) && $.allTaskList[i].state.value === 0){
+//                 $.taskName = $.allTaskList[i].res.sName;
+//                 let sleep = 1;
+//                 console.log(`去做${$.taskName}\t等待${sleep}秒`)
+//                 await $.wait(sleep * 1000);
+//                 await doLottery(`{"id":"${$.id}","activeid":"A_8943039_R_6_D_20211015","activeId":"A_8943039_R_6_D_20211015","authcode":"${$.authcode}","token":"${$.taskToken}"}`)
+//                 await $.wait(sleep * 1000);
+//             };
             if (["匹配挑战"].includes($.allTaskList[i].res.sName) && $.allTaskList[i].state.value === 0){
                 $.taskName = $.allTaskList[i].res.sName;
                 console.log(`去做${$.taskName}\t等待答题完成`)
