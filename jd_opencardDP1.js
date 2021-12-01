@@ -1,7 +1,7 @@
 /*
 大牌联合 赢大额京豆
 12.1 - 12.12
-https://lzdz1-isv.isvjd.com/dingzhi/shop/league/activity/3178572?activityId=dz211122100001616201shop&shareUuid=c72aea73f94d46a2a32125ef84fe1125&adsource=null&shareuserid4minipg=t5ZaqiGmHAUSIGMKTESiDmSy3WQlSnqzfk0%2FaZMj9YjTmBx5mleHyWG1kOiKkz%2Fk&shopid=1000334325&_ts=1638365636157&utm_user=plusmember&ad_od=share&utm_source=androidapp&utm_medium=appshare&utm_campaign=t_335139774&utm_term=Wxfriends
+https://lzdz1-isv.isvjcloud.com/dingzhi/shop/league/activity/6758593?activityId=dz211122100001616201shop&shareUuid=c72aea73f94d46a2a32125ef84fe1125
 
 cron 17 2,19 * * * https://raw.githubusercontent.com/KingRan/JDJB/main/jd_opencardDP1.js
 */
@@ -29,7 +29,7 @@ if ($.isNode()) {
         $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
         return;
     }
-
+    
     for (let i = 0; i < cookiesArr.length; i++) {
         if (cookiesArr[i]) {
             cookie = cookiesArr[i]
