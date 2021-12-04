@@ -6,7 +6,6 @@
 活动入口：京东APP-游戏与互动-查看更多-京喜工厂
 或者: 京东APP首页搜索 "玩一玩" ,造物工厂即可
 
-
 已支持IOS双京东账号,Node.js支持N个京东账号
 脚本兼容: QuantumultX, Surge, Loon, JSBox, Node.js
 ============Quantumultx===============
@@ -457,6 +456,7 @@ async function helpFriends() {
   if ($.canHelpFlag) {
     await shareCodesFormat();
     if ($.isNode() && !process.env.DREAM_FACTORY_SHARE_CODES) {
+      console.log(`您未填写助力码变量，开始账号内互助`);
       $.newShareCode = [...(jdDreamFactoryShareArr || []), ...(newShareCodes || [])]
     } else {
       $.newShareCode = newShareCodes
@@ -662,11 +662,6 @@ function userInfo() {
                 console.log(`当前等级：${data.user.currentLevel}`)
                 console.log(`\n【京东账号${$.index}（${$.UserName}）的${$.name}好友互助码】${data.user.encryptPin}`);
                 jdDreamFactoryShareArr.push(data.user.encryptPin)
-                await $.get({
-                  url: 'http://106.13.233.51:8080/activeJdFactoryCode?code=' + data.user.encryptPin
-                }, function (err, resp, data) {
-                  console.log('互助码状态:' + resp.body);
-                })
                 console.log(`已投入电力：${production.investedElectric}`);
                 console.log(`所需电力：${production.needElectric}`);
                 console.log(`生产进度：${((production.investedElectric / production.needElectric) * 100).toFixed(2)}%`);
@@ -674,7 +669,6 @@ function userInfo() {
                 message += `【生产商品】${$.productName}\n`;
                 message += `【当前等级】${data.user.userIdentity} ${data.user.currentLevel}\n`;
                 message += `【生产进度】${((production.investedElectric / production.needElectric) * 100).toFixed(2)}%\n`;
-
 
                 if (production.investedElectric >= production.needElectric) {
                   if (production['exchangeStatus'] === 1) $.log(`\n\n可以兑换商品了`)
@@ -1046,7 +1040,17 @@ async function tuanActivity() {
   }
 }
 async function joinLeaderTuan() {
-  
+  let res = await updateTuanIdsCDN('')
+  $.authorTuanIds = [...(res && res.tuanIds || [])]
+  if ($.authorTuanIds && $.authorTuanIds.length) {
+    for (let tuanId of $.authorTuanIds) {
+      if (!tuanId) continue
+      if (!$.canHelp) break;
+      console.log(`\n账号${$.UserName} 参加作者的团 【${tuanId}】`);
+      await JoinTuan(tuanId);
+      await $.wait(1000);
+    }
+  }
 }
 //可获取开团后的团ID，如果团ID为空并且surplusOpenTuanNum>0，则可继续开团
 //如果团ID不为空，则查询QueryTuan()
@@ -1264,6 +1268,46 @@ function tuanAward(activeId, tuanId, isTuanLeader = true) {
     })
   })
 }
+
+function updateTuanIdsCDN(url) {
+  return new Promise(async resolve => {
+    const options = {
+      url: `${url}?${new Date()}`, "timeout": 10000, headers: {
+        "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1 Edg/87.0.4280.88"
+      }
+    };
+    if ($.isNode() && process.env.TG_PROXY_HOST && process.env.TG_PROXY_PORT) {
+      const tunnel = require("tunnel");
+      const agent = {
+        https: tunnel.httpsOverHttp({
+          proxy: {
+            host: process.env.TG_PROXY_HOST,
+            port: process.env.TG_PROXY_PORT * 1
+          }
+        })
+      }
+      Object.assign(options, { agent })
+    }
+    $.get(options, (err, resp, data) => {
+      try {
+        if (err) {
+          // console.log(`${JSON.stringify(err)}`)
+        } else {
+          if (safeGet(data)) {
+            $.tuanConfigs = data = JSON.parse(data);
+          }
+        }
+      } catch (e) {
+        $.logErr(e, resp)
+      } finally {
+        resolve(data);
+      }
+    })
+    await $.wait(20000)
+    resolve();
+  })
+}
+
 //商品可兑换时的通知
 async function exchangeProNotify() {
   await GetShelvesList();
