@@ -49,12 +49,6 @@ if (process.env.NO_RUSH && process.env.NO_RUSH != "") {
         $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
         return;
     }
-    authorCodeList = await getAuthorCodeList('https://gitee.com/KingRan521/JD-Scripts/raw/master/shareCodes/opencardLL8.json')
-    if($.getAuthorCodeListerr === false){
-        authorCodeList = [
-            '',
-        ]
-    }
 
     for (let i = 0; i < cookiesArr.length; i++) {
         if (cookiesArr[i]) {
@@ -77,8 +71,7 @@ if (process.env.NO_RUSH && process.env.NO_RUSH != "") {
             $.bean = 0;
             $.ADID = getUUID('xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx', 1);
             $.UUID = getUUID('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx');
-            // $.authorCode = authorCodeList[random(0, authorCodeList.length)]
-            $.authorCode = ownCode ? ownCode : authorCodeList[random(0, authorCodeList.length)]
+            $.authorCode = ownCode ? ownCode : ''
             $.authorNum = `${random(1000000, 9999999)}`
             $.randomCode = random(1000000, 9999999)
             $.activityId = 'dzsdfkl20211204A'

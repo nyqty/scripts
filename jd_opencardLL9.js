@@ -49,14 +49,10 @@ if ($.isNode()) {
             $.bean = 0;
             $.ADID = getUUID('xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx', 1);
             $.UUID = getUUID('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx');
-            authorCodeList = [
-                'k1Nobb+P0er+C2sysxnx/P2KELO9izRVpwCyqu0eqVZ5aW7RHzlMobrzJ/e9r/uf',
-            ]
             $.appkey = "51B59BB805903DA4CE513D29EC448375"
             $.userId = "10299171"
             $.actId = "c196cba0e4204254a44c_120101"
-            // $.authorCode = authorCodeList[random(0, authorCodeList.length)]
-            $.authorCode = ownCode ? ownCode : authorCodeList[random(0, authorCodeList.length)]
+            $.authorCode = ownCode ? ownCode : 'oWYzEz0N7KY058rLNke8o87TwJCmNe8NFvhpI0XmJDULVU108+UxlHw7qoUuHA4F'
             console.log('去助力 -> '+$.authorCode);
             await openCardNew();
             if ($.bean > 0) {
@@ -409,29 +405,6 @@ function getFirstLZCK() {
                 console.log(error)
             } finally {
                 resolve();
-            }
-        })
-    })
-}
-function getAuthorCodeList(url) {
-    return new Promise(resolve => {
-        const options = {
-            url: `${url}?${new Date()}`, "timeout": 10000, headers: {
-            "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1 Edg/87.0.4280.88"
-            }
-        };
-        $.get(options, async (err, resp, data) => {
-            try {
-                if (err) {
-                    $.log(err)
-                } else {
-                if (data) data = JSON.parse(data)
-                }
-            } catch (e) {
-                $.logErr(e, resp)
-                data = null;
-            } finally {
-                resolve(data);
             }
         })
     })
