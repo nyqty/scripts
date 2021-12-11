@@ -26,8 +26,8 @@ run_send='yes'     # yes或no, yes则启用通知推送服务
 
 
 # 获取pin
-cookie_match=re.compile(r'pt_key=(.+);pt_pin=(.+);')
-cookie_match2=re.compile(r'pt_pin=(.+);pt_key=(.+);')
+cookie_match=re.compile(r'pt_key=(.+); ?pt_pin=([^; ]+)')
+cookie_match2=re.compile(r'pt_pin=(.+); ?pt_key=([^; ]+)')
 def get_pin(cookie):
     try:
         return cookie_match.match(cookie).group(2)

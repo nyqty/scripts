@@ -60,7 +60,7 @@ let shareList = [],message = '';
     let allShareList = [];
     for (let i = 0; i < cookiesArr.length; i++) {
         let cookie = cookiesArr[i];
-        let userName = decodeURIComponent(cookie.match(/pt_pin=(.+?);/) && cookie.match(/pt_pin=(.+?);/)[1]);
+        let userName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1]);
         for (let j = 0; j < shareList.length; j++) {
             if(shareList[j].user === userName){
                 allShareList.push(shareList[j]);
@@ -71,7 +71,7 @@ let shareList = [],message = '';
     console.log(`\n==================开始内部助力===================\n`)
     for (let i = 0; i < cookiesArr.length; i++) {
         let cookie = cookiesArr[i];
-        let userName = decodeURIComponent(cookie.match(/pt_pin=(.+?);/) && cookie.match(/pt_pin=(.+?);/)[1]);
+        let userName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1]);
         let canHelp = true;
         let helpTime = 0;
         for (let j = 0; j < allShareList.length && canHelp && helpTime < 5; j++) {
@@ -100,7 +100,7 @@ let shareList = [],message = '';
 });
 
 async function main(cookie,index) {
-    let userName = decodeURIComponent(cookie.match(/pt_pin=(.+?);/) && cookie.match(/pt_pin=(.+?);/)[1]);
+    let userName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1]);
     let homePage = await takeRequest(cookie,`{"apiMapping":"/api/index/indexInfo"}`);
     await takeRequest(cookie,`{"apiMapping":"/api/front/rule"}`);
     await takeRequest(cookie,`{"apiMapping":"/api/index/groupIndex"}`);

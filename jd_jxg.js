@@ -39,7 +39,7 @@ if ($.isNode()) {
     if (cookiesArr[i]) {
       cookie = cookiesArr[i];
       $.thisHelpCode = {};
-      $.UserName = decodeURIComponent(cookie.match(/pt_pin=(.+?);/) && cookie.match(/pt_pin=(.+?);/)[1])
+      $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
       $.index = i + 1;
       $.isLogin = true;
       $.nickName = $.UserName;
@@ -66,7 +66,7 @@ if ($.isNode()) {
     for (let i = 0; i < cookiesArr.length/2; i++) {
       $.getCodeFlag = true;
       cookie = cookiesArr[i];
-      $.UserName = decodeURIComponent(cookie.match(/pt_pin=(.+?);/) && cookie.match(/pt_pin=(.+?);/)[1])
+      $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
       if ($.sendCode){
         do{
           await transferBoxCard($.sendCode);
@@ -84,7 +84,7 @@ if ($.isNode()) {
     let codeList = [];
     for (let j = 0; j < thisCookiesArr.length; j++) {
       cookie = thisCookiesArr[j];
-      $.UserName = decodeURIComponent(cookie.match(/pt_pin=(.+?);/) && cookie.match(/pt_pin=(.+?);/)[1])
+      $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
       codeList.push({
         'name':$.UserName,
         'helpCode':$.helpCodeList[$.UserName]
@@ -92,7 +92,7 @@ if ($.isNode()) {
     }
     for (let j = 0; j < thisCookiesArr.length; j++) {
       cookie = thisCookiesArr[j];
-      $.UserName = decodeURIComponent(cookie.match(/pt_pin=(.+?);/) && cookie.match(/pt_pin=(.+?);/)[1])
+      $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
       for (let k = 0; k < codeList.length; k++) {
         if(codeList[k].name === $.UserName){
           continue;

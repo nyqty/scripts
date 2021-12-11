@@ -115,7 +115,7 @@ if ($.isNode()) {
     console.log(`\n开始帮【atyvcn】助力，感谢！\n`);
     for (let i = 0; i < cookiesArr.length && i < $.authorCode.length; i++) {
       cookie = cookiesArr[i];
-      $.UserName = decodeURIComponent($.cookie.match(/pt_pin=(.+?);/) && $.cookie.match(/pt_pin=(.+?);/)[1])
+      $.UserName = decodeURIComponent($.cookie.match(/pt_pin=([^; ]+)(?=;?)/) && $.cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
       $.index = i + 1;
       $.isLogin = true;
       $.canHelp = true;

@@ -56,7 +56,7 @@ function GetCookie() {
       var CV = $request.headers["Cookie"] || $request.headers["cookie"];
       if (CV.match(/(pt_key=.+?pt_pin=|pt_pin=.+?pt_key=)/)) {
         var CookieValue = CV.match(/pt_key=.+?;/) + CV.match(/pt_pin=.+?;/);
-        var UserName = CookieValue.match(/pt_pin=(.+?);/)[1];
+        var UserName = CookieValue.match(/pt_pin=([^; ]+)(?=;?)/)[1];
         var DecodeName = decodeURIComponent(UserName);
         var CookiesData = getCache();
         var updateCookiesData = [...CookiesData];
@@ -66,7 +66,7 @@ function GetCookie() {
           var ck = item.cookie;
           var Account = ck
             ? ck.match(/pt_pin=.+?;/)
-              ? ck.match(/pt_pin=(.+?);/)[1]
+              ? ck.match(/pt_pin=([^; ]+)(?=;?)/)[1]
               : null
             : null;
           const verify = UserName === Account;

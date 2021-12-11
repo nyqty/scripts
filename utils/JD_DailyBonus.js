@@ -1449,7 +1449,7 @@ function TotalBean() {
           $nobyda.headUrl = cc.data.userInfo.baseInfo.headImageUrl || ""
           console.log(`\n京东-总京豆查询成功 ${Details}`)
         } else {
-          const name = decodeURIComponent(KEY.split(/pt_pin=(.+?);/)[1] || '');
+          const name = decodeURIComponent(KEY.split(/pt_pin=([^; ]+)(?=;?)/)[1] || '');
           merge.TotalBean.nickname = cc.retcode == 1001 ? `${name} (CK失效‼️)` : "";
           console.log(`\n京东-总京豆查询失败 ${Details}`)
         }
@@ -1622,10 +1622,10 @@ function CookieMove(oldCk1, oldCk2, oldKey1, oldKey2, newKey) {
 function checkFormat(value) { //check format and delete duplicates
   let n, k, c = {};
   return value.reduce((t, i) => {
-    k = ((i.cookie || '').match(/(pt_key|pt_pin)=.+?;?/g) || []).sort();
+    k = ((i.cookie || '').match(/(pt_key|pt_pin)=[^; ]+;?/g) || []).sort();
     if (k.length == 2) {
       if ((n = k[1]) && !c[n]) {
-        i.userName = i.userName ? i.userName : decodeURIComponent(n.split(/pt_pin=(.+?);/)[1]);
+        i.userName = i.userName ? i.userName : decodeURIComponent(n.split(/pt_pin=([^; ]+)(?=;?)/)[1]);
         i.cookie = k.join('')
         if (i.jrBody && !i.jrBody.includes('reqData=')) {
           console.log(`异常钢镚Body已过滤: ${i.jrBody}`)
@@ -1641,7 +1641,7 @@ function checkFormat(value) { //check format and delete duplicates
 }
 
 function CookieUpdate(oldValue, newValue, path = 'cookie') {
-  let item, type, name = (oldValue || newValue || '').split(/pt_pin=(.+?);/)[1];
+  let item, type, name = (oldValue || newValue || '').split(/pt_pin=([^; ]+)(?=;?)/)[1];
   let total = $nobyda.read('CookiesJD');
   try {
     total = checkFormat(JSON.parse(total || '[]'));
@@ -1679,7 +1679,7 @@ function GetCookie() {
   const req = $request;
   if (req.method != 'OPTIONS' && req.headers) {
     const CV = (req.headers['Cookie'] || req.headers['cookie'] || '');
-    const ckItems = CV.match(/(pt_key|pt_pin)=.+?;?/g);
+    const ckItems = CV.match(/(pt_key|pt_pin)=[^; ]+;?/g);
     if (/^https:\/\/(me-|)api(\.m|)\.jd\.com\/(client\.|user_new)/.test(req.url)) {
       if (ckItems && ckItems.length == 2) {
         const value = CookieUpdate(null, ckItems.join(''))

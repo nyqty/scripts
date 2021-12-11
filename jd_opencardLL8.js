@@ -55,7 +55,7 @@ if (process.env.NO_RUSH && process.env.NO_RUSH != "") {
             cookie = cookiesArr[i]
             originCookie = cookiesArr[i]
             newCookie = ''
-            $.UserName = decodeURIComponent(cookie.match(/pt_pin=(.+?);/) && cookie.match(/pt_pin=(.+?);/)[1])
+            $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
             $.index = i + 1;
             $.isLogin = true;
             $.nickName = '';

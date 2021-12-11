@@ -68,7 +68,7 @@ let token ='';
     $.can_help = true
     $.cookie = $.helpCkList[i]
     token = await getJxToken()
-    $.UserName = decodeURIComponent($.cookie.match(/pt_pin=(.+?);/) && $.cookie.match(/pt_pin=(.+?);/)[1])
+    $.UserName = decodeURIComponent($.cookie.match(/pt_pin=([^; ]+)(?=;?)/) && $.cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
     for (let j = 0; j < $.inviteCodeList_hb.length && $.can_help; j++) {
       $.oneCodeInfo = $.inviteCodeList_hb[j]
       if($.oneCodeInfo.use === $.UserName){
@@ -92,7 +92,7 @@ let token ='';
     let codeList = [];
     for (let j = 0; j < thisCookiesArr.length; j++) {
       $.cookie = thisCookiesArr[j];
-      $.UserName = decodeURIComponent($.cookie.match(/pt_pin=(.+?);/) && $.cookie.match(/pt_pin=(.+?);/)[1])
+      $.UserName = decodeURIComponent($.cookie.match(/pt_pin=([^; ]+)(?=;?)/) && $.cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
       for (let k = 0; k < $.inviteCodeList.length; k++) {
         if ($.UserName === $.inviteCodeList[k].use) {
           codeList.push({
@@ -106,7 +106,7 @@ let token ='';
     for (let j = 0; j < thisCookiesArr.length; j++) {
       $.cookie = thisCookiesArr[j];
       token = await getJxToken()
-      $.UserName = decodeURIComponent($.cookie.match(/pt_pin=(.+?);/) && $.cookie.match(/pt_pin=(.+?);/)[1])
+      $.UserName = decodeURIComponent($.cookie.match(/pt_pin=([^; ]+)(?=;?)/) && $.cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
       for (let k = 0; k < codeList.length; k++) {
         $.oneCodeInfo = codeList[k];
         if(codeList[k].name === $.UserName){

@@ -41,7 +41,7 @@ let autoCode = '',projectId = '',helpId = '';
     if(res.length > 0){
         autoCode = getRandomArrayElements(res,1)[0];
     }
-    mainPin = decodeURIComponent(cookiesArr[0].match(/pt_pin=(.+?);/) && cookiesArr[0].match(/pt_pin=(.+?);/)[1])
+    mainPin = decodeURIComponent(cookiesArr[0].match(/pt_pin=([^; ]+)(?=;?)/) && cookiesArr[0].match(/pt_pin=([^; ]+)(?=;?)/)[1])
     if(cookiesArr.length>0){
         const promiseArr = cookiesArr.map((ck, index) => main(ck));
         await Promise.all(promiseArr);
@@ -65,7 +65,7 @@ let autoCode = '',projectId = '',helpId = '';
 });
 
 async function help(ck){
-    let userName = decodeURIComponent(ck.match(/pt_pin=(.+?);/) && ck.match(/pt_pin=(.+?);/)[1])
+    let userName = decodeURIComponent(ck.match(/pt_pin=([^; ]+)(?=;?)/) && ck.match(/pt_pin=([^; ]+)(?=;?)/)[1])
     if(userName === ownCode.user){
         if(autoCode){
             console.log(`\n助力作者`);
@@ -94,7 +94,7 @@ async function help(ck){
 }
 
 async function main(ck){
-    let userName = decodeURIComponent(ck.match(/pt_pin=(.+?);/) && ck.match(/pt_pin=(.+?);/)[1])
+    let userName = decodeURIComponent(ck.match(/pt_pin=([^; ]+)(?=;?)/) && ck.match(/pt_pin=([^; ]+)(?=;?)/)[1])
     let mainInfo = await takeRequest('smt_newFission_index',`&body=`,ck);
     if(JSON.stringify(mainInfo) === '{}'){console.log(`${userName},初始化失败`);return;}
     console.log(`${userName},初始化成功`);
