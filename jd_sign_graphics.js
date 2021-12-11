@@ -10,7 +10,7 @@ npm i png-js 或者 npm i png-js -S
 */
 
 const validator = require('./utils/JDJRValidator_Pure.js');
-const Faker=require('./utils/sign_graphics_validate.js') 
+const Faker=require('./utils/sign_graphics_validate.js');
 
 const $ = new Env('京东签到图形验证');
 const notify = $.isNode() ? require('./sendNotify') : '';
@@ -66,7 +66,7 @@ const turnTableId = [
   for (let i = 0; i < cookiesArr.length; i++) {
     if (cookiesArr[i]) {
       cookie = cookiesArr[i];
-      $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]);?/) && cookie.match(/pt_pin=([^; ]);?/)[1])
+      $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+);?/) && cookie.match(/pt_pin=([^; ]+);?/)[1])
       $.index = i + 1;
       $.nickName = '';
       console.log(`\n开始【京东账号${$.index}】${$.nickName || $.UserName}\n`);
