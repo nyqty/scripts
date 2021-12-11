@@ -16,6 +16,13 @@ Exchange = true;
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [],
     cookie = '';
+function oc(fn, defaultVal) {//optioanl chaining
+  try {
+    return fn()
+  } catch (e) {
+    return undefined
+  }
+}
 if ($.isNode()) {
     Object.keys(jdCookieNode).forEach((item) => {
         cookiesArr.push(jdCookieNode[item])
@@ -29,7 +36,7 @@ const JD_API_HOST = `https://api.m.jd.com/client.action`;
 message = ""
 $.shareuuid = ["eb602b7c548f4161a0cbd2949b959811", "8c20dc3e1bfe456680db9af9063fc795"][Math.floor((Math.random() * 3))];
 
-    !(async () => {
+!(async () => {
         if (!cookiesArr[0]) {
             $.msg($.name, '【提示】请先获取cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/', {
                 "open-url": "https://bean.m.jd.com/"
@@ -122,7 +129,7 @@ $.shareuuid = ["eb602b7c548f4161a0cbd2949b959811", "8c20dc3e1bfe456680db9af9063f
 // 更新cookie 
 
 function updateCookie (resp) {
-    if (!resp?.headers['set-cookie']){
+    if (!oc(() => resp.headers['set-cookie'])){
         return
     }
     let obj = {}
