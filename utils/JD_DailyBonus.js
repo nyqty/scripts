@@ -1679,7 +1679,7 @@ function GetCookie() {
   const req = $request;
   if (req.method != 'OPTIONS' && req.headers) {
     const CV = (req.headers['Cookie'] || req.headers['cookie'] || '');
-    const ckItems = CV.match(/(pt_key|pt_pin)=.+?;/g);
+    const ckItems = CV.match(/(pt_key|pt_pin)=.+?;?/g);
     if (/^https:\/\/(me-|)api(\.m|)\.jd\.com\/(client\.|user_new)/.test(req.url)) {
       if (ckItems && ckItems.length == 2) {
         const value = CookieUpdate(null, ckItems.join(''))
