@@ -1622,7 +1622,7 @@ function CookieMove(oldCk1, oldCk2, oldKey1, oldKey2, newKey) {
 function checkFormat(value) { //check format and delete duplicates
   let n, k, c = {};
   return value.reduce((t, i) => {
-    k = ((i.cookie || '').match(/(pt_key|pt_pin)=.+?;/g) || []).sort();
+    k = ((i.cookie || '').match(/(pt_key|pt_pin)=.+?;?/g) || []).sort();
     if (k.length == 2) {
       if ((n = k[1]) && !c[n]) {
         i.userName = i.userName ? i.userName : decodeURIComponent(n.split(/pt_pin=(.+?);/)[1]);
