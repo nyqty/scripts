@@ -84,7 +84,6 @@ if ($.isNode()) {
       await $.wait(2000);
     }
   }
-  //let res = await getAuthorShareCode('https://gitee.com/KingRan521/JD-Scripts/raw/master/shareCodes/cfd.json')
   $.strMyShareIds = []
   await shareCodesFormat()
   for (let i = 0; i < cookiesArr.length; i++) {
@@ -779,7 +778,7 @@ async function requestAlgo() {
       "expandParams": ""
     })
   }
-  new Promise(async resolve => {
+  return new Promise(async resolve => {
     $.post(options, (err, resp, data) => {
       try {
         if (err) {

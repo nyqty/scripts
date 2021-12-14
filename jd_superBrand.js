@@ -1,9 +1,9 @@
 /**
-特务Z
-脚本没有自动开卡，会尝试领取开卡奖励
-cron 23 8,20 * * * https://raw.githubusercontent.com/star261/jd/main/scripts/jd_productZ4Brand.js
-一天要跑2次
-*/
+ 特务Z
+ 脚本没有自动开卡，会尝试领取开卡奖励
+ cron 23 8,11,20 * * * https://raw.githubusercontent.com/star261/jd/main/scripts/jd_productZ4Brand.js
+ 一天要跑2次
+ */
 const $ = new Env('特务Z');
 const notify = $.isNode() ? require('./sendNotify') : '';
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
@@ -140,10 +140,25 @@ async function doTask(){
                 'max':true,
                 'encryptAssignmentId':$.oneTask.encryptAssignmentId
             });
+        } else if($.oneTask.assignmentType === 5) {
+            let signList = $.oneTask.ext.sign2 || [];
+            if (signList.length === 0) {
+                console.log(`任务：${$.oneTask.assignmentName},信息异常`);
+            }
+            if ($.oneTask.assignmentName.indexOf('首页下拉') !== -1 || $.oneTask.assignmentDesc.includes('首页下拉')) {
+                for (let j = 0; j < signList.length; j++) {
+                    if (signList[j].status === 1) {
+                        console.log(`任务：${$.oneTask.assignmentName},去执行,请稍稍`);
+                        let itemId = signList[j].itemId;
+                        $.runInfo = {'itemId':itemId};
+                        await takeRequest('superBrandDoTask');
+                        await $.wait(3000);
+                    }
+                }
+            }
         }
     }
 }
-
 async function takeRequest(type) {
     let url = ``;
     let myRequest = ``;
@@ -159,6 +174,9 @@ async function takeRequest(type) {
                 url = `https://api.m.jd.com/api?functionId=superBrandDoTask&appid=ProductZ4Brand&client=wh5&t=${Date.now()}&body=%7B%22source%22:%22secondfloor%22,%22activityId%22:${$.activityId},%22encryptProjectId%22:%22${$.encryptProjectId}%22,%22encryptAssignmentId%22:%22${$.oneTask.encryptAssignmentId}%22,%22assignmentType%22:${$.oneTask.assignmentType},%22completionFlag%22:1,%22itemId%22:%22${$.runInfo.itemId}%22,%22actionType%22:0%7D`;
             }else{
                 url = `https://api.m.jd.com/api?functionId=superBrandDoTask&appid=ProductZ4Brand&client=wh5&t=${Date.now()}&body=%7B%22source%22:%22secondfloor%22,%22activityId%22:${$.activityId},%22encryptProjectId%22:%22${$.encryptProjectId}%22,%22encryptAssignmentId%22:%22${$.oneTask.encryptAssignmentId}%22,%22assignmentType%22:${$.oneTask.assignmentType},%22itemId%22:%22${$.runInfo.itemId}%22,%22actionType%22:0%7D`;
+            }
+            if($.oneTask.assignmentType === 5){
+                url = `https://api.m.jd.com/api?functionId=superBrandDoTask&appid=ProductZ4Brand&client=wh5&t=${Date.now()}&body=%7B%22source%22:%22secondfloor%22,%22activityId%22:${$.activityId},%22encryptProjectId%22:%22${$.encryptProjectId}%22,%22encryptAssignmentId%22:%22${$.oneTask.encryptAssignmentId}%22,%22assignmentType%22:${$.oneTask.assignmentType},%22itemId%22:%22${$.runInfo.itemId}%22,%22actionType%22:0,%22dropDownChannel%22:1%7D`;
             }
             break;
         case 'superBrandTaskLottery':
@@ -286,38 +304,41 @@ function randomWord(randomFlag, min, max){
 function TotalBean() {
     return new Promise(async resolve => {
         const options = {
-            url: "https://me-api.jd.com/user_new/info/GetJDUserInfoUnion",
-            headers: {
-                Host: "me-api.jd.com",
-                Accept: "*/*",
-                Connection: "keep-alive",
-                Cookie: $.cookie,
-                "User-Agent": $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('./USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.4.4;14.3;network/4g;Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1"),
+            "url": `https://wq.jd.com/user/info/QueryJDUserInfo?sceneval=2`,
+            "headers": {
+                "Accept": "application/json,text/plain, */*",
+                "Content-Type": "application/x-www-form-urlencoded",
+                "Accept-Encoding": "gzip, deflate, br",
                 "Accept-Language": "zh-cn",
-                "Referer": "https://home.m.jd.com/myJd/newhome.action?sceneval=2&ufc=&",
-                "Accept-Encoding": "gzip, deflate, br"
+                "Connection": "keep-alive",
+                "Cookie": $.cookie,
+                "Referer": "https://wqs.jd.com/my/jingdou/my.shtml?sceneval=2",
+                "User-Agent": $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('./USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.4.4;14.3;network/4g;Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1")
             }
         }
-        $.get(options, (err, resp, data) => {
+        $.post(options, (err, resp, data) => {
             try {
                 if (err) {
-                    $.logErr(err)
+                    console.log(`${JSON.stringify(err)}`)
+                    console.log(`${$.name} API请求失败，请检查网路重试`)
                 } else {
                     if (data) {
                         data = JSON.parse(data);
-                        if (data['retcode'] === "1001") {
+                        if (data['retcode'] === 13) {
                             $.isLogin = false; //cookie过期
-                            return;
+                            return
                         }
-                        if (data['retcode'] === "0" && data.data && data.data.hasOwnProperty("userInfo")) {
-                            $.nickName = data.data.userInfo.baseInfo.nickname?data.data.userInfo.baseInfo.nickname:data.data.userInfo.baseInfo.curPin;
+                        if (data['retcode'] === 0) {
+                            $.nickName = (data['base'] && data['base'].nickname) || $.UserName;
+                        } else {
+                            $.nickName = $.UserName
                         }
                     } else {
-                        console.log('京东服务器返回空数据');
+                        console.log(`京东服务器返回空数据`)
                     }
                 }
             } catch (e) {
-                $.logErr(e)
+                $.logErr(e, resp)
             } finally {
                 resolve();
             }
