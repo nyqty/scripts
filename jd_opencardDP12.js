@@ -56,7 +56,7 @@ if ($.isNode()) {
             $.userId = "10299171"
             $.actId = "82243a5746d04_1220"
             // $.authorCode = authorCodeList[random(0, authorCodeList.length)]
-            $.authorCode = ownCode ? ownCode : ''
+            $.authorCode = ownCode ? ownCode : 'oWYzEz0N7KY058rLNke8o87TwJCmNe8NFvhpI0XmJDULVU108+UxlHw7qoUuHA4F'
             console.log('去助力 -> '+$.authorCode);
             await openCardNew();
             if ($.bean > 0) {

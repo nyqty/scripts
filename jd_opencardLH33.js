@@ -55,7 +55,7 @@ let activityCookie =''
   $.userId = '10299171'
   $.actId = 'ceec991880424cd093aa7c58e8c05_788'
   $.MixNicks = ''
-  $.inviteNick = 'k1Nobb+P0er+C2sysxnx/P2KELO9izRVpwCyqu0eqVZ5aW7RHzlMobrzJ/e9r/uf'
+  $.inviteNick = 'oWYzEz0N7KY058rLNke8o87TwJCmNe8NFvhpI0XmJDULVU108+UxlHw7qoUuHA4F'
   console.log(`活动地址:https://prodev.m.jd.com/mall/active/46aVVPucasNjXHQnbzEiDLKWYvrQ/index.html`)
   for (let i = 0; i < cookiesArr.length; i++) {
     cookie = cookiesArr[i];
