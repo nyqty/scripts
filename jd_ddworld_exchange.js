@@ -2,7 +2,6 @@
 /**
 东东世界兑换
 cron 0 0 * * * jd_ddworld_exchange.js
-TG频道：https://t.me/sheeplost
 */
 const $ = new Env("东东世界兑换");
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
@@ -32,7 +31,7 @@ if ($.isNode()) {
         UA = `jdapp;iPhone;10.1.6;13.5;${UUID};network/wifi;model/iPhone11,6;addressid/4596882376;appBuild/167841;jdSupportDarkMode/0;Mozilla/5.0 (iPhone; CPU iPhone OS 13_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1`;
         if (cookiesArr[i]) {
             cookie = cookiesArr[i];
-            $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
+            $.UserName = decodeURIComponent(cookie.match(/pt_pin=(.+?);/) && cookie.match(/pt_pin=(.+?);/)[1])
             $.index = i + 1;
             $.isLogin = true;
             $.nickName = '';
@@ -47,9 +46,6 @@ if ($.isNode()) {
                 continue
             }
             await main();
-            if (i != cookiesArr.length) {
-                await $.wait(5000)
-            }
         }
     }
 })().catch((e) => { $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '') }).finally(() => { $.done(); })
@@ -64,11 +60,12 @@ async function main() {
             await task('get_exchange');
             if (!$.hotFlag) {
                 if ($.exchangeList) {
-                    $.exchangeList = $.exchangeList.filter((x) => !x.name.includes('红包'))
-                    for (const vo of $.exchangeList.reverse()) {
-                        $.log(`去兑换：${vo.name}`)
-                        await taskPost('do_exchange', `id=${vo.id}`);
-                        await $.wait(5000)
+                    for (const vo of $.exchangeList.sort((a,b)=> b.coins-a.coins)) {
+                        if (!vo.name.match(/红包\d*/)) {
+                            $.log(`去兑换：${vo.name}`)
+                            await taskPost('do_exchange', `id=${vo.id}`);
+                            await $.wait(3000)
+                        }
                     }
                 } else {
                     $.log("没有获取到兑换列表！")
