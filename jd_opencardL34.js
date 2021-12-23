@@ -1,31 +1,29 @@
 /*
-12.10～12.21 京选大牌 超会宠你 [jd_opencardLH28.js]
+12.18~12.30 京选大牌 超会宠你 [jd_opencardL34.js]
 开卡脚本,一次性脚本
 
 1.邀请一人20豆
-2.开2组(共12张) 成功开1组 获得1次抽奖
-3.关注10豆 
-4.加购5京豆
-5.浏览店铺1豆/个
-6.浏览商品1豆/个
+2.开2组(共6张) 成功开1组 获得1次抽奖
+3.加购5京豆
+4.浏览店铺1豆/个
+5.浏览商品1豆/个
 
 第一个账号助力作者 其他依次助力CK1
 第一个CK失效会退出脚本
 ————————————————
-入口：[ 12.10～12.21 京选大牌 超会宠你 (https://lzdz1-isv.isvjcloud.com/dingzhi/dz/openCard/activity?activityId=5870cf9ea76046b4bfc5493f82784eef&shareUuid=ce0e59d74223419d86d6c576de18e312)]
+入口：[ 12.18~12.30 京选大牌 超会宠你 (https://lzdz1-isv.isvjcloud.com/dingzhi/dz/openCard/activity?activityId=4c1162ed00874ba5ac0447c30cc45f8a&shareUuid=2f706963fc8a4477b18bc3bccd266dcb)]
 
 请求太频繁会被黑ip
 过10分钟再执行
 
-cron:17 5,19 10-21 12 *
+cron:40 1,6 23-30 12 *
 ============Quantumultx===============
 [task_local]
-#12.10～12.21 京选大牌 超会宠你
-17 5,19 10-21 12 * https://raw.githubusercontent.com/he1pu/JDHelp/main/jd_opencardLH28.js, tag=12.10～12.21 京选大牌 超会宠你, enabled=true
+#12.18~12.30 京选大牌 超会宠你
+40 1,6 23-30 12 * https://raw.githubusercontent.com/KingRan/JDJB/main/jd_opencardL34.js, tag=12.18~12.30 京选大牌 超会宠你, enabled=true
 
 */
-
-const $ = new Env('12.10～12.21 京选大牌 超会宠你');
+const $ = new Env('12.18~12.30 京选大牌 超会宠你');
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 const notify = $.isNode() ? require('./sendNotify') : '';
 //IOS等用户直接用NobyDa的jd cookie
@@ -40,6 +38,7 @@ if ($.isNode()) {
 } else {
   cookiesArr = [$.getdata('CookieJD'), $.getdata('CookieJD2'), ...jsonParse($.getdata('CookiesJD') || "[]").map(item => item.cookie)].filter(item => !!item);
 }
+
 allMessage = ""
 message = ""
 $.hotFlag = false
@@ -54,8 +53,8 @@ let activityCookie =''
     });
     return;
   }
-  $.activityId = "5870cf9ea76046b4bfc5493f82784eef"
-  $.shareUuid = "82c82a55bb9b48f3a3d4f62b6fdfe4bc"
+  $.activityId = "4c1162ed00874ba5ac0447c30cc45f8a"
+  $.shareUuid = "2f706963fc8a4477b18bc3bccd266dcb"
   console.log(`入口:\nhttps://lzdz1-isv.isvjcloud.com/dingzhi/dz/openCard/activity?activityId=${$.activityId}&shareUuid=${$.shareUuid}`)
   for (let i = 0; i < cookiesArr.length; i++) {
     cookie = cookiesArr[i];
@@ -164,17 +163,13 @@ async function run() {
       await $.wait(parseInt(Math.random() * 1000 + 3000, 10))
     }
     
-    $.log("关注: " + $.followShop)
-    if(!$.followShop && !$.outFlag){
-      flag = true
-      await takePostRequest('followShop');
-      await $.wait(parseInt(Math.random() * 1000 + 5000, 10))
-    }
     $.log("加购: " + $.addSku)
+    
     if(!$.addSku && !$.outFlag){
         flag = true
         await takePostRequest('addSku');
         await $.wait(parseInt(Math.random() * 1000 + 5000, 10))
+      
     }
     $.runFalag = true
     $.log("浏览店铺: " + $.toShop)
@@ -206,8 +201,8 @@ async function run() {
       await takePostRequest('activityContent');
     }
     await $.wait(parseInt(Math.random() * 1000 + 2000, 10))
-    // await takePostRequest('getDrawRecordHasCoupon');
-    // await takePostRequest('getShareRecord');
+    await takePostRequest('getDrawRecordHasCoupon');
+    await takePostRequest('getShareRecord');
     if($.outFlag){
       console.log('此ip已被限制，请过10分钟后再执行脚本\n')
       return
@@ -414,7 +409,7 @@ async function dealReturn(type, data) {
             $.endTime = res.data.endTime || 0
             $.hasEnd = res.data.hasEnd || false
             $.actorUuid = res.data.actorUuid || ''
-            $.followShop = res.data.followShop.allStatus || false
+            // $.followShop = res.data.followShop.allStatus || false
             $.addSku = res.data.addSku.allStatus || false
             if(res.data.followShop && res.data.followShop.settings && res.data.followShop.settings[0]){
               $.followShopValue = res.data.followShop.settings[0].value || 1
