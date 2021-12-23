@@ -54,7 +54,7 @@ let activityCookie =''
     return;
   }
   $.activityId = "4c1162ed00874ba5ac0447c30cc45f8a"
-  $.shareUuid = "2f706963fc8a4477b18bc3bccd266dcb"
+  $.shareUuid = "554f3205ee8a48f893e60383d3f74d5f"
   console.log(`入口:\nhttps://lzdz1-isv.isvjcloud.com/dingzhi/dz/openCard/activity?activityId=${$.activityId}&shareUuid=${$.shareUuid}`)
   for (let i = 0; i < cookiesArr.length; i++) {
     cookie = cookiesArr[i];
@@ -208,11 +208,6 @@ async function run() {
       return
     }
     console.log($.actorUuid)
-    console.log(`当前助力:${$.shareUuid}`)
-    if($.index == 1){
-      $.shareUuid = $.actorUuid
-      console.log(`后面的号都会助力:${$.shareUuid}`)
-    }
     await $.wait(parseInt(Math.random() * 1000 + 5000, 10))
     if(flag) await $.wait(parseInt(Math.random() * 1000 + 10000, 10))
     
