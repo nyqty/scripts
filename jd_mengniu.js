@@ -2,7 +2,7 @@
 组队分豆-蒙牛 [jd_mengniu.js]
 
 ————————————————
-入口：[组队分豆-蒙牛 (https://lzkjdz-isv.isvjcloud.com/pool/captain/4471266?activityId=e319ac3cef964226a29eac2559f1cf57&signUuid=b60c56696fdb45b9a9be70fac4faf0ff)]
+入口：[组队分豆-蒙牛 (https://lzkjdz-isv.isvjcloud.com/pool/captain/4471266?activityId=4e3b9b6233104c199c0c44ff6edbc85d&signUuid=1fc26ba85abe4d7fa8024c9917163442)]
 IOS等用户直接用NobyDa的jd cookie
 ============Quantumultx===============
 [task_local]
@@ -40,13 +40,13 @@ if ($.isNode()) {
         $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
         return;
     }
-    console.log(`若之前做过该活动，则无法重复入队。\n入口:\nhttps://lzkjdz-isv.isvjcloud.com/pool/captain/4471266?activityId=e319ac3cef964226a29eac2559f1cf57&signUuid=b60c56696fdb45b9a9be70fac4faf0ff`)
+    console.log(`若之前做过该活动，则无法重复入队。\n入口:\nhttps://lzkjdz-isv.isvjcloud.com/pool/captain/4471266?activityId=4e3b9b6233104c199c0c44ff6edbc85d&signUuid=1fc26ba85abe4d7fa8024c9917163442`)
     for (let i = 0; i < cookiesArr.length; i++) {
         if (cookiesArr[i]) {
             cookie = cookiesArr[i]
             originCookie = cookiesArr[i]
             newCookie = ''
-            $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
+            $.UserName = decodeURIComponent(cookie.match(/pt_pin=(.+?);/) && cookie.match(/pt_pin=(.+?);/)[1])
             $.index = i + 1;
             $.isLogin = true;
             $.nickName = '';
@@ -66,7 +66,7 @@ if ($.isNode()) {
             // $.authorCode = authorCodeList[random(0, authorCodeList.length)]
             $.authorCode = ownCode ? ownCode : authorCodeList[random(0, authorCodeList.length)]
             $.authorNum = `${random(1000000, 9999999)}`
-            $.activityId = 'e319ac3cef964226a29eac2559f1cf57'
+            $.activityId = '4e3b9b6233104c199c0c44ff6edbc85d'
             $.activityShopId = '1000014803'
             $.activityUrl = `https://lzkjdz-isv.isvjcloud.com/pool/captain/${$.authorNum}?activityId=${$.activityId}&signUuid=${encodeURIComponent($.authorCode)}&adsource=null&shareuserid4minipg=null&shopid=${$.activityShopId}&lng=00.000000&lat=00.000000&sid=&un_area=`
             await anjia();
