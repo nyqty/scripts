@@ -181,13 +181,13 @@ function interact_template_getHomeData(timeout = 0) {
 								if (!code)
 									continue;
 								await harmony_collectScore(code, data.data.result.taskVos[i].taskId);
-								await $.wait(1000);
+								await $.wait(2000);
 								if(!llcanhelp)
 									break;								
 							}
 						} else if (data.data.result.taskVos[i].status === 3) {
 							console.log('开始抽奖');
-							//await interact_template_getLotteryResult(data.data.result.taskVos[i].taskId);
+							await interact_template_getLotteryResult(data.data.result.taskVos[i].taskId);
 						} else if ([0, 13].includes(data.data.result.taskVos[i].taskType)) {
 							if (data.data.result.taskVos[i].status === 1) {
 								await harmony_collectScore(data.data.result.taskVos[i].simpleRecordInfoVo.taskToken, data.data.result.taskVos[i].taskId);
@@ -195,9 +195,9 @@ function interact_template_getHomeData(timeout = 0) {
 						} else if ([14, 6].includes(data.data.result.taskVos[i].taskType)) {
 							for (let j = 0; j < (data.data.result.userInfo.lotteryNum || 0); j++) {
 								if (appId === "1EFRTxQ") {
-									//await ts_smashGoldenEggs();
+									await ts_smashGoldenEggs();
 								} else {
-									//await interact_template_getLotteryResult(data.data.result.taskVos[i].taskId);
+									await interact_template_getLotteryResult(data.data.result.taskVos[i].taskId);
 								}
 							}
 						}
@@ -209,7 +209,7 @@ function interact_template_getHomeData(timeout = 0) {
 										if (list[j].itemId) {
 											await harmony_collectScore(list[j].taskToken, data.data.result.taskVos[i].taskId, list[j].itemId, 1);
 											if (k === data.data.result.taskVos[i].maxTimes - 1)
-												//await interact_template_getLotteryResult(data.data.result.taskVos[i].taskId);
+												await interact_template_getLotteryResult(data.data.result.taskVos[i].taskId);
 										} else {
 											await harmony_collectScore(list[j].taskToken, data.data.result.taskVos[i].taskId)
 										}

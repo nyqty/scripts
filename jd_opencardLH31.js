@@ -16,11 +16,11 @@
 请求太频繁会被黑ip
 过10分钟再执行
 
-cron:30 2,16 21-31,2-5 12,1 *
+cron:30 2,16 21-31,1-5 12,1 *
 ============Quantumultx===============
 [task_local]
 #12.20~1.5 双旦寻宝 玩转大富翁
-30 2,16 21-31,2-5 12,1 * https://raw.githubusercontent.com/KingRan/JDJB/main/jd_opencardLH31.js, tag=12.20~1.5 双旦寻宝 玩转大富翁, enabled=true
+30 2,16 21-31,1-5 12,1 * https://raw.githubusercontent.com/KingRan/JDJB/main/jd_opencardLH31.js, tag=12.20~1.5 双旦寻宝 玩转大富翁, enabled=true
 
 */
 
