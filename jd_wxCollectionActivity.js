@@ -1,3 +1,7 @@
+/**
+ 加购物车抽奖
+ cron 30 3 * * * jd_wxCollectionActivity.js
+ */
 if (!["true"].includes(process.env.JD_JGWCCJ)) {
     console.log("避免自动运行请设置加购环境变量JD_JGWCCJ为\"true\"来运行本脚本")
     return
