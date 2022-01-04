@@ -76,7 +76,7 @@ if ($.isNode()) {
         await $.wait(time)
       }
     }
-  } while (count < (process.env.CFD_LOOP_LIMIT || 5)*1)
+  } while (count < (process.env.CFD_LOOP_LIMIT || 1)*1)
 })()
   .catch((e) => $.logErr(e))
   .finally(() => $.done());
@@ -333,7 +333,7 @@ async function requestAlgo() {
       "expandParams": ""
     })
   }
-  new Promise(async resolve => {
+  return new Promise(async resolve => {
     $.post(options, (err, resp, data) => {
       try {
         if (err) {

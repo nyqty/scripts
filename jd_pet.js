@@ -156,28 +156,6 @@ async function jdPet() {
     }
 }
 
-async function GetShareCode() {
-    try {
-        //查询jd宠物信息
-        const initPetTownRes = await request('initPetTown');
-        if (initPetTownRes.code === '0' && initPetTownRes.resultCode === '0' && initPetTownRes.message === 'success') {
-            $.petInfo = initPetTownRes.result;
-            if ($.petInfo.userStatus == 0 || $.petInfo.petStatus == 5 || $.petInfo.petStatus == 6 || !$.petInfo.goodsInfo) {
-				console.log(`【京东账号${$.index}（${$.UserName}）的互助码】\n宠物状态不能被助力，跳过...`);
-                return;
-            }
-            console.log(`【京东账号${$.index}（${$.UserName}）的互助码】\n${$.petInfo.shareCode}`);
-            newShareCodes.push($.petInfo.shareCode);			
-        }
-    } catch (e) {
-        $.logErr(e)
-        const errMsg = `【京东账号${$.index} ${$.nickName || $.UserName}】\n任务执行异常，请检查执行日志 ‼️‼️`;
-        if ($.isNode())
-            await notify.sendNotify(`${$.name}`, errMsg);
-        $.msg($.name, '', `${errMsg}`);
-    }
-}
-
 // 收取所有好感度
 async function energyCollect() {
     console.log('开始收取任务奖励好感度');
@@ -322,6 +300,10 @@ async function petSport() {
             if (resultCode == 0) {
                 let sportRevardResult = await request('getSportReward');
                 console.log(`领取遛狗奖励完成: ${JSON.stringify(sportRevardResult)}`);
+			} else if (resultCode == 1013) {
+			let sportRevardResult = await request('getSportReward', {"version":1});
+				console.log(`领取遛狗奖励完成: ${JSON.stringify(sportRevardResult)}`);
+				if (sportRevardResult.resultCode == 0) resultCode = 0
             }
             times++;
         } while (resultCode == 0 && code == 0)
@@ -543,7 +525,7 @@ function taskUrl(function_id, body = {}) {
     body["channel"] = 'app';
     return {
         url: `${JD_API_HOST}?functionId=${function_id}`,
-        body: `body=${escape(JSON.stringify(body))}&appid=wh5&loginWQBiz=pet-town&clientVersion=9.0.4`,
+    body: `body=${encodeURIComponent(JSON.stringify(body))}&appid=wh5&loginWQBiz=pet-town&clientVersion=9.0.4`,
         headers: {
             'Cookie': cookie,
             'User-Agent': $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('./USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.4.4;14.3;network/4g;Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1"),
