@@ -1,7 +1,11 @@
 /*
 活动：京小鸽吾悦寄
-活动路径：边玩边赚->京小鸽吾悦寄
+活动路径：边玩边赚-》京小鸽吾悦寄
 很小的几率能抽到实物。
+============Quantumultx===============
+[task_local]
+#京小鸽吾悦寄
+0 15 * * * jd_jxg.js, tag=京小鸽吾悦寄, enabled=true
 */
 const $ = new Env('京小鸽吾悦寄');
 const notify = $.isNode() ? require('./sendNotify') : '';
@@ -272,7 +276,7 @@ async function getBigReward(){
   return new Promise(async resolve => {
     $.post(myRequest, (err, resp, data) => {
       try {
-        // console.log(data);
+        console.log(data);
         data = JSON.parse(data);
         if(data.success === true && data.code === 1){
           if(data && data.content && data.content.rewardDTO){
@@ -545,41 +549,40 @@ function getPostRequest(type,body){
 function TotalBean() {
   return new Promise(async resolve => {
     const options = {
-        url: "https://me-api.jd.com/user_new/info/GetJDUserInfoUnion",
-        headers: {
-            Host: "me-api.jd.com",
-            Accept: "*/*",
-            Connection: "keep-alive",
-            Cookie: cookie,
-            "User-Agent": $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('./USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.4.4;14.3;network/4g;Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1"),
-            "Accept-Language": "zh-cn",
-            "Referer": "https://home.m.jd.com/myJd/newhome.action?sceneval=2&ufc=&",
-            "Accept-Encoding": "gzip, deflate, br"
-        }
+      "url": `https://wq.jd.com/user/info/QueryJDUserInfo?sceneval=2`,
+      "headers": {
+        "Accept": "application/json,text/plain, */*",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Accept-Language": "zh-cn",
+        "Connection": "keep-alive",
+        "Cookie": cookie,
+        "Referer": "https://wqs.jd.com/my/jingdou/my.shtml?sceneval=2",
+        "User-Agent": $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('./USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.2.2;14.2;%E4%BA%AC%E4%B8%9C/9.2.2 CFNetwork/1206 Darwin/20.1.0"),
+      }
     }
-    $.get(options, (err, resp, data) => {
-        try {
-            if (err) {
-                $.logErr(err)
-            } else {
-                if (data) {
-                    data = JSON.parse(data);
-                    if (data['retcode'] === "1001") {
-                        $.isLogin = false; //cookie过期
-                        return;
-                    }
-                    if (data['retcode'] === "0" && data.data && data.data.hasOwnProperty("userInfo")) {
-                        $.nickName = data.data.userInfo.baseInfo.nickname?data.data.userInfo.baseInfo.nickname:data.data.userInfo.baseInfo.curPin;
-                    }
-                } else {
-                    console.log('京东服务器返回空数据');
-                }
+    $.post(options, (err, resp, data) => {
+      try {
+        if (err) {
+          console.log(`${JSON.stringify(err)}`)
+          console.log(`${$.name} API请求失败，请检查网路重试`)
+        } else {
+          if (data) {
+            data = JSON.parse(data);
+            if (data['retcode'] === 13) {
+              $.isLogin = false; //cookie过期
+              return;
             }
-        } catch (e) {
-            $.logErr(e)
-        } finally {
-            resolve();
+            //$.nickName = data['base'].nickname;
+          } else {
+            console.log(`京东服务器返回空数据`)
+          }
         }
+      } catch (e) {
+        $.logErr(e, resp)
+      } finally {
+        resolve();
+      }
     })
   })
 }

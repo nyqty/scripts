@@ -40,7 +40,7 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
   for (let i = 0; i < cookiesArr.length; i++) {
     if (cookiesArr[i]) {
       cookie = cookiesArr[i];
-      $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
+      $.UserName = decodeURIComponent(cookie.match(/pt_pin=(.+?);/) && cookie.match(/pt_pin=(.+?);/)[1])
       $.index = i + 1;
       $.isLogin = true;
       $.beans = 0
@@ -59,6 +59,7 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
         }
         continue
       }
+      await goldCreatorDoTask({ "type": 1 })
       await goldCenterHead();
 
     }
@@ -86,8 +87,8 @@ function goldCenterHead() {
           if (safeGet(data)) {
             data = JSON.parse(data)
             if (data.code === '0') {
-              await goldCreatorDoTask({ "type": 1 })
               if (data.result.medalNum === 5) {
+                await $.wait(1500)
                 await goldCreatorDoTask({ "type": 2 })
               }
             } else {
@@ -107,7 +108,6 @@ function goldCenterHead() {
 function goldCreatorDoTask(body) {
   return new Promise(resolve => {
     const options = taskUrl('goldCenterDoTask', body)
-    // console.log(options);
     $.get(options, async (err, resp, data) => {
       try {
         if (err) {

@@ -167,7 +167,7 @@ let args_xh = {
         for(let i = 0; i < $.cookiesArr.length; i++){
             if($.cookiesArr[i]){
                 $.cookie = $.cookiesArr[i];
-                $.UserName = decodeURIComponent($.cookie.match(/pt_pin=([^; ]+);?/) && $.cookie.match(/pt_pin=([^; ]+);?/)[1])
+                $.UserName = decodeURIComponent($.cookie.match(/pt_pin=(.+?);/) && $.cookie.match(/pt_pin=(.+?);/)[1])
                 $.index = i + 1;
                 $.isLogin = true;
                 $.nickName = '';
@@ -380,6 +380,11 @@ function try_feedsList(tabId, page){
                                     for(let itemTag of item.tagList){
                                         if(itemTag.tagType === 3){
                                             args_xh.printLog ? console.log('商品被过滤，该商品是种草官专属') : ''
+                                            $.isPush = false;
+                                            break;
+                                        }
+                                        else if(itemTag.tagType === 5){
+                                            args_xh.printLog ? console.log('商品被跳过，该商品是付费试用！') : ''
                                             $.isPush = false;
                                             break;
                                         }
