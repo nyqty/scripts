@@ -44,7 +44,7 @@ let activityCookie =''
   $.actId = 'c49b9bf1e3c3487dac8ab_22010601'
   $.MixNicks = ''
   $.inviteNick = 'oWYzEz0N7KY058rLNke8o87TwJCmNe8NFvhpI0XmJDULVU108+UxlHw7qoUuHA4F'
-  console.log(`\n活动地址:https://jinggengjcq-isv.isvjcloud.com/fronth5/#/pages/unitedCardNew20220106/unitedCardNew20220106?actId=c49b9bf1e3c3487dac8ab_22010601&bizExtString=c2hhcmVOaWNrOmsxTm9iYiUyQlAwZXIlMkJDMnN5c3hueCUyRlAyS0VMTzlpelJWcHdDeXF1MGVxVlo1YVc3Ukh6bE1vYnJ6SiUyRmU5ciUyRnVm`)
+  console.log(`\n活动地址:https://jinggengjcq-isv.isvjcloud.com/fronth5/#/pages/unitedCardNew20220106/unitedCardNew20220106?actId=c49b9bf1e3c3487dac8ab_22010601&bizExtString=oWYzEz0N7KY058rLNke8o87TwJCmNe8NFvhpI0XmJDULVU108+UxlHw7qoUuHA4F`)
   for (let i = 0; i < cookiesArr.length; i++) {
     cookie = cookiesArr[i];
     if (cookie) {
