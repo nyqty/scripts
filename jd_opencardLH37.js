@@ -1,11 +1,6 @@
 /*
 1.6~1.14 联合开卡 [jd_opencardLH37.js]
 开卡脚本，一次性脚本
-
-第一个账号助力作者 其他依次助力CK1
-第一个CK失效会退出脚本
-
-
 cron:50 0,13 6-14 1 *
 ============Quantumultx===============
 [task_local]
@@ -48,7 +43,7 @@ let activityCookie =''
   $.userId = '10299171'
   $.actId = 'c49b9bf1e3c3487dac8ab_22010601'
   $.MixNicks = ''
-  $.inviteNick = 'k1Nobb+P0er+C2sysxnx/P2KELO9izRVpwCyqu0eqVZ5aW7RHzlMobrzJ/e9r/uf'
+  $.inviteNick = 'oWYzEz0N7KY058rLNke8o87TwJCmNe8NFvhpI0XmJDULVU108+UxlHw7qoUuHA4F'
   console.log(`\n活动地址:https://jinggengjcq-isv.isvjcloud.com/fronth5/#/pages/unitedCardNew20220106/unitedCardNew20220106?actId=c49b9bf1e3c3487dac8ab_22010601&bizExtString=c2hhcmVOaWNrOmsxTm9iYiUyQlAwZXIlMkJDMnN5c3hueCUyRlAyS0VMTzlpelJWcHdDeXF1MGVxVlo1YVc3Ukh6bE1vYnJ6SiUyRmU5ciUyRnVm`)
   for (let i = 0; i < cookiesArr.length; i++) {
     cookie = cookiesArr[i];
@@ -159,7 +154,6 @@ async function run() {
     await takePostRequest('myAward');
     await takePostRequest('missionInviteList');
     console.log($.MixNick)
-    console.log(`当前助力:${$.inviteNick}`)
     await $.wait(parseInt(Math.random() * 1000 + 5000, 10))
     if(flag) await $.wait(parseInt(Math.random() * 1000 + 10000, 10))
     
