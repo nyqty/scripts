@@ -47,7 +47,7 @@ if ($.isNode()) {
             cookie = cookiesArr[i]
             originCookie = cookiesArr[i]
             newCookie = ''
-            $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
+            $.UserName = decodeURIComponent(cookie.match(/pt_pin=(.+?);/) && cookie.match(/pt_pin=(.+?);/)[1])
             $.index = i + 1;
             $.isLogin = true;
             $.nickName = '';
@@ -60,7 +60,7 @@ if ($.isNode()) {
                 }
                 continue
             }
-            authorCodeList = ['a651f375412342ef9b54fa2435ffad51']
+            authorCodeList = ['63dda38005e344e4bd89eba5b85c46a4','7208ffe82f644228b145888dbf39a9ae']
             $.bean = 0;
             $.authorCode = ownCode ? ownCode : authorCodeList[random(0, authorCodeList.length)]
             $.activityId = '52c0712263f342308da1287a66702009'
