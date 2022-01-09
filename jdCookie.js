@@ -33,5 +33,5 @@ console.log(`==================脚本执行- 北京时间(UTC+8)：${new Date(ne
 if (process.env.JD_DEBUG && process.env.JD_DEBUG === 'false') console.log = () => {};
 for (let i = 0; i < CookieJDs.length; i++) {
   const index = (i + 1 === 1) ? '' : (i + 1);
-  exports['CookieJD' + index] = CookieJDs[i].trim();
+  exports['CookieJD' + index] = CookieJDs[i].trim().substr(-1)+(CookieJDs[i].trim().substr(-1)===";"?"":";");//防止意外末尾加;
 }
