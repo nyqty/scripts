@@ -2,7 +2,7 @@
 2022年年货节京享红包活动🧧
 ck1助力 作者
 其余助力ck1
-https://u.jd.com/SKi70Fh
+https://u.jd.com/SIioUdg
 跳转到app 可查看助力情况
 0 0,8,20,22 * * * jd_RedEnvelope.js
 */
@@ -57,9 +57,9 @@ let nowTime = new Date().getTime() + new Date().getTimezoneOffset()*60*1000 + 8*
     }
   }
   if(message){
-    $.msg($.name, ``, `${message}\nhttps://u.jd.com/SKi70Fh\n\n跳转到app 可查看助力情况`);
+    $.msg($.name, ``, `${message}\nhttps://u.jd.com/SIioUdg\n\n跳转到app 可查看助力情况`);
     if ($.isNode()){
-      await notify.sendNotify(`${$.name}`, `${message}\n\nhttps://u.jd.com/SKi70Fh\n跳转到app 可查看助力情况`);
+      await notify.sendNotify(`${$.name}`, `${message}\n\nhttps://u.jd.com/SIioUdg\n跳转到app 可查看助力情况`);
     }
   }
 })()
@@ -317,13 +317,11 @@ function getEid(arr) {
 
 function getUA(){
   $.UA = `jdapp;iPhone;10.2.0;13.1.2;${randomString(40)};M/5.0;network/wifi;ADID/;model/iPhone8,1;addressid/2308460611;appBuild/167853;jdSupportDarkMode/0;Mozilla/5.0 (iPhone; CPU iPhone OS 13_1_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1;`
-  rebateCode = 'SKi70Fh'
-  if($.index != 1){//SwI8CmH
-    //https://u.jd.com/SCiFHdb
-    //https://u.jd.com/SdiePmC  PC
-    let arr = [rebateCodes,'SKi70Fh','SdiePmC','SCiFHdb']
+  rebateCode = 'SIioUdg'
+  if($.index != 1){
+    let arr = [rebateCodes,'SIioUdg']
     rebateCode = arr[Math.floor(Math.random() * arr.length)] || rebateCode
-    if(!rebateCode) rebateCode = 'SKi70Fh'
+    if(!rebateCode) rebateCode = 'SIioUdg'
   }
   console.log(rebateCode)
 }
