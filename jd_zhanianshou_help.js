@@ -42,10 +42,6 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
             console.log(`\n******开始【京东账号${$.index}】${$.UserName}*********\n`);
             try {
                 res = await tigernian_getTaskDetail()  
-                if( res.inviteId ){
-                    console.log(`助力码：${res.inviteId}\n`)
-                    $.shareCodesArr.push(res.inviteId)
-                }
             } catch (e) {
                 $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
             }
@@ -170,13 +166,18 @@ function tigernian_getTaskDetail() {
                         if (data.code === 0) {
                             if (data.data && data['data']['bizCode'] === 0) {
                                 if (data.data.result.inviteId == null) {
-                                    console.log("黑号或者已完成邀请任务")
-                                    resolve("")
+                                    console.log("已完成邀请任务")
+                                }else if( res.inviteId ){
+                                    console.log(`助力码：${res.inviteId}\n`)
+                                    $.shareCodesArr.push(res.inviteId)
                                 }
                                 resolve(data.data.result)
+                            }else{
+                                resolve("")
+                                console.log("黑号了！")
                             }
                         } else {
-                            //console.log(`\n\nsecretp失败:${JSON.stringify(data)}\n`)
+                            console.log(`失败:${JSON.stringify(data)}\n`)
                         }
                     }
                 }
