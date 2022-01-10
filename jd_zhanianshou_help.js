@@ -1,13 +1,9 @@
-if (!["true"].includes(process.env.JD_ZNS)) {
-    console.log("避免自动运行请设置环境变量JD_ZNS为\"true\"来运行本脚本")
-    return
-}
-
 /*
+https://wbbny.m.jd.com/babelDiy/Zeus/41AJZXRUJeTqdBK9bPoPgUJiodcU/index.html?babelChannel=sszd&shareType=taskHelp&inviteId=ZXASTT012Zk7ilpW8IMpgFjRWn6W7zB55awQ&mpin=RnFtyzILazSPztTNHBWh1l98aDc&from=sc
 脚本有问题，凑活用
 =================================Quantumultx=========================
 [task_local]
-#炸年兽
+#炸年兽互助
 0 0-23/5 * * * jd_zhanianshou.js, tag=炸年兽, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
 */
 const $ = new Env('炸年兽');
@@ -17,8 +13,7 @@ const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 let cookiesArr = [],
     cookie = '',
     message;
-let secretp = '',
-    inviteId = []
+let secretp = '';
 
 if ($.isNode()) {
     Object.keys(jdCookieNode).forEach((item) => {
@@ -29,131 +24,83 @@ if ($.isNode()) {
     cookiesArr = [$.getdata('CookieJD'), $.getdata('CookieJD2'), ...jsonParse($.getdata('CookiesJD') || "[]").map(item => item.cookie)].filter(item => !!item);
 }
 const JD_API_HOST = 'https://api.m.jd.com/client.action';
-let inviteCodes = [
 
-]
-$.shareCodesArr = [];
 
 !(async() => {
     if (!cookiesArr[0]) {
         $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
         return;
     }
-
-    $.inviteIdCodesArr = {}
+    $.shareCodesArr = [];
     for (let i = 0; i < cookiesArr.length; i++) {
         if (cookiesArr[i]) {
             await getUA()
             cookie = cookiesArr[i];
             $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
             $.index = i + 1;
-            $.isLogin = true;
-            $.nickName = '';
-            message = '';
-            console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
-            //   await shareCodesFormat()
-            await get_secretp()
+            console.log(`\n******开始【京东账号${$.index}】${$.UserName}*********\n`);
             try {
-                do {
-                    var conti = false
-                    await tigernian_collectAtuoScore()
-                    res = await tigernian_getTaskDetail()
-
-                    for (var p = 0; p < res.lotteryTaskVos[0].badgeAwardVos.length; p++) {
-                        if (res.lotteryTaskVos[0].badgeAwardVos[p].status == 3) {
-                            await tigernian_getBadgeAward(res.lotteryTaskVos[0].badgeAwardVos[p].awardToken)
-                        }
-
-                    }
-                    let task = []
-                    let r = []
-                    for (var p = 0; p < res.taskVos.length; p++) {
-                        task = res.taskVos[p]
-                        if (task.status != 1) continue
-                        switch (task.taskType) {
-                            case 7:
-                            case 9:
-                            case 3:
-                            case 6:
-                            case 26:
-                                var tmp = []
-                                if (task.taskType == 7) {
-                                    tmp = task.browseShopVo
-                                } else {
-                                    tmp = task.shoppingActivityVos
-                                }
-
-                                for (var o = 0; o < tmp.length; o++) {
-                                    console.log(`\n\n ${tmp[o].title?tmp[o].title:tmp[o].shopName}`)
-                                    if (tmp[o].status == 1) {
-                                        conti = true
-                                        await tigernian_collectScore(tmp[o].taskToken, task.taskId)
-                                    }
-
-                                }
-                                await $.wait(8000)
-                                for (var o = 0; o < tmp.length; o++) {
-                                    if (tmp[o].status == 1) {
-                                        conti = true
-                                        await qryViewkitCallbackResult(tmp[o].taskToken)
-                                    }
-
-                                }
-                                break
-                            case 2:
-                                r = await tigernian_getFeedDetail(task.taskId)
-                                var t = 0;
-                                for (var o = 0; o < r.productInfoVos.length; o++) {
-                                    if (r.productInfoVos[o].status == 1) {
-                                        conti = true
-                                        await tigernian_collectScore(r.productInfoVos[o].taskToken, task.taskId)
-                                        t++
-                                        if (t >= 5) break
-                                    }
-
-                                }
-                                break
-                            case 5:
-                                r = await tigernian_getFeedDetail2(task.taskId)
-                                var t = 0;
-                                for (var o = 0; o < r.browseShopVo.length; o++) {
-                                    if (r.browseShopVo[o].status == 1) {
-                                        conti = true
-                                        await tigernian_collectScore(r.browseShopVo[o].taskToken, task.taskId)
-                                        t++
-                                        if (t >= 5) break
-                                    }
-
-                                }
-                                break
-                            case 21:
-                                    for (var o = 0; o < task.brandMemberVos.length; o++) {
-                                        if (task.brandMemberVos[o].status == 1) {
-                                            console.log(`\n\n ${task.brandMemberVos[o].title}`)
-                                            memberUrl = task.brandMemberVos[o].memberUrl
-                                            memberUrl = transform(memberUrl)
-                                            await join(task.brandMemberVos[o].vendorIds, memberUrl.channel, memberUrl.shopId ? memberUrl.shopId : "")
-                                            await tigernian_collectScore(task.brandMemberVos[o].taskToken, task.taskId)
-                                        }
-
-                                    }
-                        }
-
-                    }
-                    await $.wait(1000)
-                } while (conti)
-
-
-                await tigernian_sign()
-                do {
-                    var ret = await tigernian_raise()
-                } while (ret)
+                res = await tigernian_getTaskDetail()  
                 console.log(`\n\n助力码：${res.inviteId}\n`)
-                $.newShareCodes.push(res.inviteId)
-                inviteId.push(res.inviteId)
+                $.shareCodesArr.push(res.inviteId)
             } catch (e) {
                 $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
             }
+        }
+    }
+
+    for (let i = 0; i < cookiesArr.length; i++) {
+        if (cookiesArr[i]) {
+            await getUA()
+            cookie = cookiesArr[i];
+            $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
+            $.index = i + 1;
+            $.nickName = '';
+            console.log(`\n******开始【京东账号${$.index}】${$.UserName}*********\n`);
+
+            await get_secretp()
+            for (let i = 0; i < $.shareCodesArr.length; i++) {
+                console.log(`\n开始助力 【${$.shareCodesArr[i]}】`)
+                let res = await Friends_help($.shareCodesArr[i])
+                console.log(res);
+                if ( res && res['data'] ) {
+                    let bizCode = res['data']['bizCode'],bizMsg=res['data']['bizMsg'];
+                    if( bizCode===0 ){
+
+                    }else if( bizCode===109 ){
+                        console.log(bizMsg)
+                    }
+                    /*
+                    //{"code":0,"data":{"bizCode":109,"bizMsg":"不能给自己助力哦~","success":false},"msg":"调用成功"}
+                    if (res['data']['result']['toasts'] && res['data']['result']['toasts'][0] && res['data']['result']['toasts'][0]['status'] === '3') {
+                        console.log(`助力次数已耗尽，跳出`)
+                        break
+                    }
+                    if (res['data']['result']['toasts'] && res['data']['result']['toasts'][0]) {
+                        console.log(`助力 【${$.shareCodesArr[i]}】:${res.data.result.toasts[0].msg}`)
+                    }*/
+                }
+                /*
+                if ((res && res['status'] && res['status'] === '3') || (res && res.data && res.data.bizCode === -11)) {
+                    // 助力次数耗尽 || 黑号
+                    break
+                }*/
+
+                /*
+                        if (data && data.data && data.data.biz_code === 0) {
+            let result = data.data.result
+            // status ,0:助力成功，1:不能重复助力，3:助力次数耗尽，8:不能为自己助力
+            console.log(`账号【${$.index}】 助力: ${shareCodes[j]}\n${result.status} ${result.statusDesc}\n`);
+            if (result.status === 2){
+                shareCodes.splice(j, 1)
+                j--
+                continue
+            }else if ( result.status === 3 || result.status === 9 ) break;
+        } else {
+            console.log(`助力异常：${JSON.stringify(data)}`);
+        }*/
+            }
+
         }
     }
 })()
@@ -163,17 +110,6 @@ $.shareCodesArr = [];
     .finally(() => {
         $.done();
     })
-
-function transform(str) {
-    var REQUEST = new Object,
-        data = str.slice(str.indexOf("?") + 1, str.length - 1),
-        aParams = data.substr(1).split("&");
-    for (i = 0; i < aParams.length; i++) {　　
-        var aParam = aParams[i].split("=");　　
-        REQUEST[aParam[0]] = aParam[1]
-    }
-    return REQUEST
-}
 
 function get_secretp() {
     let body = {};
@@ -230,104 +166,6 @@ function Friends_help(inviteId) {
     })
 }
 
-function tigernian_sign() {
-    let body = { "ss": { "extraData": { "log": "", "sceneid": "ZNShPageh5" }, "secretp": secretp, "random": randomString(6) } };
-    return new Promise((resolve) => {
-        $.post(taskPostUrl("tigernian_sign", body), async(err, resp, data) => {
-            try {
-                if (err) {
-                    console.log(`${JSON.stringify(err)}`)
-                    console.log(`${$.name} API请求失败，请检查网路重试`)
-                } else {
-                    if (safeGet(data)) {
-                        data = JSON.parse(data);
-                        if (data.code === 0) {
-                            if (data.data && data['data']['bizCode'] === 0) {
-
-                                console.log(`\n\n 签到成功`)
-                                resolve(true)
-                            } else {
-                                resolve(false)
-                            }
-                        } else {
-                            console.log(`\n\n签到失败:${JSON.stringify(data)}\n`)
-                            resolve(false)
-                        }
-                    }
-                }
-            } catch (e) {
-                $.logErr(e, resp)
-            } finally {
-                resolve(data);
-            }
-        })
-    })
-}
-
-function tigernian_raise() {
-    let body = { "ss": { "extraData": { "log": "", "sceneid": "ZNShPageh5" }, "secretp": secretp, "random": randomString(6) } };
-    return new Promise((resolve) => {
-        $.post(taskPostUrl("tigernian_raise", body), async(err, resp, data) => {
-            try {
-                if (err) {
-                    console.log(`${JSON.stringify(err)}`)
-                    console.log(`${$.name} API请求失败，请检查网路重试`)
-                } else {
-                    if (safeGet(data)) {
-                        data = JSON.parse(data);
-                        if (data.code === 0) {
-                            if (data.data && data['data']['bizCode'] === 0) {
-
-                                console.log(`\n\n 升级成功`)
-                                resolve(true)
-                            } else {
-                                resolve(false)
-                            }
-                        } else {
-                            console.log(`\n\n升级失败:${JSON.stringify(data)}\n`)
-                            resolve(false)
-                        }
-                    }
-                }
-            } catch (e) {
-                $.logErr(e, resp)
-            } finally {
-                resolve(data);
-            }
-        })
-    })
-}
-
-function tigernian_collectAtuoScore() {
-    let body = { "ss": { "extraData": { "log": "", "sceneid": "ZNShPageh5" }, "secretp": secretp, "random": randomString(6) } };
-    return new Promise((resolve) => {
-        $.post(taskPostUrl("tigernian_collectAtuoScore", body), async(err, resp, data) => {
-            try {
-                if (err) {
-                    console.log(`${JSON.stringify(err)}`)
-                    console.log(`${$.name} API请求失败，请检查网路重试`)
-                } else {
-                    if (safeGet(data)) {
-                        data = JSON.parse(data);
-                        if (data.code === 0) {
-                            if (data.data && data['data']['bizCode'] === 0) {
-
-                                console.log(`\n\n 成功领取${data.data.result.produceScore}个币`)
-                            }
-                        } else {
-                            //console.log(`\n\nsecretp失败:${JSON.stringify(data)}\n`)
-                        }
-                    }
-                }
-            } catch (e) {
-                $.logErr(e, resp)
-            } finally {
-                resolve(data);
-            }
-        })
-    })
-}
-
 function tigernian_getTaskDetail() {
     let body = {};
     return new Promise((resolve) => {
@@ -345,7 +183,6 @@ function tigernian_getTaskDetail() {
                                     console.log("黑号")
                                     resolve("")
                                 }
-                                inviteId.push(data.data.result.inviteId)
                                 resolve(data.data.result)
                             }
                         } else {
