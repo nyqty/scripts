@@ -79,7 +79,7 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
                         $.shareCodesArr.splice(j, 1)
                         j--
                         continue
-                    }else if( bizCode===-5001 ){//活动太火爆了，稍后再试试吧~
+                    }else if( bizCode===-1002 || bizCode===-5001 ){//活动太火爆了，稍后再试试吧~
                         await $.wait(getRndInteger(6000,15000))
                     }else{
                         console.log(bizCode+bizMsg) //109 不能给自己助力哦~
