@@ -76,10 +76,12 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
                         console.log(bizMsg)
                         break;
                     }else if( bizCode===-201 ){//好友人气爆棚不需要助力啦
+                        console.log(bizMsg)
                         $.shareCodesArr.splice(j, 1)
                         j--
                         continue
                     }else if( bizCode===-1002 || bizCode===-5001 ){//活动太火爆了，稍后再试试吧~
+                        console.log(bizMsg)
                         await $.wait(getRndInteger(6000,15000))
                     }else{
                         console.log(bizCode+bizMsg) //109 不能给自己助力哦~
@@ -191,202 +193,6 @@ function tigernian_getTaskDetail() {
     })
 }
 
-function tigernian_collectScore(taskToken, taskId) {
-    let body = { "taskId": taskId, "taskToken": taskToken, "actionType": 1, "ss": { "extraData": { "log": "", "sceneid": "ZNShPageh5" }, "secretp": secretp, "random": randomString(6) } };
-
-    return new Promise((resolve) => {
-        $.post(taskPostUrl("tigernian_collectScore", body), async(err, resp, data) => {
-            try {
-                if (err) {
-                    console.log(`${JSON.stringify(err)}`)
-                    console.log(`${$.name} API请求失败，请检查网路重试`)
-                } else {
-                    if (safeGet(data)) {
-                        data = JSON.parse(data);
-                        if (data.code === 0) {
-                            if (data.data && data['data']['bizCode'] === 0) {
-                                console.log(data.msg)
-                            }
-                        } else {
-                            console.log(`\n\n 失败:${JSON.stringify(data)}\n`)
-                        }
-                    }
-                }
-            } catch (e) {
-                $.logErr(e, resp)
-            } finally {
-                resolve(data);
-            }
-        })
-    })
-}
-
-function qryViewkitCallbackResult(taskToken) {
-    let body = { "dataSource": "newshortAward", "method": "getTaskAward", "reqParams": `{\"taskToken\":"${taskToken}"}`, "sdkVersion": "1.0.0", "clientLanguage": "zh", "onlyTimeId": new Date().getTime(), "riskParam": { "platform": "3", "orgType": "2", "openId": "-1", "pageClickKey": "Babel_VKCoupon", "eid": "", "fp": "-1", "shshshfp": "", "shshshfpa": "", "shshshfpb": "", "childActivityUrl": "", "userArea": "-1", "client": "", "clientVersion": "", "uuid": "", "osVersion": "", "brand": "", "model": "", "networkType": "", "jda": "-1" } };
-
-    return new Promise((resolve) => {
-        $.post(taskPostUrl2("qryViewkitCallbackResult", body), async(err, resp, data) => {
-            try {
-                if (err) {
-                    console.log(`${JSON.stringify(err)}`)
-                    console.log(`${$.name} API请求失败，请检查网路重试`)
-                } else {
-                    if (safeGet(data)) {
-                        if (data.indexOf("已完成") != -1) {
-                            data = JSON.parse(data);
-                            console.log(`\n\n ${data.toast.subTitle}`)
-                        } else {
-                            console.log(`\n\n失败:${JSON.stringify(data)}\n`)
-                        }
-                    }
-                }
-            } catch (e) {
-                $.logErr(e, resp)
-            } finally {
-                resolve(data);
-            }
-        })
-    })
-}
-
-function tigernian_getBadgeAward(taskToken) {
-    let body = { "awardToken": taskToken };
-
-    return new Promise((resolve) => {
-        $.post(taskPostUrl("tigernian_getBadgeAward", body), async(err, resp, data) => {
-            try {
-                if (err) {
-                    console.log(`${JSON.stringify(err)}`)
-                    console.log(`${$.name} API请求失败，请检查网路重试`)
-                } else {
-                    if (safeGet(data)) {
-                        data = JSON.parse(data);
-                        if (data.code === 0) {
-                            if (data.data && data['data']['bizCode'] === 0) {
-                                for (let i = 0; i < data.data.result.myAwardVos.length; i++) {
-                                    switch (data.data.result.myAwardVos[i].type) {
-                                        case 15:
-                                            console.log(`\n\n 获得${data.data.result.myAwardVos[i].pointVo.score}币`)
-                                            break
-                                        case 1:
-                                            //console.log(`\n\n 获得优惠券 满${data.result.myAwardVos[1].couponVo.usageThreshold}-${data.result.myAwardVos[i].couponVo.quota}  ${data.result.myAwardVos[i].couponVo.useRange}`)
-                                            break
-                                    }
-                                }
-                            }
-                        } else {
-                            console.log(`\n\n 失败:${JSON.stringify(data)}\n`)
-                        }
-                    }
-                }
-            } catch (e) {
-                $.logErr(e, resp)
-            } finally {
-                resolve(data);
-            }
-        })
-    })
-}
-
-function tigernian_getFeedDetail(taskId) {
-    let body = { "taskId": taskId.toString() };
-
-    return new Promise((resolve) => {
-        $.post(taskPostUrl("tigernian_getFeedDetail", body), async(err, resp, data) => {
-            try {
-                if (err) {
-                    console.log(`${JSON.stringify(err)}`)
-                    console.log(`${$.name} API请求失败，请检查网路重试`)
-                } else {
-                    if (safeGet(data)) {
-                        data = JSON.parse(data);
-                        if (data.code === 0) {
-                            if (data.data && data['data']['bizCode'] === 0) {
-                                resolve(data.data.result.addProductVos[0])
-                            }
-                        } else {
-                            console.log(`\n\n 失败:${JSON.stringify(data)}\n`)
-                        }
-                    }
-                }
-            } catch (e) {
-                $.logErr(e, resp)
-            } finally {
-                resolve(data);
-            }
-        })
-    })
-}
-
-function tigernian_getFeedDetail2(taskId) {
-    let body = { "taskId": taskId.toString() };
-
-    return new Promise((resolve) => {
-        $.post(taskPostUrl("tigernian_getFeedDetail", body), async(err, resp, data) => {
-            try {
-                if (err) {
-                    console.log(`${JSON.stringify(err)}`)
-                    console.log(`${$.name} API请求失败，请检查网路重试`)
-                } else {
-                    if (safeGet(data)) {
-                        data = JSON.parse(data);
-                        if (data.code === 0) {
-                            if (data.data && data['data']['bizCode'] === 0) {
-                                resolve(data.data.result.taskVos[0])
-                            }
-                        } else {
-                            console.log(`\n\n 失败:${JSON.stringify(data)}\n`)
-                        }
-                    }
-                }
-            } catch (e) {
-                $.logErr(e, resp)
-            } finally {
-                resolve(data);
-            }
-        })
-    })
-}
-
-function join(venderId, channel, shopId) {
-    let shopId_ = shopId != "" ? `,"shopId":"${shopId}"` : ""
-    return new Promise((resolve) => {
-        $.get({
-            url: `https://api.m.jd.com/client.action?appid=jd_shop_member&functionId=bindWithVender&body={"venderId":"${venderId}"${shopId_},"bindByVerifyCodeFlag":1,"registerExtend":{},"writeChildFlag":0,"channel":${channel}}&client=H5&clientVersion=9.2.0&uuid=88888`,
-            headers: {
-                'Content-Type': 'text/plain; Charset=UTF-8',
-                'Cookie': cookie,
-                'Host': 'api.m.jd.com',
-                'Connection': 'keep-alive',
-                'Content-Type': 'application/x-www-form-urlencoded',
-                "User-Agent": $.UA,
-                'Accept-Language': 'zh-cn',
-                'Referer': `https://shopmember.m.jd.com/shopcard/?venderId=${venderId}&shopId=${venderId}&venderType=5&channel=401&returnUrl=https://lzdz1-isv.isvjcloud.com/dingzhi/personal/care/activity/4540555?activityId=dz210768869313`,
-                'Accept-Encoding': 'gzip, deflate, br'
-            }
-        }, async(err, resp, data) => {
-            try {
-                if (err) {
-                    console.log(`${JSON.stringify(err)}`)
-                    console.log(`${$.name} API请求失败，请检查网路重试`)
-                } else {
-                    if (safeGet(data)) {
-                        if (data.indexOf("成功") != -1) {
-                            console.log(`\n\n 入会成功\n`)
-                        } else {
-                            console.log(`\n\n 失败:${JSON.stringify(data)}\n`)
-                        }
-                    }
-                }
-            } catch (e) {
-                $.logErr(e, resp)
-            } finally {
-                resolve(data);
-            }
-        })
-    })
-}
-
 function taskPostUrl(functionId, body) {
     return {
         //functionId=tigernian_getHomeData&body={}&client=wh5&clientVersion=1.0.0
@@ -401,23 +207,6 @@ function taskPostUrl(functionId, body) {
             'Origin': 'https://wbbny.m.jd.com',
             'Accept-Language': 'zh-cn',
             'Accept-Encoding': 'gzip, deflate, br',
-        }
-    }
-}
-
-function taskPostUrl2(functionId, body) {
-    return {
-        url: `${JD_API_HOST}?functionId=${functionId}&client=wh5`,
-        body: `body=${escape(JSON.stringify(body))}`,
-        headers: {
-            'Cookie': cookie,
-            'Host': 'api.m.jd.com',
-            'Connection': 'keep-alive',
-            'Content-Type': 'application/x-www-form-urlencoded',
-            "User-Agent": $.UA,
-            'Accept-Language': 'zh-cn',
-            'Accept-Encoding': 'gzip, deflate, br',
-            'Origin': 'https://wbbny.m.jd.com',
         }
     }
 }
