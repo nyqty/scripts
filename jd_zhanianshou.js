@@ -10,9 +10,7 @@ if (!["true"].includes(process.env.JD_ZNS)) {
 [task_local]
 #炸年兽
 0 0-23/5 * * * jd_zhanianshou.js, tag=炸年兽, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
-
-
- */
+*/
 const $ = new Env('炸年兽');
 
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
