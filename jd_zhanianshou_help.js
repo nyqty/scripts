@@ -31,7 +31,9 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
         $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
         return;
     }
+    
     $.shareCodesArr = [];
+
     for (let i = 0; i < cookiesArr.length; i++) {
         if (cookiesArr[i]) {
             await getUA()
@@ -41,15 +43,17 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
             console.log(`\n******开始【京东账号${$.index}】${$.UserName}*********\n`);
             try {
                 res = await tigernian_getTaskDetail()  
-                console.log(`\n\n助力码：${res.inviteId}\n`)
-                $.shareCodesArr.push(res.inviteId)
+                if( res.inviteId ){
+                    console.log(`助力码：${res.inviteId}\n`)
+                    $.shareCodesArr.push(res.inviteId)
+                }
             } catch (e) {
                 $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
             }
         }
     }
 
-    for (let i = 0; i < cookiesArr.length; i++) {
+    for (let i = 60; i < cookiesArr.length; i++) {
         if (cookiesArr[i]) {
             await getUA()
             cookie = cookiesArr[i];
@@ -57,50 +61,38 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
             $.index = i + 1;
             $.nickName = '';
             console.log(`\n******开始【京东账号${$.index}】${$.UserName}*********\n`);
-
             await get_secretp()
-            for (let i = 0; i < $.shareCodesArr.length; i++) {
-                console.log(`\n开始助力 【${$.shareCodesArr[i]}】`)
-                let res = await Friends_help($.shareCodesArr[i])
-                console.log(res);
-                if ( res && res['data'] ) {
+            for (let j = 0; j < $.shareCodesArr.length; j++) {
+                let inviteId=$.shareCodesArr[j];
+                console.log(`\n开始助力 【${inviteId}】`)
+                let res = await post("tigernian_collectScore",{ "ss": { "extraData": { "log": "", "sceneid": "ZNSZLh5" }, "secretp": secretp, "random": randomNum(8) } ,"inviteId":inviteId})
+                if ( res && res['code']===0 && res['data'] ) {
                     let bizCode = res['data']['bizCode'],bizMsg=res['data']['bizMsg'];
-                    if( bizCode===0 ){
-
-                    }else if( bizCode===109 ){
+                    if( bizCode===0 && res['data']['success'] ){
+                        let result=res['data']['result'];
                         console.log(bizMsg)
+                        if( result.times===result.maxTimes ){        
+                            $.shareCodesArr.splice(j, 1)
+                            j--
+                            //continue
+                        }
+                        if( chance=result.alreadyAssistTimes===result.maxAssistTimes ) break;
+                    }else if( bizCode===108 ){//每日助力次数最多6次
+                        console.log(bizMsg)
+                        break;
+                    }else if( bizCode===-201 ){//好友人气爆棚不需要助力啦
+                        $.shareCodesArr.splice(j, 1)
+                        j--
+                        continue
+                    }else if( bizCode===-5001 ){//活动太火爆了，稍后再试试吧~
+                        await $.wait(getRndInteger(6000,15000))
+                    }else{
+                        console.log(bizCode+bizMsg) //109 不能给自己助力哦~
                     }
-                    /*
-                    //{"code":0,"data":{"bizCode":109,"bizMsg":"不能给自己助力哦~","success":false},"msg":"调用成功"}
-                    if (res['data']['result']['toasts'] && res['data']['result']['toasts'][0] && res['data']['result']['toasts'][0]['status'] === '3') {
-                        console.log(`助力次数已耗尽，跳出`)
-                        break
-                    }
-                    if (res['data']['result']['toasts'] && res['data']['result']['toasts'][0]) {
-                        console.log(`助力 【${$.shareCodesArr[i]}】:${res.data.result.toasts[0].msg}`)
-                    }*/
-                }
-                /*
-                if ((res && res['status'] && res['status'] === '3') || (res && res.data && res.data.bizCode === -11)) {
-                    // 助力次数耗尽 || 黑号
-                    break
-                }*/
-
-                /*
-                        if (data && data.data && data.data.biz_code === 0) {
-            let result = data.data.result
-            // status ,0:助力成功，1:不能重复助力，3:助力次数耗尽，8:不能为自己助力
-            console.log(`账号【${$.index}】 助力: ${shareCodes[j]}\n${result.status} ${result.statusDesc}\n`);
-            if (result.status === 2){
-                shareCodes.splice(j, 1)
-                j--
-                continue
-            }else if ( result.status === 3 || result.status === 9 ) break;
-        } else {
-            console.log(`助力异常：${JSON.stringify(data)}`);
-        }*/
+                }else console.log(res);
+                //console.log(`助力异常：${JSON.stringify(data)}`);
+                await $.wait(getRndInteger(2500,5500))
             }
-
         }
     }
 })()
@@ -143,10 +135,9 @@ function get_secretp() {
     })
 }
 
-function Friends_help(inviteId) {
-    let body = { "ss": { "extraData": { "log": "", "sceneid": "ZNSZLh5" }, "secretp": secretp, "random": randomNum(8) } ,"inviteId":inviteId};
+function post(functionId,body) {
     return new Promise((resolve) => {
-        $.post(taskPostUrl("tigernian_collectScore", body), async(err, resp, data) => {
+        $.post(taskPostUrl(functionId, body), async(err, resp, data) => {
             try {
                 if (err) {
                     console.log(`${JSON.stringify(err)}`)
@@ -160,7 +151,7 @@ function Friends_help(inviteId) {
             } catch (e) {
                 $.logErr(e, resp)
             } finally {
-                resolve(data);
+                resolve("");
             }
         })
     })
@@ -180,7 +171,7 @@ function tigernian_getTaskDetail() {
                         if (data.code === 0) {
                             if (data.data && data['data']['bizCode'] === 0) {
                                 if (data.data.result.inviteId == null) {
-                                    console.log("黑号")
+                                    console.log("黑号或者已完成邀请任务")
                                     resolve("")
                                 }
                                 resolve(data.data.result)
@@ -431,9 +422,12 @@ function taskPostUrl2(functionId, body) {
 }
 
 
-
 function getUA() {
     $.UA = `jdapp;android;10.0.6;11;${randomNum(16)}-${randomNum(16)};network/wifi;model/KB2000;addressid/138121554;aid/9657c795bc73349d;oaid/;osVer/30;appBuild/88852;partner/oppo;eufv/1;jdSupportDarkMode/0;Mozilla/5.0 (Linux; Android 11; KB2000 Build/RP1A.201005.001; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/77.0.3865.120 MQQBrowser/6.2 TBS/045537 Mobile Safari/537.36`
+}
+
+function getRndInteger(min, max) {
+    return Math.floor(Math.random() * (max - min + 1) ) + min;
 }
 
 function randomString(e) {
