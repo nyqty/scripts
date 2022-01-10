@@ -165,11 +165,12 @@ function tigernian_getTaskDetail() {
                         data = JSON.parse(data);
                         if (data.code === 0) {
                             if (data.data && data['data']['bizCode'] === 0) {
-                                if (data.data.result.inviteId == null) {
+                                let inviteId=data.data.result.inviteId;
+                                if ( inviteId == null) {
                                     console.log("已完成邀请任务")
-                                }else if( res.inviteId ){
-                                    console.log(`助力码：${res.inviteId}\n`)
-                                    $.shareCodesArr.push(res.inviteId)
+                                }else if( inviteId ){
+                                    console.log(`助力码：${inviteId}\n`)
+                                    $.shareCodesArr.push(inviteId)
                                 }
                                 resolve(data.data.result)
                             }else{
