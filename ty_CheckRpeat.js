@@ -116,9 +116,12 @@ async function delScripts(filename){
 };
 
 !(async() => {
-	console.log(`是否删除重复任务 默认"false"  export CheckRpeat_DeleteTask="true"
-是否删除重复脚本文件 默认"false"  export CheckRpeat_DeleteFile="true"
-如果获取报错请设置QL_URL端口5700是你青龙端口 export QL_URL="http://localhost:5700"
+	console.log(`是否删除重复任务 默认"false"
+export CheckRpeat_DeleteTask="true"
+是否删除重复脚本文件 默认"false"
+export CheckRpeat_DeleteFile="true"
+如果获取报错请设置QL_URL端口5700是你青龙端口
+export QL_URL="http://localhost:5700"
 根据名称以及脚本路径名称判断重复性！`);
 
 	try {
