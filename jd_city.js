@@ -36,8 +36,6 @@ let inviteCodes = [
   '-ryUOd57JD8XKXaODqWPu98ipnknA_w'
 ]
 
-$.newShareCodes = $.shareCodesArr = [];
-
 !(async () => {
   if (!cookiesArr[0]) {
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
@@ -64,6 +62,7 @@ $.newShareCodes = $.shareCodesArr = [];
       await getInviteId();
     }
   }
+  $.shareCodesArr = [];
   if(Object.getOwnPropertyNames($.inviteIdCodesArr).length > 0){
     for (let i = 0; i < cookiesArr.length && true; i++) {
       if (cookiesArr[i]) {
@@ -90,6 +89,7 @@ $.newShareCodes = $.shareCodesArr = [];
       console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
       await getUA()
       //await shareCodesFormat()
+      $.newShareCodes = [];
       for (let i = 0; i < $.newShareCodes.length && true; ++i) {
         console.log(`\n开始助力 【${$.newShareCodes[i]}】`)
         let res = await getInfo($.newShareCodes[i])
