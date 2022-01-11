@@ -1,5 +1,5 @@
 if (!["true"].includes(process.env.JD_ZNS)) {
-    console.log("避免自动运行请设置环境变量JD_ZNS为\"true\"来运行本脚本")
+    console.log("可能黑号,运行前最少手动进去过一次，避免自动运行请设置环境变量JD_ZNS为\"true\"来运行本脚本")
     return
 }
 
@@ -9,10 +9,11 @@ if (!["true"].includes(process.env.JD_ZNS)) {
 [task_local]
 #炸年兽
 0 0-23/5 * * * jd_zhanianshou.js, tag=炸年兽, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
-*/
+ */
 const $ = new Env('炸年兽');
 
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
+
 
 let cookiesArr = [],
     cookie = '',
@@ -29,9 +30,7 @@ if ($.isNode()) {
     cookiesArr = [$.getdata('CookieJD'), $.getdata('CookieJD2'), ...jsonParse($.getdata('CookiesJD') || "[]").map(item => item.cookie)].filter(item => !!item);
 }
 const JD_API_HOST = 'https://api.m.jd.com/client.action';
-let inviteCodes = [
 
-]
 $.shareCodesArr = [];
 
 !(async() => {
@@ -41,9 +40,17 @@ $.shareCodesArr = [];
     }
 
     $.inviteIdCodesArr = {}
+    for (let i = 0; i < cookiesArr.length && true; i++) {
+        if (cookiesArr[i]) {
+            cookie = cookiesArr[i];
+            $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
+            $.index = i + 1;
+            await getUA()
+        }
+    }
+    $.newShareCodes = []
     for (let i = 0; i < cookiesArr.length; i++) {
         if (cookiesArr[i]) {
-            await getUA()
             cookie = cookiesArr[i];
             $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
             $.index = i + 1;
@@ -51,9 +58,9 @@ $.shareCodesArr = [];
             $.nickName = '';
             message = '';
             console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
-            //   await shareCodesFormat()
-            await get_secretp()
             try {
+                await get_secretp()
+
                 do {
                     var conti = false
                     await tigernian_collectAtuoScore()
@@ -127,6 +134,9 @@ $.shareCodesArr = [];
                                 }
                                 break
                             case 21:
+                                if (process.env.FS_LEVEL != 'card') {
+                                    console.log('默认不开卡，设置FS_LEVEL为card开卡')
+                                }else{
                                     for (var o = 0; o < task.brandMemberVos.length; o++) {
                                         if (task.brandMemberVos[o].status == 1) {
                                             console.log(`\n\n ${task.brandMemberVos[o].title}`)
@@ -137,6 +147,7 @@ $.shareCodesArr = [];
                                         }
 
                                     }
+                                }
                         }
 
                     }
@@ -168,8 +179,8 @@ function transform(str) {
     var REQUEST = new Object,
         data = str.slice(str.indexOf("?") + 1, str.length - 1),
         aParams = data.substr(1).split("&");
-    for (i = 0; i < aParams.length; i++) {　　
-        var aParam = aParams[i].split("=");　　
+    for (i = 0; i < aParams.length; i++) {
+        var aParam = aParams[i].split("=");
         REQUEST[aParam[0]] = aParam[1]
     }
     return REQUEST
@@ -196,29 +207,6 @@ function get_secretp() {
                         if (data.code != 0) {
                             //console.log(`\n\nsecretp失败:${JSON.stringify(data)}\n`)
                         }
-                    }
-                }
-            } catch (e) {
-                $.logErr(e, resp)
-            } finally {
-                resolve(data);
-            }
-        })
-    })
-}
-
-function Friends_help(inviteId) {
-    let body = { "ss": { "extraData": { "log": "", "sceneid": "ZNSZLh5" }, "secretp": secretp, "random": randomNum(8) } ,"inviteId":inviteId};
-    return new Promise((resolve) => {
-        $.post(taskPostUrl("tigernian_collectScore", body), async(err, resp, data) => {
-            try {
-                if (err) {
-                    console.log(`${JSON.stringify(err)}`)
-                    console.log(`${$.name} API请求失败，请检查网路重试`)
-                } else {
-                    if (safeGet(data)) {
-                        data = JSON.parse(data);
-                        resolve(data)
                     }
                 }
             } catch (e) {
