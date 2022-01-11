@@ -1,12 +1,13 @@
 /*
-cron "10 0,12,17 * * *" CheckRpeat.js, tag:脚本重复检测by-TengYu
+cron "10,0 0-23/2 * * *" CheckRpeat.js, tag:脚本重复检测by-TengYu
  */
 const $ = new Env('脚本重复检测');
 const notify = $.isNode() ? require('./sendNotify') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
 /*
-是否删除重复任务 默认"false""  export CheckRpeat_DeleteTask="true"
-是否删除重复脚本文件 默认"false""  export CheckRpeat_DeleteFile="true"
+是否删除重复任务 默认"false"  export CheckRpeat_DeleteTask="true"
+是否删除重复脚本文件 默认"false"  export CheckRpeat_DeleteFile="true"
+如果获取报错请设置QL_URL端口5700是你青龙端口 export QL_URL="http://localhost:5700"
 根据名称以及脚本路径名称判断重复性！
 */
 
@@ -18,8 +19,15 @@ const path = require('path');
 const qlDir = process.env.QL_DIR || '/ql';
 const authFile = path.join(qlDir, 'config/auth.json');
 
+var prefixUrl;
+if( process.env.QL_URL==="https://github.com/whyour/qinglong.git" ){
+	prefixUrl = "http://localhost:5700";
+}else{
+	prefixUrl = process.env.QL_URL || 'http://localhost:5700'
+}
+
 const api = got.extend({
-  prefixUrl: process.env.QL_URL || 'http://localhost:5600',
+  prefixUrl: prefixUrl,
   retry: { limit: 0 },
 });
 
@@ -54,6 +62,7 @@ async function getCrons() {
 		Accept: 'application/json',
 		authorization: `Bearer ${token}`,
 	  },
+	  timeout:3000
 	}).json();
 	return body.data;
 }
@@ -73,7 +82,6 @@ async function DisableCrons(eid){
 	}).json();
 	return body;
 };
-
 
 async function delCrons(eid){
 	const token = await getToken();
@@ -108,7 +116,20 @@ async function delScripts(filename){
 };
 
 !(async() => {
-	const crons = await getCrons();
+	console.log(`是否删除重复任务 默认"false"  export CheckRpeat_DeleteTask="true"
+是否删除重复脚本文件 默认"false"  export CheckRpeat_DeleteFile="true"
+如果获取报错请设置QL_URL端口5700是你青龙端口 export QL_URL="http://localhost:5700"
+根据名称以及脚本路径名称判断重复性！`);
+
+	try {
+		var crons = await getCrons();
+	} catch (e) {
+		console.log(e);//prefixUrl
+		console.log(`请设置QL_URL 例如：export QL_URL="http://localhost:5700"`);
+		return
+	} finally {
+	}
+
 	if (!crons[0]) {
 		$.msg($.name, '【提示】无法定时任务', '【提示】无法定时任务');
 		return;
@@ -169,7 +190,6 @@ async function delScripts(filename){
 })()
 .catch((e) => $.logErr(e))
 .finally(() => $.done())
-
 
 
 // prettier-ignore
