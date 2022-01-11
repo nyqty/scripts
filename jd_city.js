@@ -35,7 +35,8 @@ let inviteCodes = [
   '-ryUM9lbJB8_PkmFPK6Du6olJhQnEtU',
   '-ryUOd57JD8XKXaODqWPu98ipnknA_w'
 ]
-$.shareCodesArr = [];
+
+$.newShareCodes = $.shareCodesArr = [];
 
 !(async () => {
   if (!cookiesArr[0]) {
@@ -88,7 +89,7 @@ $.shareCodesArr = [];
       message = '';
       console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
       await getUA()
-      await shareCodesFormat()
+      //await shareCodesFormat()
       for (let i = 0; i < $.newShareCodes.length && true; ++i) {
         console.log(`\n开始助力 【${$.newShareCodes[i]}】`)
         let res = await getInfo($.newShareCodes[i])
@@ -341,13 +342,14 @@ function shareCodesFormat() {
   return new Promise(async resolve => {
     // console.log(`第${$.index}个京东账号的助力码:::${$.shareCodesArr[$.index - 1]}`)
     $.newShareCodes = [];
-    if(helpShareFlag+"" != "true"){
+    if( helpShareFlag+"" != "true" ){
       if ($.shareCodesArr[$.index - 1]) {
         $.newShareCodes = $.shareCodesArr[$.index - 1].split('@');
       }
+      $.newShareCodes = [...inviteCodes,...$.newShareCodes]
+    }else{
+      $.newShareCodes = [...$.newShareCodes,...inviteCodes]
     }
-    //if($.index == 1) 
-    $.newShareCodes = [...inviteCodes,...$.newShareCodes]
     console.log(`第${$.index}个京东账号将要助力的好友${JSON.stringify($.newShareCodes)}`)
     resolve();
   })
