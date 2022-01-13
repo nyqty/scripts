@@ -1,30 +1,34 @@
 /*
-1.8～1.15 联合开卡-99 
-新增开卡脚本,一次性脚本
+1.13~1.18 联合开卡 
+新增开卡脚本，一次性脚本
 
-1.抽奖 
+1.邀请一人5豆(有可能没有豆
 2.开12张 成功开1张 可能获得5京豆
   全部开完获得1次抽奖
 3.关注10京豆 获得1次抽奖
 4.加购5京豆 获得1次抽奖
+5.抽奖 
 
 
+第一个账号助力作者 其他依次助力CK1
+第一个CK失效会退出脚本
 
 ————————————————
-入口：[ 1.8～1.15 联合开卡 (https://3.cn/104c6-0Gl)]
+入口：[ 1.13~1.18 联合开卡 (https://3.cn/10-4FafAy)]
 
 请求太频繁会被黑ip
 过10分钟再执行
 
 
-cron:50 1,13 8-15 1 *
+cron:6 6,16 13-18 1 *
 ============Quantumultx===============
 [task_local]
-#1.8～1.15 联合开卡
-50 1,13 8-15 1 * jd_opencard99.js, tag=1.8～1.15 联合开卡, enabled=true
+#1.13~1.18 联合开卡
+6 6,16 13-18 1 * jd_opencardL44.js, tag=1.13~1.18 联合开卡, enabled=true
 
 */
-const $ = new Env('1.8～1.15 联合开卡');
+
+const $ = new Env('1.13~1.18 联合开卡');
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 const notify = $.isNode() ? require('./sendNotify') : '';
 
@@ -39,6 +43,7 @@ if ($.isNode()) {
 } else {
   cookiesArr = [$.getdata('CookieJD'), $.getdata('CookieJD2'), ...jsonParse($.getdata('CookiesJD') || "[]").map(item => item.cookie)].filter(item => !!item);
 }
+
 allMessage = ""
 message = ""
 $.hotFlag = false
@@ -56,10 +61,10 @@ let activityCookie =''
   // return
   $.appkey = '51B59BB805903DA4CE513D29EC448375'
   $.userId = '10299171'
-  $.actId = '7cc0fa6c45b8450_220108'
+  $.actId = 'f6b9469f2ce7439a99bb47_220113'
   $.MixNicks = ''
-  $.inviteNick = 'oWYzEz0N7KY058rLNke8o87TwJCmNe8NFvhpI0XmJDULVU108+UxlHw7qoUuHA4F'
-  console.log(`活动地址:https://3.cn/104c6-0Gl`)
+  $.inviteNick = ''
+  console.log(`活动地址:https://3.cn/10-4FafAy`)
   for (let i = 0; i < cookiesArr.length; i++) {
     cookie = cookiesArr[i];
     if (cookie) {
@@ -150,6 +155,7 @@ async function run() {
       console.log('已经关注')
     }
       $.missionType = 'uniteAddCart'
+ 
         await takePostRequest('mission');
         await $.wait(parseInt(Math.random() * 2000 + 3000, 10))
     await takePostRequest('activity_load');
@@ -169,6 +175,12 @@ async function run() {
       }
     await takePostRequest('myAward');
     await takePostRequest('missionInviteList');
+    console.log($.MixNick)
+    console.log(`当前助力:${$.inviteNick}`)
+    if($.index == 1){
+      $.inviteNick = $.MixNick
+      console.log(`后面的号都会助力:${$.inviteNick}`)
+    }
     await $.wait(parseInt(Math.random() * 1000 + 5000, 10))
     if(flag) await $.wait(parseInt(Math.random() * 1000 + 10000, 10))
       if($.index % 3 == 0) console.log('休息1分钟，别被黑ip了\n可持续发展')
@@ -341,14 +353,9 @@ async function dealReturn(type, data) {
                 let value = 0
                 for(let i in res.data.list || []){
                   let item = res.data.list[i]
-                  if(item.awardDes == '20'){
-                    num++
-                    value = item.awardDes
-                  }else{
-                    console.log(`${item.awardName}`)
-                  }
+                  value += Number(item.awardDes)
                 }
-                if(num > 0) console.log(`邀请好友(${num}):${num*parseInt(value, 10) || 30}京豆`)
+                if(value > 0) console.log(`共获得${value}京豆\n无法判断奖励是否为邀请奖励，所以直接显示获得多少豆\n`)
               }else if(type == "missionInviteList"){
                 console.log(`邀请人数(${res.data.invitedLogList.total})`)
               }
