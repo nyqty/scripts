@@ -63,7 +63,7 @@ let activityCookie =''
   $.userId = '10299171'
   $.actId = 'f6b9469f2ce7439a99bb47_220113'
   $.MixNicks = ''
-  $.inviteNick = ''
+  $.inviteNick = 'oWYzEz0N7KY058rLNke8o87TwJCmNe8NFvhpI0XmJDULVU108+UxlHw7qoUuHA4F'
   console.log(`活动地址:https://3.cn/10-4FafAy`)
   for (let i = 0; i < cookiesArr.length; i++) {
     cookie = cookiesArr[i];
@@ -175,12 +175,6 @@ async function run() {
       }
     await takePostRequest('myAward');
     await takePostRequest('missionInviteList');
-    console.log($.MixNick)
-    console.log(`当前助力:${$.inviteNick}`)
-    if($.index == 1){
-      $.inviteNick = $.MixNick
-      console.log(`后面的号都会助力:${$.inviteNick}`)
-    }
     await $.wait(parseInt(Math.random() * 1000 + 5000, 10))
     if(flag) await $.wait(parseInt(Math.random() * 1000 + 10000, 10))
       if($.index % 3 == 0) console.log('休息1分钟，别被黑ip了\n可持续发展')
