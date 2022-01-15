@@ -13,7 +13,7 @@
 第一个CK失效会退出脚本
 
 ————————————————
-入口：[ 1.6~1.20 山海之巅，冲刺大牌盲盒 (https://lzdz1-isv.isvjcloud.com/dingzhi/customized/common/index/activity?activityId=dz220106100001616201Union&shareUuid=18510cf80be44e718d86e90cf0dc9241)]
+入口：[ 1.6~1.20 山海之巅，冲刺大牌盲盒 (https://lzdz1-isv.isvjcloud.com/dingzhi/customized/common/index/activity?activityId=dz220106100001616201Union&shareUuid=f89e7749e2844922b8132e99d03826f1)]
 请求太频繁会被黑ip
 过10分钟再执行
 
@@ -53,14 +53,8 @@ let activityCookie =''
     return;
   }
   $.activityId = "dz220106100001616201Union"
-  $.shareUuid = "18510cf80be44e718d86e90cf0dc9241"
-  console.log(`入口:\nhttps://lzdz1-isv.isvjcloud.com/dingzhi/customized/common/index/activity?activityId=${$.activityId}&shareUuid=${$.shareUuid}`)
-  let shareUuidArr = [$.shareUuid,"18510cf80be44e718d86e90cf0dc9241","1160ce40cedd40c7bd62d702f8e300a8","a95818413b514ae4b2ac3872894c999d"]
-  let s = Math.floor((Math.random()*10))
-  let n = 0
-  if(s == 1) n = Math.floor((Math.random()*shareUuidArr.length))
-  $.shareUuid = shareUuidArr[n] ? shareUuidArr[n] : $.shareUuid
-  
+  $.shareUuid = "f89e7749e2844922b8132e99d03826f1"
+  console.log(`入口:\nhttps://lzdz1-isv.isvjcloud.com/dingzhi/customized/common/index/activity?activityId=${$.activityId}&shareUuid=${$.shareUuid}`)  
   for (let i = 0; i < cookiesArr.length; i++) {
     cookie = cookiesArr[i];
     if (cookie) {
@@ -193,12 +187,6 @@ async function run() {
     if($.outFlag){
       console.log('此ip已被限制，请过10分钟后再执行脚本\n')
       return
-    }
-    console.log($.actorUuid)
-    console.log(`当前助力:${$.shareUuid}`)
-    if($.index == 1){
-      $.shareUuid = $.actorUuid
-      console.log(`后面的号都会助力:${$.shareUuid}`)
     }
     await $.wait(parseInt(Math.random() * 1000 + 5000, 10))
     if(flag) await $.wait(parseInt(Math.random() * 1000 + 10000, 10))
