@@ -65,31 +65,7 @@ Object.keys(jdCookieNode).forEach((item) => {
             console.log('黑号？', e)
         }
     }
-    let authorCode = []
-    let res = await getAuthorShareCode('https://gitee.com/KingRan521/JD-Scripts/raw/master/shareCodes/tiger.json')
-    if (!res) {
-        res = await getAuthorShareCode('https://gitee.com/KingRan521/JD-Scripts/raw/master/shareCodes/tiger.json')
-    }
-    if (res) {
-        authorCode = res.sort(() => 0.5 - Math.random())
-        const limit = 3
-        if (authorCode.length > limit) {
-            authorCode = authorCode.splice(0, limit)
-        }
-    }
-    for (let i = 0; i < cookiesArr.length; i++) {
-        cookie = cookiesArr[i]
-        const userName = decodeURIComponent(cookie.match(/pt_pin=(.+?);/) && cookie.match(/pt_pin=(.+?);/)[1])
-        // if (shareCodesHW.length === 0) {
-        //     shareCodesHW = await getshareCodeHW('tiger')
-        // }
-        // index === 0 ?
-        //     shareCodes = Array.from(new Set([...shareCodesHW, ...shareCodesSelf, ...temp])) :
-        //     shareCodes = Array.from(new Set([...shareCodesSelf, ...shareCodesHW, ...temp]))
-        //shareCodes = Array.from(new Set([...shareCodesSelf, ...authorCode]))
-        // console.log(shareCodes)
 
-    }
     for (let i = 0; i < cookiesArr.length; i++) {
         cookie = cookiesArr[i]
         const userName = decodeURIComponent(cookie.match(/pt_pin=(.+?);/) && cookie.match(/pt_pin=(.+?);/)[1])
