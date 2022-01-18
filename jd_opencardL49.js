@@ -51,7 +51,7 @@ let activityCookie =''
     return;
   }
   $.activityId = "dz2201100000356801"
-  $.shareUuid = "7c19ea8bacf74fbf83a87b6897a0002d"
+  $.shareUuid = "740ef3bf88654834bde054b99176739f"
   console.log(`入口:\nhttps://lzdz1-isv.isvjcloud.com/dingzhi/flyCrane/collect/activity?activityId=${$.activityId}&shareUuid=${$.shareUuid}`)
   let shareUuidArr = [$.shareUuid,"82609696607c46878da51772cecb7a21","450e6b0af93541c39b489a0a7c920e5d"]
   let s = Math.floor((Math.random()*10))
@@ -186,12 +186,6 @@ async function run() {
     if($.outFlag){
       console.log('此ip已被限制，请过10分钟后再执行脚本\n')
       return
-    }
-    console.log($.actorUuid)
-    console.log(`当前助力:${$.shareUuid}`)
-    if($.index == 1){
-      $.shareUuid = $.actorUuid
-      console.log(`后面的号都会助力:${$.shareUuid}`)
     }
     await $.wait(parseInt(Math.random() * 1000 + 5000, 10))
     if(flag) await $.wait(parseInt(Math.random() * 1000 + 10000, 10))

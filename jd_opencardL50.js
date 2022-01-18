@@ -58,7 +58,7 @@ let activityCookie =''
   $.userId = '10299171'
   $.actId = '4bf393119c_788'
   $.MixNicks = ''
-  $.inviteNick = 'k1Nobb+P0er+C2sysxnx/P2KELO9izRVpwCyqu0eqVZ5aW7RHzlMobrzJ/e9r/uf'
+  $.inviteNick = 'oWYzEz0N7KY058rLNke8o87TwJCmNe8NFvhpI0XmJDULVU108+UxlHw7qoUuHA4F'
   console.log(`活动地址:https://prodev.m.jd.com/mall/active/W1JeR6TyFJiEt2FobvSgBXSt7Q4/index.html`)
   console.log(`请自行测试有水无水。`)
   for (let i = 0; i < cookiesArr.length; i++) {
@@ -171,12 +171,6 @@ async function run() {
       }
     await takePostRequest('myAward');
     await takePostRequest('missionInviteList');
-    console.log($.MixNick)
-    console.log(`当前助力:${$.inviteNick}`)
-    if($.index == 1){
-      $.inviteNick = $.MixNick
-      console.log(`后面的号都会助力:${$.inviteNick}`)
-    }
     await $.wait(parseInt(Math.random() * 1000 + 5000, 10))
     if(flag) await $.wait(parseInt(Math.random() * 1000 + 10000, 10))
       if($.index % 3 == 0) console.log('休息1分钟，别被黑ip了\n可持续发展')
