@@ -9,14 +9,14 @@
 =================================Quantumultx=========================
 [task_local]
 #城城领现金提现
-0-50/10 0 * * *" https://raw.githubusercontent.com/jiulan/platypus/main/scripts/jd_citytx.js, tag=城城领现金提现, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
+0-50/3 0-3 * * *" https://raw.githubusercontent.com/jiulan/platypus/main/scripts/jd_citytx.js, tag=城城领现金提现, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
 
 =================================Loon===================================
 [Script]
-cron "0-50/10 0 * * *"" script-path=https://raw.githubusercontent.com/jiulan/platypus/main/scripts/jd_citytx.js,tag=城城领现金提现
+cron "0-50/3 0-3 * * *"" script-path=https://raw.githubusercontent.com/jiulan/platypus/main/scripts/jd_citytx.js,tag=城城领现金提现
 
 ===================================Surge================================
-城城领现金提现 = type=cron,cronexp="0-50/10 0 * * *"",wake-system=1,timeout=3600,script-path=https://raw.githubusercontent.com/jiulan/platypus/main/scripts/jd_citytx.js
+城城领现金提现 = type=cron,cronexp="0-50/3 0-3 * * *"",wake-system=1,timeout=3600,script-path=https://raw.githubusercontent.com/jiulan/platypus/main/scripts/jd_citytx.js
 
 ====================================小火箭=============================
 城城领现金提现 = type=cron,script-path=https://raw.githubusercontent.com/jiulan/platypus/main/scripts/jd_citytx.js, cronexpr="0-50/3 0-3 * * *"", timeout=3600, enable=true
@@ -186,7 +186,7 @@ function city_getHomeData() {
         $.post(option, (err, resp, data) => {
             try {
                 data = JSON.parse(data);
-                if (data.data.success) {
+                if (data?.data?.success) {
                     let res = data.data.result;
                     console.log("邀请码：" + res.userActBaseInfo.inviteId);
                     console.log("邀请链接：	https://bunearth.m.jd.com/babelDiy/Zeus/x4pWW6pvDwW7DjxMmBbnzoub8J/index.html?inviteId=" + res.userActBaseInfo.inviteId);
@@ -228,7 +228,7 @@ function city_receiveCash(city, roundNum) {
         $.post(option, (err, resp, data) => {
             try {
                 data = JSON.parse(data);
-                if (data.data.success) {
+                if (data?.data?.success) {
                     let res = data.data.result;
                     console.log(city + "拆到现金:" + res.currentTimeCash + "元，当前余额:" + res.totalCash);
                 } else {
@@ -259,7 +259,7 @@ function city_mainWithdrawal() {
         $.post(option, (err, resp, data) => {
             try {
                 data = JSON.parse(data);
-                if (data.data.success) {
+                if (data?.data?.success) {
                     let res = data.data.result;
                     if (res) {
                         console.log("code" + res.securityCode);
@@ -315,7 +315,7 @@ function city_withdraw() {
         $.post(option, (err, resp, data) => {
             try {
                 data = JSON.parse(data);
-                if (data.data.success) {
+                if (data?.data?.success) {
                     let res = data.data.result;
                     if (res) {
                         console.log("余额" + res.poolMoney);
@@ -323,7 +323,7 @@ function city_withdraw() {
                         $.isdui = false;
                     }
                 } else {
-                    console.log("兑换结果:" + data.data.bizMsg);
+                    console.log("兑换结果:" + data?.data?.bizMsg);
                     $.isdui = false;
                 }
             } catch (e) {

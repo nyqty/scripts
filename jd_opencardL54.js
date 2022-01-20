@@ -1,34 +1,26 @@
 /*
-1.13~1.18 联合开卡 
+1.20~1.26 大牌联合 瓜分千万京豆
 新增开卡脚本，一次性脚本
-
-1.邀请一人5豆(有可能没有豆
-2.开12张 成功开1张 可能获得5京豆
-  全部开完获得1次抽奖
-3.关注10京豆 获得1次抽奖
-4.加购5京豆 获得1次抽奖
-5.抽奖 
-
 
 第一个账号助力作者 其他依次助力CK1
 第一个CK失效会退出脚本
 
 ————————————————
-入口：[ 1.13~1.18 联合开卡 (https://3.cn/10-4FafAy)]
+入口：[ 1.20~1.26 大牌联合 瓜分千万京豆 (https://jinggengjcq-isv.isvjcloud.com/fronth5/#/pages/unitedCardNew2022012002/unitedCardNew2022012002?actId=329e27c899d34933a13d0514eb3e_22012003)]
 
 请求太频繁会被黑ip
 过10分钟再执行
 
 
-cron:6 6,16 13-18 1 *
+cron:26 3,16 20-26 1 *
 ============Quantumultx===============
 [task_local]
-#1.13~1.18 联合开卡
-6 6,16 13-18 1 * jd_opencardL44.js, tag=1.13~1.18 联合开卡, enabled=true
+#1.20~1.26 大牌联合 瓜分千万京豆
+26 3,16 20-26 1 * jd_opencardL53.js, tag=1.20~1.26 大牌联合 瓜分千万京豆, enabled=true
 
 */
 
-const $ = new Env('1.13~1.18 联合开卡');
+const $ = new Env('1.20~1.30 联合开卡');
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 const notify = $.isNode() ? require('./sendNotify') : '';
 
@@ -61,10 +53,11 @@ let activityCookie =''
   // return
   $.appkey = '51B59BB805903DA4CE513D29EC448375'
   $.userId = '10299171'
-  $.actId = 'f6b9469f2ce7439a99bb47_220113'
+  $.actId = '329e27c899d34933a13d0514eb3e_22012003'
   $.MixNicks = ''
-  $.inviteNick = 'oWYzEz0N7KY058rLNke8o87TwJCmNe8NFvhpI0XmJDULVU108+UxlHw7qoUuHA4F'
-  console.log(`活动地址:https://3.cn/10-4FafAy`)
+  $.inviteNick = 'k1Nobb+P0er+C2sysxnx/P2KELO9izRVpwCyqu0eqVZ5aW7RHzlMobrzJ/e9r/uf'
+  console.log(`活动地址:https://jinggengjcq-isv.isvjcloud.com/fronth5/#/pages/unitedCardNew2022012002/unitedCardNew2022012002?actId=329e27c899d34933a13d0514eb3e_22012003`)
+  console.log(`请自行测试有水无水。`)
   for (let i = 0; i < cookiesArr.length; i++) {
     cookie = cookiesArr[i];
     if (cookie) {
@@ -175,6 +168,12 @@ async function run() {
       }
     await takePostRequest('myAward');
     await takePostRequest('missionInviteList');
+    console.log($.MixNick)
+    console.log(`当前助力:${$.inviteNick}`)
+    if($.index == 1){
+      $.inviteNick = $.MixNick
+      console.log(`后面的号都会助力:${$.inviteNick}`)
+    }
     await $.wait(parseInt(Math.random() * 1000 + 5000, 10))
     if(flag) await $.wait(parseInt(Math.random() * 1000 + 10000, 10))
       if($.index % 3 == 0) console.log('休息1分钟，别被黑ip了\n可持续发展')
@@ -483,7 +482,7 @@ function joinShop() {
     $.get(options, async (err, resp, data) => {
       try {
         // console.log(data)
-        let res = $.toObj(data);
+        let res = $.toObj(data,data);
         if(typeof res == 'object'){
           if(res.success === true){
             console.log(res.message)
@@ -524,11 +523,15 @@ function getshopactivityId() {
     }
     $.get(options, async (err, resp, data) => {
       try {
-        let res = $.toObj(data);
-        if(res.success == true){
-          // console.log($.toStr(res.result))
-          console.log(`入会:${res.result.shopMemberCardInfo.venderCardName || ''}`)
-          $.shopactivityId = res.result.interestsRuleList && res.result.interestsRuleList[0] && res.result.interestsRuleList[0].interestsInfo && res.result.interestsRuleList[0].interestsInfo.activityId || ''
+        let res = $.toObj(data,data);
+        if(typeof res == 'object'){
+          if(res.success == true){
+            // console.log($.toStr(res.result))
+            console.log(`入会:${res.result.shopMemberCardInfo.venderCardName || ''}`)
+            $.shopactivityId = res.result.interestsRuleList && res.result.interestsRuleList[0] && res.result.interestsRuleList[0].interestsInfo && res.result.interestsRuleList[0].interestsInfo.activityId || ''
+          }
+        }else{
+          console.log(data)
         }
       } catch (e) {
         $.logErr(e, resp)
