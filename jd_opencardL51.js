@@ -1,10 +1,6 @@
 /*
 2022.1.18-1.24 会员联合盛典 瓜分百万京豆
 
-
-第一个账号助力作者 其他依次助力CK1
-第一个CK失效会退出脚本
-
 ————————————————
 入口：https://lzdz1-isv.isvjcloud.com/dingzhi/customized/common/activity?activityId=dzlhkklblzms20220108&shareUuid=3f2e798615e14640b1760672731bea6f
 
@@ -49,7 +45,7 @@ let activityCookie =''
     return;
   }
   $.activityId = "dzlhkklblsifkpeq0118"
-  $.shareUuid = "3f2e798615e14640b1760672731bea6f"
+  $.shareUuid = "8a4b6bd0f51f430d8ba5d9b9ae509079"
   console.log(`入口:\nhttps://lzdz1-isv.isvjcloud.com/dingzhi/customized/common/activity?activityId=${$.activityId}&shareUuid=${$.shareUuid}`)
   for (let i = 0; i < cookiesArr.length; i++) {
     cookie = cookiesArr[i];
@@ -218,12 +214,6 @@ async function run() {
     if($.outFlag){
       console.log('此ip已被限制，请过10分钟后再执行脚本\n')
       return
-    }
-    console.log($.actorUuid)
-    console.log(`当前助力:${$.shareUuid}`)
-    if($.index == 1){
-      $.shareUuid = $.actorUuid
-      console.log(`后面的号都会助力:${$.shareUuid}`)
     }
     await $.wait(parseInt(Math.random() * 1000 + 5000, 10))
     if(flag) await $.wait(parseInt(Math.random() * 1000 + 10000, 10))
