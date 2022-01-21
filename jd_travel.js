@@ -16,9 +16,8 @@ let userToTeamMap = {}
 $.curlCmd = ""
 const h = (new Date()).getHours()
 const helpFlag = h >= 9 && h < 12
-const puzzleFlag = false
+const puzzleFlag = h >= 13 && h < 18
 let expandFlag = h === 22, expandHelpFlag = h === 23
-let llhadtask=false
 if (process.env.JD_TRAVEL_EXPAND !== undefined) {
     expandFlag = h === +process.env.JD_TRAVEL_EXPAND
 }
@@ -85,13 +84,7 @@ const pkTeamNum = () => Math.ceil(cookiesArr.length / 30)
             $.joyytoken = await getToken()
             $.blog_joyytoken = await getToken("50999", "4")
             cookie = $.ZooFaker.getCookie(cookie + `joyytoken=${appid}${$.joyytoken};`)
-			for (let k = 0; k < 50; k++) {
-				llhadtask=false
-				await travel()
-				if(!llhadtask){
-					 console.log("任务全做完了，跳出......")
-					break;}
-            }
+            await travel()
             helpSysInfoArr.push({
                 cookie,
                 pin: $.UserName,
@@ -503,15 +496,13 @@ async function doAppTask() {
             if (taskId === 1) {
                 continue
             }
-            console.log(`当前正在做任务：${taskName}`)			
+            console.log(`当前正在做任务：${taskName}`)
             const body = { taskId, taskToken, actionType: 1 }
             if (taskId === 31) {
                 await doApi("pk_getHomeData")
                 await doApi("pk_getPkTaskDetail", null, null, false, true)
                 await doApi("pk_getMsgPopup")
                 delete body.actionType
-				console.log("dEBUG1")
-				llhadtask=true
             }
             const res = await doApi("collectScore", { taskId, taskToken, actionType: 1 }, null, true)
             res?.score && (formatMsg(res.score, "任务收益"), true)/*  || console.log(res) */
@@ -522,18 +513,14 @@ async function doAppTask() {
             if (!flag) flag = true
             const { shopName, title, taskToken, status } = activity
             if (status !== 1) continue
-            console.log(`当前正在做任务：${shopName || title}`)			
+            console.log(`当前正在做任务：${shopName || title}`)
             const res = await doApi("collectScore", { taskId, taskToken, actionType: 1 }, null, true)
             if ($.stopCard) break
             if (waitDuration || res?.taskToken) {
                 await $.wait(waitDuration * 1000)
                 const res = await doApi("collectScore", { taskId, taskToken, actionType: 0 }, null, true)
-				console.log("dEBUG2")
-				llhadtask=true
                 res?.score && (formatMsg(res.score, "任务收益"), true)/*  || console.log(res) */
             } else {
-				llhadtask=true
-				console.log("dEBUG3")
                 res?.score && (formatMsg(res.score, "任务收益"), true)/*  || console.log(res) */
             }
             times++
@@ -554,7 +541,7 @@ async function doAppTask() {
             const t = Date.now()
             let times = timesTemp
             if (t >= taskBeginTime && t <= taskEndTime) {
-                console.log(`当前正在做任务：${taskName}`)				
+                console.log(`当前正在做任务：${taskName}`)
                 for (let productInfo of mohuReadJson(mainTask, "Vo(s)?$", maxTimes, "taskToken") || []) {
                     const { taskToken, status } = productInfo
                     if (status !== 1) continue
@@ -562,8 +549,6 @@ async function doAppTask() {
                     times = res?.times ?? (times + 1)
                     await $.wait(waitDuration * 1000)
                     if (times >= maxTimes) {
-						console.log("dEBUG4")
-						llhadtask=true
                         formatMsg(score, "任务收益")
                         break
                     }
@@ -602,8 +587,6 @@ async function doWxTask() {
             const { shopName, title, taskToken, status } = activity
             if (status !== 1) continue
             console.log(`当前正在做任务：${shopName || title}`)
-			console.log("dEBUG5")
-			llhadtask=true
             const res = await doWxApi("collectScore", { taskId, taskToken, actionType: 1 }, null, true)
             if ($.stopCard || $.stopWxTask) break
             if (waitDuration || res.taskToken) {
@@ -634,8 +617,6 @@ async function doWxTask() {
             let times = timesTemp
             if (t >= taskBeginTime && t <= taskEndTime) {
                 console.log(`当前正在做任务：${taskName}`)
-				console.log("dEBUG6")
-				llhadtask=true
                 for (let productInfo of mohuReadJson(mainTask, "Vo(s)?$", maxTimes, "taskToken") || []) {
                     const { taskToken, status } = productInfo
                     if (status !== 1) continue
@@ -683,8 +664,6 @@ async function doJrAppTask() {
             babelChannel: "1111zhuhuichangfuceng"
         }, true)
         console.log(`当前正在做任务：${title}，${subTitle}`)
-		console.log("dEBUG7")
-		llhadtask=true
         const readTime = url.getKeyVal("readTime")
         const juid = url.getKeyVal("juid")
         if (readTime) {
