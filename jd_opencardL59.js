@@ -1,25 +1,25 @@
 /*
-2022.1.14-1.21 超级年货节 惊喜不打烊
+2022.1.21-1.27 南北年货 新意回家
 
 
 第一个账号助力作者 其他依次助力CK1
 第一个CK失效会退出脚本
 
 ————————————————
-入口：https://lzdz1-isv.isvjcloud.com/dingzhi/customized/common/activity/6869761?activityId=dzlhkkkbblnt20220114&shareUuid=5b15935c37ce41f6ac929f442407bcbd
+入口：https://lzdz1-isv.isvjcloud.com/dingzhi/customized/common/activity?activityId=dzlhkkpoutnkskl20220121&shareUuid=fe63d6d8051c402f928ccc53b8db398d
 
 请求太频繁会被黑ip
 过10分钟再执行
 
 
-cron:1 6,21 14-21 1 *
+cron:21 21 21-27 1 *
 ============Quantumultx===============
 [task_local]
-#2022.1.14-1.21 超级年货节 惊喜不打烊
-1 6,21 14-21 1 * https://raw.githubusercontent.com/KingRan/JDJB/main/jd_opencardL45.js, tag=2022.1.14-1.21 超级年货节 惊喜不打烊, enabled=true
+#2022.1.21-1.27 南北年货 新意回家
+21 21 21-27 1 * https://raw.githubusercontent.com/KingRan/JDJB/main/jd_opencardL59.js, tag=2022.1.21-1.27 南北年货 新意回家, enabled=true
 
 */
-const $ = new Env("2022.1.14-1.21 超级年货节 惊喜不打烊");
+const $ = new Env("2022.1.21-1.27 南北年货 新意回家");
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 const notify = $.isNode() ? require('./sendNotify') : '';
 //IOS等用户直接用NobyDa的jd cookie
@@ -48,8 +48,8 @@ let activityCookie =''
     });
     return;
   }
-  $.activityId = "dzlhkkkbblnt20220114"
-  $.shareUuid = "c716c1459ce74be5888cf9f56485fcf1"
+  $.activityId = "dzlhkkpoutnkskl20220121"
+  $.shareUuid = "fe63d6d8051c402f928ccc53b8db398d"
   console.log(`入口:\nhttps://lzdz1-isv.isvjcloud.com/dingzhi/customized/common/activity?activityId=${$.activityId}&shareUuid=${$.shareUuid}`)
   for (let i = 0; i < cookiesArr.length; i++) {
     cookie = cookiesArr[i];
@@ -160,12 +160,6 @@ async function run() {
     if($.yaoqing){
       await takePostRequest('助力');
     }
-    $.log("加购: " + $.addCart)
-    if(!$.addCart && !$.outFlag){
-        flag = true
-        await takePostRequest('addCart');
-        await $.wait(parseInt(Math.random() * 2000 + 4000, 10))
-    }
     $.runFalag = true
     $.log("浏览商品: " + $.visitSku)
     if(!$.visitSku && !$.outFlag){
@@ -198,20 +192,19 @@ async function run() {
     }
     console.log(`${$.score}值 游戏:${$.point}`)
     $.runFalag = true
-    count = parseInt($.score/1000)
+    count = parseInt($.score/50)
     console.log(`抽奖次数为:${count}`)
     for(m=1;count--;m++){
         console.log(`第${m}次抽奖`)
         await takePostRequest('抽奖');
         if($.runFalag == false) break
         if(Number(count) <= 0) break
-        if(m >= 10){
+        if(m >= 5){
             console.log("抽奖太多次，多余的次数请再执行脚本")
             break
         }
         await $.wait(parseInt(Math.random() * 2000 + 2000, 10))
     }
-    
     await $.wait(parseInt(Math.random() * 1000 + 2000, 10))
     await takePostRequest('getDrawRecordHasCoupon');
     await takePostRequest('getShareRecord');
@@ -219,9 +212,14 @@ async function run() {
       console.log('此ip已被限制，请过10分钟后再执行脚本\n')
       return
     }
+    console.log($.actorUuid)
+    console.log(`当前助力:${$.shareUuid}`)
+    if($.index == 1){
+      $.shareUuid = $.actorUuid
+      console.log(`后面的号都会助力:${$.shareUuid}`)
+    }
     await $.wait(parseInt(Math.random() * 1000 + 5000, 10))
     if(flag) await $.wait(parseInt(Math.random() * 1000 + 10000, 10))
-    
     if($.index % 3 == 0) console.log('休息1分钟，别被黑ip了\n可持续发展')
     if($.index % 3 == 0) await $.wait(parseInt(Math.random() * 5000 + 60000, 10))
     
@@ -267,8 +265,8 @@ async function takePostRequest(type) {
         body = `activityId=${$.activityId}&pin=${encodeURIComponent($.Pin)}`
         break;
       case 'checkOpenCard':
-        url = `${domain}/dingzhi/linkgame/checkOpenCard`;
-        body = `activityId=${$.activityId}&pin=${encodeURIComponent($.Pin)}`
+        url = `${domain}/dingzhi/opencard/checkOpenCard`;
+        body = `activityId=${$.activityId}&pin=${encodeURIComponent($.Pin)}&shareUuid=${$.shareUuid}`
         break;
       case 'info':
         url = `${domain}/dingzhi/linkgame/task/info`;
@@ -293,9 +291,9 @@ async function takePostRequest(type) {
       case '邀请':
       case '助力':
         if(type == '助力'){
-          url = `${domain}/dingzhi/linkgame/assist`;
+          url = `${domain}/dingzhi/opencard/assist`;
         }else{
-          url = `${domain}/dingzhi/linkgame/assist/status`;
+          url = `${domain}/dingzhi/opencard/assist/status`;
         }
         body = `activityId=${$.activityId}&pin=${encodeURIComponent($.Pin)}&shareUuid=${$.shareUuid}`
         break;
@@ -331,7 +329,7 @@ async function takePostRequest(type) {
         break;
       case '抽奖':
         url = `${domain}/dingzhi/linkgame/draw`;
-        body = `activityId=${$.activityId}&pin=${encodeURIComponent($.Pin)}&actorUuid=${$.actorUuid}`
+        body = `activityId=${$.activityId}&actorUuid=${$.actorUuid}&pin=${encodeURIComponent($.Pin)}`
         break;
       default:
         console.log(`错误${type}`);
@@ -742,7 +740,7 @@ function joinShop() {
     $.get(options, async (err, resp, data) => {
       try {
         // console.log(data)
-        let res = $.toObj(data);
+        let res = $.toObj(data,data);
         if(typeof res == 'object'){
           if(res.success === true){
             console.log(res.message)
@@ -783,11 +781,15 @@ function getshopactivityId() {
     }
     $.get(options, async (err, resp, data) => {
       try {
-        let res = $.toObj(data);
-        if(res.success == true){
-          // console.log($.toStr(res.result))
-          console.log(`入会:${res.result.shopMemberCardInfo.venderCardName || ''}`)
-          $.shopactivityId = res.result.interestsRuleList && res.result.interestsRuleList[0] && res.result.interestsRuleList[0].interestsInfo && res.result.interestsRuleList[0].interestsInfo.activityId || ''
+        let res = $.toObj(data,data);
+        if(typeof res == 'object'){
+          if(res.success == true){
+            // console.log($.toStr(res.result))
+            console.log(`入会:${res.result.shopMemberCardInfo.venderCardName || ''}`)
+            $.shopactivityId = res.result.interestsRuleList && res.result.interestsRuleList[0] && res.result.interestsRuleList[0].interestsInfo && res.result.interestsRuleList[0].interestsInfo.activityId || ''
+          }
+        }else{
+          console.log(data)
         }
       } catch (e) {
         $.logErr(e, resp)
