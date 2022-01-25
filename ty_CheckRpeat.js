@@ -165,6 +165,7 @@ export QL_URL="http://localhost:5700"
 			continue
 		}
 		try {
+			var id=crons[n].id?crons[n].id:crons[n]._id;
 			json=DisableCrons(crons[n]._id)
 			msg+="\n禁用"+filename[n]
 			//msg+=json.code==DisableCrons(crons[n]._id)?"成功":"失败"
