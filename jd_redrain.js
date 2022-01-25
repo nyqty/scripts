@@ -2,7 +2,6 @@
 整点京豆雨
 更新时间：2021-12-8
 脚本兼容: Quantumult X, Surge, Loon, JSBox, Node.js
-by：msechen
 ==============Quantumult X==============
 [task_local]
 #整点京豆雨
@@ -15,7 +14,7 @@ cron "0 * * * *" script-path=https://raw.githubusercontent.com/KingRan/JDJB/main
 ===============小火箭==========
 整点京豆雨 = type=cron,script-path=https://raw.githubusercontent.com/KingRan/JDJB/main/jd_redrain.js, cronexpr="0 * * * *", timeout=3600, enable=true
 */
-const $ = new Env('整点红包雨');
+const $ = new Env('整点京豆雨');
 const notify = $.isNode() ? require('./sendNotify') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
@@ -43,12 +42,12 @@ if ($.isNode()) {
   }
   if (!jd_redrain_activityId) {
     $.log(`\n本地红包雨配置获取错误，尝试从远程读取配置\n`);
-    await $.wait(1000);
-    if (!jd_redrain_url) {
-      $.log(`\n今日龙王🐲出差，天气晴朗☀️，改日再来～\n`);
-      return;
-    }    
+    await $.wait(1000);   
     let RedRainIds = await getRedRainIds(jd_redrain_url);
+	if (!RedRainIds) {
+    await $.wait(1000)
+    RedRainIds = await getRedRainIds('https://gitee.com/KingRan521/JD-Scripts/raw/master/shareCodes/redrain.json')
+	}
     for (let i = 0; i < 1; i++) {
       jd_redrain_activityId = RedRainIds[0];
     }
@@ -93,7 +92,7 @@ if ($.isNode()) {
           }
           continue
         }
-        await noahRedRainLottery();
+        await queryRedRainTemplateNew($.activityId)
       }
     }
   }
@@ -110,11 +109,12 @@ if ($.isNode()) {
   })
 
 
-function noahRedRainLottery() {
-  const body = { "actId": $.activityId };
+// 查询红包
+function queryRedRainTemplateNew(actId) {
+  const body = { "actId": actId };
   return new Promise(async resolve => {
     const options = {
-      url: `https://api.m.jd.com/client.action?functionId=noahRedRainLottery&client=wh5&clientVersion=1.0.0&&body=${encodeURIComponent(JSON.stringify(body))}&_=${(new Date).getTime()}`,
+      url: `https://api.m.jd.com/client.action?appid=redrain-2021&functionId=queryRedRainTemplateNew&client=wh5&clientVersion=1.0.0&body=${encodeURIComponent(JSON.stringify(body))}&_=${(new Date).getTime()}`,
       headers: {
         Host: "api.m.jd.com",
         origin: 'https://h5.m.jd.com/',
@@ -130,17 +130,52 @@ function noahRedRainLottery() {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
-          console.log(`noahRedRainLottery api请求失败，请检查网路重试`)
+          console.log(`queryRedRainTemplateNew api请求失败，请检查网路重试`)
         } else {
           if (safeGet(data)) {
             data = JSON.parse(data);
-            if (data.subCode === '0') {
-              console.log(`领取成功，获得${data.lotteryResult.jPeasList[0].quantity}个京豆`);
-              message += `领取成功，获得 ${data.lotteryResult.jPeasList[0].quantity}个京豆`
-              allMessage += `京东账号${$.index}${$.nickName || $.UserName}\n领取成功，获得 ${(data.lotteryResult.jPeasList[0].quantity)}京豆${$.index !== cookiesArr.length ? '\n\n' : ''}`;
-            } else if (data.subCode === '8') {
-              console.log(`领取失败：本场已领过`)
-              message += `领取失败，本场已领过`;
+            //console.log(data);
+            await doInteractiveAssignment(data.activityInfo.encryptProjectId, data.activityInfo.encryptAssignmentId);
+          }
+        }
+      } catch (e) {
+        $.logErr(e, resp)
+      } finally {
+        resolve();
+      }
+    })
+  })
+}
+
+// 拆红包
+function doInteractiveAssignment(encryptProjectId, encryptAssignmentId) {
+  const body = { "encryptProjectId": encryptProjectId, "encryptAssignmentId": encryptAssignmentId, "completionFlag": true, "sourceCode": "acehby20210924" };
+  return new Promise(async resolve => {
+    const options = {
+      url: `https://api.m.jd.com/client.action?appid=redrain-2021&functionId=doInteractiveAssignment&client=wh5&clientVersion=1.0.0&body=${encodeURIComponent(JSON.stringify(body))}&_=${(new Date).getTime()}`,
+      headers: {
+        Host: "api.m.jd.com",
+        origin: 'https://h5.m.jd.com/',
+        Accept: "*/*",
+        "Accept-Language": "zh-cn",
+        "Accept-Encoding": "gzip, deflate, br",
+        Cookie: cookie,
+        "User-Agent": "Mozilla/5.0 (Linux; Android 10; WLZ-AN00 Build/HUAWEIWLZ-AN00; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/89.0.4389.72 MQQBrowser/6.2 TBS/045811 Mobile Safari/537.36 MMWEBID/2874 MicroMessenger/8.0.15.2020(0x28000F39) Process/tools WeChat/arm64 Weixin NetType/4G Language/zh_CN ABI/arm64",
+        "Referer": `https://h5.m.jd.com/`
+      }
+    }
+    $.get(options, async (err, resp, data) => {
+      try {
+        if (err) {
+          console.log(`${JSON.stringify(err)}`)
+          console.log(`doInteractiveAssignment api请求失败，请检查网路重试`)
+        } else {
+          if (safeGet(data)) {
+            data = JSON.parse(data);
+            if (data.subCode == "0") {
+              //console.log(`${data.rewardsInfo.successRewards[3][0].rewardName}`);
+              message += `领取成功，获得 ${data.rewardsInfo.successRewards[3][0].rewardName}`
+              allMessage += `京东账号${$.index}${$.nickName || $.UserName}\n领取成功，获得 ${data.rewardsInfo.successRewards[3][0].rewardName}${$.index !== cookiesArr.length ? '\n\n' : ''}`;
             } else {
               console.log(data);
             }
