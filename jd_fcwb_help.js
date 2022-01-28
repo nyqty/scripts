@@ -55,7 +55,7 @@ let curRound = 1
     let res = [];
 
     //try{res = await getAuthorShareCode('https://gitee.com/KingRan521/JD-Scripts/raw/master/shareCodes/fcwb.json');}catch (e) {}
-    // if(!res){res = [];}
+    if(!res){res = [];}
     
     if(res.length > 0){
         let actCodeInfo = getRandomArrayElements(res,1)[0];
@@ -162,8 +162,9 @@ async function main() {
     if($.index === 1){
         fcwbinviter = homeInfo.markedPin;
         fcwbinviteCode = homeInfo.inviteCode;
-    }
+    
     await doTask();
+	}
     if($.freshFlag){
         await $.wait(2000);
         homeInfo = await takeRequest(`happyDigHome`,`{"linkId":"${link}"}`,true);
