@@ -49,7 +49,7 @@ $.innerKeyWords =
         "宠物", "饲料", "丝袜", "黑丝", "磨脚",
         "脚皮", "除臭", "性感", "内裤", "跳蛋",
         "安全套", "龟头", "阴道", "阴部", "手机卡",
-        "流量卡", "和田玉", "钢化膜", "手机壳"
+        "流量卡", "和田玉", "钢化膜", "手机壳","习题","试卷"
     ]
 //下面很重要，遇到问题请把下面注释看一遍再来问
 let args_xh = {
@@ -113,7 +113,7 @@ let args_xh = {
      * 过滤大于设定值的已申请人数，例如下面设置的1000，A商品已经有1001人申请了，则A商品不会进行申请，会被跳过
      * 可设置环境变量：JD_TRY_APPLYNUMFILTER
      * */
-    applyNumFilter: process.env.JD_TRY_APPLYNUMFILTER * 1 || 10000,
+    applyNumFilter: process.env.JD_TRY_APPLYNUMFILTER * 1 || 100000,
     /*
      * 商品试用之间和获取商品之间的间隔, 单位：毫秒(1秒=1000毫秒)
      * 可设置环境变量：JD_TRY_APPLYINTERVAL
@@ -179,7 +179,7 @@ let args_xh = {
         for (let i = 0; i < $.cookiesArr.length; i++) {
             if ($.cookiesArr[i]) {
                 $.cookie = $.cookiesArr[i];
-                $.UserName = decodeURIComponent($.cookie.match(/pt_pin=(.+?);/) && $.cookie.match(/pt_pin=(.+?);/)[1])
+                $.UserName = decodeURIComponent($.cookie.match(/pt_pin=([^; ]+)(?=;?)/) && $.cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
                 $.index = i + 1;
                 $.isLogin = true;
                 $.nickName = '';

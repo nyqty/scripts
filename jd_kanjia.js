@@ -65,12 +65,14 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
         }
         continue
       }
-      if( packetId && actId ){
-        await kanjia()
-      }else{
-        await list()
-      }
-      await $.wait(2000)
+
+      await list()
+     
+     await $.wait(10000)
+     
+     await kanjia()
+     
+
     }
   }
 })()
@@ -102,7 +104,7 @@ headers: {
                     data = JSON.parse(data);
                  
                    
-                   
+                   if($.index === 1){
                     if(data.code == 0){
 console.log("商品："+data.data[0].goodsName+"\n商品ID："+data.data[0].actId)
 await listyqm(data.data[0].actId)
@@ -116,6 +118,7 @@ console.log("\n商品："+data.data[4].goodsName+"\n商品ID："+data.data[4].ac
 await listyqm(data.data[4].actId)
 
                 }
+			}
             } catch (e) {
                 $.logErr(e, resp);
             } finally {

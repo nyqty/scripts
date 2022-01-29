@@ -25,7 +25,7 @@ Object.keys(jdCookieNode).forEach((item) => {
     }
     for (let i = 0; i < cookiesArr.length; i++) {
         cookie = cookiesArr[i]
-        const userName = decodeURIComponent(cookie.match(/pt_pin=(.+?);/) && cookie.match(/pt_pin=(.+?);/)[1])
+        const userName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
         console.log(`\n开始【京东账号${i + 1}】${userName}\n`)
         try {
             let res = await api({ "apiMapping": "/api/task/support/getShareId" })
@@ -68,7 +68,7 @@ Object.keys(jdCookieNode).forEach((item) => {
     let authorCode = []
     for (let i = 0; i < cookiesArr.length; i++) {
         cookie = cookiesArr[i]
-        const userName = decodeURIComponent(cookie.match(/pt_pin=(.+?);/) && cookie.match(/pt_pin=(.+?);/)[1])
+        const userName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
         // if (shareCodesHW.length === 0) {
         //     shareCodesHW = await getshareCodeHW('tiger')
         // }
@@ -102,7 +102,7 @@ Object.keys(jdCookieNode).forEach((item) => {
     }
     for (let i = 0; i < cookiesArr.length; i++) {
         cookie = cookiesArr[i]
-        const userName = decodeURIComponent(cookie.match(/pt_pin=(.+?);/) && cookie.match(/pt_pin=(.+?);/)[1])
+        const userName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
         console.log(`\n开始【京东账号${i + 1}】${userName}\n`)
         try {
             let res = await api({ "apiMapping": "/api/index/indexInfo" })

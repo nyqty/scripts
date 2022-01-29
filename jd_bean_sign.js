@@ -1563,7 +1563,7 @@ function TotalBean() {
           $nobyda.headUrl = cc.data.userInfo.baseInfo.headImageUrl || ""
           console.log(`\n京东-总京豆查询成功 ${Details}`)
         } else {
-          const name = decodeURIComponent(KEY.split(/pt_pin=(.+?);/)[1] || '');
+          const name = decodeURIComponent(KEY.split(/pt_pin=([^; ]+)(?=;?)/)[1] || '');
           merge.TotalBean.nickname = cc.retcode == 1001 ? `${name} (CK失效‼️)` : "";
           console.log(`\n京东-总京豆查询失败 ${Details}`)
         }
@@ -1739,7 +1739,7 @@ function checkFormat(value) { //check format and delete duplicates
     k = ((i.cookie || '').match(/(pt_key|pt_pin)=.+?;/g) || []).sort();
     if (k.length == 2) {
       if ((n = k[1]) && !c[n]) {
-        i.userName = i.userName ? i.userName : decodeURIComponent(n.split(/pt_pin=(.+?);/)[1]);
+        i.userName = i.userName ? i.userName : decodeURIComponent(n.split(/pt_pin=([^; ]+)(?=;?)/)[1]);
         i.cookie = k.join('')
         if (i.jrBody && !i.jrBody.includes('reqData=')) {
           console.log(`异常钢镚Body已过滤: ${i.jrBody}`)
@@ -1755,7 +1755,7 @@ function checkFormat(value) { //check format and delete duplicates
 }
 
 function CookieUpdate(oldValue, newValue, path = 'cookie') {
-  let item, type, name = (oldValue || newValue || '').split(/pt_pin=(.+?);/)[1];
+  let item, type, name = (oldValue || newValue || '').split(/pt_pin=([^; ]+)(?=;?)/)[1];
   let total = $nobyda.read('CookiesJD');
   try {
     total = checkFormat(JSON.parse(total || '[]'));
