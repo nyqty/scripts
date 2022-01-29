@@ -21,7 +21,7 @@ JoyJd任务脚本 = type=cron,script-path=https://raw.githubusercontent.com/King
 
 */
 const $ = new Env('会员开卡赢京豆');
-const Faker=require('./sign_graphics_validate.js') 
+const Faker=require('./utils/sign_graphics_validate.js') 
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 const notify = $.isNode() ? require('./sendNotify') : '';
 //IOS等用户直接用NobyDa的jd cookie
