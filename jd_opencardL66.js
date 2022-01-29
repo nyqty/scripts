@@ -2,10 +2,6 @@
 1.29~2.15 京东粉丝联盟福利社 入会赢专享好礼
 新增开卡脚本，一次性脚本
 
-
-第一个账号助力作者 其他依次助力CK1
-第一个CK失效会退出脚本
-
 ————————————————
 入口：[ 1.29~2.15 京东粉丝联盟福利社 入会赢专享好礼 (https://lzdz1-isv.isvjcloud.com/dingzhi/shop/league/activity?activityId=dz220107100001616201shop&shareUuid=488be07602b444ba9b2b4825aec09d81)]
 
