@@ -21,7 +21,7 @@ cron "35 10 * * *" script-path=https://raw.githubusercontent.com/KingRan/JDJB/ma
 
 */
 const $ = new Env('情人节活动');
-const Faker=require('./sign_graphics_validate.js') 
+const Faker=require('./utils/sign_graphics_validate.js') 
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 const notify = $.isNode() ? require('./sendNotify') : '';
 //IOS等用户直接用NobyDa的jd cookie
