@@ -102,7 +102,7 @@ async function help(){
 function requestApi(functionId, body = {}) {
     return new Promise(resolve => {
         $.post({
-            url: `https://api.m.jd.com/api?appid=jinlihongbao&functionId=${functionId}&loginType=2&client=jinlihongbao&t=${gettimestamp()}&clientVersion=10.1.4&osVersion=-1`,
+            url: `https://api.m.jd.com/api?appid=jinlihongbao&functionId=${functionId}&loginType=2&client=jinlihongbao&t=${gettimestamp()}&clientVersion10.3.5&&osVersion=AndroidOS&d_brand=Xiaomi&d_model=Xiaomi`,
             headers: {
                 "Cookie": cookie,
                 "origin": "https://h5.m.jd.com",

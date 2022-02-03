@@ -2,8 +2,9 @@
 发财挖宝
 更新时间：2021-10-30
 活动入口：极速版-发财挖宝
-活动部分账号验证h5st参数，请自行抓包参数添加
-小号助力大号，抓包助力成功链接在代码235行末尾添加h5st=xxx参数。
+目前需要下一单才能通关，需要的自己玩下
+活动部分账号验证h5st参数，请自行抓包参数添加 
+小号助力大号，抓包助力成功链接在代码236行修改为完整抓包链接，运行脚本提示 都黑号了，别薅了 为正常现象。
 h5st参数有时效性，抓包后请及时运行脚本
 脚本兼容: QuantumultX, Surge, Loon, JSBox, Node.js
 ============Quantumultx===============
@@ -58,7 +59,7 @@ let curRound = 1
     let res = [];
 
     //try{res = await getAuthorShareCode('https://gitee.com/KingRan521/JD-Scripts/raw/master/shareCodes/fcwb.json');}catch (e) {}
-     if(!res){res = [];}
+    if(!res){res = [];}
     
     if(res.length > 0){
         let actCodeInfo = getRandomArrayElements(res,1)[0];
