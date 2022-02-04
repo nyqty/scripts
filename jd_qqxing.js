@@ -3,7 +3,7 @@
 活动入口：QQ星儿童牛奶京东自营旗舰店->品牌会员->星系牧场
 [task_local]
 #星系牧场
-1 0-23/4 * * * jd_qqxing.js
+22 4-22/3 * * * * * * jd_qqxing.js
 */
 const $ = new Env('QQ星系牧场');
 //Node.js用户请在jdCookie.js处填写京东ck;
@@ -34,9 +34,8 @@ if ($.isNode()) {
 
 const JD_API_HOST = `https://api.m.jd.com/client.action`;
 message = ""
-$.shareuuid = ["eb602b7c548f4161a0cbd2949b959811", "8c20dc3e1bfe456680db9af9063fc795"][Math.floor((Math.random() * 3))];
-
-!(async () => {
+$.shareuuid = ["bf3ffb1c973a49acbac4983ac15162f3", "be5c05485b624d69b2bb1acee71ffc87"][Math.floor((Math.random() * 2))];
+    !(async () => {
         if (!cookiesArr[0]) {
             $.msg($.name, '【提示】请先获取cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/', {
                 "open-url": "https://bean.m.jd.com/"
@@ -102,7 +101,7 @@ $.shareuuid = ["eb602b7c548f4161a0cbd2949b959811", "8c20dc3e1bfe456680db9af9063f
                     let exchanges =Math.floor($.foodNum/10000)
                     console.log(`可兑换 ${exchanges} 次 100京🐶`)
                     for(q = 0;q<exchanges && Exchange;q++){
-                    await exchange(16)   //16是100豆，14是50豆，13是20豆
+                    await exchange(14)   //16是100豆，14是50豆，13是20豆
                     }
                     await getinfo()
                     if(!Exchange){console.log("你 默认 不兑换东西,请自行进去活动兑换")}
@@ -116,7 +115,7 @@ $.shareuuid = ["eb602b7c548f4161a0cbd2949b959811", "8c20dc3e1bfe456680db9af9063f
         }
         if (message.length != 0) {
         if ($.isNode()) {
-           await notify.sendNotify("星系牧场", `${message}\n牧场入口：QQ星儿童牛奶京东自营旗舰店->星系牧场`);
+           await notify.sendNotify("星系牧场", `${message}\n牧场入口：QQ星儿童牛奶京东自营旗舰店->星系牧场\n\n`);
    }  else {
             $.msg($.name, "", '星系牧场' + message)
         }
