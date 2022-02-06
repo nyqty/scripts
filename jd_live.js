@@ -8,17 +8,17 @@
 ============Quantumultx===============
 [task_local]
 #京东直播
-50 12-14 * * * https://raw.githubusercontent.com/Aaron-lv/sync/jd_scripts/jd_live.js, tag=京东直播, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
+50 12-14 * * * https://raw.githubusercontent.com/KingRan/JDJB/main/jd_live.js, tag=京东直播, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
 
 ================Loon==============
 [Script]
-cron "50 12-14 * * *" script-path=https://raw.githubusercontent.com/Aaron-lv/sync/jd_scripts/jd_live.js,tag=京东直播
+cron "50 12-14 * * *" script-path=https://raw.githubusercontent.com/KingRan/JDJB/main/jd_live.js,tag=京东直播
 
 ===============Surge=================
-京东直播 = type=cron,cronexp="50 12-14 * * *",wake-system=1,timeout=3600,script-path=https://raw.githubusercontent.com/Aaron-lv/sync/jd_scripts/jd_live.js
+京东直播 = type=cron,cronexp="50 12-14 * * *",wake-system=1,timeout=3600,script-path=https://raw.githubusercontent.com/KingRan/JDJB/main/jd_live.js
 
 ============小火箭=========
-京东直播 = type=cron,script-path=https://raw.githubusercontent.com/Aaron-lv/sync/jd_scripts/jd_live.js, cronexpr="50 12-14 * * *", timeout=3600, enable=true
+京东直播 = type=cron,script-path=https://raw.githubusercontent.com/KingRan/JDJB/main/jd_live.js, cronexpr="50 12-14 * * *", timeout=3600, enable=true
  */
 const $ = new Env('京东直播');
 const notify = $.isNode() ? require('./sendNotify') : '';
@@ -134,12 +134,10 @@ function getTaskList() {
 
 async function getauthorId(liveId) {
   let functionId = `liveDetailV910`
-  let body = escape(JSON.stringify({"liveId":liveId,"fromId":"","liveList":[],"sku":"","source":"17","d":"","direction":"","isNeedVideo":1}))
-  let uuid = randomString(16)
-  let sign = await getSign(functionId, decodeURIComponent(body), uuid)
-  let url = `https://api.m.jd.com/client.action?functionId=${functionId}&build=167774&client=apple&clientVersion=10.1.0&uuid=${uuid}&${sign}`
+  let body = {"liveId":liveId,"fromId":"","liveList":[],"sku":"","source":"17","d":"","direction":"","isNeedVideo":1}
+  let sign = await getSign(functionId, body)
   return new Promise(resolve => {
-    $.post(taskPostUrl(functionId, body, url), async (err, resp, data) => {
+    $.post(taskPostUrl(functionId, sign), async (err, resp, data) => {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
@@ -160,12 +158,10 @@ async function getauthorId(liveId) {
 
 async function superTask(liveId, authorId) {
   let functionId = `liveChannelReportDataV912`
-  let body = escape(JSON.stringify({"liveId":liveId,"type":"viewTask","authorId":authorId,"extra":{"time":60}}))
-  let uuid = randomString(16)
-  let sign = await getSign(functionId, decodeURIComponent(body), uuid)
-  let url = `https://api.m.jd.com/client.action?functionId=${functionId}&build=167774&client=apple&clientVersion=10.1.0&uuid=${uuid}&${sign}`
+  let body = {"liveId":liveId,"type":"viewTask","authorId":authorId,"extra":{"time":60}}
+  let sign = await getSign(functionId, body)
   return new Promise(resolve => {
-    $.post(taskPostUrl(functionId, body, url), async (err, resp, data) => {
+    $.post(taskPostUrl(functionId, sign), async (err, resp, data) => {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
@@ -282,14 +278,13 @@ function sign() {
   })
 }
 
-function getSign(functionid, body, uuid) {
+function getSign(functionId, body) {
   return new Promise(async resolve => {
     let data = {
-      "functionId":functionid,
-      "body":body,
-      "uuid":uuid,
-      "client":"apple",
-      "clientVersion":"10.1.0"
+      functionId,
+      body: JSON.stringify(body),
+      client: "apple",
+      clientVersion: "10.3.0"
     }
     let HostArr = ['jdsign.cf', 'signer.nz.lu']
     let Host = HostArr[Math.floor((Math.random() * HostArr.length))]
@@ -319,12 +314,10 @@ function getSign(functionid, body, uuid) {
   })
 }
 
-function taskPostUrl(function_id, body = {}, url=null) {
-  if (url && (function_id === "liveChannelReportDataV912" || function_id === "liveDetailV910")) body = `body=${body}`
-  if(!url) url = `https://api.m.jd.com/client.action?functionId=${function_id}`
+function taskPostUrl(function_id, body = "") {
   return {
-    url: url,
-    body: body,
+    url: `https://api.m.jd.com/client.action?functionId=${function_id}`,
+    body,
     headers: {
       "Host": "api.m.jd.com",
       "Content-Type": "application/x-www-form-urlencoded",
@@ -332,8 +325,7 @@ function taskPostUrl(function_id, body = {}, url=null) {
       "Referer": "",
       "Cookie": cookie,
       "Origin": "https://h5.m.jd.com",
-      'Content-Type': 'application/x-www-form-urlencoded',
-      "Content-Length": "996",
+      "Content-Type": 'application/x-www-form-urlencoded',
       "User-Agent": "JD4iPhone/167774 (iPhone; iOS 14.7.1; Scale/3.00)",
       "Accept-Language": "zh-Hans-CN;q=1",
       "Accept-Encoding": "gzip, deflate, br"
@@ -342,7 +334,7 @@ function taskPostUrl(function_id, body = {}, url=null) {
 }
 function taskUrl(function_id, body = {}) {
   return {
-    url: `${JD_API_HOST}?functionId=${function_id}&appid=h5-live&body=${escape(JSON.stringify(body))}&v=${new Date().getTime() + new Date().getTimezoneOffset()*60*1000 + 8*60*60*1000}&uuid=${uuid}`,
+    url: `${JD_API_HOST}?functionId=${function_id}&appid=h5-live&body=${encodeURIComponent(JSON.stringify(body))}&v=${new Date().getTime() + new Date().getTimezoneOffset()*60*1000 + 8*60*60*1000}&uuid=${uuid}`,
     headers: {
       "Host": "api.m.jd.com",
       "Accept": "application/json, text/plain, */*",
@@ -369,45 +361,48 @@ function randomString(e) {
 }
 
 function TotalBean() {
-    return new Promise(async resolve => {
-        const options = {
-            url: "https://me-api.jd.com/user_new/info/GetJDUserInfoUnion",
-            headers: {
-                Host: "me-api.jd.com",
-                Accept: "*/*",
-                Connection: "keep-alive",
-                Cookie: cookie,
-                "User-Agent": $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('./USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.4.4;14.3;network/4g;Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1"),
-                "Accept-Language": "zh-cn",
-                "Referer": "https://home.m.jd.com/myJd/newhome.action?sceneval=2&ufc=&",
-                "Accept-Encoding": "gzip, deflate, br"
+  return new Promise(async resolve => {
+    const options = {
+      "url": `https://wq.jd.com/user/info/QueryJDUserInfo?sceneval=2`,
+      "headers": {
+        "Accept": "application/json,text/plain, */*",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Accept-Language": "zh-cn",
+        "Connection": "keep-alive",
+        "Cookie": cookie,
+        "Referer": "https://wqs.jd.com/my/jingdou/my.shtml?sceneval=2",
+        "User-Agent": $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('./USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.4.4;14.3;network/4g;Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1")
+      }
+    }
+    $.post(options, (err, resp, data) => {
+      try {
+        if (err) {
+          console.log(`${JSON.stringify(err)}`)
+          console.log(`${$.name} API请求失败，请检查网路重试`)
+        } else {
+          if (data) {
+            data = JSON.parse(data);
+            if (data['retcode'] === 13) {
+              $.isLogin = false; //cookie过期
+              return
             }
+            if (data['retcode'] === 0) {
+              $.nickName = (data['base'] && data['base'].nickname) || $.UserName;
+            } else {
+              $.nickName = $.UserName
+            }
+          } else {
+            console.log(`京东服务器返回空数据`)
+          }
         }
-        $.get(options, (err, resp, data) => {
-            try {
-                if (err) {
-                    $.logErr(err)
-                } else {
-                    if (data) {
-                        data = JSON.parse(data);
-                        if (data['retcode'] === "1001") {
-                            $.isLogin = false; //cookie过期
-                            return;
-                        }
-                        if (data['retcode'] === "0" && data.data && data.data.hasOwnProperty("userInfo")) {
-                            $.nickName = data.data.userInfo.baseInfo.nickname?data.data.userInfo.baseInfo.nickname:data.data.userInfo.baseInfo.curPin;
-                        }
-                    } else {
-                        console.log('京东服务器返回空数据');
-                    }
-                }
-            } catch (e) {
-                $.logErr(e)
-            } finally {
-                resolve();
-            }
-        })
+      } catch (e) {
+        $.logErr(e, resp)
+      } finally {
+        resolve();
+      }
     })
+  })
 }
 function safeGet(data) {
   try {
