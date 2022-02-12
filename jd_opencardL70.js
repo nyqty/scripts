@@ -55,7 +55,7 @@ let activityCookie =''
   $.userId = '10299171'
   $.actId = '628b293b355c42e39d5fea6f583e_20220212'
   $.MixNicks = ''
-  $.inviteNick = 'k1Nobb+P0er+C2sysxnx/P2KELO9izRVpwCyqu0eqVZ5aW7RHzlMobrzJ/e9r/uf'
+  $.inviteNick = 'oWYzEz0N7KY058rLNke8o87TwJCmNe8NFvhpI0XmJDULVU108+UxlHw7qoUuHA4F'
   console.log(`活动地址:https://mpdz3-isv.isvjcloud.com/fronth5/#/pages/unitedCardNew20220212/unitedCardNew20220212?actId=628b293b355c42e39d5fea6f583e_20220212`)
   console.log(`请自行测试有水无水。`)
   for (let i = 0; i < cookiesArr.length; i++) {
@@ -168,12 +168,6 @@ async function run() {
       }
     await takePostRequest('myAward');
     await takePostRequest('missionInviteList');
-    console.log($.MixNick)
-    console.log(`当前助力:${$.inviteNick}`)
-    if($.index == 1){
-      $.inviteNick = $.MixNick
-      console.log(`后面的号都会助力:${$.inviteNick}`)
-    }
     await $.wait(parseInt(Math.random() * 1000 + 5000, 10))
   } catch (e) {
     console.log(e)
