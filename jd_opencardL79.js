@@ -1,26 +1,26 @@
 /*
-2.13~2.19 联合开卡 
+2.20~2.26 联合开卡 
 新增开卡脚本，一次性脚本
 
 第一个账号助力作者 其他依次助力CK1
 第一个CK失效会退出脚本
 
 ————————————————
-入口：[ 2.13~2.19 联合开卡]
+入口：[ 2.20~2.26 联合开卡 ]
 
 请求太频繁会被黑ip
 过10分钟再执行
 
 
-cron:35 1,18 13-19 2 *
+cron:41 0,17 20-26 2 *
 ============Quantumultx===============
 [task_local]
-#2.13~2.19 联合开卡
-35 1,18 13-19 2 * jd_opencardL71.js, tag=2.13~2.19 联合开卡, enabled=true
+#2.20~2.26 联合开卡
+41 0,17 20-26 2 * jd_opencardL79.js, tag=2.20~2.26 联合开卡, enabled=true
 
 */
 
-const $ = new Env('2.13~2.19 联合开卡');
+const $ = new Env('2.20~2.26 联合开卡');
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 const notify = $.isNode() ? require('./sendNotify') : '';
 
@@ -53,10 +53,10 @@ let activityCookie =''
   // return
   $.appkey = '51B59BB805903DA4CE513D29EC448375'
   $.userId = '10299171'
-  $.actId = '98a976e9f0_22021301'
+  $.actId = '29a7e74b884d42adb90d8_22022001'
   $.MixNicks = ''
-  $.inviteNick = 'oWYzEz0N7KY058rLNke8o87TwJCmNe8NFvhpI0XmJDULVU108+UxlHw7qoUuHA4F'
-  console.log(`活动地址:`)
+  $.inviteNick = 'k1Nobb+P0er+C2sysxnx/P2KELO9izRVpwCyqu0eqVZ5aW7RHzlMobrzJ/e9r/uf'
+  console.log(`活动地址:https://jinggengjcq-isv.isvjcloud.com/fronth5/#/pages/unitedCardNew20220220/unitedCardNew20220220?actId=29a7e74b884d42adb90d8_22022001`)
   console.log(`请自行测试有水无水。`)
   for (let i = 0; i < cookiesArr.length; i++) {
     cookie = cookiesArr[i];
@@ -168,6 +168,12 @@ async function run() {
       }
     await takePostRequest('myAward');
     await takePostRequest('missionInviteList');
+    console.log($.MixNick)
+    console.log(`当前助力:${$.inviteNick}`)
+    if($.index == 1){
+      $.inviteNick = $.MixNick
+      console.log(`后面的号都会助力:${$.inviteNick}`)
+    }
     await $.wait(parseInt(Math.random() * 1000 + 5000, 10))
   } catch (e) {
     console.log(e)

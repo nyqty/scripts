@@ -21,6 +21,9 @@ cron "10 5,17 * * *" script-path=jd_fruit_friend.js,tag=东东农场好友删减
 =========================小火箭===========================
 东东农场好友删减奖励 = type=cron,script-path=jd_fruit_friend.js, cronexpr="10 5,17 * * *", timeout=3600, enable=true
 
+每号间隔（毫秒），默认0毫秒（0分钟）
+export fruit_sleep=20000
+
 */
 const $ = new Env('东东农场好友删减奖励');
 let cookiesArr = [], cookie = '', isBox = false, notify,allMessage = '';
@@ -88,6 +91,9 @@ let llhelp=true;
       $.retry = 0;
       await jdFruit();
     }
+		if ($.isNode()) {
+		process.env.fruit_sleep ? await $.wait(Number(process.env.fruit_sleep)) : ''
+		}
   }
   if ($.isNode() && allMessage && $.ctrTemp) {
     await notify.sendNotify(`${$.name}`, `${allMessage}`)
@@ -170,8 +176,8 @@ async function GetCollect() {
       console.log(`\n【京东账号${$.index}（${$.UserName}）的${$.name}互助码】${$.farmInfo.farmUserPro.shareCode}`);
       newShareCodes.push($.farmInfo.farmUserPro.shareCode)
     } else {
-      console.log(`\n【京东账号${$.index}（${$.UserName}）的${$.name}互助码】\n数据异常,使用作者的互助码:a86ba6416d0040f18b39fd08c230c811`);
-      newShareCodes.push("a86ba6416d0040f18b39fd08c230c811");
+      console.log(`\n【京东账号${$.index}（${$.UserName}）的${$.name}互助码】\n数据异常,使用作者的互助码:94f3ba0769b04c94bbfca26139108702`);
+	  newShareCodes.push("94f3ba0769b04c94bbfca26139108702");
     }
   } catch (e) {
     $.logErr(e);
