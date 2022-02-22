@@ -50,7 +50,7 @@ let allMessage = '';
   }
   await requireConfig()
   $.authorCode=[]
-  //$.authorCode = await getAuthorShareCode('https://gitee.com/KingRan521/JD-Scripts/raw/master/shareCodes/jd_cash.json')
+  //$.authorCode = await getAuthorShareCode('https://raw.githubusercontent.com/atyvcn/updateTeam/master/shareCodes/jd/cash.json')
   for (let i = 0; i < cookiesArr.length; i++) {
     if (cookiesArr[i]) {
       cookie = cookiesArr[i];

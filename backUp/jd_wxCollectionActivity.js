@@ -42,7 +42,7 @@ $.keywordsNum = 0;
         $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
         return;
     }
-    //let activityIdList = await getActivityIdList('https://gitee.com/KingRan521/JD-Scripts/raw/master/shareCodes/wxCollection.json')
+    //let activityIdList = await getActivityIdList('https://raw.githubusercontent.com/atyvcn/updateTeam/master/shareCodes/jd/wxCollection.json')
     // let activityIdList = [
     // ]
     for(let a in activityIdList){
@@ -53,7 +53,7 @@ $.keywordsNum = 0;
                 cookie = cookiesArr[i]
                 originCookie = cookiesArr[i]
                 newCookie = ''
-                $.UserName = decodeURIComponent(cookie.match(/pt_pin=(.+?);/) && cookie.match(/pt_pin=(.+?);/)[1])
+                $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
                 $.index = i + 1;
                 $.isLogin = true;
                 $.nickName = '';
