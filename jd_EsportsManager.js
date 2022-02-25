@@ -47,8 +47,8 @@
              if (r !== 200)
                  continue
  
-             await $.wait(2000);
-             await main();
+             //await $.wait(2000);
+             //await main();
              await $.wait(3000)
          }
      }
