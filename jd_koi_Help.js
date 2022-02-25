@@ -21,6 +21,7 @@ TY二次修改 满了删除助力码
 const $ = new Env("锦鲤红包互助")
 const JD_API_HOST = 'https://api.m.jd.com/client.action';
 const ua = `jdltapp;iPhone;3.1.0;${Math.ceil(Math.random()*4+10)}.${Math.ceil(Math.random()*4)};${randomString(40)}`
+//const ua="jdapp;android;10.4.2;;;appBuild/92901;ef/1;ep/%7B%22hdid%22%3A%22JM9F1ywUPwflvMIpYPok0tt5k9kW4ArJEU3lfLhxBqw%3D%22%2C%22ts%22%3A1645763864081%2C%22ridx%22%3A-1%2C%22cipher%22%3A%7B%22sv%22%3A%22CJO%3D%22%2C%22ad%22%3A%22CJPrC2GnENY2YtTwZQSzDK%3D%3D%22%2C%22od%22%3A%22EJKyCQUyYtq3DtvtCQPuDq%3D%3D%22%2C%22ov%22%3A%22CzK%3D%22%2C%22ud%22%3A%22CJPrC2GnENY2YtTwZQSzDK%3D%3D%22%7D%2C%22ciphertype%22%3A5%2C%22version%22%3A%221.2.0%22%2C%22appname%22%3A%22com.jingdong.app.mall%22%7D;jdSupportDarkMode/0;Mozilla/5.0 (Linux; Android 11; M2006J10C Build/RP1A.200720.011; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/77.0.3865.120 MQQBrowser/6.2 TBS/045745 Mobile Safari/537.36"
 let cookiesArr = [], cookie = '';
 let shareCodes = [];
 !(async () => {
@@ -81,16 +82,21 @@ async function help(){
       $.index = i + 1;
       $.nickName = '';
       for (let j = 0; j < shareCodes.length; j++){
-        let data = await requestApi('jinli_h5assist', {"redPacketId":shareCodes[j],"followShop":0,"random":random(000000, 999999),"log":"42588613~8,~0iuxyee","sceneid":"JLHBhPageh5"})
-        if (data && data.data && data.data.biz_code === 0) {
-            let result = data.data.result
-            // status ,0:助力成功，1:不能重复助力，3:助力次数耗尽，8:不能为自己助力
-            console.log(`账号【${$.index}】 助力: ${shareCodes[j]}\n${result.status} ${result.statusDesc}\n`);
-            if (result.status === 2){
-                shareCodes.splice(j, 1)
-                j--
-                continue
-            }else if ( result.status === 3 || result.status === 9 ) break;
+        let data = await requestApi('jinli_h5assist', {"redPacketId":shareCodes[j],"followShop":0,"random":random(00000000, 99999999),"log":gettimestamp()+"42588613~8,~0iuxyee","sceneid":"JLHBhPageh5"})
+        
+        if (data && data?.data && data?.data?.biz_code === 0) {
+            let result = data?.data?.result
+            if( result ){
+              //data：{"code":0,"data":{"biz_code":0,"code":0,"rtn_code":403,"success":true},"rtn_code":403}
+              console.log(`result：${JSON.stringify(result)}`);
+              // status ,0:助力成功，1:不能重复助力，3:助力次数耗尽，8:不能为自己助力
+              console.log(`账号【${$.index}】 助力: ${shareCodes[j]}\n${result.status} ${result.statusDesc}\n`);
+              if (result.status === 2){
+                  shareCodes.splice(j, 1)
+                  j--
+                  continue
+              }else if ( result.status === 3 || result.status === 9 ) break;
+            }else console.log(`result异常：${JSON.stringify(data)}`);
         } else {
             console.log(`助力异常：${JSON.stringify(data)}`);
         }
@@ -102,14 +108,19 @@ async function help(){
 function requestApi(functionId, body = {}) {
     return new Promise(resolve => {
         $.post({
-            url: `https://api.m.jd.com/api?appid=jinlihongbao&functionId=${functionId}&loginType=2&client=jinlihongbao&t=${gettimestamp()}&clientVersion=10.4.2&&osVersion=AndroidOS&d_brand=Xiaomi&d_model=Xiaomi`,
+            url: `https://api.m.jd.com/api?appid=jinlihongbao&functionId=${functionId}&loginType=2&client=jinlihongbao&t=${gettimestamp()}&clientVersion=10.4.2&osVersion=-1`,
             headers: {
+                //"Accept": "application/json, text/plain, */*",
                 "Cookie": cookie,
-                "origin": "https://h5.m.jd.com",
-                "referer": "https://h5.m.jd.com/babelDiy/Zeus/2NUvze9e1uWf4amBhe1AV6ynmSuH/index.html",
+                "origin": "https://happy.m.jd.com",
+                "referer": "https://happy.m.jd.com/babelDiy/Zeus/3ugedFa7yA6NhxLN5gw2L3PF9sQC/index.html?asid=436583640",
                 'Content-Type': 'application/x-www-form-urlencoded',
+                "Sec-Fetch-Mode": "cors",
                 "X-Requested-With": "com.jingdong.app.mall",
+                "Sec-Fetch-Site": "same-site",
                 "User-Agent": ua,
+                "Accept-Encoding": "gzip, deflate, br",
+                "Accept-Language": "zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7"
             },
             body: `body=${escape(JSON.stringify(body))}`,
         }, (_, resp, data) => {
