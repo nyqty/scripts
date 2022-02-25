@@ -100,7 +100,7 @@ if ($.isNode()) {
 			}
     }
   }
-  let res = await getAuthorShareCode('https://gitee.com/KingRan521/JD-Scripts/raw/master/shareCodes/cfd.json')
+  let res = await getAuthorShareCode('https://raw.githubusercontent.com/atyvcn/updateTeam/master/shareCodes/jd/cfd.json')
   $.strMyShareIds = [...(res || [])]
   await shareCodesFormat()
   for (let i = 0; i < cookiesArr.length; i++) {
