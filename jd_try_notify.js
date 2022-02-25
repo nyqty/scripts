@@ -39,11 +39,11 @@ if ($.isNode()) {
         })
         return
     }
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 200; i++) {
         // for(let i = 0; i < $.cookiesArr.length; i++){
         if (cookiesArr[i]) {
             $.cookie = cookiesArr[i];
-            $.UserName = decodeURIComponent($.cookie.match(/pt_pin=([^; ]+)(?=;?)/) && $.cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
+            $.UserName = decodeURIComponent($.cookie.match(/pt_pin=(.+?);/) && $.cookie.match(/pt_pin=(.+?);/)[1])
             $.index = i + 1;
             $.isLogin = true;
             console.log(`\n开始【京东账号${$.index}】${$.UserName}\n`);

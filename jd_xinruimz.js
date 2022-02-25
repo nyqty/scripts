@@ -1,3 +1,7 @@
+if (!["true"].includes(process.env.JD_Xinruimz)) {
+    console.log("避免自动运行请设置环境变量JD_Xinruimz为\"true\"来运行本脚本")
+    return
+}
 /*
 cron 30 6-20/3 * * * jd_xinruimz.js
 TG https://t.me/duckjobs
@@ -38,7 +42,7 @@ if ($.isNode()) {
         UA = `jdapp;iPhone;10.1.6;13.5;${UUID};network/wifi;model/iPhone11,6;addressid/4596882376;appBuild/167841;jdSupportDarkMode/0;Mozilla/5.0 (iPhone; CPU iPhone OS 13_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1`;
         if (cookiesArr[i]) {
             cookie = cookiesArr[i];
-            $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
+            $.UserName = decodeURIComponent(cookie.match(/pt_pin=(.+?);/) && cookie.match(/pt_pin=(.+?);/)[1])
             $.index = i + 1;
             $.isLogin = true;
             $.nickName = '';
