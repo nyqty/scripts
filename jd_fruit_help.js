@@ -34,6 +34,10 @@ let cookiesArr = [],
 //此此内容是IOS用户下载脚本到本地使用，填写互助码的地方，同一京东账号的好友互助码请使用@符号隔开。
 //下面给出两个账号的填写示例（iOS只支持2个京东账号）
 let shareCodes = [ // 这个列表填入你要助力的好友的shareCode
+    //     //账号一的好友shareCode,不同好友的shareCode中间用@符号隔开
+    //     '5853550f71014282912b76d95beb84c0@b58ddba3317b44ceb0ac86ea8952998c@8d724eb95e3847b6a1526587d1836f27@a80b7d1db41a4381b742232da9d22443@ce107b8f64d24f62a92292180f764018@c73ea563a77d4464b273503d3838fec1@0dd9a7fd1feb449fb1bf854a3ec0e801',
+    //     //账号二的好友shareCode,不同好友的shareCode中间用@符号隔开
+    //     '5853550f71014282912b76d95beb84c0@b58ddba3317b44ceb0ac86ea8952998c@8d724eb95e3847b6a1526587d1836f27@a80b7d1db41a4381b742232da9d22443@ce107b8f64d24f62a92292180f764018@c73ea563a77d4464b273503d3838fec1@0dd9a7fd1feb449fb1bf854a3ec0e801',
 ]
 let newShareCodes=[];
 let message = '',
@@ -63,6 +67,7 @@ if (Fileexists) {
 }
 let lnrun = 0;
 let llgetshare = false;
+let NoNeedCodes = [];
 !(async() => {
     await requireConfig();
     if (!cookiesArr[0]) {
@@ -140,8 +145,8 @@ let llgetshare = false;
             $.retry = 0;
           lnrun++;
           await jdFruit();
-          if (lnrun == 5) {
-              console.log(`\n【访问接口次数达到5次，休息一分钟.....】\n`);
+          if (lnrun == 3) {
+              console.log(`\n【访问接口次数达到3次，休息一分钟.....】\n`);
               await $.wait(60 * 1000);
               lnrun = 0;
           }
@@ -270,6 +275,19 @@ async function masterHelpShare() {
   if(llhelp){
 	  console.log('开始助力好友')
 	  for (let code of newShareCodes) {
+		if(NoNeedCodes){
+			var llnoneed=false;
+			for (let NoNeedCode of NoNeedCodes) {
+				if (code==NoNeedCode){
+					llnoneed=true;
+					break;
+				}
+			}
+			if(llnoneed){
+				console.log(`${code}助力已满，跳过...`);
+				continue;
+			}
+		}
 		console.log(`${$.UserName}开始助力: ${code}`);
 		if (!code) continue;
 		if (!$.farmInfo.farmUserPro) {
@@ -293,6 +311,7 @@ async function masterHelpShare() {
 		  } else if ($.helpResult.helpResult.code === '9') {
 			console.log(`【助力好友结果】: 之前给【${$.helpResult.helpResult.masterUserInfo.nickName}】助力过了`);
 		  } else if ($.helpResult.helpResult.code === '10') {
+			NoNeedCodes.push(code);
 			console.log(`【助力好友结果】: 好友【${$.helpResult.helpResult.masterUserInfo.nickName}】已满五人助力`);
 		  } else {
 			console.log(`助力其他情况：${JSON.stringify($.helpResult.helpResult)}`);
