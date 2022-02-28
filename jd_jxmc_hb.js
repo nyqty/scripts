@@ -19,7 +19,7 @@ $.inviteCodeList = [];
 $.inviteCodeList_hb = [];
 let flag_hb = true
 let cookiesArr = [];
-$.appId = 10028;
+$.appId = "00df8";
 $.helpCkList = [];
 if ($.isNode()) {
   Object.keys(jdCookieNode).forEach((item) => {
@@ -62,12 +62,13 @@ let token ='';
   }
   if (process.env.JXMC_RP != 'false' && flag_hb) {
   console.log('\n##################开始账号内互助(红包)#################\n');
+  //await getShareCode('jxmc_hb.json')
   $.inviteCodeList_hb = [...($.inviteCodeList_hb || []), ...($.shareCode || [])]
   for(let i = 0;i<$.helpCkList.length;i++){
     $.can_help = true
     $.cookie = $.helpCkList[i]
     token = await getJxToken()
-    $.UserName = decodeURIComponent($.cookie.match(/pt_pin=([^; ]+);?/) && $.cookie.match(/pt_pin=([^; ]+);?/)[1])
+    $.UserName = decodeURIComponent($.cookie.match(/pt_pin=(.+?);/) && $.cookie.match(/pt_pin=(.+?);/)[1])
     for (let j = 0; j < $.inviteCodeList_hb.length && $.can_help; j++) {
       $.oneCodeInfo = $.inviteCodeList_hb[j]
       if($.oneCodeInfo.use === $.UserName){
@@ -81,6 +82,7 @@ let token ='';
   }
   console.log('\n##################开始账号内互助#################\n');
   $.shareCode = []
+  //await getShareCode('jxmc.json')
   let newCookiesArr = [];
   for(let i = 0;i<$.helpCkList.length;i+=4){
     newCookiesArr.push($.helpCkList.slice(i,i+4))
@@ -90,7 +92,7 @@ let token ='';
     let codeList = [];
     for (let j = 0; j < thisCookiesArr.length; j++) {
       $.cookie = thisCookiesArr[j];
-      $.UserName = decodeURIComponent($.cookie.match(/pt_pin=([^; ]+);?/) && $.cookie.match(/pt_pin=([^; ]+);?/)[1])
+      $.UserName = decodeURIComponent($.cookie.match(/pt_pin=(.+?);/) && $.cookie.match(/pt_pin=(.+?);/)[1])
       for (let k = 0; k < $.inviteCodeList.length; k++) {
         if ($.UserName === $.inviteCodeList[k].use) {
           codeList.push({
@@ -104,7 +106,7 @@ let token ='';
     for (let j = 0; j < thisCookiesArr.length; j++) {
       $.cookie = thisCookiesArr[j];
       token = await getJxToken()
-      $.UserName = decodeURIComponent($.cookie.match(/pt_pin=([^; ]+);?/) && $.cookie.match(/pt_pin=([^; ]+);?/)[1])
+      $.UserName = decodeURIComponent($.cookie.match(/pt_pin=(.+?);/) && $.cookie.match(/pt_pin=(.+?);/)[1])
       for (let k = 0; k < codeList.length; k++) {
         $.oneCodeInfo = codeList[k];
         if(codeList[k].name === $.UserName){
@@ -124,6 +126,31 @@ let token ='';
     .finally(() => {
       $.done();
     })
+
+function getShareCode(name) {
+  return new Promise(resolve => {
+    $.get({
+      url: "",
+      headers: {
+        "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1 Edg/87.0.4280.88"
+      }
+    }, async (err, resp, data) => {
+      try {
+        if (err) {
+          //console.log(`${JSON.stringify(err)}`);
+          //console.log(`${$.name} API请求失败，请检查网路重试`);
+        } else {
+          console.log(`优先账号内部互助`);
+          $.shareCode = JSON.parse(data);
+        }
+      } catch (e) {
+        $.logErr(e, resp)
+      } finally {
+        resolve();
+      }
+    })
+  })
+}
 
 async function pasture() {
   try {
