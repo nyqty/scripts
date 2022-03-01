@@ -132,6 +132,7 @@ async function run() {
         if(o.status == 0){
           flag = true
           $.joinVenderId = o.venderId
+          await $.wait(parseInt(Math.random() * 3000 + 2000, 10))
           await joinShop()
 		  if($.joinShopresmessage === '活动太火爆，请稍后再试'){
 			  console.log('重新开卡')
@@ -160,20 +161,50 @@ async function run() {
       await takePostRequest('邀请');
     }
     //await takePostRequest('startDraw');
-
-    if(flag){
-      await takePostRequest('activityContent');
+    if(!$.viewVideo && !$.outFlag){
+        flag = true
+        await takePostRequest('viewVideo');
+        await $.wait(parseInt(Math.random() * 1000 + 3000, 10))
+      
+    } 
+    if(!$.addSku && !$.outFlag){
+        flag = true
+        await takePostRequest('addSku');
+        await $.wait(parseInt(Math.random() * 1000 + 3000, 10))
+      
     }
-    console.log(`${$.score}值 游戏:${$.point}`)
+	if(flag){
+	await takePostRequest('activityContent');
+	}
+	  console.log(`${$.score}值`)
       $.runFalag = true
-      let count = parseInt($.score/100)
+      let count = parseInt($.score/50)
+      console.log(`集卡次数为:${count}`)
+      for(m=1;count--;m++){
+        console.log(`第${m}次集卡`)
+        await takePostRequest('getCardInfo');
+		await takePostRequest('集卡');
+        if($.runFalag == false) break
+        if(Number(count) <= 0) break
+        if(m >= 5){
+          console.log("集卡太多次，多余的次数请再执行脚本")
+          break
+        }
+        await $.wait(parseInt(Math.random() * 2000 + 2000, 10))
+      }
+	if(flag){
+    await takePostRequest('activityContent');
+	}
+    console.log(`${$.score}值`)
+      $.runFalag = true
+      count = parseInt($.score/100)
       console.log(`抽奖次数为:${count}`)
       for(m=1;count--;m++){
         console.log(`第${m}次抽奖`)
         await takePostRequest('抽奖');
         if($.runFalag == false) break
         if(Number(count) <= 0) break
-        if(m >= 10){
+        if(m >= 5){
           console.log("抽奖太多次，多余的次数请再执行脚本")
           break
         }
@@ -191,7 +222,7 @@ async function run() {
     if(flag) await $.wait(parseInt(Math.random() * 1000 + 10000, 10))
     
     if($.index % 5 == 0) console.log('休息一下，别被黑ip了\n可持续发展')
-    if($.index % 5 == 0) await $.wait(parseInt(Math.random() * 5000 + 10000, 10))
+    if($.index % 5 == 0) await $.wait(parseInt(Math.random() * 5000 + 30000, 10))
     
   } catch (e) {
     console.log(e)
@@ -251,6 +282,14 @@ async function takePostRequest(type) {
         // url = `${domain}/dingzhi/dz/openCard/saveTask`;
         body = `activityId=${$.activityId}&pin=${encodeURIComponent($.Pin)}&actorUuid=${$.actorUuid}&taskType=1`
         break;
+      case 'getCardInfo':
+        url = `${domain}/collect/card/getCardInfo`;
+        body = `activityId=${$.activityId}&pin=${encodeURIComponent($.Pin)}&actorUuid=${$.actorUuid}`
+        break;
+      case '集卡':
+        url = `${domain}/collect/card/drawCard`;
+        body = `activityId=${$.activityId}&pin=${encodeURIComponent($.Pin)}&actorUuid=${$.actorUuid}`
+        break;
       case 'sign':
       case 'addCart':
       case 'browseGoods':
@@ -271,12 +310,12 @@ async function takePostRequest(type) {
       case 'visitSku':
       case 'toShop':
       case 'addSku':
-        url = `${domain}/dingzhi/dz/openCard/saveTask`;
+        url = `${domain}/play/monopoly/doTasks`;
         let taskType = ''
         let taskValue = ''
         if(type == 'viewVideo'){
-          taskType = 31
-          taskValue = 31
+          taskType = 0
+          taskValue = 0
         }else if(type == 'visitSku'){
           taskType = 5
           taskValue = $.visitSkuValue || 5
@@ -284,10 +323,10 @@ async function takePostRequest(type) {
           taskType = 14
           taskValue = $.toShopValue || 14
         }else if(type == 'addSku'){
-          taskType = 2
-          taskValue = $.addSkuValue || 2
+          taskType = 21
+          taskValue = $.addSkuValue || 21
         }
-        body = `activityId=${$.activityId}&pin=${encodeURIComponent($.Pin)}&actorUuid=${$.actorUuid}&taskType=${taskType}&taskValue=${taskValue}`
+        body = `activityId=${$.activityId}&pin=${encodeURIComponent($.Pin)}&actorUuid=${$.actorUuid}&taskType=${taskType}`
         break;
       case 'getDrawRecordHasCoupon':
         url = `${domain}/play/monopoly/getPrizeList`;
@@ -546,6 +585,23 @@ async function dealReturn(type, data) {
           if(res.result && res.result === true && res.data){
             $.ShareCount = res.data.assistCount
             $.log(`=========== 你邀请了:${res.data.assistCount}个`)
+          }else if(res.errorMessage){
+            console.log(`${type} ${res.errorMessage || ''}`)
+          }else{
+            console.log(`${type} ${data}`)
+          }
+        }else{
+          console.log(`${type} ${data}`)
+        }
+        break;
+      case 'getCardInfo':
+      case '集卡':
+        if(typeof res == 'object'){
+          if(res.result && res.result === true && res.data){
+            if(type == "集卡"){
+              if(res.data.status == 1) console.log(`集卡成功->${res.data.cardName}`)
+              else console.log('集卡失败'+ res.data.cardName && '->'+res.data.cardName || '\n'+data)
+            }
           }else if(res.errorMessage){
             console.log(`${type} ${res.errorMessage || ''}`)
           }else{
