@@ -45,7 +45,7 @@ let activityCookie =''
     return;
   }
   $.activityId = "uniongame20220301ul6ar3g76a"
-  $.shareUuid = "deb51eda516f4ad481fccb34b4a65203"
+  $.shareUuid = "468adf788c944bcf9969476f14cbd0fc"
   console.log(`入口:\nhttps://lzdz1-isv.isvjcloud.com/dingzhi/customized/common/activity?activityId=${$.activityId}&shareUuid=${$.shareUuid}`)
 
   for (let i = 0; i < cookiesArr.length; i++) {
@@ -186,12 +186,6 @@ async function run() {
     if($.outFlag){
       console.log('此ip已被限制，请过10分钟后再执行脚本\n')
       return
-    }
-    console.log($.actorUuid)
-    console.log(`当前助力:${$.shareUuid}`)
-    if($.index == 1){
-      $.shareUuid = $.actorUuid
-      console.log(`后面的号都会助力:${$.shareUuid}`)
     }
     await $.wait(parseInt(Math.random() * 1000 + 5000, 10))
     if(flag) await $.wait(parseInt(Math.random() * 1000 + 10000, 10))
