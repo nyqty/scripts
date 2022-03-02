@@ -1,10 +1,6 @@
 /*
 3.2-3.8 诠释你的每一面
 开卡脚本,一次性脚本
-
-
-第一个账号助力作者 其他依次助力CK1
-第一个CK失效会退出脚本
 ————————————————
 入口：[ 3.2-3.8 诠释你的每一面 ]
 
@@ -51,12 +47,10 @@ let activityCookie =''
     return;
   }
   $.activityId = "dz3438d88c47209a29355c6192b127"
-  authorCodeList = await getAuthorCodeList('https://gitee.com/KingRan521/JD-Scripts/raw/master/shareCodes/opencard91.json')
-    if(authorCodeList === '404: Not Found'){
-        authorCodeList = [
-            '6f231cc035da4addbf2739486dc06d41',
-        ]
-    }
+    authorCodeList = [
+        '632cbafb2351415393cc089950bf7c6f',
+        '7c8f7df50aac4bec97103a83742f4889'
+    ]
   $.shareUuid = authorCodeList[Math.floor((Math.random() * authorCodeList.length))]
   console.log(`入口:\nhttps://lzdz1-isv.isvjcloud.com/dingzhi/fashion/union/activity?activityId=${$.activityId}&shareUuid=${$.shareUuid}`)
   for (let i = 0; i < cookiesArr.length; i++) {
@@ -189,12 +183,6 @@ async function run() {
     if($.outFlag){
       console.log('此ip已被限制，请过10分钟后再执行脚本\n')
       return
-    }
-    console.log($.actorUuid)
-    console.log(`当前助力:${$.shareUuid}`)
-    if($.index == 1){
-      $.shareUuid = $.actorUuid
-      console.log(`后面的号都会助力:${$.shareUuid}`)
     }
     await $.wait(parseInt(Math.random() * 1000 + 5000, 10))
     if(flag) await $.wait(parseInt(Math.random() * 1000 + 10000, 10))
