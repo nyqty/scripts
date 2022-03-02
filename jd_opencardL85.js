@@ -76,8 +76,8 @@ async function run() {
       return
     }
     let config = [
-	  {configCode:'1c099a15608f48dc905af5befaa623d9',configName:'个护女神节'},
-
+      {configCode:'f7e00cba17fb461ab7204f06a688f957',configName:'食品女神价到'},
+	    {configCode:'1c099a15608f48dc905af5befaa623d9',configName:'个护女神节'},
     ]
     for(let i in config){
       $.hotFlag = false
