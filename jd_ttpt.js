@@ -1,22 +1,25 @@
 /*
 *
-Author：zero205
-Data：2021-09-29
-GitHub：https://github.com/zero205/JD_tencent_scf/tree/main
+
 活动入口：京东金融APP-签到-天天拼图
+
 已支持IOS双京东账号,Node.js支持N个京东账号
 脚本兼容: QuantumultX, Surge, Loon, JSBox, Node.js
+
 ============Quantumultx===============
 [task_local]
 京东金融天天拼图
-20 0,16 * * * https://raw.githubusercontent.com/zero205/JD_tencent_scf/main/jd_ttpt.js, tag=京东金融天天拼图, enabled=true
+20 0,16 * * * jd_ttpt.js, tag=京东金融天天拼图, enabled=true
+
 ================Loon==============
 [Script]
-cron "20 0,16 * * *" script-path=https://raw.githubusercontent.com/zero205/JD_tencent_scf/main/jd_ttpt.js,tag=京东金融天天拼图
+cron "20 0,16 * * *" script-path=jd_ttpt.js,tag=京东金融天天拼图
+
 ===============Surge=================
-京东金融天天拼图 = type=cron,cronexp="20 0,16 * * *",wake-system=1,timeout=20,script-path=https://raw.githubusercontent.com/zero205/JD_tencent_scf/main/jd_ttpt.js
+京东金融天天拼图 = type=cron,cronexp="20 0,16 * * *",wake-system=1,timeout=20,script-path=jd_ttpt.js
+
 ============小火箭============
-京东金融天天拼图 = type=cron,script-path=https://raw.githubusercontent.com/zero205/JD_tencent_scf/main/jd_ttpt.js, cronexpr="20 0,16 * * *", timeout=3600, enable=true
+京东金融天天拼图 = type=cron,script-path=jd_ttpt.js, cronexpr="20 0,16 * * *", timeout=3600, enable=true
 *
 */
 const $ = new Env('天天拼图');
@@ -43,7 +46,7 @@ if ($.isNode()) {
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
     return;
   }
-  console.log(`\nAuthor：zero205\n活动入口：京东金融APP->签到->天天拼图\n`);
+  console.log(`\n【活动入口：京东金融APP->我的->游戏与互动->更多】\n【部分号没有此任务，会返回操作繁忙】`);
   for (let i = 0; i < cookiesArr.length; i++) {
     if (cookiesArr[i]) {
       cookie = cookiesArr[i];
@@ -74,7 +77,7 @@ if ($.isNode()) {
 async function main() {
   try {
     await getNewMissions();//领取任务
-    if (!$.canRun) return
+	if (!$.canRun) return
     await getNewMissions();//重新查询任务
     await missions();
     await grantAward();
@@ -139,8 +142,8 @@ function getAwardFromMc(missionId) {
                 if (data.resultData.data) {
                   if (data.resultData.data.nextStatus) {
                     console.log(`\n奖励${data.resultData.data.opMsg}`)
-                  }
                 }
+				} 
               } else {
                 console.log(`其他情况：${JSON.stringify(data)}`)
               }
@@ -188,9 +191,9 @@ async function getNewMissions() {
                       }
                     }
                   }
-                } else {
-                  console.log(`\n获取任务失败：${JSON.stringify(data)}`)
-                  $.canRun = false
+				} else {
+                console.log(`\n获取任务失败：${JSON.stringify(data)}`)
+                $.canRun = false
                 }
               } else {
                 console.log(`其他情况：${JSON.stringify(data)}`)
@@ -396,45 +399,48 @@ async function finishReadMission(missionId, readTime) {
 }
 
 function TotalBean() {
-    return new Promise(async resolve => {
-        const options = {
-            url: "https://me-api.jd.com/user_new/info/GetJDUserInfoUnion",
-            headers: {
-                Host: "me-api.jd.com",
-                Accept: "*/*",
-                Connection: "keep-alive",
-                Cookie: cookie,
-                "User-Agent": $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('./USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.4.4;14.3;network/4g;Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1"),
-                "Accept-Language": "zh-cn",
-                "Referer": "https://home.m.jd.com/myJd/newhome.action?sceneval=2&ufc=&",
-                "Accept-Encoding": "gzip, deflate, br"
+  return new Promise(async resolve => {
+    const options = {
+      "url": `https://wq.jd.com/user/info/QueryJDUserInfo?sceneval=2`,
+      "headers": {
+        "Accept": "application/json,text/plain, */*",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Accept-Language": "zh-cn",
+        "Connection": "keep-alive",
+        "Cookie": cookie,
+        "Referer": "https://wqs.jd.com/my/jingdou/my.shtml?sceneval=2",
+        "User-Agent": $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('./USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.4.4;14.3;network/4g;Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1")
+      }
+    }
+    $.post(options, (err, resp, data) => {
+      try {
+        if (err) {
+          console.log(`${JSON.stringify(err)}`)
+          console.log(`${$.name} API请求失败，请检查网路重试`)
+        } else {
+          if (data) {
+            data = JSON.parse(data);
+            if (data['retcode'] === 13) {
+              $.isLogin = false; //cookie过期
+              return
             }
+            if (data['retcode'] === 0) {
+              $.nickName = (data['base'] && data['base'].nickname) || $.UserName;
+            } else {
+              $.nickName = $.UserName
+            }
+          } else {
+            console.log(`京东服务器返回空数据`)
+          }
         }
-        $.get(options, (err, resp, data) => {
-            try {
-                if (err) {
-                    $.logErr(err)
-                } else {
-                    if (data) {
-                        data = JSON.parse(data);
-                        if (data['retcode'] === "1001") {
-                            $.isLogin = false; //cookie过期
-                            return;
-                        }
-                        if (data['retcode'] === "0" && data.data && data.data.hasOwnProperty("userInfo")) {
-                            $.nickName = data.data.userInfo.baseInfo.nickname?data.data.userInfo.baseInfo.nickname:data.data.userInfo.baseInfo.curPin;
-                        }
-                    } else {
-                        console.log('京东服务器返回空数据');
-                    }
-                }
-            } catch (e) {
-                $.logErr(e)
-            } finally {
-                resolve();
-            }
-        })
+      } catch (e) {
+        $.logErr(e, resp)
+      } finally {
+        resolve();
+      }
     })
+  })
 }
 
 function taskUrl(function_id, body) {
