@@ -97,7 +97,6 @@ $.appId = "e395f"
 
   //互助
   console.log(`\n自己京东账号助力码：\n${JSON.stringify($.packetIdArr)}\n`);
-  console.log(`\n开始助力：助力逻辑 先自己京东相互助力，如有剩余助力机会，则助力作者\n`)
   for (let i = 0; i < cookiesArr.length; i++) {
     cookie = cookiesArr[i];
     $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1]);
@@ -157,9 +156,12 @@ $.appId = "e395f"
       $.done();
     })
 async function main() {
+  $.openFail=false
   await joinActive();
   await $.wait(2000);
+  if (!$.openFail){
   await getUserInfo();
+  }
 }
 //参与活动
 function joinActive() {
@@ -174,6 +176,9 @@ function joinActive() {
           if (data.iRet === 0) {
             console.log(`活动开启成功\n`);
           } else {
+            if (data.iRet === 2016){
+                $.openFail=true
+            }
             console.log(`活动开启失败：${data.sErrMsg}\n`);
           }
         }
