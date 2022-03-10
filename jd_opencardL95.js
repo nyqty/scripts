@@ -47,14 +47,9 @@ let authorCodeList = []
     });
     return;
   }
-  $.activityId = ""
-  authorCodeList = await getAuthorCodeList('https://gitee.com/KingRan521/JD-Scripts/raw/master/shareCodes/opencard95.json')
-    if(authorCodeList === '404: Not Found'){
-        authorCodeList = [
-            'd08920bbdcd44feca9f9aba68133c5d1',
-        ]
-    }
-  $.shareUuid = authorCodeList[Math.floor((Math.random() * authorCodeList.length))]
+  $.activityId = "dz04bfe2a64b46bbcb1110fc0ca9bf"
+  
+  $.shareUuid = '7cb1d1d3a32642e198419cda130c1847'
   console.log(`入口:\nhttps://lzdz1-isv.isvjcloud.com/dingzhi/dz/openCard/activity?activityId=${$.activityId}&shareUuid=${$.shareUuid}`)
   for (let i = 0; i < cookiesArr.length; i++) {
     cookie = cookiesArr[i];
