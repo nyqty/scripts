@@ -24,7 +24,7 @@ linkId="pTTvJeSTrpthgk9ASBVGsw"
 
 
 # 获取pin
-cookie_findall=re.compile(r'pt_pin=(.+?);')
+cookie_findall=re.compile(r'pt_pin=([^;]+)')
 def get_pin(cookie):
     try:
         return cookie_findall.findall(cookie)[0]

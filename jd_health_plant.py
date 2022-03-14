@@ -211,7 +211,7 @@ msg().main()
 
 def setName(cookie):
     try:
-        r = re.compile(r"pt_pin=(.*?);")    #指定一个规则：查找pt_pin=与;之前的所有字符,但pt_pin=与;不复制。r"" 的作用是去除转义字符.
+        r = re.compile(r"pt_pin=([^;]+)")    #指定一个规则：查找pt_pin=与;之前的所有字符,但pt_pin=与;不复制。r"" 的作用是去除转义字符.
         userName = r.findall(cookie)        #查找pt_pin=与;之前的所有字符，并复制给r，其中pt_pin=与;不复制。
         #print (userName)
         userName = unquote(userName[0])     #r.findall(cookie)赋值是list列表，这个赋值为字符串

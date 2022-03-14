@@ -198,7 +198,7 @@ if __name__ == '__main__':
         cks = re.findall(r'Cookie[0-9]*="(pt_key=.*?;pt_pin=.*?;)"', f.read())
         f.close()
     for ck in cks:
-        ptpin = re.findall(r"pt_pin=(.*?);", ck)[0]
+        ptpin = re.findall(r"pt_pin=([^;]+)", ck)[0]
         try:
             if remarkinfos[ptpin]!='':
                 printf("--账号:" + remarkinfos[ptpin] + "--")
