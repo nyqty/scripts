@@ -12,11 +12,11 @@
 请求太频繁会被黑ip
 过10分钟再执行
 
-cron:55 1,14 21-31 3 *
+cron:55 7 21-31 3 *
 ============Quantumultx===============
 [task_local]
 #3.21-3.31 精致宅家 春尚焕新
-55 1,14 21-31 3 * jd_opencardL98.js, tag=3.21-3.31 精致宅家 春尚焕新, enabled=true
+55 7 21-31 3 * jd_opencardL98.js, tag=3.21-3.31 精致宅家 春尚焕新, enabled=true
 
 */
 const $ = new Env("3.21-3.31 精致宅家 春尚焕新");
