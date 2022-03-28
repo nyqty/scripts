@@ -1,9 +1,25 @@
 ## 禁止Star/Fork!!
 ## 请勿使用Action运行脚本!
-## 本仓库部分脚本已加入JDHelloWorld大佬助力池，默认加入助力池互助
-## 由于限制TG群内成员提交助力码，请需要互助的 [加入组织](https://t.me/jd_zero_205)，回复助力池，获取使用[教程](https://t.me/jd_zero205_tz/53)
-## 不需要助力池请添加环境变量，变量名：`JD_JOIN_ZLC`，变量值：`false`  
-## 我已经去除助力池，但还是最好设置一下，难免我有忽略
+
+
+无互助池，无需配置互助码，账号之间内部互助。
+
+目前有加密的如下（不放心请禁用）
+
+1.jd_zdjr.js   （组队瓜分）
+2.jd_cjzdgf.js （组队瓜分）
+3.jd_zjd.js   （赚京豆）
+4.jd_fan.js  （粉丝互动）
+5.jd_js_sign.js （极速版签到提现）
+6.jd_jx_sign.js （京东-京喜双签）
+7.jd_computer.js （电脑配件通用任务）
+
+另外涉及开卡均有部分加密。
+
+青龙 config.sh 文件中修改
+
+## ql repo命令拉取脚本时需要拉取的文件后缀，直接写文件后缀名即可
+RepoFileExtensions="js py ts"
 
 ## 请勿直接fork！！云函数用户先按照下方教程建立私库！！！
 ## 已经创建公开仓库的请点击仓库右上角`Setting`，拉到页面最下方，点击`Change visibility`，选择`Make private`，填入黑体仓库名称进行确认!
