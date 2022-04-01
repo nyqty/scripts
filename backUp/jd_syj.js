@@ -47,7 +47,7 @@ const JD_API_HOST = 'https://api.m.jd.com/api';
         return;
     }
     
-	//$.authorTuanList = await getAuthorShareCode('https://raw.githubusercontent.com/atyvcn/updateTeam/master/shareCodes/jd/tewu.json');
+	//$.authorTuanList = await getAuthorShareCode('https://cdn.jsdelivr.net/gh/atyvcn/updateTeam@master/shareCodes/jd/tewu.json');
     $.authorTuanList = [];
     // await getRandomCode();
     for (let i = 0; i < cookiesArr.length; i++) {

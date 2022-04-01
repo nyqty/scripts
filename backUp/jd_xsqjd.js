@@ -33,7 +33,7 @@ let autoCode = '',projectId = '',helpId = '';
         return;
     }
     let res = [];
-    try{res = await getAuthorShareCode('https://raw.githubusercontent.com/atyvcn/updateTeam/master/shareCodes/jd/shop.json');}catch (e) {}
+    try{res = await getAuthorShareCode('https://cdn.jsdelivr.net/gh/atyvcn/updateTeam@master/shareCodes/jd/shop.json');}catch (e) {}
     if(!res){
         try{res = await getAuthorShareCode('https://raw.fastgit.org/atyvcn/updateTeam/master/shareCodes/jd/shop.json');}catch (e) {}
         if(!res){res = [];}
