@@ -50,13 +50,8 @@ let shareUuidArr = []
     return;
   }
   $.activityId = "dzlhkk068d4d0ab8a1234853002f66"
-  $.shareUuid = "93ccb801940c499cbbd107460c77270b"
+  $.shareUuid = "473cd80fe4034a31a0bfa5a7e85de704"
   console.log(`入口:\nhttps://lzdz1-isv.isvjcloud.com/dingzhi/mar2022/miFenJie/activity/563603?activityId=${$.activityId}&shareUuid=${$.shareUuid}`)
-  let shareUuidArr = ["93ccb801940c499cbbd107460c77270b","0c234d16b24144da92e6e9645d7bfbf7","e2968aeebe214b588d1366aadf8b55bc"]
-  let s = Math.floor((Math.random()*3))
-  let n = 0
-  n = Math.floor((Math.random()*shareUuidArr.length))
-  $.shareUuid = shareUuidArr[n] ? shareUuidArr[n] : $.shareUuid
   for (let i = 0; i < cookiesArr.length; i++) {
     cookie = cookiesArr[i];
     if (cookie) {
