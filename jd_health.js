@@ -7,17 +7,17 @@
 ===================quantumultx================
 [task_local]
 #东东健康社区
-13 1,6,22 * * * https://raw.githubusercontent.com/KingRan/JDJB/main/jd_health.js, tag=东东健康社区, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
+13 1,6,22 * * * https://raw.githubusercontent.com/KingRan/KR/main/jd_health.js, tag=东东健康社区, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
 
 =====================Loon================
 [Script]
-cron "13 1,6,22 * * *" script-path=https://raw.githubusercontent.com/KingRan/JDJB/main/jd_health.js, tag=东东健康社区
+cron "13 1,6,22 * * *" script-path=https://raw.githubusercontent.com/KingRan/KR/main/jd_health.js, tag=东东健康社区
 
 ====================Surge================
-东东健康社区 = type=cron,cronexp="13 1,6,22 * * *",wake-system=1,timeout=3600,script-path=https://raw.githubusercontent.com/KingRan/JDJB/main/jd_health.js
+东东健康社区 = type=cron,cronexp="13 1,6,22 * * *",wake-system=1,timeout=3600,script-path=https://raw.githubusercontent.com/KingRan/KR/main/jd_health.js
 
 ============小火箭=========
-东东健康社区 = type=cron,script-path=https://raw.githubusercontent.com/KingRan/JDJB/main/jd_health.js, cronexpr="13 1,6,22 * * *", timeout=3600, enable=true
+东东健康社区 = type=cron,script-path=https://raw.githubusercontent.com/KingRan/KR/main/jd_health.js, cronexpr="13 1,6,22 * * *", timeout=3600, enable=true
  */
 const $ = new Env("东东健康社区");
 const jdCookieNode = $.isNode() ? require("./jdCookie.js") : "";
@@ -94,6 +94,7 @@ async function main() {
     if (reward) {
       await getCommodities()
     }
+	await exchanges()
 
   } catch (e) {
     $.logErr(e)
@@ -174,6 +175,29 @@ function getTaskDetail(taskId = '') {
           resolve()
         }
       })
+  })
+}
+
+function exchanges(commodityType, commodityId) {
+  return new Promise(resolve => {
+    const options = taskUrl('jdhealth_doLottery', {"taskId":1})
+    $.post(options, (err, resp, data) => {
+      try {
+        if (safeGet(data)) {
+          data = $.toObj(data)
+          if (data.data.bizCode === 0 || data.data.bizMsg === "success") {
+            $.score = data.data.result.jingBeanNum
+            console.log(`领取${data.data.result.jingBeanNum}京豆成功`)
+          } else {
+            console.log(data.data.bizMsg)
+          }
+        }
+      } catch (e) {
+        console.log(e)
+      } finally {
+        resolve(data)
+      }
+    })
   })
 }
 

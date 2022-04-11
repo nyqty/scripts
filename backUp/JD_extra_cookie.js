@@ -7,36 +7,32 @@ Github: https://github.com/dompling
 
 ===================
 特别说明：
-1.获取多个京东cookie的脚本，不和NobyDa的京东cookie冲突。
+1.获取多个京东cookie的脚本，不和NobyDa的京东cookie冲突。注：如与NobyDa的京东cookie重复，建议在BoxJs处删除重复的cookie
 ===================
 ===================
 使用方式：在代理软件配置好下方配置后，复制 https://home.m.jd.com/myJd/newhome.action 到浏览器打开 ，在个人中心自动获取 cookie，
-若弹出成功则正常使用。否则继续再此页面继续刷新一下试试
-===================
+若弹出成功则正常使用。否则继续再此页面继续刷新一下试试。
 
+注：建议通过脚本去获取cookie，若要在BoxJs处手动修改，请按照JSON格式修改（注：可使用此JSON校验 https://www.bejson.com/json/format）
+示例：[{"userName":"jd_xxx","cookie":"pt_key=AAJ;pt_pin=jd_xxx;"},{"userName":"jd_66","cookie":"pt_key=AAJ;pt_pin=jd_66;"}]
+===================
+new Env('获取多账号京东Cookie');//此处忽略即可，为自动生成iOS端软件配置文件所需
 ===================
 [MITM]
-hostname = wq.jd.com
+hostname = me-api.jd.com
 
-【Surge脚本配置】:
-===================
-[Script]
-获取京东Cookie = type=http-request,pattern=^https:\/\/wq\.jd\.com\/user_new\/info\/GetJDUserInfoUnion,requires-body=1,max-size=0,script-path=https://raw.githubusercontent.com/LXK9301/jd_scripts/master/JD_extra_cookie.js,script-update-interval=0
-
-===================
-【Loon脚本配置】:
-===================
-[Script]
-http-request https:\/\/wq\.jd\.com\/user_new\/info\/GetJDUserInfoUnion tag=获取京东Cookie, script-path=https://raw.githubusercontent.com/LXK9301/jd_scripts/master/JD_extra_cookie.js
-
-
-===================
-【 QX  脚本配置 】 :
-===================
-
+===================Quantumult X=====================
 [rewrite_local]
-https:\/\/wq\.jd\.com\/user_new\/info\/GetJDUserInfoUnion  url script-request-header https://raw.githubusercontent.com/LXK9301/jd_scripts/master/JD_extra_cookie.js
+# 获取多账号京东Cookie
+https:\/\/me-api\.jd\.com\/user_new\/info\/GetJDUserInfoUnion url script-request-header JD_extra_cookie.js
 
+===================Loon===================
+[Script]
+http-request https:\/\/me-api\.jd\.com\/user_new\/info\/GetJDUserInfoUnion script-path=JD_extra_cookie.js, tag=获取多账号京东Cookie
+
+===================Surge===================
+[Script]
+获取多账号京东Cookie = type=http-request,pattern=^https:\/\/me-api\.jd\.com\/user_new\/info\/GetJDUserInfoUnion,requires-body=1,max-size=0,script-path=JD_extra_cookie.js,script-update-interval=0
  */
 
 const APIKey = "CookiesJD";
@@ -55,7 +51,7 @@ function GetCookie() {
     if ($request.headers && $request.url.indexOf("GetJDUserInfoUnion") > -1) {
       var CV = $request.headers["Cookie"] || $request.headers["cookie"];
       if (CV.match(/(pt_key=.+?pt_pin=|pt_pin=.+?pt_key=)/)) {
-        var CookieValue = CV.match(/pt_key=.+?;/) + CV.match(/pt_pin=.+?;/);
+        var CookieValue = CV.match(/pt_key=.+?;/)[0] + CV.match(/pt_pin=([^; ]+)(?=;?)/)[0] + ';';
         var UserName = CookieValue.match(/pt_pin=([^; ]+)(?=;?)/)[1];
         var DecodeName = decodeURIComponent(UserName);
         var CookiesData = getCache();
@@ -65,7 +61,7 @@ function GetCookie() {
         var updateCodkie = CookiesData.find((item, index) => {
           var ck = item.cookie;
           var Account = ck
-            ? ck.match(/pt_pin=.+?;/)
+            ? ck.match(/pt_pin=([^; ]+)(?=;?)/)
               ? ck.match(/pt_pin=([^; ]+)(?=;?)/)[1]
               : null
             : null;
