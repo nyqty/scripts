@@ -49,7 +49,7 @@ $.log(`最大化收益模式: 已${$.JOY_COIN_MAXIMIZE ? `默认开启` : `关�
 const JD_API_HOST = `https://api.m.jd.com/client.action`;
 message = ""
 !(async () => {
-  $.user_agent = require('./USER_AGENTS').USER_AGENT
+  //$.user_agent = require('./USER_AGENTS').USER_AGENT
   if (!cookiesArr[0]) {
     $.msg($.name, '【提示】请先获取cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/', {
       "open-url": "https://bean.m.jd.com/"
@@ -74,7 +74,8 @@ message = ""
       $.index = i + 1;
       $.isLogin = true;
       $.nickName = '';
-      $.maxJoyCount = 10
+      $.maxJoyCount = 10;
+	  $.UA = `jdapp;iPhone;10.1.4;13.1.2;${randomString(40)};network/wifi;model/iPhone8,1;addressid/2308460611;appBuild/167814;jdSupportDarkMode/0;Mozilla/5.0 (iPhone; CPU iPhone OS 13_1_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1`
       await TotalBean();
       if (!$.isLogin) {
         $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
@@ -85,27 +86,6 @@ message = ""
         continue
       }
       console.log(`\n\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
-      if ($.isNode()) {
-        if (process.env.HELP_JOYPARK && process.env.HELP_JOYPARK == "false") {
-        } else {
-          await getShareCode()
-          if ($.kgw_invitePin && $.kgw_invitePin.length) {
-            $.log("开始帮作者助力开工位\n");
-            $.kgw_invitePin = [...($.kgw_invitePin || [])][Math.floor((Math.random() * $.kgw_invitePin.length))];
-            let resp = await getJoyBaseInfo(undefined, 2, $.kgw_invitePin);
-            if (resp.helpState && resp.helpState === 1) {
-              $.log("帮作者开工位成功，感谢！\n");
-            } else if (resp.helpState && resp.helpState === 3) {
-              $.log("你不是新用户！跳过开工位助力\n");
-            } else if (resp.helpState && resp.helpState === 2) {
-              $.log(`他的工位已全部开完啦！\n`);
-            } else {
-              $.log("开工位失败！\n");
-              console.log(`${JSON.stringify(resp)}`)
-            }
-          }
-        }
-      }
       //下地后还有有钱买Joy并且买了Joy
       $.hasJoyCoin = true
       await getJoyBaseInfo(undefined, undefined, undefined, true);
@@ -528,7 +508,7 @@ function apCashWithDraw(id, poolBaseId, prizeGroupId, prizeBaseId) {
 function getShareCode() {
   return new Promise(resolve => {
       $.get({
-          url: "https://cdn.jsdelivr.net/gh/KingRan/shareCodes@master/joypark.json",
+          url: "https://cdn.jsdelivr.net/gh/atyvcn/updateTeam@master/shareCodes/jd/joypark.json",
           headers: {
               "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1 Edg/87.0.4280.88"
           }
@@ -554,7 +534,7 @@ function taskPostClientActionUrl(body, functionId) {
     url: `https://api.m.jd.com/client.action?${functionId ? `functionId=${functionId}` : ``}`,
     body: body,
     headers: {
-      'User-Agent': $.user_agent,
+      'User-Agent': $.UA,
       'Content-Type': 'application/x-www-form-urlencoded',
       'Host': 'api.m.jd.com',
       'Origin': 'https://joypark.jd.com',
@@ -569,7 +549,7 @@ function taskGetClientActionUrl(body, functionId) {
     url: `https://api.m.jd.com/client.action?functionId=${functionId}${body ? `&${body}` : ``}`,
     // body: body,
     headers: {
-      'User-Agent': $.user_agent,
+      'User-Agent': $.UA,
       'Content-Type': 'application/x-www-form-urlencoded',
       'Host': 'api.m.jd.com',
       'Origin': 'https://joypark.jd.com',
@@ -591,7 +571,7 @@ function TotalBean() {
         "Connection": "keep-alive",
         "Cookie": cookie,
         "Referer": "https://wqs.jd.com/my/jingdou/my.shtml?sceneval=2",
-        "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.2 Mobile/15E148 Safari/604.1"
+        "User-Agent": $.UA
       }
     }
     $.post(options, (err, resp, data) => {
@@ -623,7 +603,13 @@ function TotalBean() {
     })
   })
 }
-
+function randomString(e) {
+  e = e || 32;
+  let t = "abcdef0123456789", a = t.length, n = "";
+  for (i = 0; i < e; i++)
+    n += t.charAt(Math.floor(Math.random() * a));
+  return n
+}
 function jsonParse(str) {
   if (typeof str == "string") {
     try {
