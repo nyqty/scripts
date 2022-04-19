@@ -52,9 +52,9 @@ let cookies = []
   }
   
   $.activityId = "dz479899c4c94b59984be24e02bcb"
-  $.shareUuid = "af32d2360f4243febe86003a8736ea27"
+  $.shareUuid = "2f410896d5e6465da5a6185c81324d43"
   console.log(`入口:\nhttps://lzdz1-isv.isvjcloud.com/dingzhi/drinkcategory/piecetoge1/activity?activityId=${$.activityId}&shareUuid=${$.shareUuid}`)
-  let shareUuidArr = ["af32d2360f4243febe86003a8736ea27","b25d37693558411ebb63c71571787783","24257e628dde43c994fad8b0c32e2b14"]
+  let shareUuidArr = ["2f410896d5e6465da5a6185c81324d43","970f6d2d67534c43aa6410930b8a9174"]
   let s = Math.floor((Math.random()*3))
   let n = 0
   n = Math.floor((Math.random()*shareUuidArr.length))
