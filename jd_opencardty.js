@@ -26,7 +26,7 @@ if ($.isNode()) {
 }
 message = ""
 !(async () => {
-  console.log('\n【如遇火爆请重跑一次即可】\n【奖励未到账请再次运行本脚本】')
+  console.log('\n【如遇火爆请重跑一次即可】\n【奖励未到账请再次运行本脚本】\n【日志显示已入会，才代表奖励已经领取】')
   if (!cookiesArr[0]) {
     $.msg($.name, '【提示】请先获取cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/', {
       "open-url": "https://bean.m.jd.com/"
@@ -43,15 +43,15 @@ message = ""
       $.nickName = '';
       console.log(`\n\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
       await run();
-      if($.bean > 0) message += `【京东账号${$.index}】获得${$.bean}京豆\n`
+      //if($.bean > 0) message += `【京东账号${$.index}】获得${$.bean}京豆\n`
     }
   }
-  if(message){
-    $.msg($.name, ``, `${message}\n获得到的京豆不一定到账`);
-    if ($.isNode()){
+  //if(message){
+    //$.msg($.name, ``, `${message}\n获得到的京豆不一定到账`);
+    //if ($.isNode()){
       //await notify.sendNotify(`${$.name}`, `${message}\n获得到的京豆不一定到账`);
-    }
-  }
+    //}
+  //}
 })()
     .catch((e) => $.logErr(e))
     .finally(() => $.done())
@@ -66,6 +66,7 @@ async function run() {
       return
     }
     let config = [
+	{configCode:'4a2ead2edc9741f9af4ff95b7d0831a2',configName:'科沃斯4.22-4.30机器人联盟'},
 	{configCode:'27a288f28a084279adca5d0d0cb10ab8',configName:'4月桌面好物联合活动开卡'},
 	{configCode:'884b78acfa6940ee8dde34cea8b2a942',configName:'4月小天才联合活动开卡'},
     ]
