@@ -1,4 +1,3 @@
-
 /*
 cron "30 12,21 * * *" jd_bean_change.js, tag:资产变化强化版by-ccwav
  */
@@ -202,7 +201,7 @@ if(DisableIndex!=-1){
 }
 	
 //东东农场
-let EnableJdFruit=true;
+let EnableJdFruit=false;
 DisableIndex = strDisableList.findIndex((item) => item === "东东农场");
 if(DisableIndex!=-1){
 	console.log("检测到设定关闭东东农场查询");
@@ -248,7 +247,7 @@ if(DisableIndex!=-1){
 }	
 
 //金融养猪
-let EnablePigPet=true;
+let EnablePigPet=false;
 DisableIndex=strDisableList.findIndex((item) => item === "金融养猪");
 if(DisableIndex!=-1){
 	console.log("检测到设定关闭金融养猪查询");

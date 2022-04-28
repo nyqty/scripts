@@ -1,19 +1,12 @@
 /*
 京东集魔方
-by:小手冰凉 tg:@chianPLA
-脚本更新时间：2021-12-27 19:20
-脚本兼容: Node.js
-新手写脚本，难免有bug，能用且用。
 ===========================
-大势新品赏-集魔方
-入口：京东APP首页左上角-领京贴
-活动时间：2021年10月27日 – 1月1日24:00
 
-cron:22 0,20 27-31,1 12,1 *
+cron:2 0 * * *
 ============Quantumultx===============
 [task_local]
-#12.27~1.1 集魔方
-22 0,20 27-31,1 12,1 * https://raw.githubusercontent.com/KingRan/JDJB/main/jd_desire.js, tag=12.27~1.1 集魔方, enabled=true
+#集魔方
+2 0 * * * jd_desire.js, tag=集魔方, enabled=true
  */
 
 const $ = new Env('京东集魔方');
@@ -158,7 +151,7 @@ async function getInteractionInfo(type = true) {
 }
 function queryPanamaFloor() {
   return new Promise((resolve) => {
-    $.post(taskPostUrl("qryCompositeMaterials", { "geo": null, "mcChannel": 0, "activityId": "01128912", "pageId": "3279508", "qryParam": "[{\"type\":\"advertGroup\",\"id\":\"06066757\",\"mapTo\":\"advData\",\"next\":[{\"type\":\"productGroup\",\"mapKey\":\"desc\",\"mapTo\":\"productGroup\",\"attributes\":13}]}]", "applyKey": "21new_products_h" }), (err, resp, data) => {
+    $.post(taskPostUrl("qryCompositeMaterials", {"geo":null,"mcChannel":0,"activityId":"01213138","pageId":"3513123","qryParam":"[{\"type\":\"advertGroup\",\"id\":\"06282906\",\"mapTo\":\"advData\",\"next\":[{\"type\":\"productGroup\",\"mapKey\":\"desc\",\"mapTo\":\"productGroup\",\"attributes\":13}]}]","applyKey":"21new_products_h"}), (err, resp, data) => {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
@@ -167,6 +160,7 @@ function queryPanamaFloor() {
           if (safeGet(data)) {
             data = JSON.parse(data)
             for (let skuVo of data.data.advData.list) {
+				$.sku2 = ["100035127996","100020571745","100036441470","100019125569","100032353530", "100033492870", "100033551096", "100035250900"]
                 $.sku2.push(skuVo.advertId)
             }
           }
@@ -182,7 +176,7 @@ function queryPanamaFloor() {
 
 function qryCompositeMaterials() {
   return new Promise((resolve) => {
-    $.post(taskPostUrl("qryCompositeMaterials", { "geo": null, "mcChannel": 0, "activityId": "01128912", "pageId": "3195530", "qryParam": "[{\"type\":\"advertGroup\",\"id\":\"06050930\",\"mapTo\":\"advData\",\"next\":[{\"type\":\"productGroup\",\"mapKey\":\"desc\",\"mapTo\":\"productGroup\",\"attributes\":13}]}]", "applyKey": "21new_products_h" }), (err, resp, data) => {
+    $.post(taskPostUrl("qryCompositeMaterials", {"geo":null,"mcChannel":0,"activityId":"01213138","pageId":"3513123","qryParam":"[{\"type\":\"advertGroup\",\"id\":\"06282906\",\"mapTo\":\"advData\",\"next\":[{\"type\":\"productGroup\",\"mapKey\":\"desc\",\"mapTo\":\"productGroup\",\"attributes\":13}]}]","applyKey":"21new_products_h"}), (err, resp, data) => {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
@@ -213,7 +207,7 @@ function qryCompositeMaterials() {
 
 function qryCompositeMaterials2() {
   return new Promise((resolve) => {
-    $.post(taskPostUrl("qryCompositeMaterials", { "geo": null, "mcChannel": 0, "activityId": "01128912", "pageId": "3195530", "qryParam": "[{\"type\":\"advertGroup\",\"id\":\"06066757\",\"mapTo\":\"advData\",\"next\":[{\"type\":\"productGroup\",\"mapKey\":\"desc\",\"mapTo\":\"productGroup\",\"attributes\":13}]}]", "applyKey": "21new_products_h" }), (err, resp, data) => {
+    $.post(taskPostUrl("qryCompositeMaterials", {"geo":null,"mcChannel":0,"activityId":"01213138","pageId":"3513123","qryParam":"[{\"type\":\"advertGroup\",\"id\":\"06290597\",\"mapTo\":\"advData\",\"next\":[{\"type\":\"productGroup\",\"mapKey\":\"comment[0]\",\"mapTo\":\"productGroup\",\"attributes\":13}]}]","applyKey":"21new_products_h"}), (err, resp, data) => {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
@@ -337,43 +331,6 @@ function randomString(e) {
   for (let i = 0; i < e; i++)
     n += t.charAt(Math.floor(Math.random() * a));
   return n
-}
-
-function getSign(functionid, body, uuid) {
-  return new Promise(async resolve => {
-    let data = {
-      "functionId": functionid,
-      "body": body,
-      "uuid": uuid,
-      "client": "apple",
-      "clientVersion": "10.1.0"
-    }
-    let HostArr = ['jdsign.cf', 'signer.nz.lu']
-    let Host = HostArr[Math.floor((Math.random() * HostArr.length))]
-    let options = {
-      url: `https://cdn.nz.lu/ddo`,
-      body: JSON.stringify(data),
-      headers: {
-        Host,
-        "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1 Edg/87.0.4280.88"
-      },
-      timeout: 30 * 1000
-    }
-    $.post(options, (err, resp, data) => {
-      try {
-        if (err) {
-          console.log(`${JSON.stringify(err)}`)
-          console.log(`${$.name} getSign API请求失败，请检查网路重试`)
-        } else {
-
-        }
-      } catch (e) {
-        $.logErr(e, resp)
-      } finally {
-        resolve(data);
-      }
-    })
-  })
 }
 
 function TotalBean() {
