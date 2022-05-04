@@ -1,7 +1,6 @@
 /*
 cron "30 12,21 * * *" jd_bean_change.js, tag:资产变化强化版by-ccwav
  */
-
 //详细说明参考 https://github.com/ccwav/QLScript2
 
 // prettier-ignore
@@ -177,7 +176,7 @@ if(DisableIndex!=-1){
 }
 	
 //汪汪乐园
-let EnableJoyPark=true;
+let EnableJoyPark=false;
 DisableIndex = strDisableList.findIndex((item) => item === "汪汪乐园");
 if(DisableIndex!=-1){
 	console.log("检测到设定关闭汪汪乐园查询");
