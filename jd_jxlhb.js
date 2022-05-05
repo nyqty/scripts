@@ -54,7 +54,7 @@ $.appId = "e395f"
     res = await getAuthorShareCode('https://raw.fastgit.org/atyvcn/updateTeam/master/shareCodes/jd/jxhb.json')
   }
   if (res && res.activeId) $.activeId = res.activeId;
-  $.authorMyShareIds = [...((res && res.codes) || [])];
+  $.authorMyShareIds = (res && res.codes)?res.codes:[];
   $.CryptoJS = $.isNode() ? require('crypto-js') : CryptoJS;
   await requestAlgo()
   await $.wait(1000)

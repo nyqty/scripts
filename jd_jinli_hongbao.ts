@@ -2,7 +2,7 @@
  * const $ = new Env('京东-锦鲤红包');
  * 做任务、助力、开红包
  * cron: 1 0,18 * * *
- * 修改自HW大佬，自用，仅助力前7账号，纯内部互助
+ * 修改自HW大佬，自用，仅助力前4账号，纯内部互助
  */
 
 import axios from 'axios';
@@ -16,28 +16,36 @@ let min: number[] = [0.02, 0.12, 0.3, 0.6, 0.7, 0.8, 1, 2], log: string = '', lo
 !(async () => {
   let cookiesArr: string[] = await requireConfig(false);
   for (let [index, value] of cookiesArr.entries()) {
-	if(index < 7){
-    try {
-	  cookie = value;
-      UserName = decodeURIComponent(cookie.match(/pt_pin=([^;]*)/)![1])
-      console.log(`\n开始【京东账号${index + 1}】${UserName}\n`);
-      UA = `jdltapp;iPhone;3.1.0;${Math.ceil(Math.random() * 4 + 10)}.${Math.ceil(Math.random() * 4)};${randomString(40)}`
-      log = logs[getRandomNumberByRange(0, logs.length - 1)]
-      let random = log.match(/"random":"(\d+)"/)[1], log1 = log.match(/"log":"(.*)"/)[1]
-      res = await api('h5launch', {"followShop": 0, "random": random, "log": log1, "sceneid": "JLHBhPageh5"})
-      console.log('活动初始化：', res.data.result.statusDesc)
-      await wait(1000)
+	  if(index < 4){
+      try {
+        cookie = value;
+        UserName = decodeURIComponent(cookie.match(/pt_pin=([^;]*)/)![1])
+        console.log(`\n开始【京东账号${index + 1}】${UserName}\n`);
+        UA = `jdltapp;iPhone;3.1.0;${Math.ceil(Math.random() * 4 + 10)}.${Math.ceil(Math.random() * 4)};${randomString(40)}`
+        log = logs[getRandomNumberByRange(0, logs.length - 1)]
+        let random = log.match(/"random":"(\d+)"/)[1], log1 = log.match(/"log":"(.*)"/)[1]
+        res = await api('h5launch', {"followShop": 0, "random": random, "log": log1, "sceneid": "JLHBhPageh5"})
+        console.log('活动初始化：', res.data.result.statusDesc)
+        await wait(1000)
 
-      res = await api('h5activityIndex', {"isjdapp": 1})
-      console.log('红包ID：', res.data.result.redpacketInfo.id)
-      shareCodesSelf.push(res.data.result.redpacketInfo.id)
-      await wait(1000)
-	} catch (e) {
-      console.log(e)
+        res = await api('h5activityIndex', {"isjdapp": 1})
+        console.log('红包ID：', res.data.result.redpacketInfo.id)
+        shareCodesSelf.push(res.data.result.redpacketInfo.id)
+        await wait(1000)
+      } catch (e) {
+          console.log(e)
+      }
     }
   }
-  }
 
+  let data = await get('https://cdn.jsdelivr.net/gh/atyvcn/updateTeam@master/shareCodes/jd/red.json')
+  if (!data) {
+    axios.get('https://purge.jsdelivr.net/gh/atyvcn/updateTeam@master/shareCodes/jd/red.json').then(function (response) {//console.log(response);
+    }).catch(function (error) {console.log("刷新CDN异常");console.log(error);});
+    await wait(1000)
+    data = await get('https://cdn.jsdelivr.net/gh/atyvcn/updateTeam@master/shareCodes/jd/red.json');
+  }
+  if( data ) shareCodesSelf=[...data, ...shareCodesSelf];
   await wait(2000)
 
   console.log('内部助力：', shareCodesSelf)
@@ -183,4 +191,9 @@ async function api(fn: string, body: object, retry: number = 0) {
     await api(fn, body, ++retry)
   }
   return data
+}
+
+async function get(url: string) {
+  let {data} = await axios.get('https://cdn.jsdelivr.net/gh/atyvcn/updateTeam@master/shareCodes/jd/red.json');
+  return data;
 }
