@@ -1,5 +1,4 @@
 /*
-
 脚本默认会帮我助力开工位，介意请添加变量HELP_JOYPARK，false为不助力
 export HELP_JOYPARK=""
 
@@ -34,10 +33,9 @@ if ($.isNode()) {
 }
 $.invitePinTaskList = []
 $.invitePin = [
-  "VxQJC6Sr0QZkcOHwxoTjrw",
-  "oRY9YryofcNg71MZeKSZseKD6P6BJzKv2NBGxfiuJ20",
-  "EDPUVDhR7nUPh3jUGDJ_GyiLt77-wROqWVP2aesRUt8"
-]
+    "LZ8bwK9rX2mOuE9JWxOXRw",
+    "TAt01wPoomjn49QY9PNAEw"
+  ]
 const JD_API_HOST = `https://api.m.jd.com/client.action`;
 message = ""
 !(async () => {
