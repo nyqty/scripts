@@ -54,9 +54,9 @@ let activityCookie =''
     }
     $.joinStatus = false
     $.activityId = "2205100037674501"
-    $.shareUuid = "1c782aff18b44998a1c6b15c456a287b"
+    $.shareUuid = "e342084e0084406aab1ff4441854eca6"
     console.log(`入口:\nhttps://lzkjdz-isv.isvjcloud.com/esteelauder/inviteNew/activityPage?activityId=2205100037674501&inviterUuid=${$.shareUuid}`)
-	let shareUuidArr = ["1c782aff18b44998a1c6b15c456a287b","425ce882861b49729bed944be311da85"]
+	let shareUuidArr = ["e342084e0084406aab1ff4441854eca6","a46e7683f55e41b19c736d1c5d709412"]
 	let s = Math.floor((Math.random()*2))
 	let n = 0
 	n = Math.floor((Math.random()*shareUuidArr.length))
