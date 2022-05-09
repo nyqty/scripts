@@ -222,6 +222,7 @@ function index() {
 async function appdoTask(type,taskInfo) {
   let functionId = 'cash_doTask'
   let body = {"type":type,"taskInfo":taskInfo}
+  await $.wait(5000)
   let sign = await getSignfromPanda(functionId, body)  
 
   return new Promise((resolve) => {
@@ -237,7 +238,7 @@ async function appdoTask(type,taskInfo) {
               console.log(`任务完成成功`)
               // console.log(data.data.result.taskInfos)
             } else {
-              console.log(JSON.stringify(data))
+              //console.log(JSON.stringify(data))
             }
           }
         }
@@ -296,21 +297,26 @@ function getSignfromPanda(functionId, body) {
         }
         $.post(url, async(err, resp, data) => {
             try {				
-                data = JSON.parse(data);				
-				
+				if (err) {
+					console.log(`衰仔，没有连接上熊猫服务，兄弟帮不了你啦！o(╥﹏╥)o`)
+				} else {
+					data = JSON.parse(data);				
 				if (data && data.code == 200) {
                     lnrequesttimes = data.request_times;
-                    console.log("连接Panda服务成功，当前Token使用次数为" + lnrequesttimes);
-                    if (data.data.sign)
+                    console.log("衰仔，连接熊猫服务成功(*^▽^*)，当前Token使用次数为:" + lnrequesttimes);
+                    if (data.data){
                         strsign = data.data.sign || '';
-                    if (strsign != '')
+						}
+                    if (strsign != ''){
                         resolve(strsign);
-                    else
+					}
+                    else {
                         console.log("签名获取失败,可能Token使用次数上限或被封.");
+					}
                 } else {
                     console.log("签名获取失败.");
                 }
-				
+				}
             }catch (e) {
                 $.logErr(e, resp);
             }finally {
@@ -335,30 +341,6 @@ function showMsg() {
     } else {
       $.log(`京东账号${$.index}${$.nickName}\n${message}`);
     }
-    resolve()
-  })
-}
-function readShareCode() {
-  console.log(`开始`)
-  return new Promise(async resolve => {
-    $.get({url: `http://code.chiang.fun/api/v1/jd/jdcash/read/${randomCount}/`, 'timeout': 30000}, (err, resp, data) => {
-      try {
-        if (err) {
-          console.log(`${JSON.stringify(err)}`)
-          console.log(`${$.name} API请求失败，请检查网路重试`)
-        } else {
-          if (data) {
-            console.log(`随机取${randomCount}个码放到您固定的互助码后面(不影响已有固定互助)`)
-            data = JSON.parse(data);
-          }
-        }
-      } catch (e) {
-        $.logErr(e, resp)
-      } finally {
-        resolve(data);
-      }
-    })
-    await $.wait(30000);
     resolve()
   })
 }
