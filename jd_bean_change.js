@@ -1,6 +1,7 @@
 /*
-cron "30 12,21 * * *" jd_bean_change.js, tag:资产变化强化版by-ccwav
+cron "30 21 * * *" jd_bean_change.js, tag:资产变化强化版by-ccwav
  */
+
 //详细说明参考 https://github.com/ccwav/QLScript2
 
 // prettier-ignore
@@ -200,7 +201,7 @@ if(DisableIndex!=-1){
 }
 	
 //东东农场
-let EnableJdFruit=false;
+let EnableJdFruit=true;
 DisableIndex = strDisableList.findIndex((item) => item === "东东农场");
 if(DisableIndex!=-1){
 	console.log("检测到设定关闭东东农场查询");
