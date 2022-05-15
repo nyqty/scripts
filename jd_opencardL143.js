@@ -48,9 +48,9 @@ let activityCookie='';
 	}
 	$.assistStatus=false;
 	$.activityId='2205100041110401';
-	$.shareUuid='';
+	$.shareUuid='0a733c4167c54a0d8022ea323108bef5';
 	console.log('入口:\nhttps://lzkjdz-isv.isvjcloud.com/m/1000411104/99/'+$.activityId+'/?helpUuid='+$.shareUuid);
-	let _0x21a609=['',''];
+	let _0x21a609=['0a733c4167c54a0d8022ea323108bef5','18d4824fcd224e69bb12e521d1eb05bd'];
 	let _0x1d36f0=Math.floor(Math.random()*2);
 	let _0x502ac5=0;
 	_0x502ac5=Math.floor(Math.random()*_0x21a609.length);
