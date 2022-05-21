@@ -42,7 +42,7 @@ message = ""
             });
             return;
         }
-		let codeList = ['bf3ffb1c973a49acbac4983ac15162f3','be5c05485b624d69b2bb1acee71ffc87']
+		let codeList = ['eb602b7c548f4161a0cbd2949b959811']
 		$.shareUuid = codeList[Math.floor((Math.random()*codeList.length))]
         //for (let i = 0; i <cookiesArr.length; i++) {
 		for (let i = 0; i < 7; i++) {
