@@ -1,26 +1,25 @@
 /*
-5.16-5.23 情暖五月 以爱之名
+5.20-5.27 婴家乐 会员日
 开卡脚本,一次性脚本
 
-每日前5名邀请才有奖励，自行调整
 
 第一个账号助力作者 其他依次助力CK1
 第一个CK失效会退出脚本
 ————————————————
-入口：[ 5.16-5.23 情暖五月 以爱之名 ]
+入口：[ 5.20-5.27 婴家乐 会员日 ]
 
 请求太频繁会被黑ip
 过10分钟再执行
 
-cron:15 21 15-23 5 *
+cron:50 15 23-27 5 *
 ============Quantumultx===============
 [task_local]
-#5.16-5.23 情暖五月 以爱之名
-15 21 15-23 5 * jd_opencardL146.js, tag=5.16-5.23 情暖五月 以爱之名, enabled=true
+#5.20-5.27 婴家乐 会员日
+50 15 23-27 5 * jd_opencardL154.js, tag=5.20-5.27 婴家乐 会员日, enabled=true
 
 */
 
-const $ = new Env('5.16-5.23 情暖五月 以爱之名')
+const $ = new Env('5.20-5.27 婴家乐 会员日')
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 const notify = $.isNode() ? require('./sendNotify') : '';
 
@@ -50,9 +49,16 @@ let activityCookie =''
     });
     return;
   }
-  $.activityId = "dzlhkk17e740478a664c23f2c5580a"
-  $.shareUuid = "10668ac1e04e4b24a988d40d6a0fa846"
+  $.activityId = "dzlhkk855a1b041832408dadaf77b8"
+  $.shareUuid = "590040bc8a1c4865bc0be1bde261a041"
   console.log(`入口:\nhttps://lzdz1-isv.isvjcloud.com/dingzhi/customized/common/activity?activityId=${$.activityId}&shareUuid=${$.shareUuid}`)
+  let shareUuidArr = ["590040bc8a1c4865bc0be1bde261a041","ee52e826262e4823bd2ab3596801d175","cfce7e2541de4c66baec3204e5f8a279"]
+  let s = Math.floor((Math.random()*3))
+  let n = 0
+  n = Math.floor((Math.random()*shareUuidArr.length))
+  $.shareUuid = shareUuidArr[n] ? shareUuidArr[n] : $.shareUuid
+
+
   for (let i = 0; i < cookiesArr.length; i++) {
     cookie = cookiesArr[i];
     if (cookie) {
@@ -65,6 +71,7 @@ let activityCookie =''
       console.log(`\n\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
       await getUA()
       await run();
+	  await $.wait(3000)
       if(i == 0 && !$.actorUuid) break
       if($.outFlag || $.activityEnd) break
     }
@@ -147,6 +154,7 @@ async function run() {
           for (let i = 0; i < Array(5).length; i++) {
             if (i > 0) console.log(`第${i}次 重新开卡`)
             await joinShop()
+			await $.wait(1000)
             if ($.errorJoinShop.indexOf('活动太火爆，请稍后再试') == -1) {
               break
             }
@@ -160,7 +168,7 @@ async function run() {
           await takePostRequest('activityContent');
           await takePostRequest('drawContent');
           await takePostRequest('checkOpenCard');
-          await $.wait(parseInt(Math.random() * 2000 + 3000, 10))
+          await $.wait(parseInt(Math.random() * 2000 + 2000, 10))
         }
       }
     }else{
@@ -171,7 +179,7 @@ async function run() {
     if(!$.followShop && !$.outFlag){
       flag = true
       await takePostRequest('followShop');
-      await $.wait(parseInt(Math.random() * 2000 + 3000, 10))
+      await $.wait(parseInt(Math.random() * 2000 + 1000, 10))
     }
 
     $.yaoqing = false
@@ -183,7 +191,7 @@ async function run() {
     if(!$.addCart && !$.outFlag){
         flag = true
         await takePostRequest('addCart');
-        await $.wait(parseInt(Math.random() * 2000 + 4000, 10))
+        await $.wait(parseInt(Math.random() * 2000 + 1000, 10))
     }
     if(flag){
       await takePostRequest('activityContent');
@@ -197,7 +205,7 @@ async function run() {
         await takePostRequest('抽奖');
         if($.runFalag == false) break
         if(Number(count) <= 0) break
-        if(m >= 10){
+        if(m >= 2){
           console.log("抽奖太多次，多余的次数请再执行脚本")
           break
         }
@@ -205,8 +213,8 @@ async function run() {
       }
     
     await $.wait(parseInt(Math.random() * 1000 + 2000, 10))
-    await takePostRequest('getDrawRecordHasCoupon');
-    await takePostRequest('getShareRecord');
+    //await takePostRequest('getDrawRecordHasCoupon');
+    //await takePostRequest('getShareRecord');
     if($.outFlag){
       console.log('此ip已被限制，请过10分钟后再执行脚本\n')
       return
@@ -217,9 +225,9 @@ async function run() {
       $.shareUuid = $.actorUuid
       console.log(`后面的号都会助力:${$.shareUuid}`)
     }
-    await $.wait(parseInt(Math.random() * 1000 + 5000, 10))
+    await $.wait(parseInt(Math.random() * 1000 + 1000, 10))
       if($.index % 3 == 0) console.log('休息一下，别被黑ip了\n可持续发展')
-      if($.index % 3 == 0) await $.wait(parseInt(Math.random() * 5000 + 30000, 10))
+      if($.index % 3 == 0) await $.wait(parseInt(Math.random() * 5000 + 20000, 10))
   } catch (e) {
     console.log(e)
   }
