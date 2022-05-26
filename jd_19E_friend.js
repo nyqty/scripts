@@ -93,22 +93,23 @@ let groups = []
                     console.log(`火爆`); continue;
                 }
                 await $.wait(1000)
-                let res
+                let res,bizCode
                 for (let j = 0; j < inviteId.length; j++) {
                     console.log(`\n开始助力 【${inviteId[j]}】`)
                     res = await help(inviteId[j])
+                    bizCode = res['data']['bizCode'];
                     if (res['data']['bizCode'] === 0) {
                         console.log('助力成功,获得：', parseFloat(res.data.result.acquiredScore), '金币')
                         if (res.data.result?.redpacket?.value) console.log('🧧', parseFloat(res.data.result?.redpacket?.value))
                         //console.log('助力结果：'+res.data.bizMsg)
-                    } else if (res.data.bizMsg === '助力次数用完啦~') { 
+                    }else if (bizCode==108) { //无助力
                         console.log(res.data.bizMsg); break 
-                    }else if (res.data.bizMsg === '好友人气爆棚，不需要助力啦~') {
-                        console.log(res.data.bizMsg)
+                    }else if (bizCode==-201) {//好友人气爆棚，不需要助力啦~
+                        console.log(res.data.bizMsg);
                         inviteId.splice(j, 1)
                         j--
                         continue
-                    }else { console.log(res.data.bizMsg) }
+                    }else { console.log(res.data.bizCode+res.data.bizMsg) }
                     await $.wait(1000)
                 }
 
