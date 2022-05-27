@@ -1,6 +1,6 @@
 /*
 建议手动先点开一次
-cron "10 0,6-21/5 * * " jd_19E_help.js, tag:热爱奇旅互助版
+10 0,6-21/5 * * * jd_19E_help.js
 */
 const CryptoJS = require("crypto-js");
 const $ = new Env('热爱奇旅互助版-部分加密');
