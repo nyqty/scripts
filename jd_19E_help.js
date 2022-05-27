@@ -76,12 +76,12 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
             $.blog_joyytoken = await getToken("50999", "4")
            // cookie = $.ZooFaker.getCookie(cookie + `joyytoken=${appid}${$.joyytoken};`)
             await travel()
-    helpSysInfoArr.push({
+            helpSysInfoArr.push({
                 cookie,
                 pin: $.UserName,
                 UA: $.UA,
                 joyytoken: $.joyytoken,
-               blog_joyytoken: $.blog_joyytoken,
+                blog_joyytoken: $.blog_joyytoken,
                 secretp: $.secretp
             })
         }
