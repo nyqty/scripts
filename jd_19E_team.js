@@ -49,7 +49,7 @@ let groups = []
             }
             await promote_collectAtuoScore() //定时领取
             let res
-            //此处修改组队人数 默认前3组队
+            //此处修改组队人数 默认前6组队
             if (i < 6) {
                 res = await promote_pk_getHomeData()
                 if (res.data.result.groupInfo.memberList) {
