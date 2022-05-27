@@ -1,11 +1,10 @@
 /*
 建议手动先点开一次
-0 8 * * * jd_19E_friend.js
-快速助力、加入队伍、升级，跑一次即可
+cron "1 8,14 * * *" jd_19E_team.js, tag:快速助力、加入队伍、升级，跑一次即可
 */
 
 
-const $ = new Env('热爱奇旅助力组队升级');
+const $ = new Env('热爱奇旅组队升级');
 
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 
@@ -31,7 +30,7 @@ let groups = []
         $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
         return;
     }
-    console.log('\n仅助力+组队+升级，快速跑完\n')
+    console.log('\n仅组队+升级，快速跑完\n')
     await getUA()
     for (let i = 0; i < cookiesArr.length; i++) {
         if (cookiesArr[i]) {
@@ -51,7 +50,7 @@ let groups = []
             await promote_collectAtuoScore() //定时领取
             let res
             //此处修改组队人数 默认前3组队
-            if (i < 8) {
+            if (i < 6) {
                 res = await promote_pk_getHomeData()
                 if (res.data.result.groupInfo.memberList) {
                     let memberCount = res.data.result.groupInfo.memberList.length
@@ -65,7 +64,7 @@ let groups = []
                         console.log('队伍未满:', groupJoinInviteId)
                     }
                 }
-            }
+            }else break;
             try {
                 res = await promote_getTaskDetail()
                 await promote_sign()
@@ -93,6 +92,7 @@ let groups = []
                     console.log(`火爆`); continue;
                 }
                 await $.wait(1000)
+                /*
                 let res,bizCode
                 for (let j = 0; j < inviteId.length; j++) {
                     console.log(`\n开始助力 【${inviteId[j]}】`)
@@ -109,10 +109,12 @@ let groups = []
                         inviteId.splice(j, 1)
                         j--
                         continue
+                    }else if (bizCode==-1002) {//运行环境异常，请您从正规途径参与活动，谢谢~
+                        break;
                     }else { console.log(res.data.bizCode+res.data.bizMsg) }
                     await $.wait(1000)
                 }
-
+                */
                 res = await promote_pk_getHomeData()
                 if (res.data.result.groupInfo.memberList) {
                     let memberCount = res.data.result.groupInfo.memberList.length
@@ -126,7 +128,7 @@ let groups = []
                                 console.log('加入队伍成功')
                                 break
                             } else {
-                                console.log(res.data.bizMsg)
+                                console.log(res.data.bizCode+res.data.bizMsg)
                             }
                             res = await promote_pk_getHomeData()
                         }
@@ -173,8 +175,7 @@ function get_secretp() {
                         if (data.code == 0) {
                             if (data.data && data.data.bizCode === 0) {
                                 secretp = data.data.result.homeMainInfo.secretp
-								
-                          }
+							}
                         } 
 						
                     }
@@ -452,7 +453,7 @@ function collectFriendRecordColor(mpin) {
 
 
 function promote_pk_joinGroup(groupJoinInviteId) {
-    let body = {"inviteId": groupJoinInviteId, "ss": {extraData: {log: "", sceneid: 'RAhomePageh5'}, secretp: secretp, random: randomString(6)}, "confirmFlag": 1};
+    let body = {"inviteId": groupJoinInviteId, "ss": JSON.stringify({extraData: {log: "", sceneid: 'RAhomePageh5'}, secretp: secretp, random: randomString(6)}), "confirmFlag": 1};
     return new Promise((resolve) => {
         $.post(taskPostUrl("promote_pk_joinGroup", body), async(err, resp, data) => {
             try {
@@ -477,7 +478,7 @@ function promote_pk_joinGroup(groupJoinInviteId) {
 function taskPostUrl(functionId, body) {
     return {
         //functionId=promote_getHomeData&body={}&client=wh5&clientVersion=1.0.0
-        url: `${JD_API_HOST}`,
+        url: `${JD_API_HOST}?functionId=${functionId}`,
         body: `functionId=${functionId}&body=${escape(JSON.stringify(body))}&client=m&clientVersion=-1&appid=signed_wh5`,
         headers: {
             'Cookie': cookie,
