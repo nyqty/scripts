@@ -7,7 +7,7 @@ cron:30 2,16 21-31 5 *
 
 */
 const $ = new Env('健康、个护618任务开卡');
-const Faker=require('./sign_graphics_validate.js') 
+const Faker=require('./utils/sign_graphics_validate.js') 
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 const notify = $.isNode() ? require('./sendNotify') : '';
 CryptoScripts()
