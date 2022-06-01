@@ -30,6 +30,7 @@ let appId, fingerprint, token, enCryptMethodJD;
         $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
         return;
     }
+    console.log('请务必填写你的Code！变量：export CODE618="" \n\n请务必填写你的Code！变量：export CODE618=""\n\n个人建议禁用,避免其他问题\n')
     $.CryptoJS = $.isNode() ? require('crypto-js') : CryptoJS;
     appId = '6a98d';
     let fglist = ['6289931560897925', '0403403318679778', '1390288884563462'];
@@ -53,13 +54,13 @@ let appId, fingerprint, token, enCryptMethodJD;
 async function main(ck, code = 'lMC0Jwn') {
     const codes = ['lMC0Jwn','lMCp5xT']
     code = $.CODE618 ? $.CODE618 : codes[random(0, codes.length)]
-    // console.log(code)
+    //console.log(code)
     let userName = decodeURIComponent(ck.match(/pt_pin=([^; ]+)(?=;?)/) && ck.match(/pt_pin=([^; ]+)(?=;?)/)[1])
     let jfInfo = await getInfoByUrl($, ck, code);
     ck = jfInfo['ck'];
     let url2 = jfInfo['url'];
     let UA = getUA();
-    let actId = url2.match(/mall\/active\/([^/]+)\/index\.html/) && url2.match(/mall\/active\/([^/]+)\/index\.html/)[1] || '2UboZe4RXkJPrpkp6SkpJJgtRmod';
+    let actId = url2.match(/mall\/active\/([^/]+)\/index\.html/) && url2.match(/mall\/active\/([^/]+)\/index\.html/)[1] || '31e6keDr2FdaUEVSvNZM2kjD7QVx';
     await getHtml(url2, ck, UA)
     await takeRequest(ck, UA, userName, actId, code);
 }
@@ -106,7 +107,7 @@ async function getInfoByUrl($, ck, code) {
     }
     let url1 = info1['data'].match(/(https:\/\/u\.jd\.com\/jda[^']+)/) && info1['data'].match(/(https:\/\/u\.jd\.com\/jda[^']+)/)[1] || '';
     if (!url1) {
-        console.log(`初始化1失败`);
+        console.log(`变量错误，请重新填写`);
         return returnInfo;
     }
     let info2 = await getInfo($, `${ck}${jfCk}${newCookie}`, url1, 2);
@@ -193,18 +194,18 @@ async function takeRequest(ck, UA, userName, actId, code) {
     return new Promise(async resolve => {
         $.get(myRequest, (err, resp, data) => {
             try {
-                if ($.show) {
                     if (err) {
                         console.log(`${$.toStr(err)}`)
                         console.log(`${userName} API请求失败，请检查网路重试`)
                     } else {
                         let res = $.toObj(data, data);
                         if (typeof res == 'object') {
-                            // if(res.msg){
-                            //     console.log('结果：'+res.msg)
-                            // }
+                             //if(res.msg){
+                             //    console.log('结果：'+res.msg)
+                             //}
                             if (res.msg.indexOf('上限') !== -1) {
                                 $.max = true;
+                                console.log('今日已达领取上限，明日再来吧！')
                             }
                             if ($.shareId && typeof res.data !== 'undefined' && typeof res.data.joinNum !== 'undefined') {
                                 console.log(`当前${res.data.joinSuffix}:${res.data.joinNum}`)
@@ -226,7 +227,6 @@ async function takeRequest(ck, UA, userName, actId, code) {
                             console.log(data)
                         }
                     }
-                }
             } catch (e) {
 
                 $.logErr(e, resp)

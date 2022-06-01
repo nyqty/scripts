@@ -1,25 +1,25 @@
 /*
-5.18-5.31 五月宠爱季 和你在一起
+6.1-6.8 大牌“粽”情献礼
 开卡脚本,一次性脚本
 
 
 第一个账号助力作者 其他依次助力CK1
 第一个CK失效会退出脚本
 ————————————————
-入口：[ 5.18-5.31 五月宠爱季 和你在一起 ]
+入口：[ 6.1-6.8 大牌“粽”情献礼 ]
 
 请求太频繁会被黑ip
 过10分钟再执行
 
-cron:29 0 18-31 5 *
+cron:31 11 1-8 6 *
 ============Quantumultx===============
 [task_local]
-#5.18-5.31 五月宠爱季 和你在一起
-29 0 18-31 5 * jd_opencardL150.js, tag=5.18-5.31 五月宠爱季 和你在一起, enabled=true
+#6.1-6.8 大牌“粽”情献礼
+31 11 1-8 6 * jd_opencardL173.js, tag=6.1-6.8 大牌“粽”情献礼, enabled=true
 
 */
 
-const $ = new Env('5.18-5.31 五月宠爱季 和你在一起')
+const $ = new Env('6.1-6.8 大牌“粽”情献礼')
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 const notify = $.isNode() ? require('./sendNotify') : '';
 
@@ -49,9 +49,16 @@ let activityCookie =''
     });
     return;
   }
-  $.activityId = "dzlhkkbd172c997dbf3c4fa4d2cf42"
-  $.shareUuid = "cc9eba0364884d9187240942e851097c"
+  $.activityId = "dzlhkk17e740478a2c5580a664c23f"
+  $.shareUuid = "c7dc12ecb81a4051be6bea1a62bcfa45"
   console.log(`入口:\nhttps://lzdz1-isv.isvjcloud.com/dingzhi/customized/common/activity?activityId=${$.activityId}&shareUuid=${$.shareUuid}`)
+  let shareUuidArr = ["c7dc12ecb81a4051be6bea1a62bcfa45","f8fa7d9ee6d04e81b17eabeb9bf24614","f6b7b5da989140b0b2f58f0c3094a1ae"]
+  let s = Math.floor((Math.random()*3))
+  let n = 0
+  n = Math.floor((Math.random()*shareUuidArr.length))
+  $.shareUuid = shareUuidArr[n] ? shareUuidArr[n] : $.shareUuid
+
+
   for (let i = 0; i < cookiesArr.length; i++) {
     cookie = cookiesArr[i];
     if (cookie) {
@@ -64,6 +71,7 @@ let activityCookie =''
       console.log(`\n\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
       await getUA()
       await run();
+	  await $.wait(3000)
       if(i == 0 && !$.actorUuid) break
       if($.outFlag || $.activityEnd) break
     }
@@ -146,6 +154,7 @@ async function run() {
           for (let i = 0; i < Array(5).length; i++) {
             if (i > 0) console.log(`第${i}次 重新开卡`)
             await joinShop()
+			await $.wait(1000)
             if ($.errorJoinShop.indexOf('活动太火爆，请稍后再试') == -1) {
               break
             }
@@ -159,7 +168,7 @@ async function run() {
           await takePostRequest('activityContent');
           await takePostRequest('drawContent');
           await takePostRequest('checkOpenCard');
-          await $.wait(parseInt(Math.random() * 2000 + 3000, 10))
+          await $.wait(parseInt(Math.random() * 2000 + 2000, 10))
         }
       }
     }else{
@@ -170,7 +179,7 @@ async function run() {
     if(!$.followShop && !$.outFlag){
       flag = true
       await takePostRequest('followShop');
-      await $.wait(parseInt(Math.random() * 2000 + 3000, 10))
+      await $.wait(parseInt(Math.random() * 2000 + 1000, 10))
     }
 
     $.yaoqing = false
@@ -182,7 +191,7 @@ async function run() {
     if(!$.addCart && !$.outFlag){
         flag = true
         await takePostRequest('addCart');
-        await $.wait(parseInt(Math.random() * 2000 + 4000, 10))
+        await $.wait(parseInt(Math.random() * 2000 + 1000, 10))
     }
     if(flag){
       await takePostRequest('activityContent');
@@ -196,7 +205,7 @@ async function run() {
         await takePostRequest('抽奖');
         if($.runFalag == false) break
         if(Number(count) <= 0) break
-        if(m >= 10){
+        if(m >= 2){
           console.log("抽奖太多次，多余的次数请再执行脚本")
           break
         }
@@ -204,8 +213,8 @@ async function run() {
       }
     
     await $.wait(parseInt(Math.random() * 1000 + 2000, 10))
-    await takePostRequest('getDrawRecordHasCoupon');
-    await takePostRequest('getShareRecord');
+    //await takePostRequest('getDrawRecordHasCoupon');
+    //await takePostRequest('getShareRecord');
     if($.outFlag){
       console.log('此ip已被限制，请过10分钟后再执行脚本\n')
       return
@@ -218,7 +227,7 @@ async function run() {
     }
     await $.wait(parseInt(Math.random() * 1000 + 5000, 10))
       if($.index % 3 == 0) console.log('休息一下，别被黑ip了\n可持续发展')
-      if($.index % 3 == 0) await $.wait(parseInt(Math.random() * 5000 + 30000, 10))
+      if($.index % 3 == 0) await $.wait(parseInt(Math.random() * 5000 + 20000, 10))
   } catch (e) {
     console.log(e)
   }
