@@ -4,10 +4,9 @@
 变量
 export CODE618=""  
 
-建议禁用，避免其他问题 需要的请填写自己的码子，
+建议禁用，避免其他问题 需要的请填写自己的码子
 
-cron 0 0,10,20 * * * jd_618_red.js
-
+cron 30 12,20 * * * jd_618red.js
 */
 const $ = new Env('618红包');
 $.CODE618 = $.isNode() ? (process.env.CODE618 ? process.env.CODE618 : '') : '';
