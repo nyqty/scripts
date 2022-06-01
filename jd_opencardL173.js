@@ -50,9 +50,9 @@ let activityCookie =''
     return;
   }
   $.activityId = "dzlhkk17e740478a2c5580a664c23f"
-  $.shareUuid = "c7dc12ecb81a4051be6bea1a62bcfa45"
+  $.shareUuid = "14d50acd814243e8b7d6fd4403180226"
   console.log(`入口:\nhttps://lzdz1-isv.isvjcloud.com/dingzhi/customized/common/activity?activityId=${$.activityId}&shareUuid=${$.shareUuid}`)
-  let shareUuidArr = ["c7dc12ecb81a4051be6bea1a62bcfa45","f8fa7d9ee6d04e81b17eabeb9bf24614","f6b7b5da989140b0b2f58f0c3094a1ae"]
+  let shareUuidArr = ["14d50acd814243e8b7d6fd4403180226","3395a64c0a2f4e208f7037a1050f4e75"]
   let s = Math.floor((Math.random()*3))
   let n = 0
   n = Math.floor((Math.random()*shareUuidArr.length))
