@@ -29,6 +29,7 @@ let jdNotify = true;//是否关闭通知，false打开通知推送，true关闭�
 const helpAuthor = false; // 是否帮助作者助力，false打开通知推送，true关闭通知推送
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '', uuid = '', message;
+$.outFlag = false
 if ($.isNode()) {
   Object.keys(jdCookieNode).forEach((item) => {
     cookiesArr.push(jdCookieNode[item])
@@ -65,51 +66,9 @@ const JD_API_HOST = 'https://api.m.jd.com/';
         continue
       }
       await jdBeanHome();
+			await $.wait(parseInt(Math.random() * 5000 + 8000, 10))
     }
   }
-  // for (let i = 0; i < cookiesArr.length; i++) {
-  //   $.index = i + 1;
-  //   if (cookiesArr[i]) {
-  //     cookie = cookiesArr[i];
-  //     $.canHelp = true;
-  //     $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
-  //     if ($.newShareCodes.length > 1) {
-  //       console.log(`\n【抢京豆】 ${$.UserName} 去助力排名第一的cookie`);
-  //       // let code = $.newShareCodes[(i + 1) % $.newShareCodes.length]
-  //       // await help(code[0], code[1])
-  //       let code = $.newShareCodes[0];
-  //       if(code[2] && code[2] ===  $.UserName){
-  //         //不助力自己
-  //       } else {
-  //         await help(code[0], code[1]);
-  //       }
-  //     }
-  //     if (helpAuthor && $.authorCode && $.canHelp) {
-  //       console.log(`\n【抢京豆】${$.UserName} 去帮助作者`)
-  //       for (let code of $.authorCode) {
-  //         const helpRes = await help(code.shareCode, code.groupCode);
-  //         if (helpRes && helpRes['code'] === '0') {
-  //           if (helpRes && helpRes.data && helpRes.data.respCode === 'SG209') {
-  //             console.log(`${helpRes.data.helpToast}\n`);
-  //             break;
-  //           }
-  //         } else {
-  //           console.log(`助力异常:${JSON.stringify(helpRes)}\n`);
-  //         }
-  //       }
-  //     }
-  //     for (let j = 1; j < $.newShareCodes.length && $.canHelp; j++) {
-  //       let code = $.newShareCodes[j];
-  //       if(code[2] && code[2] ===  $.UserName){
-  //         //不助力自己
-  //       } else {
-  //         console.log(`【抢京豆】${$.UserName} 去助力账号 ${j + 1}`);
-  //         await help(code[0], code[1]);
-  //         await $.wait(2000);
-  //       }
-  //     }
-  //   }
-  // }
 })()
   .catch((e) => {
     $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
@@ -126,9 +85,11 @@ async function jdBeanHome() {
     //   await $.wait(1000)
     //   if ($.doneState) break
     // }
-    do {
+		$.outFlag = false
+		do {
       await doTask2()
-      await $.wait(3000)
+			if ($.outFlag) break
+      await $.wait(5000)
     } while (!$.doneState)
     await $.wait(1000)
     await award("feeds")
@@ -142,16 +103,16 @@ async function jdBeanHome() {
     //await $.wait(1000)
 
     await beanTaskList(1)
-    await $.wait(1000)
+    await $.wait(2000)
     await queryCouponInfo()
     $.doneState = false
     let num = 0
     do {
-      await $.wait(2000)
+      await $.wait(3000)
       await beanTaskList(2)
       num++
     } while (!$.doneState && num < 5)
-    await $.wait(2000)
+    await $.wait(3000)
     if ($.doneState) await beanTaskList(3)
 
     await showMsg();
@@ -392,8 +353,9 @@ function doTask2() {
       $.post(taskUrl('beanHomeTask', body), (err, resp, data) => {
         try {
           if (err) {
-            console.log(`${JSON.stringify(err)}`)
-            console.log(`${$.name} API请求失败，请检查网路重试`)
+            $.outFlag = true
+						console.log(`${JSON.stringify(err)}`)
+            console.log(`doTask2 API请求失败，请检查网路重试`)
           } else {
             if (safeGet(data)) {
               data = JSON.parse(data);
@@ -458,7 +420,7 @@ function getUserInfo() {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
-          console.log(`${$.name} API请求失败，请检查网路重试`)
+          console.log(`getUserInfo API请求失败，请检查网路重试`)
         } else {
           if (safeGet(data)) {
             data = JSON.parse(data);
@@ -496,7 +458,7 @@ function hitGroup() {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
-          console.log(`${$.name} API请求失败，请检查网路重试`)
+          console.log(`hitGroup API请求失败，请检查网路重试`)
         } else {
           if (safeGet(data)) {
             data = JSON.parse(data);
@@ -578,7 +540,7 @@ function getTaskList() {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
-          console.log(`${$.name} API请求失败，请检查网路重试`)
+          console.log(`getTaskList API请求失败，请检查网路重试`)
         } else {
           if (safeGet(data)) {
             data = JSON.parse(data);
@@ -614,7 +576,7 @@ function receiveTask(itemId = "zddd", type = "3") {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
-          console.log(`${$.name} API请求失败，请检查网路重试`)
+          console.log(`receiveTask API请求失败，请检查网路重试`)
         } else {
           if (safeGet(data)) {
             data = JSON.parse(data);
@@ -642,7 +604,8 @@ function award(source="home") {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
-          console.log(`${$.name} API请求失败，请检查网路重试`)
+          console.log(`award API请求失败，请检查网路重试`)
+					$.outFlag = true
         } else {
           if (safeGet(data)) {
             data = JSON.parse(data);
@@ -683,7 +646,8 @@ function receiveJd2() {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
-          console.log(`${$.name} API请求失败，请检查网路重试`)
+          console.log(`receiveJd2 API请求失败，请检查网路重试`)
+					$.outFlag = true
         } else {
           if (safeGet(data)) {
             data = JSON.parse(data);
@@ -774,7 +738,7 @@ function TotalBean() {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
-          console.log(`${$.name} API请求失败，请检查网路重试`)
+          console.log(`TotalBean API请求失败，请检查网路重试`)
         } else {
           if (data) {
             data = JSON.parse(data);
