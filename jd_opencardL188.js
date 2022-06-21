@@ -1,25 +1,25 @@
 /*
-6.10~6.20 为热爱选择 一起618
+6.21~6.29 盛夏福利 FUN肆狂欢
 开卡脚本,一次性脚本
 
 
 第一个账号助力作者 其他依次助力CK1
 第一个CK失效会退出脚本
 ————————————————
-入口：[ 6.10~6.20 为热爱选择 一起618 ]
+入口：[ 6.21~6.29 盛夏福利 FUN肆狂欢 ]
 
 请求太频繁会被黑ip
 请更换IP后再执行脚本
 
-cron:10 0 11-20 6 *
+cron:59 1,16 21-29 6 *
 ============Quantumultx===============
 [task_local]
-#6.10~6.20 为热爱选择 一起618
-10 0 11-20 6 * jd_opencardL186.js, tag=6.10~6.20 为热爱选择 一起618, enabled=true
+#6.21~6.29 盛夏福利 FUN肆狂欢
+59 1,16 21-29 6 * jd_opencardL188.js, tag=6.21~6.29 盛夏福利 FUN肆狂欢, enabled=true
 
 */
 
-const $ = new Env('6.10~6.20 为热爱选择 一起618')
+const $ = new Env('6.21~6.29 盛夏福利 FUN肆狂欢')
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 const notify = $.isNode() ? require('./sendNotify') : '';
 
@@ -51,10 +51,10 @@ let activityCookie =''
     });
     return;
   }
-  $.activityId = "dzlhkkd1304d0fa8d97c17d8423853"
-  $.shareUuid = "2d9b446a85b94089a2911a66ec27a512"
+  $.activityId = "dzlhkk7073cc8467954f40bfc76f71"
+  $.shareUuid = "bf43c0f0ea47417b9d4fffd3be69114d"
   console.log(`入口:\nhttps://lzdz1-isv.isvjcloud.com/dingzhi/customized/common/activity?activityId=${$.activityId}&shareUuid=${$.shareUuid}`)
-  let shareUuidArr = ["2d9b446a85b94089a2911a66ec27a512","994594f230ff44d49c94bcbbaf6efae4"]
+  let shareUuidArr = ["bf43c0f0ea47417b9d4fffd3be69114d","70f403077bc043ba9c85da3426449824","519d7f22905740d8a0bc3fadd03a812a"]
   let s = Math.floor((Math.random()*3))
   let n = 0
   n = Math.floor((Math.random()*shareUuidArr.length))
