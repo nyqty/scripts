@@ -38,9 +38,15 @@ const JD_API_HOST='https://api.m.jd.com/client.action';
 	}
 	$.CryptoJS=$.isNode()?require('crypto-js'):CryptoJS;
 	await jxmflra();
-	const QOOO0O0=(Math.random()>0.5)?'https://kingran.coding.net/p/yq.json/d/shareCodes/git/raw/master/jxmfl.json':'https://kingran.coding.net/p/yq.json/d/shareCodes/git/raw/master/jxmfl.json';
-	launchidlsit=(await getAuthorShareCode(QOOO0O0))||[];
-	launchid=(await getAuthorShareCode(QOOO0O0))||[];
+
+    let res = await getAuthorShareCode('https://cdn.jsdelivr.net/gh/atyvcn/updateTeam@master/shareCodes/jd/jxmfl.json')
+    if (!res) {
+      $.http.get({url: 'https://purge.jsdelivr.net/gh/atyvcn/updateTeam@master/shareCodes/jd/jxmfl.json'}).then((resp) => {}).catch((e) => console.log('刷新CDN异常', e));
+      await $.wait(1000)
+      res = await getAuthorShareCode('https://cdn.jsdelivr.net/gh/atyvcn/updateTeam@master/shareCodes/jd/jxmfl.json')
+    }
+	launchidlsit=res||[];
+	launchid=res||[];
 	if(process.env.launchid){
 		launchid=process.env.launchid.split('@');
 	}if((launchid.length==0)&&!first){
