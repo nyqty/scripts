@@ -7,7 +7,7 @@
  * 已内置log，不定时更新，若火爆请在HarbourTouluChat反馈以便及时更新log。
  */
 
-import {requireConfig, wait, post, get} from './TS_USER_AGENTS'
+import {requireConfig, wait, post, get} from "./function/TS_USER_AGENTS";
 import {existsSync} from "fs";
 import * as dotenv from 'dotenv'
 

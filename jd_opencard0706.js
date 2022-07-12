@@ -80,15 +80,8 @@ let lz_cookie={}
     return;
   }
   $.activityId = "dzlhkkcb37e91f440aa2cf5d6fa056"
-  $.shareUuid = "5755cde1aa7845659c4f156729c79235"
+  $.shareUuid = "f46cb6f0ab4a42a99049bfb2bedf177d"
   console.log(`入口:\nhttps://lzdz1-isv.isvjcloud.com/dingzhi/customized/common/activity?activityId=${$.activityId}&shareUuid=${$.shareUuid}`)
-  let shareUuidArr = [$.shareUuid,'5755cde1aa7845659c4f156729c79235','631531121e4f4e0db6de416c0251447d','ab31173b860e42c8864c55550b0fe563']
-  let s = Math.floor((Math.random()*10))
-  let n = 0
-  if(s >= 1 && s<= 6) n = Math.floor((Math.random()*shareUuidArr.length))
-  $.shareUuid = shareUuidArr[n] ? shareUuidArr[n] : $.shareUuid
-
-
   for (let i = 0; i < cookiesArr.length; i++) {
     cookie = cookiesArr[i];
     originCookie=cookiesArr[i];
