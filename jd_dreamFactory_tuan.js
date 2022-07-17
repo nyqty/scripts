@@ -98,7 +98,7 @@ if ($.isNode()) {
       // }
       $.isLogin = true;
       $.canHelp = true;//能否参团
-      await TotalBean();
+      //await TotalBean();
       if (!$.isLogin) {continue;}
       $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1]);
       if ((cookiesArr && cookiesArr.length >= ($.tuanNum || 5)) && $.canHelp) {
