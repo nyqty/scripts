@@ -367,7 +367,7 @@ function getFirstLZCK() {
                             }
                         }
                     }
-						$.cookie = cookie
+                    $.cookie = cookie
                 }
             } catch (error) {
                 console.log(error)
