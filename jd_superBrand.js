@@ -37,7 +37,7 @@ if ($.isNode()) {
         $.isLogin = true;
         $.nickName = '';
         $.UserName = decodeURIComponent($.cookie.match(/pt_pin=([^; ]+)(?=;?)/) && $.cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1]);
-        //await TotalBean();
+        await TotalBean();
         console.log(`\n*****开始【京东账号${$.index}】${$.nickName || $.UserName}*****\n`);
         if (!$.isLogin) {
             $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
@@ -85,8 +85,8 @@ async function main() {
     $.runFlag = false;
     $.activityInfo = {};
     await takeRequest('superBrandSecondFloorMainPage');
-    if(JSON.stringify($.activityInfo) === '{}'){
-        console.log(`获取活动详情失败`);
+    if($.bizCode == 'MP001'){
+        console.log(`本期活动结束，期待下期。。。`);
 		$.flag = true
         return ;
     }
@@ -120,13 +120,13 @@ async function doTask(){
             console.log(`任务：${$.oneTask.assignmentName}，已完成`);
             continue;
         }
-        if($.oneTask.assignmentType === 3 || $.oneTask.assignmentType === 0 || $.oneTask.assignmentType === 1 || $.oneTask.assignmentType === 7){
+        if($.oneTask.assignmentType === 3  || $.oneTask.assignmentType === 7 || $.oneTask.assignmentType === 1){  //7是开卡  3是关注店铺 1是浏览会场
             if($.oneTask.assignmentType === 7){
                 console.log(`任务：${$.oneTask.assignmentName}，尝试领取开卡奖励；（不会自动开卡，如果你已经是会员，则会领取成功）`);
             }else{
                 console.log(`任务：${$.oneTask.assignmentName}，去执行`);
             }
-            let subInfo = $.oneTask.ext.followShop || $.oneTask.ext.brandMemberList || $.oneTask.ext.shoppingActivity ||'';
+            let subInfo = $.oneTask.ext.followShop || $.oneTask.ext.brandMemberList || $.oneTask.ext.shoppingActivity;
             if(subInfo && subInfo[0]){
                 $.runInfo = subInfo[0];
             }else{
@@ -216,6 +216,7 @@ function dealReturn(type, data) {
     }
     switch (type) {
         case 'superBrandSecondFloorMainPage':
+						$.bizCode = data.data.bizCode;	
             if(data.code === '0' &&  data.data && data.data.result){
                 $.activityInfo = data.data.result;
             }
