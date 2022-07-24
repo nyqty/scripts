@@ -8,7 +8,7 @@ TG: https://t.me/HarbourToulu
 */
 const $ = new Env('joy通用开卡');
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
-const Faker=require('./sign_graphics_validate.js')
+const Faker=require('./utils/sign_graphics_validate.js')
 const notify = $.isNode() ? require('./sendNotify') : '';
 CryptoScripts()
 $.CryptoJS = $.isNode() ? require('crypto-js') : CryptoJS;
