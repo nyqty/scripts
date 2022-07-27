@@ -1,6 +1,6 @@
 /*
 入口：APP搜-生鲜早起打卡
-支付一元才能参与打卡，填写环境变量morningScPins给指定CK打卡
+支付一元才能参与打卡
 15 6,7 * * * jd_morningSc.js
 */
 const $ = new Env("生鲜早起打卡")
@@ -16,16 +16,9 @@ let cookie = '';
         });
         return;
     }
-    if(!pins){
-        console.log("未设置变量，指定CK的pin 如：morningScPins='pt_pin1&pt_pin2'")
-    }
     for (let i = 0; i < cookiesArr.length; i++) {
         if (cookiesArr[i]) {
             cookie = cookiesArr[i];
-            pin = cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1]
-            if(!pins || pins.indexOf(pin)==-1){
-                continue
-            }
             $.cookie = cookie;
             $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
             $.index = i + 1;
