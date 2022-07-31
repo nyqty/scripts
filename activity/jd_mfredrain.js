@@ -4,7 +4,7 @@ cron:1 10 * * *
 ============Quantumultx===============
 [task_local]
 #魔方红包雨
-1 10 * * * jd_mfredrain.js, tag=魔方红包雨, enabled=true
+1 12 * * * jd_mfredrain.js, tag=魔方红包雨, enabled=true
  */
 
 const $ = new Env('魔方红包雨');
@@ -35,7 +35,7 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
       $.index = i + 1;
       $.isLogin = true;
       $.nickName = '';
-      await TotalBean();
+      //await TotalBean();
       console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
       if (!$.isLogin) {
         $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
@@ -84,7 +84,7 @@ async function dotask() {
 
 function taskUrl() {
   return {
-    url: `https://api.m.jd.com/client.action?client=wh5&clientVersion=1.0.0&appid=redrain-2021&functionId=doInteractiveAssignment&body=%7B%22completionFlag%22:true,%22sourceCode%22:%22acehby20210924%22,%22encryptProjectId%22:%223sXXaRM6gCUyJc4LwYU7EZpYhrcq%22,%22encryptAssignmentId%22:%228ppJjFktuVPrJKPVYZin9z6fgtv%22%7D`,
+    url: `https://api.m.jd.com/client.action?client=wh5&clientVersion=1.0.0&appid=redrain-2021&functionId=doInteractiveAssignment&body=%7B%22completionFlag%22:true,%22sourceCode%22:%22acehby20210924%22,%22encryptProjectId%22:%22uyuXxVVy8C3AarwZ2VAHecYNat6%22,%22encryptAssignmentId%22:%2246xcZZ1QaAG7ykQzpDNtSwarHxSk%22%7D`,
     headers: {
       'Host': 'api.m.jd.com',
       'accept':'application/json, text/plain, */*',
