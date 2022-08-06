@@ -8,11 +8,11 @@
 
 All变量适用
 ————————————————
-入口：[ 8.3-8.10 飞利浦88会员狂欢日 (https://lzdz1-isv.isvjcloud.com/dingzhi/customized/common/activity/8938022?activityId=dzlhkkde95c4481a4859f30fa6f5868&shareUuid=5aad9c300c514d68b163a509c634d0fa)]
+入口：[ 8.3-8.10 飞利浦88会员狂欢日 (https://lzdz1-isv.isvjcloud.com/dingzhi/customized/common/activity/8938022?activityId=dzlhkkde95c4481a4859f30fa6f5868&shareUuid=f35ea869e00c4a54ae64542e027ffcc6)]
 
 请求太频繁会被黑ip
 过10分钟再执行
-cron:1 1 1 1 1 1
+cron:29 8,17 3-10 8 *
 */
 let opencard_addSku = ""
 let opencard = "true"
@@ -79,9 +79,9 @@ let lz_cookie={}
     return;
   }
   $.activityId = "dzlhkka846aa1410e44bc2b4e980f4"
-  $.shareUuid = "f7d79bf0db3d482db6ac9f947dfcd0e2"
+  $.shareUuid = "f35ea869e00c4a54ae64542e027ffcc6"
   console.log(`入口:\nhttps://lzdz1-isv.isvjcloud.com/dingzhi/customized/common/activity?activityId=${$.activityId}&shareUuid=${$.shareUuid}`)
-  let shareUuidArr = [$.shareUuid,'f7d79bf0db3d482db6ac9f947dfcd0e2','3a3cc89acd4f4e658bcd4f3274b4df6d','68ac149ec4c64483b0db9afa740a38ce']
+  let shareUuidArr = [$.shareUuid,'f35ea869e00c4a54ae64542e027ffcc6']
   let s = Math.floor((Math.random()*10))
   let n = 0
   if(s >= 1 && s<= 6) n = Math.floor((Math.random()*shareUuidArr.length))
