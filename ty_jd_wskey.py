@@ -84,13 +84,13 @@ def check_ck(row):  # 方法 检查 Cookie有效性 使用变量传递 单次调
             updateHour = int(os.environ["WSKEY_UPDATE_HOUR"])  # 使用 int化数字
         nowTime = time.time()  # 获取时间戳 赋值
         if nowTime - updatedAt >= (updateHour * 60 * 60) - (10 * 60):  # 判断时间操作
-            logger.info(str(userName) + ";即将到期或已过期\n")  # 标准日志输出
+            logger.info("根据时间判断即将到期")  # 标准日志输出
             return False  # 返回 Bool类型 False
         else:  # 判断分支
             remainingTime = (updateHour * 60 * 60) - (nowTime - updatedAt)  # 时间运算操作
             hour = int(remainingTime / 60 / 60)  # 时间运算操作 [int]
             minute = int((remainingTime % 3600) / 60)  # 时间运算操作 [int]
-            logger.info(str(userName) + ";未到期，{0}时{1}分后更新\n".format(hour, minute))  # 标准日志输出
+            logger.info("未到期，{0}时{1}分后更新".format(hour, minute))  # 标准日志输出
             return True  # 返回 Bool类型 True
     elif "WSKEY_DISCHECK" in os.environ:  # 判断分支 WSKEY_DISCHECK 是否存在于系统变量
         logger.info("不检查账号有效性\n--------------------\n")  # 标准日志输出
