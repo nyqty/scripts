@@ -283,12 +283,12 @@ def Date2time(t):  # 方法 获取url
     return int(time.mktime(s_t))
 
 def ql_disable(id):
-    Data = post_cookie({"ac":"state","id":id,"state":0}).data
+    Data = post_cookie({"ac":"state","id":id,"state":0})
     logger.info(Data["msg"])
 
 
 def ql_AddUp(ck,uid):
-    Data = post_cookie({"ac":"addUp","check":True,"eid":ckEid,"uid":uid,"value":ck,"uid":uid,"nickName":""}).data
+    Data = post_cookie({"ac":"addUp","check":True,"eid":ckEid,"uid":uid,"value":ck,"uid":uid,"nickName":""})
     if Data["code"]==200 :
         logger.info(Data["msg"])
     else:
