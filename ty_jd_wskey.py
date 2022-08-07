@@ -213,7 +213,6 @@ def serch_ck(userName):  # 方法 搜索 userName
         row=ckData[i]
         #if "userName" not in row: continue # userName未定义就跳过
         if userName==row['userName']:  # 判断envlist取值['value']
-            logger.info(str(userName) + "检索成功\n")  # 标准日志输出
             return True, row  # 返回 -> True[Bool], Array
     return False
 
@@ -289,12 +288,7 @@ def ql_disable(id):
 
 def ql_AddUp(ck,uid):
     Data = post_cookie({"ac":"addUp","check":True,"eid":ckEid,"uid":uid,"value":ck,"uid":uid,"nickName":""})
-    if Data["code"]==200 :
-        logger.info(Data["msg"])
-    else:
-        logger.info("获取出错了！")  # 标准日志输出
-        logger.info(Data["msg"])
-        sys.exit(0)  # 退出脚本 [未启用]
+    logger.info(Data["msg"])
 
 
 if __name__ == '__main__':  # Python主函数执行入口
@@ -339,15 +333,17 @@ if __name__ == '__main__':  # Python主函数执行入口
     Data = post_cookie({"ac":"list","env_name":"JD_COOKIE","field":"userName,value,up_date","state":1})
     ckEid=Data["eid"]
     ckData=Data["data"]
-    logger.info("获取{0}个京东账号".format(len(ckData)))
+    logger.info("获取{0}个京东账号\n--------------------\n\n".format(len(ckData)))
 
     for i in range(len(wskeyData)):  # For循环 变量[wskeyData]的数量
         row=wskeyData[i]
         userName=row["userName"]
         ws=row["value"]
         if userName:
+            logger.info("账号{0} {1}".format(i,userName))  # 标准日志输出
             return_serch = serch_ck(userName)  # 变量 pt_pin 搜索获取 key eid
             if return_serch[0]:  # bool: True 搜索到账号
+                logger.info("检索成功")
                 if not check_ck(return_serch[1]):  # bool: False 判定 JD_COOKIE 有效性
                     for count in range(tryCount):  # for循环 [tryCount]
                         count += 1  # 自增
@@ -355,27 +351,26 @@ if __name__ == '__main__':  # Python主函数执行入口
                         if return_ws[0]:  # 判断 [return_ws]返回值 Bool类型
                             break  # 中断循环
                         if count < tryCount:  # 判断循环次
-                            logger.info("{0} 秒后重试，剩余次数：{1}\n".format(sleepTime, tryCount - count))  # 标准日志输出
+                            logger.info("{0} 秒后重试，剩余次数：{1}".format(sleepTime, tryCount - count))  # 标准日志输出
                             time.sleep(sleepTime)  # 脚本休眠 使用变量 [sleepTime]
                     if return_ws[0]:  # 判断 [return_ws]返回值 Bool类型
                         nt_key = str(return_ws[1])  # 从 return_ws[1] 取出 -> nt_key
-                        # logger.info("wskey转pt_key成功", nt_key)  # 标准日志输出 [未启用]
                         logger.info("wskey转换成功")  # 标准日志输出
                         ql_AddUp(nt_key,row["uid"])  # 调用方法 [ql_update]
                     else:  # 判断分支
                         if "WSKEY_AUTO_DISABLE" in os.environ:  # 从系统变量中获取 WSKEY_AUTO_DISABLE
-                            logger.info(str(userName) + "账号失效")  # 标准日志输出
+                            logger.info("{0}  账号失效".format(userName))  # 标准日志输出
                             text = "账号: {0} WsKey疑似失效".format(userName)  # 设置推送内容
                         else:  # 判断分支
-                            logger.info(str(userName) + "账号禁用")  # 标准日志输出
+                            logger.info("{0}  账号禁用".format(userName))  # 标准日志输出
                             ql_disable(row["id"])  # 执行方法[ql_disable] 传递 eid
                             text = "账号: {0} WsKey疑似失效, 已禁用Cookie".format(userName)  # 设置推送内容
                             ql_send(text)
             else:  # 判断分支
-                logger.info("\n新wskey\n")  # 标准日志分支
+                logger.info("新wskey")  # 标准日志分支
                 return_ws = getToken(ws)  # 使用 WSKEY 请求获取 JD_COOKIE bool jd_ck
                 if return_ws[0]:  # 判断 (return_ws[0]) 类型: [Bool]
-                    logger.info("wskey转换成功\n")  # 标准日志输出 添加CK
+                    logger.info("wskey转换成功")  # 标准日志输出 添加CK
                     ql_AddUp(str(return_ws[1]),row["uid"])  # 调用方法 [ql_insert]
             logger.info("暂停{0}秒\n".format(sleepTime))  # 标准日志输出
             time.sleep(sleepTime)  # 脚本休眠
