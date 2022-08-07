@@ -188,10 +188,8 @@ def appjmp(wskey, tokenKey):  # 方法 传递 wskey & tokenKey
             return False, wskey  # 返回 -> False[Bool], Wskey
         else:  # 判断分支
             if 'fake' in pt_key:  # 判断 pt_key中 是否存在fake
-                logger.info(str(wskey) + ";WsKey状态失效\n")  # 标准日志输出
                 return False, wskey  # 返回 -> False[Bool], Wskey
             else:  # 判断分支
-                logger.info(str(wskey) + ";WsKey状态正常\n")  # 标准日志输出
                 return True, jd_ck  # 返回 -> True[Bool], jd_ck
 
 
