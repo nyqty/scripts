@@ -212,7 +212,7 @@ def serch_ck(userName):  # 方法 搜索 userName
         #if "userName" not in row: continue # userName未定义就跳过
         if userName==row['userName']:  # 判断envlist取值['value']
             return True, row  # 返回 -> True[Bool], Array
-    return False
+    return False, row
 
 
 def post_cookie(data):  # 方法 读取变量
@@ -338,7 +338,7 @@ if __name__ == '__main__':  # Python主函数执行入口
         userName=row["userName"]
         ws=row["value"]
         if userName:
-            logger.info("账号{0} {1}".format(i,userName))  # 标准日志输出
+            logger.info("账号{0} {1}".format(i+1,userName))  # 标准日志输出
             return_serch = serch_ck(userName)  # 变量 pt_pin 搜索获取 key eid
             if return_serch[0]:  # bool: True 搜索到账号
                 logger.info("检索成功")
