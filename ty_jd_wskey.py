@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*
 '''
-cron: 0 */4 * * *
+cron: 0 */8 * * *
 new Env('TY云任务-京东wskey转换');
 #禁用发送消息 默认不禁用
 WSKEY_SEND="disable";
@@ -76,7 +76,6 @@ def get_wskey():  # 方法 获取 wskey值 [系统变量传递]
 def check_ck(row):  # 方法 检查 Cookie有效性 使用变量传递 单次调用
     #searchObj = re.search(r'pt_pin=([^;\s]+)', row["value"], re.M | re.I)  # 正则检索 pt_pin
     #if searchObj: userName = searchObj.group(1)  # 取值
-    userName = row["userName"]
     updatedAt = Date2time(row["up_date"])
     if "WSKEY_UPDATE_HOUR" in os.environ:  # 判断 WSKEY_UPDATE_HOUR是否存在于环境变量
         updateHour = 23  # 更新间隔23小时
@@ -112,10 +111,10 @@ def check_ck(row):  # 方法 检查 Cookie有效性 使用变量传递 单次调
             if res.status_code == 200:  # 判断 JD_API 接口是否为 200 [HTTP_OK]
                 code = int(json.loads(res.text)['retcode'])  # 使用 Json模块对返回数据取值 int([retcode])
                 if code == 0:  # 判断 code值
-                    logger.info(str(userName) + ";状态正常\n")  # 标准日志输出
+                    logger.info("状态正常")  # 标准日志输出
                     return True  # 返回 Bool类型 True
                 else:  # 判断分支
-                    logger.info(str(userName) + ";状态失效\n")
+                    logger.info("状态失效")
                     return False  # 返回 Bool类型 False
             else:  # 判断分支
                 logger.info("JD接口错误码: " + str(res.status_code))  # 标注日志输出
