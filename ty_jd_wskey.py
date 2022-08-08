@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*
 '''
-cron: 30 18 * * *
+cron: 0 */4 * * *
 new Env('TY云任务-京东wskey转换');
 #禁用发送消息 默认不禁用
 WSKEY_SEND="disable";
-#检查更新间隔设置就检查，设置为数字则设置多少就隔多久反正默认600小时，就是25天更新一次
-WSKEY_UPDATE_HOUR=600;
+#检查更新间隔设置就检查，设置为数字则设置多少就隔多久反正默认23小时
+WSKEY_UPDATE_HOUR=23;
 #休眠时间 10秒
 WSKEY_SLEEP=10;
 #WSKEY失效自动禁用
@@ -79,7 +79,7 @@ def check_ck(row):  # 方法 检查 Cookie有效性 使用变量传递 单次调
     userName = row["userName"]
     updatedAt = Date2time(row["up_date"])
     if "WSKEY_UPDATE_HOUR" in os.environ:  # 判断 WSKEY_UPDATE_HOUR是否存在于环境变量
-        updateHour = 600  # 更新间隔600小时
+        updateHour = 23  # 更新间隔23小时
         if os.environ["WSKEY_UPDATE_HOUR"].isdigit():  # 检查是否为 DEC值
             updateHour = int(os.environ["WSKEY_UPDATE_HOUR"])  # 使用 int化数字
         nowTime = time.time()  # 获取时间戳 赋值
@@ -89,7 +89,7 @@ def check_ck(row):  # 方法 检查 Cookie有效性 使用变量传递 单次调
         else:  # 判断分支
             remainingTime = (updateHour * 60 * 60) - (nowTime - updatedAt)  # 时间运算操作
             hour = int(remainingTime / 60 / 60)  # 时间运算操作 [int]
-            minute = int((remainingTime % 3600) / 60)  # 时间运算操作 [int]
+            minute = int((remainingTime % 323) / 60)  # 时间运算操作 [int]
             logger.info("未到期，{0}时{1}分后更新".format(hour, minute))  # 标准日志输出
             return True  # 返回 Bool类型 True
     elif "WSKEY_DISCHECK" in os.environ:  # 判断分支 WSKEY_DISCHECK 是否存在于系统变量
