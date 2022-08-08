@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*
 '''
-cron: 0 */8 * * *
+cron: 0 6-23/3,0 * * *
 new Env('TY云任务-京东wskey转换');
 #禁用发送消息 默认不禁用
 WSKEY_SEND="disable";
