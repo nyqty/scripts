@@ -1,18 +1,15 @@
 /**
- * const $ = new Env('京东新品-集魔方兑换-本地log版');
+ * const $ = new Env('京东新品-集魔方兑换-接口版');
  * cron: 10 8 * * *
- * Fix by HarbourJ
- * TG: https://t.me/HarbourToulu
  * 默认魔方满3/6自动兑换
- * 已内置log，不定时更新，若火爆请在HarbourTouluChat反馈以便及时更新log。
  */
 
-import {requireConfig, wait, post, get} from "./function/TS_USER_AGENTS";
+import {requireConfig, wait, post, get} from './function/TS_USER_AGENTS'
 import {existsSync} from "fs";
 import * as dotenv from 'dotenv'
 
 let cookie: string = '', res: any = '', UserName: string, index: number, log: string = ''
-let mf_logs: any, logApi: boolean = false // 若有log接口请改为true并修改line174接口地址
+let mf_logs: any, logApi: boolean = true // 若有log接口请改为true并修改line174接口地址
 
 !(async () => {
   dotenv.config()
@@ -28,7 +25,7 @@ let mf_logs: any, logApi: boolean = false // 若有log接口请改为true并修�
     index = i + 1
     console.log(`\n开始【京东账号${index}】${UserName}\n`)
     if (logApi === true) {
-      console.log("开启船长🛳偷撸模式")
+      console.log("开启偷撸模式")
     }
     res = await api("functionId=getInteractionHomeInfo&body=%7B%22sign%22%3A%22u6vtLQ7ztxgykLEr%22%7D&appid=content_ecology&client=wh5&clientVersion=1.0.0")
     let sign: string = res.result.taskConfig.projectId, reward: string = res.result.taskConfig.projectPoolId, rewardSign: string = res.result.giftConfig.projectId
@@ -171,7 +168,7 @@ async function api(params: string) {
 
 async function getLog() {
   if (logApi === true) {
-    let data = await get("此处填写logApi") //若有,请把log接口填写在此处
+    let data = await get("http://106.126.11.114:5889/log") //若有,请把log接口填写在此处
     return `'"random":"${data.random}","log":"${data.log}"'`
   } else if (mf_logs) {
     return mf_logs[Math.floor(Math.random() * mf_logs.length)]
