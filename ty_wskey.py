@@ -189,8 +189,10 @@ def appjmp(wskey, tokenKey):  # 方法 传递 wskey & tokenKey
             return False, wskey  # 返回 -> False[Bool], Wskey
         else:  # 判断分支
             if 'fake' in pt_key:  # 判断 pt_key中 是否存在fake
+                logger.info(str(wskey) + ";WsKey状态失效\n")  # 标准日志输出
                 return False, wskey  # 返回 -> False[Bool], Wskey
             else:  # 判断分支
+                logger.info("WsKey状态正常\n")  # 标准日志输出
                 return True, jd_ck  # 返回 -> True[Bool], jd_ck
 
 
@@ -285,9 +287,30 @@ def ql_disable(id):
     logger.info(Data["msg"])
 
 
-def ql_AddUp(ck,uid):
-    Data = post_cookie({"ac":"addUp","check":True,"eid":ckEid,"uid":uid,"value":ck,"uid":uid,"nickName":""})
-    logger.info(Data["msg"])
+def ql_AddUp(uid):
+    for count in range(tryCount):  # for循环 [tryCount]
+        count += 1  # 自增
+        return_ws = getToken(ws)  # 使用 WSKEY 请求获取 JD_COOKIE bool jd_ck
+        if return_ws[0]:  # 判断 [return_ws]返回值 Bool类型
+            break  # 中断循环
+        if count < tryCount:  # 判断循环次
+            logger.info("{0} 秒后重试，剩余次数：{1}".format(sleepTime, tryCount - count))  # 标准日志输出
+            time.sleep(sleepTime)  # 脚本休眠 使用变量 [sleepTime]
+    if return_ws[0]:  # 判断 [return_ws]返回值 Bool类型
+        nt_key = str(return_ws[1])  # 从 return_ws[1] 取出 -> nt_key
+        logger.info("wskey转换成功")  # 标准日志输出
+        Data = post_cookie({"ac":"addUp","check":True,"eid":ckEid,"uid":uid,"value":nt_key,"uid":uid,"nickName":""})
+        logger.info(Data["msg"])
+    else:  # 判断分支
+        if "WSKEY_AUTO_DISABLE" in os.environ:  # 从系统变量中获取 WSKEY_AUTO_DISABLE
+            logger.info("{0}  账号失效".format(userName))  # 标准日志输出
+            text = "账号: {0} WsKey疑似失效".format(userName)  # 设置推送内容
+        else:  # 判断分支
+            logger.info("{0}  账号禁用".format(userName))  # 标准日志输出
+            ql_disable(row["id"])  # 执行方法[ql_disable] 传递 eid
+            text = "账号: {0} WsKey疑似失效, 已禁用Cookie".format(userName)  # 设置推送内容
+            ql_send(text)
+    logger.info("暂停{0}秒\n".format(sleepTime))  # 标准日志输出
 
 
 if __name__ == '__main__':  # Python主函数执行入口
@@ -344,34 +367,10 @@ if __name__ == '__main__':  # Python主函数执行入口
             if return_serch[0]:  # bool: True 搜索到账号
                 logger.info("检索成功")
                 if not check_ck(return_serch[1]):  # bool: False 判定 JD_COOKIE 有效性
-                    for count in range(tryCount):  # for循环 [tryCount]
-                        count += 1  # 自增
-                        return_ws = getToken(ws)  # 使用 WSKEY 请求获取 JD_COOKIE bool jd_ck
-                        if return_ws[0]:  # 判断 [return_ws]返回值 Bool类型
-                            break  # 中断循环
-                        if count < tryCount:  # 判断循环次
-                            logger.info("{0} 秒后重试，剩余次数：{1}".format(sleepTime, tryCount - count))  # 标准日志输出
-                            time.sleep(sleepTime)  # 脚本休眠 使用变量 [sleepTime]
-                    if return_ws[0]:  # 判断 [return_ws]返回值 Bool类型
-                        nt_key = str(return_ws[1])  # 从 return_ws[1] 取出 -> nt_key
-                        logger.info("wskey转换成功")  # 标准日志输出
-                        ql_AddUp(nt_key,row["uid"])  # 调用方法 [ql_update]
-                    else:  # 判断分支
-                        if "WSKEY_AUTO_DISABLE" in os.environ:  # 从系统变量中获取 WSKEY_AUTO_DISABLE
-                            logger.info("{0}  账号失效".format(userName))  # 标准日志输出
-                            text = "账号: {0} WsKey疑似失效".format(userName)  # 设置推送内容
-                        else:  # 判断分支
-                            logger.info("{0}  账号禁用".format(userName))  # 标准日志输出
-                            ql_disable(row["id"])  # 执行方法[ql_disable] 传递 eid
-                            text = "账号: {0} WsKey疑似失效, 已禁用Cookie".format(userName)  # 设置推送内容
-                            ql_send(text)
+                    ql_AddUp(row["uid"])
             else:  # 判断分支
                 logger.info("新wskey")  # 标准日志分支
-                return_ws = getToken(ws)  # 使用 WSKEY 请求获取 JD_COOKIE bool jd_ck
-                if return_ws[0]:  # 判断 (return_ws[0]) 类型: [Bool]
-                    logger.info("wskey转换成功")  # 标准日志输出 添加CK
-                    ql_AddUp(str(return_ws[1]),row["uid"])  # 调用方法 [ql_insert]
-            logger.info("暂停{0}秒\n".format(sleepTime))  # 标准日志输出
+                ql_AddUp(row["uid"])
             time.sleep(sleepTime)  # 脚本休眠
         else:  # 判断分支
             logger.info("WSKEY格式错误\n--------------------\n")  # 标准日志输出
