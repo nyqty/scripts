@@ -189,10 +189,10 @@ def appjmp(wskey, tokenKey):  # 方法 传递 wskey & tokenKey
             return False, wskey  # 返回 -> False[Bool], Wskey
         else:  # 判断分支
             if 'fake' in pt_key:  # 判断 pt_key中 是否存在fake
-                logger.info(str(wskey) + ";WsKey状态失效\n")  # 标准日志输出
+                logger.info("WsKey状态失效")  # 标准日志输出
                 return False, wskey  # 返回 -> False[Bool], Wskey
             else:  # 判断分支
-                logger.info("WsKey状态正常\n")  # 标准日志输出
+                logger.info("WsKey状态正常")  # 标准日志输出
                 return True, jd_ck  # 返回 -> True[Bool], jd_ck
 
 
@@ -311,6 +311,7 @@ def ql_AddUp(uid):
             text = "账号: {0} WsKey疑似失效, 已禁用Cookie".format(userName)  # 设置推送内容
             ql_send(text)
     logger.info("暂停{0}秒\n".format(sleepTime))  # 标准日志输出
+    time.sleep(sleepTime)  # 脚本休眠
 
 
 if __name__ == '__main__':  # Python主函数执行入口
@@ -355,14 +356,14 @@ if __name__ == '__main__':  # Python主函数执行入口
     Data = post_cookie({"ac":"list","env_name":"JD_COOKIE","field":"userName,value,up_date","state":1})
     ckEid=Data["eid"]
     ckData=Data["data"]
-    logger.info("获取{0}个京东账号\n--------------------\n\n".format(len(ckData)))
+    logger.info("获取{0}个京东账号\n--------------------\n".format(len(ckData)))
 
     for i in range(len(wskeyData)):  # For循环 变量[wskeyData]的数量
         row=wskeyData[i]
         userName=row["userName"]
         ws=row["value"]
         if userName:
-            logger.info("账号{0} {1}".format(i+1,userName))  # 标准日志输出
+            logger.info("\n账号{0} {1}".format(i+1,userName))  # 标准日志输出
             return_serch = serch_ck(userName)  # 变量 pt_pin 搜索获取 key eid
             if return_serch[0]:  # bool: True 搜索到账号
                 logger.info("检索成功")
@@ -371,9 +372,8 @@ if __name__ == '__main__':  # Python主函数执行入口
             else:  # 判断分支
                 logger.info("新wskey")  # 标准日志分支
                 ql_AddUp(row["uid"])
-            time.sleep(sleepTime)  # 脚本休眠
         else:  # 判断分支
             logger.info("WSKEY格式错误\n--------------------\n")  # 标准日志输出
-    logger.info("执行完成\n--------------------")  # 标准日志输出
+    logger.info("\n执行完成\n--------------------")  # 标准日志输出
     sys.exit(0)  # 脚本退出
     # Enjoy
