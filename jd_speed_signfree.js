@@ -36,7 +36,7 @@ const JD_API_HOST = 'https://api.m.jd.com/';
             $.nickName = '';
             message = '';
             console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
-            msg.push(($.nickName || $.UserName) + ':')
+            //msg.push(($.nickName || $.UserName) + ':')
             first_flag = true
             await sign_all()
         }
@@ -96,21 +96,20 @@ function query() {
                     if (data?.success == true) {
                         if (!$.signFreeOrderInfoList) {
                             console.log("没有需要签到的商品,请到京东极速版[签到免单]购买商品");
-                            msg.push("没有需要签到的商品,请到京东极速版[签到免单]购买商品")
+                            //msg.push("没有需要签到的商品,请到京东极速版[签到免单]购买商品")
                         } else {
                             $.signFreeOrderInfoList = data.data.signFreeOrderInfoList
                             if (first_flag) {
                                 first_flag = false
                                 console.log("脚本也许随时失效,请注意");
-                                msg.push("脚本也许随时失效,请注意")
                                 if (data.data.risk == false) {
                                     console.log("风控用户,可能有异常");
-                                    msg.push("风控用户,可能有异常")
-                                }
+                                    msg.push(`【京东账号${$.index}】${$.UserName} 风控用户,可能有异常`)
+                                }else msg.push(`【京东账号${$.index}】${$.UserName} 脚本也许随时失效,请注意`)
                             }
                         }
                     }else{
-                        msg.push("signFreeHome 获取失败！")
+                        msg.push(`【京东账号${$.index}】${$.UserName} signFreeHome 获取失败！`)
                         console.error("失败");
                     }
                 }
@@ -140,7 +139,7 @@ function sign(orderId) {
                         msg_temp = $.productName + ' ' + (data.errMsg || '未知错误')
                     }
                     console.log(msg_temp)
-                    msg.push(msg_temp)
+                    //msg.push(msg_temp)
                 }
             } catch (e) {
                 $.logErr(e, resp)
@@ -168,7 +167,7 @@ function cash(orderId) {
                         msg_temp = $.productName + ' ' + (data.errMsg || '未知错误')
                     }
                     console.log(msg_temp)
-                    msg.push(msg_temp)
+                    //msg.push(msg_temp)
                 }
             } catch (e) {
                 $.logErr(e, resp)
