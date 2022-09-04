@@ -129,7 +129,7 @@ let NoNeedCodes = [];
             $.index = i + 1;
             $.isLogin = true;
             $.nickName = '';
-            //await TotalBean();
+            await TotalBean();
             console.log(`\n开始【京东账号${$.index}】${$.nickName || $.UserName}\n`);
             if (!$.isLogin) {
                 $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
@@ -218,6 +218,7 @@ async function turntableFarm() {
         continue
       }
       await lotteryMasterHelp(code);
+		if ($.lotteryMasterHelpRes.helpResult) {
       if ($.lotteryMasterHelpRes.helpResult.code === '0') {
         console.log(`天天抽奖-助力${$.lotteryMasterHelpRes.helpResult.masterUserInfo.nickName}成功\n`)
       } else if ($.lotteryMasterHelpRes.helpResult.code === '11') {
@@ -227,6 +228,7 @@ async function turntableFarm() {
         break;
       }
     }
+		}
     console.log(`天天抽奖次数共-${remainLotteryTimes}次`)
     //抽奖
     if (remainLotteryTimes > 0) {
