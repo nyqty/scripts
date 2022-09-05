@@ -13,7 +13,7 @@ cron:30 0 * * * *
 ============Quantumultx===============
 [task_local]
 #9.5~9.20 中秋佳节 情满钜惠
-30 6 * * * * jd_opencardL237.js, tag=9.5~9.20 中秋佳节 情满钜惠, enabled=true
+30 0 * * * * jd_opencardL237.js, tag=9.5~9.20 中秋佳节 情满钜惠, enabled=true
 
 */
 
