@@ -7,7 +7,7 @@ cron:30 0 * * * *
 ============Quantumultx===============
 [task_local]
 #9.5-9.15 洞见山海 诗语未来
-30 4 * * * * jd_djsh.js, tag=9.5-9.15 洞见山海 诗语未来, enabled=true
+30 4 * * * jd_djsh.js, tag=9.5-9.15 洞见山海 诗语未来, enabled=true
 */
 let opencard_toShop = "false"
 const $ = new Env("9.5-9.15 洞见山海 诗语未来");

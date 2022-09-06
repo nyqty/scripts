@@ -19,7 +19,7 @@ cron:30 0 * * * *
 ============Quantumultx===============
 [task_local]
 #9.1-9.30 三元邀新下单有礼
-30 3 * * * * jd_syyx.js, tag=9.1-9.30 三元邀新下单有礼, enabled=true
+30 3 * * * jd_syyx.js, tag=9.1-9.30 三元邀新下单有礼, enabled=true
 
 */
 

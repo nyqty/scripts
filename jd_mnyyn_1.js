@@ -14,7 +14,7 @@ cron:30 2 * * * *
 ============Quantumultx===============
 [task_local]
 #9.1-9.29 云养牛，免费赢好礼
-30 0 * * * * jd_mnyyn.js, tag=9.1-9.29 云养牛，免费赢好礼, enabled=true
+30 0 * * * jd_mnyyn.js, tag=9.1-9.29 云养牛，免费赢好礼, enabled=true
 
 */
 

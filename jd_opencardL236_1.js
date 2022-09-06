@@ -13,7 +13,7 @@ cron:30 0 * * * *
 ============Quantumultx===============
 [task_local]
 #9.5~9.20 99聚划算
-30 5 * * * * jd_opencardL236.js, tag=9.5~9.20 99聚划算, enabled=true
+30 5 * * * jd_opencardL236.js, tag=9.5~9.20 99聚划算, enabled=true
 
 */
 
