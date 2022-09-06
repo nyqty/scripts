@@ -72,23 +72,23 @@ let llgetshare = false;
                       await notify.sendNotify(`${$.name}cookie已失效 - ${$.UserName}`, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`);
                   }
                   continue
-              }
+            }
               message = '';
               subTitle = '';
               option = {};
               $.retry = 0;
-			  llgetshare = false;
+              llgetshare = false;
               await GetCollect();
-			  if(llgetshare){
-				  await $.wait(5000);
-				  lnrun++;				  
-			  }
-			  if(lnrun == 10){
-				  console.log(`\n【访问接口次数达到10次，休息一分钟.....】\n`);
-				  await $.wait(60*1000);
-				  lnrun = 0;
-			  }
+          if(llgetshare){
+            await $.wait(5000);
+            lnrun++;				  
           }
+          if(lnrun == 10){
+            console.log(`\n【访问接口次数达到10次，休息一分钟.....】\n`);
+            await $.wait(60*1000);
+            lnrun = 0;
+          }
+        }
       }
       if (boolneedUpdate) {
           var str = JSON.stringify(TempShareCache, null, 2);
