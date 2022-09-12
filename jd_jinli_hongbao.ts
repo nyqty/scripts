@@ -12,7 +12,7 @@ import {getRandomNumberByRange, getshareCodeHW, o2s, randomString, requireConfig
 let cookie: string = '', res: any = '', UserName: string, UA: string = ''
 let shareCodesSelf: string[] = [], shareCodes: string[] = [], fullCode: string[] = []
 let min: number[] = [0.02, 0.12, 0.3, 0.6, 0.7, 0.8, 1, 2], log: string = '', logIndex: number = 10
-
+//{ids : Array(0), appid: '50087' , sceneid: 'JLHBhPageh5' , uid: '-1'}
 !(async () => {
   let cookiesArr: string[] = await requireConfig(false);
   for (let [index, value] of cookiesArr.entries()) {
