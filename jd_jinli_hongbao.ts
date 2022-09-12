@@ -174,7 +174,7 @@ async function api(fn: string, body: object, retry: number = 0) {
     headers: {
       "Cookie": cookie,
       "origin": "https://h5.m.jd.com",
-      "referer": "https://h5.m.jd.com/babelDiy/Zeus/2NUvze9e1uWf4amBhe1AV6ynmSuH/index.html",
+      "referer": "https://happy.m.jd.com/babelDiy/zjyw/3ugedFa7yA6NhxLN5gw2L3PF9sQC/index.html?asid=476329415",
       'Content-Type': 'application/x-www-form-urlencoded',
       "X-Requested-With": "com.jingdong.app.mall",
       "User-Agent": UA,
