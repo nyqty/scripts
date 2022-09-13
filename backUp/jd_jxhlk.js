@@ -1,15 +1,15 @@
 /*
-#惊喜欢乐砍
-##惊喜欢乐砍 自定义变量 入口惊喜APP我的 惊喜欢乐砍
+#京喜免费领
+##京喜免费领 自定义变量 入口惊喜APP我的 京喜免费领
 export launchid="4559dd7b3f555c9260393166e0674875" ##你的邀请码
 export first="false"
 活动入口:https://st.jingxi.com/sns/202103/20/jxhlk/list.html
 
 [task_local]
-#惊喜欢乐砍
-0 7,15 * * * jd_jxhlk.js, tag=惊喜欢乐砍, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
+#京喜免费领
+0 7,15 * * * jd_jxmfl.js, tag=京喜免费领, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
 */
-const $ = new Env('惊喜欢乐砍');
+const $ = new Env('京喜免费领');
 const notify = $.isNode() ? require('./sendNotify') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
@@ -41,8 +41,8 @@ if ($.isNode()) {
 const JD_API_HOST = 'https://api.m.jd.com/client.action';
 
 !(async () => {
-	console.log('请自行打开京喜APP-惊喜欢乐砍')
-	console.log('活动入口:https://st.jingxi.com/sns/202103/20/jxhlk/list.html')
+	console.log('请自行打开京喜APP-京喜免费领')
+	console.log('活动入口:https://st.jingxi.com/sns/202205/20/jxmfl/list.html')
     console.log('环境变量添加：export launchid="4559dd7b3f555c9260393166e0674875" ##你的邀请码')
     console.log('环境变量添加：export first="false"')
 	console.log('请自行添加环境变量，否则将助力作者，账号太少的可以禁用"')
@@ -338,45 +338,41 @@ async function taskPostUrl(functionId, body) {
     }
 }
 
-
 async function TotalBean() {
     return new Promise(async resolve => {
         const options = {
-            "url": `https://wq.jd.com/user/info/QueryJDUserInfo?sceneval=2`,
-            "headers": {
-                "Accept": "application/json,text/plain, */*",
-                "Content-Type": "application/x-www-form-urlencoded",
-                "Accept-Encoding": "gzip, deflate, br",
+            url: "https://me-api.jd.com/user_new/info/GetJDUserInfoUnion",
+            headers: {
+                Host: "me-api.jd.com",
+                Accept: "*/*",
+                Connection: "keep-alive",
+                Cookie: cookie,
+                "User-Agent": $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('./USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.4.4;14.3;network/4g;Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1"),
                 "Accept-Language": "zh-cn",
-                "Connection": "keep-alive",
-                "Cookie": cookie,
-                "Referer": "https://wqs.jd.com/my/jingdou/my.shtml?sceneval=2",
-                "User-Agent": $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('./USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.4.4;14.3;network/4g;Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1")
+                "Referer": "https://home.m.jd.com/myJd/newhome.action?sceneval=2&ufc=&",
+                "Accept-Encoding": "gzip, deflate, br"
             }
         }
-        $.post(options, (err, resp, data) => {
+        $.get(options, (err, resp, data) => {
             try {
                 if (err) {
-                    console.log(`${JSON.stringify(err)}`)
-                    console.log(`${$.name} API请求失败，请检查网路重试`)
+                    $.logErr(err)
                 } else {
                     if (data) {
                         data = JSON.parse(data);
-                        if (data["retcode"] === 13) {
+                        if (data['retcode'] === "1001") {
                             $.isLogin = false; //cookie过期
                             return;
                         }
-                        if (data["retcode"] === 0) {
-                            $.nickName = (data["base"] && data["base"].nickname) || $.UserName;
-                        } else {
-                            $.nickName = $.UserName;
+                        if (data['retcode'] === "0" && data.data && data.data.hasOwnProperty("userInfo")) {
+                            $.nickName = data.data.userInfo.baseInfo.nickname?data.data.userInfo.baseInfo.nickname:data.data.userInfo.baseInfo.curPin;
                         }
                     } else {
-                        console.log(`京东服务器返回空数据`)
+                        console.log('京东服务器返回空数据');
                     }
                 }
             } catch (e) {
-                $.logErr(e, resp)
+                $.logErr(e)
             } finally {
                 resolve();
             }
