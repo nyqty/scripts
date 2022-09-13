@@ -122,8 +122,50 @@ def check_ck(row):  # 方法 检查 Cookie有效性 使用变量传递 单次调
                 logger.info("JD接口错误码: " + str(res.status_code))  # 标注日志输出
                 return False  # 返回 Bool类型 False
 
+# 返回值 String tokenKey
+def getIsvToken(cookie):
+    headers = {
+        'Host': 'api.m.jd.com',
+        'accept': '*/*',
+        'user-agent': 'okhttp/3.12.1;jdmall;android;version/11.2.5;build/98275',
+        'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
+        #'accept-encoding': 'gzip,deflate',
+        'Cookie': cookie
+    }  # 设置 HTTP头
 
-# 返回值 bool jd_ck
+    url = 'https://api.m.jd.com/client.action?functionId=genToken&clientVersion=11.2.5&build=98275&client=android&partner=xiaomi001'
+    params = {
+        'oaid':'404acfa21b2eb062',
+        'eid':'eidAc123812140sbN6WunRswQc+TE/gidHQxuDelsBO1W/Mw/Vhb1OFO+Pi6g02FYg5oT2pC0kIQR5AW7inK68bZU1wCqJqpOBXQ/Vo+wXxtpqIg5DJ6',
+        'sdkVersion':31,
+        'lang':'zh_CN',
+        'harmonyOs':'0',
+        'networkType':'wifi',
+        'uts':'0f31TVRjBSsE2eDbmyTSaPe4ojWD1OhouZ%2FLv0nIxVF2uoFLwuyK5QDoK3OLxIlS%2FCPobAyYMXK6H0iS0oU3DQLkRZmF5tEhNf6CA18ha3bF1arV6F1MTeTIRi5R0U7SQYkEEUCAcPWBsw5DThaauwlIcAzzKDi6SAM5H4xYU0nQjCFH6LbcE9goOmuHw3YO3oNXf3jaCHmP8WknE7gxnA%3D%3D',
+        'uemps':'0-2',
+        'ext':'%7B%22prstate%22%3A%220%22%2C%22pvcStu%22%3A%221%22%7D',
+        'harmonyOs':'0',
+        'avifSupport':'1',
+        'st':1663048466833,
+        'sign':'95ff2beb98aaefb7a13f46e9c305af66',
+        'sv':'101'
+    }
+
+    data = 'body=%7B%22to%22%3A%22https%253a%252f%252fplogin.m.jd.com%252fjd-mlogin%252fstatic%252fhtml%252fappjmp_blank.html%22%7D&'  # 设置 POST 载荷
+    try:  # 异常捕捉
+        res = requests.post(url=url,params=params, headers=headers, data=data, verify=False,
+                            timeout=10)  # HTTP请求 [POST] 超时 10秒
+        res_json = json.loads(res.text)  # Json模块 取值
+        tokenKey = res_json['tokenKey']  # 取出TokenKey
+    except Exception as err:  # 异常捕捉
+        logger.info("JD_WSKEY接口抛出错误 尝试重试 更换IP")  # 标准日志输出
+        logger.info(str(err))  # 标注日志输出
+        return False, ''  # 返回 -> False[Bool], ''
+    else:  # 判断分支
+        return True,tokenKey  # 传递 True, tokenKey
+        
+
+# 返回值 False[Bool], Wskey
 def getToken(wskey):  # 方法 获取 Wskey转换使用的 Token 由 JD_API 返回 这里传递 wskey
     try:  # 异常捕捉
         url = str(base64.b64decode(url_t).decode()) + 'api/genToken'  # 设置云端服务器地址 路由为 genToken
@@ -155,7 +197,7 @@ def getToken(wskey):  # 方法 获取 Wskey转换使用的 Token 由 JD_API 返�
         return appjmp(wskey, tokenKey)  # 传递 wskey, Tokenkey 执行方法 [appjmp]
 
 
-# 返回值 bool jd_ck
+# 返回值 True[Bool], jd_ck
 def appjmp(wskey, tokenKey):  # 方法 传递 wskey & tokenKey
     wskey = "pt_" + str(wskey.split(";")[0])  # 变量组合 使用 ; 分割变量 拼接 pt_
     if tokenKey == 'xxx':  # 判断 tokenKey返回值
