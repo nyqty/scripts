@@ -129,7 +129,7 @@ Int();
         console.log(`\n\n为以下分享码助力：`)//${JSON.stringify(shareCodes)}\n
         console.log(shareCodes);console.log("\n")
         var millisecond,random,log="",ok_UserNames=[],error_Hot=0,max=5,max_i=-1;
-        for (let i = 0; i < 10 && shareCodes.length; i++) {//cookiesArr.length
+        for (let i = 0; i < cookiesArr.length && shareCodes.length; i++) {
             if (cookiesArr[i]) {
                 cookie = cookiesArr[i];
                 $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
