@@ -18,7 +18,7 @@ let yqm = 'Y1J%2B%2BFA6%2BwKsvX%2BR2C2bDw%3D%3D';//["Y1J%2B%2BFA6%2BwKsvX%2BR2C2
 let zdtx = false //设置为true自动抢提现100
 if (process.env.yqm) {
   yqm = process.env.yqm;
-}
+}else yqm=""
 if (process.env.zdtx) {
   zdtx = process.env.zdtx;
 }
@@ -37,7 +37,7 @@ if ($.isNode()) {
     return;
   }
 
-  for (let i = 0; i < cookiesArr.length; i++) {
+  for (let i = 0; i < cookiesArr.length && yqm; i++) {
     if (cookiesArr[i]) {
       cookie = cookiesArr[i];
       $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
