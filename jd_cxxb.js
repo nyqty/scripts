@@ -1,6 +1,6 @@
 /*
 require
-cron 10 8,16 * * * jd_cxxb.js
+cron 10 9,15 * * * jd_cxxb.js
 */
 
 const CryptoJS = require("crypto-js");
