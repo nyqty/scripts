@@ -1,3 +1,8 @@
+/*
+require
+cron 10 8,16 * * * jd_cxxb.js
+*/
+
 const CryptoJS = require("crypto-js");
 const $ = new Env('穿行寻宝');
 const notify = $.isNode() ? require('./sendNotify') : '';
