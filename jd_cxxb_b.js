@@ -1,5 +1,5 @@
 /*
-cron 0 0-23/4 * * * jd_cxxb.js
+cron "0 0-23/4 * * *" jd_cxxb_b.js, tag:穿行寻宝,移除组队
 */
 
 const CryptoJS = require("crypto-js");
