@@ -23,8 +23,8 @@ if ($.isNode()) {
 }
 const JD_API_HOST = 'https://api.m.jd.com/client.action';
 
-$.shareCodesArr = [];
-let groups = []
+
+let groups=[],g_i=0;
 !(async () => {
     if (!cookiesArr[0]) {
         $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
@@ -82,8 +82,6 @@ let groups = []
         }
     }
     try {
-
-        let groups,g_i=0;
         for (let i = 0; i < cookiesArr.length; i++) {
             if (cookiesArr[i]) {
                 cookie = cookiesArr[i];
@@ -136,7 +134,6 @@ let groups = []
                             res = await collectFriendRecordColor(groups[g_i].mpin)
                             res = await promote_pk_joinGroup(groups[g_i].groupJoinInviteId)
                             if(res && res.data){
-
                                 console.log(`promote_pk_getHomeData:\n${JSON.stringify(res)}`)
                                 console.log('\n当前人数：',groups[g_i].num,"\n")
                                 if (res.data.bizCode === 0) {
@@ -145,14 +142,12 @@ let groups = []
                                     if(groups[g_i].num>=30){
                                         g_i++;
                                     }
-                                    break
                                 } else {
                                     console.log(res.data.bizCode+res.data.bizMsg)
                                 }
                             }else{
                                 //{ code: -40300, msg: '运行环境异常，请您从正规途径参与活动，谢谢~' }
                                 console.log(res)
-                                break
                             } 
                             await $.wait(3000)
                             //res = await promote_pk_getHomeData()
@@ -293,13 +288,13 @@ function promote_getTaskDetail() {
                         data = JSON.parse(data);
                         if (data.code === 0) {
                             if (data.data && data['data']['bizCode'] === 0) {
-								inviteIdss = data.data.result.inviteId
-								if (!inviteIdss) {
+								let 助力码 = data.data.result.inviteId
+								if (!助力码) {
                                     console.log("黑号")
                                     resolve("")
                                 }
-								console.log(inviteIdss)
-                                inviteId.push(data.data.result.inviteId)
+								console.log('助力码：',助力码)
+                                inviteId.push(助力码)
                                 resolve(data.data.result)
                             }
                         } else {
