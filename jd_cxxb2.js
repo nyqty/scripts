@@ -1,6 +1,5 @@
 /*
-require
-cron 10 9,15 * * * jd_cxxb.js
+cron 0 0-23/4 * * * jd_cxxb.js
 */
 
 const CryptoJS = require("crypto-js");
@@ -35,7 +34,7 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
         return;
     }
     const helpSysInfoArr = []
-    for (let i = 0; i <120; i++) {
+    for (let i = 60; i < cookiesArr.length; i++) {
         if (cookiesArr[i]) {
             cookie = cookiesArr[i];
             wxCookie = wxCookieArr[i] ?? "";
@@ -128,13 +127,14 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
         //}
         // $.joyytoken = ""
         // cookie = cookie.replace(/joyytoken=\S+?;/, "joyytoken=;")
+        /*
         if (teamPlayerAutoTeam.hasOwnProperty($.UserName)) {
             const { groupJoinInviteId, groupNum, groupName } = teamLeaderArr[teamPlayerAutoTeam[$.UserName]]
             console.log(`${groupName}人数：${groupNum}，正在去加入他的队伍...`)
             await joinTeam(groupJoinInviteId)
             teamLeaderArr[teamPlayerAutoTeam[$.UserName]].groupNum += 1
             await $.wait(2000)
-        }
+        }*/
     }
 })()
     .catch((e) => {
@@ -177,6 +177,7 @@ async function travel() {
                 await doAppTask()
             }
 
+            /*
             //console.log("\n去看看战队\n")
             const pkHomeData = await doApi("pk_getHomeData")
 
@@ -195,6 +196,7 @@ async function travel() {
                     teamPlayerAutoTeam[$.UserName] = n
                 }
             }
+            */
             //if (puzzleFlag) {
             //    console.log("\n去做做拼图任务")
             //    const { doPuzzle } = require('./jd_travel_puzzle')
