@@ -1,10 +1,10 @@
 /*
 建议手动先点开一次
-cron "1 8,14 * * *" jd_19E_team.js, tag:快速升级，跑一次即可
+cron "1 8,14 * * *" jd_cxxb_team.js, tag:快速升级，跑一次即可
 */
 
 
-const $ = new Env('热爱奇旅升级');
+const $ = new Env('穿行寻宝-助力组队');
 
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 
@@ -32,6 +32,9 @@ let groups = []
     }
     console.log('\n仅升级，快速跑完\n')
     await getUA()
+
+
+    let 队长用户名=[],队伍数量=cookiesArr.length>0?Math.ceil(cookiesArr.length/30):0;
     for (let i = 0; i < cookiesArr.length; i++) {
         if (cookiesArr[i]) {
             cookie = cookiesArr[i];
@@ -41,7 +44,6 @@ let groups = []
             $.nickName = '';
             message = '';
             console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
-            //   await shareCodesFormat()
             $.newShareCodes = []
             await get_secretp()
             if ($.huobao == false) {
@@ -49,23 +51,24 @@ let groups = []
             }
             await promote_collectAtuoScore() //定时领取
             let res
-            /*
-            //此处修改组队人数 默认前6组队
-            if (i < 6) {
+            
+            //此处修改组队人数
+            if ( 队伍数量>groups.length ) {
                 res = await promote_pk_getHomeData()
-                if (res.data.result.groupInfo.memberList) {
+                if (res && res.data?.result?.groupInfo?.memberList) {
                     let memberCount = res.data.result.groupInfo.memberList.length
                     console.log('当前队伍有', memberCount, '人')
                     let groupJoinInviteId = ""
-
                     if (memberCount < 30) {
+                        //队伍数量--;
+                        队长用户名.push($.UserName);
                         groupJoinInviteId = res.data.result.groupInfo.groupJoinInviteId
                         res = await getEncryptedPinColor()
-                        groups.push({ mpin: res.result, groupJoinInviteId: groupJoinInviteId })
+                        groups.push({ mpin: res.result, groupJoinInviteId: groupJoinInviteId,num:memberCount  })
                         console.log('队伍未满:', groupJoinInviteId)
                     }
                 }
-            }*/
+            }
             try {
                 res = await promote_getTaskDetail()
                 await promote_sign()
@@ -79,7 +82,9 @@ let groups = []
         }
     }
     try {
-        for (let i = 0; i < cookiesArr.length && 0; i++) {
+
+        let groups,g_i=0;
+        for (let i = 0; i < cookiesArr.length; i++) {
             if (cookiesArr[i]) {
                 cookie = cookiesArr[i];
                 $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
@@ -93,47 +98,66 @@ let groups = []
                     console.log(`火爆`); continue;
                 }
                 await $.wait(1000)
-                /*
+                
                 let res,bizCode
                 for (let j = 0; j < inviteId.length; j++) {
                     console.log(`\n开始助力 【${inviteId[j]}】`)
                     res = await help(inviteId[j])
-                    bizCode = res['data']['bizCode'];
-                    if (res['data']['bizCode'] === 0) {
-                        console.log('助力成功,获得：', parseFloat(res.data.result.acquiredScore), '金币')
-                        if (res.data.result?.redpacket?.value) console.log('🧧', parseFloat(res.data.result?.redpacket?.value))
-                        //console.log('助力结果：'+res.data.bizMsg)
-                    }else if (bizCode==108) { //无助力
-                        console.log(res.data.bizMsg); break 
-                    }else if (bizCode==-201) {//好友人气爆棚，不需要助力啦~
-                        console.log(res.data.bizMsg);
-                        inviteId.splice(j, 1)
-                        j--
-                        continue
-                    }else if (bizCode==-1002) {//运行环境异常，请您从正规途径参与活动，谢谢~
+                    if(res && res['data']){
+                        bizCode = res['data']['bizCode'];
+                        if (bizCode === 0) {
+                            console.log('助力成功,获得：', parseFloat(res.data.result.acquiredScore), '金币')
+                            if (res.data.result?.redpacket?.value) console.log('🧧', parseFloat(res.data.result?.redpacket?.value))
+                            //console.log('助力结果：'+res.data.bizMsg)
+                        }else if (bizCode==108) { //无助力
+                            console.log(res.data.bizMsg); break 
+                        }else if (bizCode==-201) {//好友人气爆棚，不需要助力啦~
+                            console.log(res.data.bizMsg);
+                            inviteId.splice(j, 1)
+                            j--
+                            continue
+                        }else if (bizCode==-1002) {//运行环境异常，请您从正规途径参与活动，谢谢~
+                            break;
+                        }else { console.log(res.data.bizCode+res.data.bizMsg) }
+                        await $.wait(1000)
+                    }else{
+                        //{ code: -40300, msg: '运行环境异常，请您从正规途径参与活动，谢谢~' }
+                        console.log(res);
                         break;
-                    }else { console.log(res.data.bizCode+res.data.bizMsg) }
-                    await $.wait(1000)
-                }
-                */
-                res = await promote_pk_getHomeData()
-                if (res.data.result.groupInfo.memberList) {
-                    let memberCount = res.data.result.groupInfo.memberList.length
-                    if (memberCount === 1) {
-                        for (let group of groups) {
-                            console.log('\n开始加入队伍：', group.groupJoinInviteId)
-                            res = await collectFriendRecordColor(group.mpin)
-                            res = await promote_pk_joinGroup(group.groupJoinInviteId)
-                            await $.wait(3000)
-                            if (res.data.bizCode === 0) {
-                                console.log('加入队伍成功')
-                                break
-                            } else {
-                                console.log(res.data.bizCode+res.data.bizMsg)
-                            }
-                            res = await promote_pk_getHomeData()
-                        }
                     }
+                }
+                //加战队
+                if(groups.length>g_i){
+                    res = await promote_pk_getHomeData()
+                    if (res?.data?.result?.groupInfo?.memberList) {
+                        let memberCount = res.data.result.groupInfo.memberList.length
+                        if (memberCount === 1 && 队长用户名.indexOf($.UserName)===-1 ) {
+                            console.log('\n开始加入队伍：', groups[g_i].groupJoinInviteId)
+                            res = await collectFriendRecordColor(groups[g_i].mpin)
+                            res = await promote_pk_joinGroup(groups[g_i].groupJoinInviteId)
+                            if(res && res.data){
+
+                                console.log(`promote_pk_getHomeData:\n${JSON.stringify(res)}`)
+                                console.log('\n当前人数：',groups[g_i].num,"\n")
+                                if (res.data.bizCode === 0) {
+                                    groups[g_i].num++;
+                                    console.log('加入队伍成功')
+                                    if(groups[g_i].num>=30){
+                                        g_i++;
+                                    }
+                                    break
+                                } else {
+                                    console.log(res.data.bizCode+res.data.bizMsg)
+                                }
+                            }else{
+                                //{ code: -40300, msg: '运行环境异常，请您从正规途径参与活动，谢谢~' }
+                                console.log(res)
+                                break
+                            } 
+                            await $.wait(3000)
+                            //res = await promote_pk_getHomeData()
+                        }
+                    }else console.log(`promote_pk_getHomeData:\n${JSON.stringify(res)}`)
                     await $.wait(3000)
                 }
             }
@@ -211,6 +235,7 @@ function promote_sign() {
                             }
                         } else {
                             console.log(`签到失败:${JSON.stringify(data)}\n`)
+                            //签到失败:{"code":-40300,"msg":"运行环境异常，请您从正规途径参与活动，谢谢~"}
                             resolve(false)
                         }
                     }
@@ -241,6 +266,7 @@ function promote_collectAtuoScore() {
                                 console.log(`成功领取${data.data.result.produceScore}个币`)
                             }
                         } else {
+                            //签到失败:{"code":-40300,"msg":"运行环境异常，请您从正规途径参与活动，谢谢~"}
                             //console.log(`\n\nsecretp失败:${JSON.stringify(data)}\n`)
                         }
                     }
@@ -362,7 +388,6 @@ function promote_raise() {
                         data = JSON.parse(data);
                         if (data.code === 0) {
                             if (data.data && data['data']['bizCode'] === 0) {
-
                                 console.log(`升级成功`)
                                 resolve(true)
                             } else {
@@ -370,6 +395,7 @@ function promote_raise() {
                             }
                         } else {
                             console.log(`升级失败:${JSON.stringify(data)}\n`)
+                            //签到失败:{"code":-40300,"msg":"运行环境异常，请您从正规途径参与活动，谢谢~"}
                             resolve(false)
                         }
                     }
