@@ -260,6 +260,7 @@ function promote_pk_collectPkExpandScore(inviteId) {
                                     resolve(2)
                                     break;
                                 case -9://您今天的助力次数已用完|今天不能再助力啦~
+                                case -40300://运行环境异常，请您从正规途径参与活动，谢谢~
                                     console.log(`助力:${data['data']['bizMsg']}`)
                                     resolve(3)
                                     break;
