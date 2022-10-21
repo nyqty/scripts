@@ -138,7 +138,7 @@ let groups=[],g_i=0;
                                 console.log('\n当前人数：',groups[g_i].num,"\n")
                                 if (res.data.bizCode === 0) {
                                     groups[g_i].num++;
-                                    console.log('加入队伍成功')
+                                    console.log('加入队伍成功+1')
                                     if(groups[g_i].num>=30){
                                         g_i++;
                                     }
