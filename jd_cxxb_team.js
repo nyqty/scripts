@@ -46,12 +46,6 @@ let groups=[],g_i=0;
             console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
             $.newShareCodes = []
             document.cookie=cookie;
-            /* await get_secretp()
-            if ($.huobao == false) {
-                console.log(`火爆`); continue;
-            }
-            await promote_collectAtuoScore() //定时领取
-            */
             let res
             
             //此处修改组队人数
@@ -134,38 +128,6 @@ let groups=[],g_i=0;
     .finally(() => {
         $.done();
     })
-
-function promote_collectAtuoScore() {
-    let random=window.smashUtils.getRandom(8);
-    let log = get_log(random);
-    let body = {"random":random,"log":log}
-    return new Promise((resolve) => {
-        $.post(taskPostUrl("promote_collectAutoScore", body), async(err, resp, data) => {
-            try {
-                if (err) {
-                    console.log(`${JSON.stringify(err)}`)
-                    console.log(`${$.name} API请求失败，请检查网路重试`)
-                } else {
-                    if (safeGet(data)) {
-                        data = JSON.parse(data);
-                        if (data.code === 0) {
-                            if (data.data && data['data']['bizCode'] === 0) {
-                                console.log(`成功领取${data.data.result.produceScore}个币`)
-                            }
-                        } else {
-                            //签到失败:{"code":-40300,"msg":"运行环境异常，请您从正规途径参与活动，谢谢~"}
-                            console.log(`promote_collectAutoScore失败:\n${JSON.stringify(data)}\n`)
-                        }
-                    }
-                }
-            } catch (e) {
-                $.logErr(e, resp)
-            } finally {
-                resolve(data);
-            }
-        })
-    })
-}
 
 function promote_pk_getHomeData(inviteId='') {
     return new Promise((resolve) => {
