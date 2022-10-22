@@ -2,7 +2,7 @@
 建议手动先点开一次
 cron "1 8 * * *" jd_cxxb_team.js, tag:快速升级，跑一次即可
 */
-var {window,get_log,Env}=require('./JDcxxb.log.min.js');//{window,document,navigator,screen,get_log,GetRandomNum,Env,get_log,GetRandomNum,Env}
+var {window,document,get_log,Env}=require('./JDcxxb.log.min.js');//{window,document,navigator,screen,get_log,GetRandomNum,Env,get_log,GetRandomNum,Env}
 
 const $ = new Env('穿行寻宝-助力组队');
 
