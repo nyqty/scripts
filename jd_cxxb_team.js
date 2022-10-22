@@ -119,9 +119,11 @@ let groups=[],g_i=0;
                         }else console.log('跳过组队！')
                     }else console.log(`promote_pk_getHomeData:\n${JSON.stringify(res)}`)
                     await $.wait(3000)
-                }
+                }else break;
             }
         }
+        console.log('组队完成！')
+
     } catch (e) {
         $.log(`❌ ${$.name}, 失败! 原因: `, e)
     }
