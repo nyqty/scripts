@@ -151,7 +151,7 @@ async function travel() {
     } catch (e) {
         console.log(e)
     }
-
+    /*
     try {
         $.WxUA = getWxUA()
         const WxHomeData = await doWxApi("getHomeData", { inviteId: "" })
@@ -171,7 +171,7 @@ async function travel() {
         await doJrAppTask()
     } catch (e) {
         console.log(e)
-    }
+    }*/
 }
 
 try {
