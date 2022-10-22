@@ -1,6 +1,7 @@
 /*
 cron "0 0-23/4 * * *" jd_cxxb_a.js, tag:穿行寻宝,移除组队
 */
+var {window,get_log,Env}=require('./JDcxxb.log.min.js');//{window,document,navigator,screen,get_log,GetRandomNum,Env,get_log,GetRandomNum,Env}
 
 const CryptoJS = require("crypto-js");
 const $ = new Env('穿行寻宝');
