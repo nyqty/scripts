@@ -35,8 +35,6 @@ let groups=[],g_i=0;
 
 
     let 队长用户名=[],队伍数量=cookiesArr.length>0?Math.ceil(cookiesArr.length/30):0;
-
-    队伍数量=2;
     for (let i = 0; i < cookiesArr.length; i++) {
         if (cookiesArr[i]) {
             cookie = cookiesArr[i];
