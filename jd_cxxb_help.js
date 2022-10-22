@@ -2,7 +2,7 @@
 建议手动先点开一次
 cron "1 15 * * *" jd_cxxb_help.js, tag:快速签到升级，助力跑一次即可
 */
-var {window,document,get_log,Env}=require('./JDcxxb.log.min.js');//{window,document,navigator,screen,get_log,GetRandomNum,Env,get_log,GetRandomNum,Env}
+var {window,document,get_log,Env}=require('./utils/JDcxxb.log.min.js');//{window,document,navigator,screen,get_log,GetRandomNum,Env,get_log,GetRandomNum,Env}
 
 const $ = new Env('穿行寻宝-助力');
 
@@ -75,7 +75,7 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
                 }
                 await $.wait(1000)*/
                 
-                let helpRes,bizCode
+                let helpRes,bizCode,bizMsg
                 for (let j = 0; j < inviteId.length; j++) {
                     console.log(`\n开始助力 【${inviteId[j]}】`)
                     helpRes = await help(inviteId[j])
@@ -88,17 +88,18 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
                     if(helpRes && helpRes['data']){
                         helpRes = helpRes['data'];
                         bizCode = helpRes['bizCode'];
+                        bizMsg = helpRes.bizMsg;
                         if (helpRes?.result?.score) {//bizCode === 0
                             const { alreadyAssistTimes, maxAssistTimes, maxTimes, score, times } = helpRes.result
                             const c = maxAssistTimes - alreadyAssistTimes
                             console.log(`互助成功，获得${score}金币，他还需要${maxTimes - times}人完成助力，你还有${maxAssistTimes - alreadyAssistTimes}次助力机会`)
                             if (!c) break
-                            if (helpRes.data.result?.redpacket?.value) console.log('🧧', parseFloat(helpRes.data.result?.redpacket?.value))
-                            //console.log('助力结果：'+helpRes.data.bizMsg)
+                            if (helpRes.result?.redpacket?.value) console.log('🧧', parseFloat(helpRes.result?.redpacket?.value))
+                            //console.log('助力结果：'+bizMsg)
                         }else if (bizCode==108) { //无助力
-                            console.log(helpRes.data.bizMsg); break 
+                            console.log(bizMsg); break 
                         }else if (bizCode==-201) {//好友人气爆棚，不需要助力啦~
-                            console.log(helpRes.data.bizMsg);
+                            console.log(bizMsg);
                             inviteId.splice(j, 1)
                             //$.newHelpCodeArr = $.newHelpCodeArr.filter(x => x.pin !== pin)
                             j--
@@ -106,7 +107,7 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
                         }else if (bizCode==-1002) {//运行环境异常，请您从正规途径参与活动，谢谢~
                             break;
                         }else {
-                            console.log(`互助失败，原因：${helpRes?.bizMsg}（${bizCode}）`)
+                            console.log(`互助失败，原因：${bizMsg}（${bizCode}）`)
                             if (![0, -201, -202].includes(bizCode)) break
                         }
                         await $.wait(1000)
