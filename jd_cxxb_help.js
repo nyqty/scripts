@@ -1,6 +1,6 @@
 /*
 建议手动先点开一次
-cron "1 15 * * *" jd_cxxb_help.js, tag:快速签到升级，助力跑一次即可
+cron "10 9 * * *" jd_cxxb_help.js, tag:快速签到升级，助力跑一次即可
 */
 var {window,document,get_log,Env}=require('./utils/JDcxxb.log.min.js');//{window,document,navigator,screen,get_log,GetRandomNum,Env,get_log,GetRandomNum,Env}
 
