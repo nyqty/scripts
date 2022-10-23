@@ -151,6 +151,49 @@ async function travel() {
     } catch (e) {
         console.log(e)
     }
+
+
+
+    console.log("做wx任务")
+    $.mediaType ="wx"
+    for (let j=1;j<=2;j++){
+        await promote_getTaskDetail()
+        let taskList = $.taskVos
+        for (let i=j;i<taskList.length;i++){
+            let task = taskList[i]
+            let taskId = task.taskId
+            let taskType = task.taskType
+            if (task.status ==2 ){
+                continue
+            }
+            switch(taskType) {
+                case 0:
+                    await taskType23(taskId,task.simpleRecordInfoVo);
+                    break;
+                case 3:
+                    await taskType26(taskId,task.maxTimes,task.shoppingActivityVos);
+                    break;                     
+                case 5:
+                    await taskType05(taskId);
+                    break;
+                case 7:
+                    await taskType07(taskId,task.maxTimes,task.browseShopVo);
+                    break;
+                case 9:
+                    await taskType07(taskId,task.maxTimes,task.shoppingActivityVos);
+                    break;
+                case 23:
+                    await taskType23(taskId,task.simpleRecordInfoVo);
+                    break;
+                case 26:
+                    await taskType26(taskId,task.maxTimes,task.shoppingActivityVos);
+                    break;                        
+                default:
+                    console.log(taskId,taskType)
+            }
+            await sleep(3000)
+        }
+    }
     /*
     try {
         $.WxUA = getWxUA()
@@ -513,6 +556,7 @@ async function doApi(functionId, prepend = {}, append = {}, needSs = false, getL
         //ss: needSs ? JSON.stringify(getSs($.secretp || "E7CRMoDURcyS-_XDYYuo__Ai9oE")) : undefined,
         ...append,
     }
+    needSs=true
     if(needSs){
         body.random=window.smashUtils.getRandom(8);
         body.log = get_log(body.random);
@@ -805,6 +849,286 @@ function safeGet(data) {
         return false;
     }
 }
+
+
+// 种草城 做4次
+async function taskType05(taskId,maxTimes){
+    let extraBody01 = {
+        "taskId":taskId+"",
+    }
+    await promote_getFeedDetail(extraBody01,taskId)
+    let task = $.taskVos2[0]
+    let subTasks = []
+    if (taskId == 4){
+        subTasks = task.browseShopVo        
+    }else{
+        subTasks = task.productInfoVos
+    }
+    
+    for (let i=0;i<maxTimes;i++){
+        let task = subTasks[i]
+        let taskToken = task.taskToken
+        console.log(task.shopName)
+        let extraBody01 = {
+            "taskId":taskId,
+            "taskToken":taskToken,
+            "actionType":1,
+        }
+        await promote_collectScore(extraBody01)
+        await sleep(3000)
+    }
+}
+
+// 浏览并关注8s
+async function taskType07(taskId,maxTimes,subTasks){
+    for (let i=0;i<maxTimes;i++){
+        let task = subTasks[i]
+        let taskToken = task.taskToken
+        if (task.status == 2 ){
+            continue
+        }
+        console.log(`${task.shopName||task.title}`)
+        let extraBody01 = {
+            "taskId":taskId,
+            "taskToken":taskToken,
+            "actionType":1,
+        }
+        await promote_collectScore(extraBody01)
+        await sleep(10000)
+        let extraBody02 = {
+            "taskId":taskId,
+            "taskToken":taskToken,
+            "actionType":0,
+        }
+        await promote_collectScore(extraBody02)
+        await sleep(3000)
+    }
+}
+// 入会并浏览  不开卡
+async function taskType21(taskId,subTasks){
+    for (let i=0;i<subTasks.length;i++){
+        let task = subTasks[i]
+        let taskToken = task.taskToken
+        if (task.status == 2 ){
+            continue
+        }
+        console.log(task.title)
+        let extraBody01 = {
+            "taskId":taskId,
+            "taskToken":taskToken,
+            "actionType":1,
+        }
+        await promote_collectScore(extraBody01)
+        await sleep(3000)
+    }
+}
+// 浏览店铺墙
+async function taskType23(taskId,subTasks){
+    let taskToken = subTasks.taskToken
+    console.log(`${subTasks.taskName||subTasks.title}`)
+    let extraBody01 = {
+        "taskId":taskId,
+        "taskToken":taskToken,
+        "actionType":1,
+    }
+    await promote_collectScore(extraBody01)
+    await sleep(10000)
+    let extraBody02 = {
+        "taskId":taskId,
+        "taskToken":taskToken,
+        "actionType":0,
+    }
+    await promote_collectScore(extraBody02)
+    await sleep(3000)
+    
+}
+
+// 浏览并关注
+async function taskType26(taskId,maxTimes,subTasks){
+    for (let i=0;i<maxTimes;i++){
+        let task = subTasks[i]
+        let taskToken = task.taskToken
+        if (task.status == 2 ){
+            continue
+        }
+        console.log(task.title)
+        let extraBody01 = {
+            "taskId":taskId,
+            "taskToken":taskToken,
+            "actionType":1,
+        }
+        await promote_collectScore(extraBody01)
+        await sleep(3000)
+    }
+}
+// 主任务
+function promote_getTaskDetail(){
+    let random=window.smashUtils.getRandom(8);
+    let body = {"random":random,"log":get_log(random)}
+    return new Promise((resolve) => {
+        $.post(taskPostUrl("promote_getTaskDetail", body), async(err, resp, data) => {
+            try {
+                if (err) {
+                    console.log(`${JSON.stringify(err)}`)
+                    console.log(`${$.name} API请求失败，请检查网路重试`)
+                } else {
+                    if (safeGet(data)) {
+                        data = JSON.parse(data);
+                        if (data.code === 0) {
+                            $.taskVos = data.data.result.taskVos
+                            $.lotteryTaskVos = data.data.result.lotteryTaskVos
+                        } else {
+                            console.log(`\n${JSON.stringify(data)}\n`)
+                        }
+                    }
+                }
+            } catch (e) {
+                $.logErr(e, resp)
+            } finally {
+                resolve(data);
+            }
+        })
+    })
+}
+
+// 子任务
+function promote_getFeedDetail(extraBody,taskId){
+    let random=window.smashUtils.getRandom(8);
+    let body = {"random":random,"log":get_log(random),...extraBody}
+    return new Promise((resolve) => {
+        $.post(taskPostUrl("promote_getFeedDetail", body), async(err, resp, data) => {
+            try {
+                if (err) {
+                    console.log(`${JSON.stringify(err)}`)
+                    console.log(`${$.name} API请求失败，请检查网路重试`)
+                } else {
+                    if (safeGet(data)) {
+                        data = JSON.parse(data);
+                        if (data.code === 0) {
+                            if (taskId == 4){
+                                $.taskVos2 = data.data.result.taskVos
+                            }else{
+                                $.taskVos2 = data.data.result.addProductVos
+                            }
+                            
+                        } else {
+                            console.log(`\n${JSON.stringify(data)}\n`)
+                        }
+                    }
+                }
+            } catch (e) {
+                $.logErr(e, resp)
+            } finally {
+                resolve(data);
+            }
+        })
+    })
+}
+
+// 执行任务
+function promote_collectScore(extraBody) {
+    let random=window.smashUtils.getRandom(8);
+    let body = {"random":random,"log":get_log(random),...extraBody}
+    return new Promise((resolve) => {
+        $.post(taskPostUrl("promote_collectScore", body), async(err, resp, data) => {
+            try {
+                if (err) {
+                    console.log(`${JSON.stringify(err)}`)
+                    console.log(`${$.name} API请求失败，请检查网路重试`)
+                } else {
+                    if (safeGet(data)) {
+                        data = JSON.parse(data);
+                        if (data.code === 0) {
+                            if (data.data && data['data']['bizCode'] === 0 && data.data.result.score) {
+                                console.log(`成功领取${data.data.result.score}个币`)
+                            }
+                        } else {
+                            //签到失败:{"code":-40300,"msg":"运行环境异常，请您从正规途径参与活动，谢谢~"}
+                            console.log(`\n${JSON.stringify(data)}\n`)
+                        }
+                    }
+                }
+            } catch (e) {
+                $.logErr(e, resp)
+            } finally {
+                resolve(data);
+            }
+        })
+    })
+}
+
+// 开宝箱
+function promote_getBadgeAward(...extraBody){
+    let random=window.smashUtils.getRandom(8);
+    let body = {"random":random,"log":get_log(random),...extraBody}
+    return new Promise((resolve) => {
+        $.post(taskPostUrl("promote_getBadgeAward", body), async(err, resp, data) => {
+            try {
+                if (err) {
+                    console.log(`${JSON.stringify(err)}`)
+                    console.log(`${$.name} API请求失败，请检查网路重试`)
+                } else {
+                    if (safeGet(data)) {
+                        data = JSON.parse(data);
+                        if (data.code === 0) {
+                            if (data.data && data['data']['bizCode'] === 0 && data.data.result.score) {
+                                console.log(`成功领取${data.data.result.score}个币`)
+                            }
+                        } else {
+                            //签到失败:{"code":-40300,"msg":"运行环境异常，请您从正规途径参与活动，谢谢~"}
+                            console.log(`\n${JSON.stringify(data)}\n`)
+                        }
+                    }
+                }
+            } catch (e) {
+                $.logErr(e, resp)
+            } finally {
+                resolve(data);
+            }
+        })
+    })
+}
+
+
+function taskPostUrl(functionId, body) {
+    let bodyMain = ""
+    let header = {}
+    if ($.mediaType == "app"){
+        bodyMain = `functionId=${functionId}&body=${escape(JSON.stringify(body))}&client=m&clientVersion=-1&appid=signed_wh5`
+        header ={
+            'Cookie': cookie,
+            'Host': 'api.m.jd.com',
+            'Connection': 'keep-alive',
+            'Content-Type': 'application/x-www-form-urlencoded',
+            "User-Agent": $.UA,
+            'referer': 'https://wbbny.m.jd.com',
+            'Origin': 'https://wbbny.m.jd.com',
+            'Accept-Language': 'zh-cn',
+            'Accept-Encoding': 'gzip, deflate, br',
+        }
+    }else if($.mediaType == "wx"){
+        bodyMain =`functionId=${functionId}&body=${escape(JSON.stringify(body))}&client=xcx&clientVersion=-1&appid=signed_mp&loginType=2&loginWQBiz=dacu`        
+        header ={
+            'Cookie': cookie,
+            'Host': 'api.m.jd.com',
+            'Connection': 'keep-alive',
+            'Content-Type': 'application/x-www-form-urlencoded',
+            "User-Agent": $.UA,
+            'referer': 'https://servicewechat.com/wx91d27dbf599dff74/570/page-frame.html',
+            'wxreferer': 'http://wq.jd.com/wxapp/pages/loveTravel/pages/index/index',
+            'Accept-Language': 'zh-cn',
+            'Accept-Encoding': 'gzip, deflate, br',
+        }    
+    }
+    return {
+        url: `${JD_API_HOST}?functionId=${functionId}`,
+        body: bodyMain,
+        headers: header
+    }
+}
+
+const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay))
+
 
 function getUA() {
     $.UUID = randomString(40)
