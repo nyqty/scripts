@@ -8,7 +8,7 @@
 cron "6 0 0-23/8 * * *" script-path=jd_speed_sign4.js,tag=京东极速版-4
 */
 
-const $ = new Env('京东极速版-1');
+const $ = new Env('京东极速版-4');
 
 const notify = $.isNode() ? require('./sendNotify') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;

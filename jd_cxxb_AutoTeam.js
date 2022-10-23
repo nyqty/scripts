@@ -1,17 +1,16 @@
 /*
 建议手动先点开一次
-cron "1 8 * * *" jd_cxxb_team.js, tag:快速升级，跑一次即可
+cron "1 8,12 * * *" jd_cxxb_team.js, tag:自动组队
 */
 var {window,document,get_log,Env}=require('./utils/JDcxxb.log.min.js');//{window,document,navigator,screen,get_log,GetRandomNum,Env,get_log,GetRandomNum,Env}
 
-const $ = new Env('穿行寻宝-助力组队');
+const $ = new Env('穿行寻宝-自动组队');
 
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 
 let cookiesArr = [],
     cookie = '';
-let secretp = '',
-    inviteId = []
+let res
 
 if ($.isNode()) {
     Object.keys(jdCookieNode).forEach((item) => {
@@ -46,7 +45,6 @@ let groups=[],g_i=0;
             console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
             $.newShareCodes = []
             document.cookie=cookie;
-            let res
             
             //此处修改组队人数
             if ( 队伍数量>groups.length ) {
@@ -63,64 +61,49 @@ let groups=[],g_i=0;
                         groups.push({ mpin: res.result, groupJoinInviteId: groupJoinInviteId,num:memberCount  })
                         console.log('队伍未满:', groupJoinInviteId)
                     }
+                }else{
+                    console.log('错误:', res)
                 }
+            }else if(groups.length>g_i){
+                res = await promote_pk_getHomeData()
+                if (res?.data?.result?.groupInfo?.memberList) {
+                    let memberCount = res.data.result.groupInfo.memberList.length
+                    if (memberCount === 1) {
+                        console.log('\n开始加入队伍：', groups[g_i].groupJoinInviteId)
+                        res = await collectFriendRecordColor(groups[g_i].mpin)
+                        res = await promote_pk_joinGroup(groups[g_i].groupJoinInviteId)
+                        if(res && res.data){
+                            console.log(`promote_pk_joinGroup:\n${JSON.stringify(res)}`)
+                            console.log('\n当前人数：',groups[g_i].num,"\n")
+                            if (res.data.bizCode === 0) {
+                                groups[g_i].num++;
+                                console.log('加入队伍成功+1')
+                                if(groups[g_i].num>=30) g_i++;
+                            }else if(res.data.bizCode === -3){//来晚了|该团队已经满员了
+                                console.log(res.data.bizMsg);
+                                g_i++;
+                                if(groups.length>g_i){
+                                    i--;
+                                }
+                                //continue;
+                            } else {
+                                console.log(res.data.bizCode+res.data.bizMsg)
+                            }
+                        }else{
+                            //{ code: -40300, msg: '运行环境异常，请您从正规途径参与活动，谢谢~' }
+                            console.log(res)
+                        } 
+                        await $.wait(3000)
+                        //res = await promote_pk_getHomeData()
+                    }else console.log('跳过组队！')
+                }else console.log(`promote_pk_getHomeData:\n${JSON.stringify(res)}`)
+                await $.wait(3000)
             }else break;
         }
     }
-    try {
-        for (let i = 0; i < cookiesArr.length; i++) {
-            if (cookiesArr[i]) {
-                cookie = cookiesArr[i];
-                $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
-                $.index = i + 1;
-                $.isLogin = true;
-                $.nickName = '';
-                message = '';
-                if($.UserName && 队长用户名.indexOf($.UserName)!==-1) continue;
-                console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
-                if(groups.length>g_i){
-                    document.cookie=cookie;
-                    res = await promote_pk_getHomeData()
-                    if (res?.data?.result?.groupInfo?.memberList) {
-                        let memberCount = res.data.result.groupInfo.memberList.length
-                        if (memberCount === 1) {
-                            console.log('\n开始加入队伍：', groups[g_i].groupJoinInviteId)
-                            res = await collectFriendRecordColor(groups[g_i].mpin)
-                            res = await promote_pk_joinGroup(groups[g_i].groupJoinInviteId)
-                            if(res && res.data){
-                                console.log(`promote_pk_joinGroup:\n${JSON.stringify(res)}`)
-                                console.log('\n当前人数：',groups[g_i].num,"\n")
-                                if (res.data.bizCode === 0) {
-                                    groups[g_i].num++;
-                                    console.log('加入队伍成功+1')
-                                    if(groups[g_i].num>=30) g_i++;
-                                }else if(res.data.bizCode === -3){//来晚了|该团队已经满员了
-                                    console.log(res.data.bizMsg);
-                                    g_i++;
-                                    if(groups.length>g_i){
-                                        i--;
-                                    }
-                                    //continue;
-                                } else {
-                                    console.log(res.data.bizCode+res.data.bizMsg)
-                                }
-                            }else{
-                                //{ code: -40300, msg: '运行环境异常，请您从正规途径参与活动，谢谢~' }
-                                console.log(res)
-                            } 
-                            await $.wait(3000)
-                            //res = await promote_pk_getHomeData()
-                        }else console.log('跳过组队！')
-                    }else console.log(`promote_pk_getHomeData:\n${JSON.stringify(res)}`)
-                    await $.wait(3000)
-                }else break;
-            }
-        }
-        console.log('组队完成！')
 
-    } catch (e) {
-        $.log(`❌ ${$.name}, 失败! 原因: `, e)
-    }
+    console.log('组队完成！')
+
 })()
     .catch((e) => {
         $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')

@@ -4,14 +4,14 @@ cron "10 9 * * *" jd_cxxb_help.js, tag:快速签到升级，助力跑一次即�
 */
 var {window,document,get_log,Env}=require('./utils/JDcxxb.log.min.js');//{window,document,navigator,screen,get_log,GetRandomNum,Env,get_log,GetRandomNum,Env}
 
-const $ = new Env('穿行寻宝-助力');
+const $ = new Env('穿行寻宝-好友助力');
 
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 
 let cookiesArr = [],
-    cookie = '';
-let secretp = '',
-    inviteId = []
+    cookie = '',
+    helpPinArr=[],
+    helpCodeArr=[];
 
 if ($.isNode()) {
     Object.keys(jdCookieNode).forEach((item) => {
@@ -59,8 +59,9 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
             }
         }
     }
+    helpCodeArr=[...helpCodeArr];
     try {
-        for (let i = 0; i < cookiesArr.length; i++) {
+        for (let i = 0; i < cookiesArr.length && helpCodeArr.length; i++) {
             if (cookiesArr[i]) {
                 cookie = cookiesArr[i];
                 $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
@@ -69,27 +70,17 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
                 $.nickName = '';
                 message = '';
                 console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
-                /*await get_secretp()
-                if ($.huobao == false) {
-                    console.log(`火爆`); continue;
-                }
-                await $.wait(1000)*/
-                
                 let helpRes,bizCode,bizMsg
-                for (let j = 0; j < inviteId.length; j++) {
-                    console.log(`\n开始助力 【${inviteId[j]}】`)
-                    helpRes = await help(inviteId[j])
-/*
-                        const helpCode = helpCodeArr[i]
-                        const { pin, code } = helpCode
-                        if (pin === $.UserName) continue
-                        console.log(`去帮助用户：${pin}`)
-                        const helpRes = await doApi("collectScore", null, { inviteId: code }, true, true)*/
+                for (let j = 0, codeLen = helpCodeArr.length; j < codeLen; j++) {
+                    const { pin, code } = helpCodeArr[j]
+                    if (pin === $.UserName) continue
+                    console.log(`去帮助用户：${pin}`)
+                    helpRes = await help(code)
                     if(helpRes && helpRes['data']){
                         helpRes = helpRes['data'];
                         bizCode = helpRes['bizCode'];
                         bizMsg = helpRes.bizMsg;
-                        if (helpRes?.result?.score) {//bizCode === 0
+                        if (bizCode === 0) {//
                             const { alreadyAssistTimes, maxAssistTimes, maxTimes, score, times } = helpRes.result
                             const c = maxAssistTimes - alreadyAssistTimes
                             console.log(`互助成功，获得${score}金币，他还需要${maxTimes - times}人完成助力，你还有${maxAssistTimes - alreadyAssistTimes}次助力机会`)
@@ -100,15 +91,16 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
                             console.log(bizMsg); break 
                         }else if (bizCode==-201) {//好友人气爆棚，不需要助力啦~
                             console.log(bizMsg);
-                            inviteId.splice(j, 1)
-                            //$.newHelpCodeArr = $.newHelpCodeArr.filter(x => x.pin !== pin)
+                            helpCodeArr.splice(j, 1)
+                            //helpCodeArr = helpCodeArr.filter(x => x.pin !== pin)
                             j--
                             continue
-                        }else if (bizCode==-1002) {//运行环境异常，请您从正规途径参与活动，谢谢~
-                            break;
+                        }else if (bizCode==-202) {
+                            console.log(bizMsg);
                         }else {
+                            //1002 //运行环境异常，请您从正规途径参与活动，谢谢~
                             console.log(`互助失败，原因：${bizMsg}（${bizCode}）`)
-                            if (![0, -201, -202].includes(bizCode)) break
+                            break
                         }
                         await $.wait(1000)
                     }else{
@@ -130,36 +122,6 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
         $.done();
     })
 
-function get_secretp() {
-    let body = {};
-    return new Promise((resolve) => {
-        $.post(taskPostUrl("promote_getHomeData", body), async(err, resp, data) => {
-            //console.log(data)
-            try {
-                if (err) {
-                    console.log(`${JSON.stringify(err)}`)
-                    console.log(`${$.name} API请求失败，请检查网路重试`)
-                } else {
-                    if (safeGet(data)) {
-                        data = JSON.parse(data);
-						$.huobao = data.data.success
-                        if (data.code == 0) {
-                            if (data.data && data.data.bizCode === 0) {
-                                secretp = data.data.result.homeMainInfo.secretp
-							}
-                        } 
-						
-                    }
-                }
-            } catch (e) {
-                $.logErr(e, resp)
-            } finally {
-                resolve(data);
-            }
-        })
-    })
-}
-
 function promote_sign() {
     let random=window.smashUtils.getRandom(8);
     let body = {"random":random,"log":get_log(random)}
@@ -174,7 +136,6 @@ function promote_sign() {
                         data = JSON.parse(data);
                         if (data.code === 0) {
                             if (data.data && data['data']['bizCode'] === 0) {
-
                                 console.log(`签到成功`)
                                 resolve(true)
                             } else {
@@ -240,13 +201,20 @@ function promote_getTaskDetail() {
                         data = JSON.parse(data);
                         if (data.code === 0) {
                             if (data.data && data['data']['bizCode'] === 0) {
-								let 助力码 = data.data.result.inviteId
-								if (!助力码) {
+								let inviteId = data.data.result.inviteId
+                                if (inviteId) {
+                                    console.log(`你的互助码：${inviteId}`)
+                                    if (!helpPinArr.includes($.UserName)) {
+                                        helpCodeArr.push({
+                                            pin: $.UserName,
+                                            code: inviteId
+                                        })
+                                        helpPinArr.push($.UserName)
+                                    }
+                                }else{
                                     console.log("黑号")
                                     resolve("")
                                 }
-								console.log('助力码：',助力码)
-                                inviteId.push(助力码)
                                 resolve(data.data.result)
                             }
                         } else {
