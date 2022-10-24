@@ -83,17 +83,20 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
                         if (bizCode === 0) {//
                             const { alreadyAssistTimes, maxAssistTimes, maxTimes, score, times } = helpRes.result
                             const c = maxAssistTimes - alreadyAssistTimes
-                            console.log(`互助成功，获得${score}金币，他还需要${maxTimes - times}人完成助力，你还有${maxAssistTimes - alreadyAssistTimes}次助力机会`)
-                            if (!c) break
+                            const num=maxTimes - times;
+                            console.log(`互助成功，获得${score}金币，他还需要${num}人完成助力，你还有${c}次助力机会`)
                             if (helpRes.result?.redpacket?.value) console.log('🧧', parseFloat(helpRes.result?.redpacket?.value))
+                            if (!c) break
+                            if(!num){//助力完成
+                                helpCodeArr.splice(j, 1);j--;
+                            }
                             //console.log('助力结果：'+bizMsg)
                         }else if (bizCode==108) { //无助力
-                            console.log(bizMsg); break 
+                            console.log(bizMsg); break;
                         }else if (bizCode==-201) {//好友人气爆棚，不需要助力啦~
                             console.log(bizMsg);
-                            helpCodeArr.splice(j, 1)
+                            helpCodeArr.splice(j, 1);j--;
                             //helpCodeArr = helpCodeArr.filter(x => x.pin !== pin)
-                            j--
                             continue
                         }else if (bizCode==-202) {
                             console.log(bizMsg);
