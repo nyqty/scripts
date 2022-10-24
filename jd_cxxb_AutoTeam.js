@@ -90,6 +90,7 @@ let groups=[],g_i=0;
                                 console.log(res.data.bizCode+res.data.bizMsg)
                             }
                         }else{
+                            //{bizCode: -2, bizMsg: "你已经有团队了|无法加入其他团队哦", success: false}
                             //{ code: -40300, msg: '运行环境异常，请您从正规途径参与活动，谢谢~' }
                             console.log(res)
                         } 

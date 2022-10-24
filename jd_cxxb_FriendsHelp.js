@@ -41,10 +41,6 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
             message = '';
             console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
             $.newShareCodes = []
-            /*await get_secretp()
-            if ($.huobao == false) {
-                console.log(`火爆`); continue;
-            }*/
             await promote_collectAtuoScore() //定时领取
             let res
             try {
