@@ -2,7 +2,8 @@
 建议手动先点开一次
 cron "10 9 * * *" jd_cxxb_help.js, tag:快速签到升级，助力跑一次即可
 */
-var {window,document,get_log,Env}=require('./utils/JDcxxb.log.min.js');//{window,document,navigator,screen,get_log,GetRandomNum,Env,get_log,GetRandomNum,Env}
+const Env=require('./utils/Env.js');
+var {window,document,get_log}=require('./utils/JDcxxb.log.min.js');
 
 const $ = new Env('穿行寻宝-好友助力');
 
@@ -310,6 +311,7 @@ function getUA() {
     $.UUID = randomString(40)
     $.UA = `jdapp;android;10.3.2`
 }
+
 
 function randomNum(min, max) {
     if (arguments.length === 0) return Math.random()

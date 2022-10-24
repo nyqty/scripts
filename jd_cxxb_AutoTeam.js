@@ -2,7 +2,8 @@
 建议手动先点开一次
 cron "1 8,12 * * *" jd_cxxb_team.js, tag:自动组队
 */
-var {window,document,get_log,Env}=require('./utils/JDcxxb.log.min.js');//{window,document,navigator,screen,get_log,GetRandomNum,Env,get_log,GetRandomNum,Env}
+const Env=require('./utils/Env.js');
+var {window,document,get_log}=require('./utils/JDcxxb.log.min.js');
 
 const $ = new Env('穿行寻宝-自动组队');
 
