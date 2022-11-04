@@ -77,9 +77,10 @@ let helpinfo = {};
                     $.index = i + 1;
                     UA = helpinfo[$.UserName].ua;
                     console.log(`\n开始【账号${$.index}】${$.nickName || $.UserName}`);
+                    if ($.UserName==shareId[j]) { console.log('不能助力自己，跳过..'); continue };
                     if (helpinfo[$.UserName].nohelp) { console.log('已无助力次数了'); continue };
                     if (helpinfo[$.UserName].hot) { console.log('可能黑了，跳过！'); continue };
-                    await help(shareId[j]);
+                    await help(helpinfo[$.UserName].sId);
                     console.log('随机等待2-5秒');
                     await $.wait(parseInt(Math.random() * 3000 + 2000, 10))
                 }
@@ -225,6 +226,7 @@ function help(shareid) {
                     } else if (data.code === 1008) {
                         console.log('今日无助力次数了！');
                     } else {
+                        //助力任务已完成
                         console.log(data.msg);
                     }
                 }
