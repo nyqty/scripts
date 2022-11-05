@@ -13,6 +13,7 @@ export dyjpin="需要助力的pin值"
 cron: 6 6 6 6 *
 new Env('赚钱大赢家');
 """
+
 import os
 import re
 import sys
@@ -25,9 +26,13 @@ import requests
 import traceback
 from hashlib import sha1
 from urllib.parse import quote_plus, unquote_plus, quote
+
 activity_name = "京东极速版-赚钱大赢家"
-logging.basicConfig(level=logging.INFO,
-                    format="%(asctime)s %(levelname)s %(lineno)d %(message)s", datefmt="%H:%M:%S")
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s %(levelname)s %(lineno)d %(message)s",
+    datefmt="%H:%M:%S"
+)
 logger = logging.getLogger(activity_name)
 index = 0
 h5st_appid = 'd06f1'
@@ -60,7 +65,12 @@ class Userinfo:
         self.help_status = False
         Userinfo.cookie_obj.append(self)
         self.sha = sha1(str(self.pt_pin).encode('utf-8')).hexdigest()
-        self.headers ={"Host":"wq.jd.com","Cookie":self.cookie+f"sid={self.sha}","User-Agent":self.UA ,"Referer":f"https://wqs.jd.com/sns/202210/20/make-money-shop/guest.html?activeId={activeId}&type=sign&shareId=&__navVer=1",}
+        self.headers = {
+            "Host": "wq.jd.com",
+            "Cookie": self.cookie + f"sid={self.sha}",
+            "User-Agent": self.UA,
+            "Referer": f"https://wqs.jd.com/sns/202210/20/make-money-shop/guest.html?activeId={activeId}&type=sign&shareId=&__navVer=1",
+        }
         self.shareUuid = ""
         self.invite_success = 0
         self.task_list = []
@@ -79,8 +89,7 @@ class Userinfo:
         else:
             self.shareUuid = home_res['data']['shareId']
             logger.info(f"车头账户[{self.name}]：已获取助力码[{self.shareUuid}]")
-            logger.info(
-                f"车头账户[{self.name}]：当前营业币约[{home_res['data']['canUseCoinAmount']}]元")
+            logger.info(f"车头账户[{self.name}]：当前营业币约[{home_res['data']['canUseCoinAmount']}]元")
         self.GetUserTaskStatusList()
         if self.need_help:
             logger.info(f"当前从{Userinfo.index}继续")
@@ -92,24 +101,24 @@ class Userinfo:
                 res = cookie.getData('guesthelp', self.shareUuid)
                 if res['code'] == 147:  # 火爆
                     cookie.account_hot = True
-                    logger.info(
-                        f"工具人账户[{cookie.user_index}][{cookie.name}]：{res['msg']}")
+                    logger.info(f"工具人账户[{cookie.user_index}][{cookie.name}]：{res['msg']}")
                 if res['code'] == 1007:
-                    logger.info(
-                        f"工具人账户[{cookie.user_index}][{cookie.name}]：{res['msg']}")
+                    logger.info(f"工具人账户[{cookie.user_index}][{cookie.name}]：{res['msg']}")
                 if res['code'] == 1008:
-                    logger.info(
-                        f"工具人账户[{cookie.user_index}][{cookie.name}]：{res['msg']}")
+                    logger.info(f"工具人账户[{cookie.user_index}][{cookie.name}]：{res['msg']}")
                 if str(res).find("助力任务已完成") > -1:
                     self.reward(invite_taskId)
                 if res['code'] == 0:
+                    self.reward(invite_taskId)
                     self.invite_success += 1
-                    logger.info(
-                        f"工具人账户[{cookie.user_index}][{cookie.name}]：助力成功，当前助力成功{self.invite_success}次")
+                    logger.info(f"工具人账户[{cookie.user_index}][{cookie.name}]：助力成功，当前助力成功{self.invite_success}次")
+
                 if self.invite_success >= need_invite:
                     logger.info(f"车头账户[{self.name}]：助力已满")
                     return self.exchange_query()
                 Userinfo.index += 1
+                # time.sleep(round(random.uniform(0.7, 1.3), 2))
+
         else:
             return self.exchange_query()
 
@@ -123,16 +132,14 @@ class Userinfo:
             for data in res['data']['cashExchangeRuleList'][::-1]:
                 if float(data['cashoutAmount']) not in not_tx:
                     if canUseCoinAmount >= float(data['cashoutAmount']):
-                        logger.info(
-                            f"车头账户[{self.name}]：当前余额[{canUseCoinAmount}]元,符合提现规则[{data['cashoutAmount']}]门槛")
+                        logger.info(f"车头账户[{self.name}]：当前余额[{canUseCoinAmount}]元,符合提现规则[{data['cashoutAmount']}]门槛")
                         rule_id = data['id']
                         self.tx(rule_id)
+
                     else:
-                        logger.info(
-                            f"车头账户[{self.name}]：当前余额[{canUseCoinAmount}]元,不足提现[{data['cashoutAmount']}]门槛")
+                        logger.info(f"车头账户[{self.name}]：当前余额[{canUseCoinAmount}]元,不足提现[{data['cashoutAmount']}]门槛")
                 else:
-                    logger.info(
-                        f"车头账户[{self.name}]：当前余额[{canUseCoinAmount}]元,不提现[{not_tx}]门槛")
+                    logger.info(f"车头账户[{self.name}]：当前余额[{canUseCoinAmount}]元,不提现[{not_tx}]门槛")
 
     def tx(self, rule_id):
         url = f'https://wq.jd.com/prmt_exchange/client/exchange?g_ty=h5&g_tk=&appCode={appCode}&bizCode=makemoneyshop&ruleId={rule_id}&sceneval=2'
@@ -170,18 +177,29 @@ class Userinfo:
                         need_invite = int(task['configTargetTimes'])
                     if self.invite_success < need_invite:
                         self.need_help = True
-                        logger.info(f"最高可邀请[{need_invite}]人,目前已邀请[{self.invite_success}]人,还需邀请[{int(need_invite) - int(self.invite_success)}]人")
+                        logger.info(
+                            f"最高可邀请[{need_invite}]人,目前已邀请[{self.invite_success}]人,还需邀请[{int(need_invite) - int(self.invite_success)}]人")
                     else:
                         logger.info(f"最高可邀请[{need_invite}]人,目前已邀请[{self.invite_success}]人,助力已满，换号")
-                self.task_list.append({"status": status, "taskName": taskName,"taskId": taskId, "configTargetTimes": configTargetTimes})
+
+                self.task_list.append(
+                    {
+                        "status": status,
+                        "taskName": taskName,
+                        "taskId": taskId,
+                        "configTargetTimes": configTargetTimes
+                    }
+                )
                 msg.append(
                     f"{taskid} : {taskName} -- {reward}个营业币 -- {status.replace('1', '未完成').replace('2', '已完成')}")
+
             print('\n'.join(msg))
             self.do_task()
 
     def reward(self, taskId):
         url = f'https://wq.jd.com/newtasksys/newtasksys_front/Award?g_ty=h5&g_tk=&appCode={appCode}&__t={getTime()}&source=makemoneyshop&taskId={taskId}&bizCode=makemoneyshop&sceneval=2'
-        self.headers['Referer'] = f'https://wqs.jd.com/sns/202210/20/make-money-shop/index.html?activeId={activeId}&lng=118.389971&lat=24.974751&sid={self.sha}&un_area=16_1341_1343_44855'
+        self.headers[
+            'Referer'] = f'https://wqs.jd.com/sns/202210/20/make-money-shop/index.html?activeId={activeId}&lng=118.389971&lat=24.974751&sid={self.sha}&un_area=16_1341_1343_44855'
         res = requests.get(url=url, headers=self.headers, timeout=10).json()
         if res['ret'] == 0:
             logger.info(f"车头账户[{self.name}]：领取成功")
@@ -239,7 +257,8 @@ def main():
             del_black(pin)
     logger.info(f"共去除{len(black)}个黑名单pin")
     logger.info(f"当前剩余[{len(Userinfo.cookie_obj)}]个cookie可助力")
-    inviterList = ([cookie_obj for cookie_obj in Userinfo.cookie_obj for name in helpPin if name in cookie_obj.pt_pin])
+    inviterList = (
+        [cookie_obj for cookie_obj in Userinfo.cookie_obj for name in helpPin if name in cookie_obj.pt_pin])
     if not inviterList:
         logger.info(f"没有找到车头:{helpPin}")
         sys.exit()
