@@ -72,7 +72,7 @@ async function main() {
             if (["BROWSE_CHANNEL"].includes($.oneTask.taskType) && $.oneTask.taskFinished === false) {
                 await apTaskDetail({ "taskId": $.oneTask.id, "taskType": $.oneTask.taskType, "channel": 4, "linkId": linkId });
                 await $.wait(1000)
-                for (let y = 0; y < ($.doList.status.finishNeed - $.doList.status.userFinishedTimes); y++) {
+                if($.doList?.status) for (let y = 0; y < ($.doList.status.finishNeed - $.doList.status.userFinishedTimes); y++) {
                     $.startList = $.doList.taskItemList[y];
                     $.itemName = $.doList.taskItemList[y].itemName;
                     console.log(`去浏览${$.itemName}`)
