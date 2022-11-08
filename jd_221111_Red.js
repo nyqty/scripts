@@ -6,7 +6,7 @@ export CODE1111=""
 链接后面那一串  不是脚本里面的
 建议禁用，避免其他问题 需要的请填写自己的码子，
 
-定时随机。
+0 0,12,20 * * * jd_221111_Red.js
 */
 const Env=require('./utils/Env.js');
 const $ = new Env('1111红包');
