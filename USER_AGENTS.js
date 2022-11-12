@@ -88,5 +88,6 @@ function UARAM (){
 
 module.exports = {
   USER_AGENT,
-  UARAM
+  UARAM,
+  randomNumber
 }
