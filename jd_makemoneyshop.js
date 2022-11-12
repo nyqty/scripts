@@ -81,7 +81,7 @@ let helpinfo = {};
                     console.log(`\n开始【账号${$.index}】${$.nickName || $.UserName}`);
                     if (helpinfo[$.UserName].nohelp) { console.log('已无助力次数了'); continue };
                     if (helpinfo[$.UserName].hot) { console.log('可能黑了，跳过！'); continue };
-                    await help(shareId[j]);
+                    await help(helpinfo[$.UserName].sId);
                     console.log('随机等待2-5秒');
                     await $.wait(parseInt(Math.random() * 3000 + 2000, 10))
                 }
