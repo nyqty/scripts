@@ -25,6 +25,7 @@ const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 //IOS等用户直接用NobyDa的jd cookie
 const {UARAM,randomNumber} = require('./USER_AGENTS');
 const fs = require('fs');
+const { isSet } = require('util/types');
 const DYJ_filter=process.env.DYJ_filter && process.env.DYJ_filter === 'true'
 let  black_path = './bigwinner_black.txt';
 let black_user = [];
@@ -123,9 +124,9 @@ if ($.isNode()) {
         for (let j = 0,sinfo; j < shareInfo.length; j++) {
             sinfo=shareInfo[j];
             if(!helpinfo[sinfo.pin]) helpinfo[sinfo.pin]={};
+            if(!helpinfo[sinfo.pin].invite_success) helpinfo[sinfo.pin].invite_success=0;
             if ( helpinfo[sinfo.pin].invite_success>=need_invite ) continue;
             console.log('\n去助力--> ' + sinfo.pin);
-            if(!helpinfo[sinfo.pin].invite_success) helpinfo[sinfo.pin].invite_success=0;
             if ($.index === m) {console.log('已无账号可用于助力！结束\n');break};
             for (let i = k; i < m - k; i++) {
                 if (helpinfo[sinfo.pin].invite_success >= need_invite) {
@@ -152,10 +153,10 @@ if ($.isNode()) {
                         }
                     } else if (data.code === 147) {//活动太火爆了，请稍后再试
                         helpinfo[$.UserName].hot=1;
-                    } else if (data.code === 1007) {//已助力
-                        helpinfo[sinfo.pin].invite_success++;
                     } else if (data.code === 1006) {
                         msg='不能助力自己！';
+                    } else if (data.code === 1007) {//已助力
+                        helpinfo[sinfo.pin].invite_success++;
                     } else if (data.code === 1008) {//天助力次数限制
                         msg='今日无助力次数了！';
                     } else if (data.code === 1009) {//助力任务已完成
@@ -163,6 +164,8 @@ if ($.isNode()) {
                         k = i--;
                         break
                     } else {
+                        if (data.msg.includes('火爆')) helpinfo[$.UserName].hot=1;
+						console.log('此CK助力可能黑了！');
                         msg="code->"+data.code+":"+data.msg;
                     }
                     if (data.code != 0) console.log(`账号[${$.index}][${$.nickName || $.UserName}]：${msg}`);
@@ -290,6 +293,7 @@ function getinfo(xc) {
                         }
                     } else {
                         console.log(data.msg);
+                        if (data.msg.includes('火爆')) console.log('此CK可能黑了！');
                         helpinfo[$.UserName].hot = 1;
                     }
                 }

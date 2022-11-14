@@ -74,43 +74,43 @@ class Userinfo:
         url = f'https://wq.jd.com/makemoneyshop/exchangequery?g_ty=h5&g_tk=&appCode={appCode}&activeId={activeId}&sceneval=2'
         res = requests.get(url=url, headers=self.headers).json()
         if res['code'] == 0:
-            logger.info(f"用户账户[{self.name}]：获取微信提现信息成功")
+            logger.info(f"获取微信提现信息成功")
             stockPersonDayLimit=int(res['data']['stockPersonDayLimit'])#用户日库存限额
             stockPersonDayUsed=int(res['data']['stockPersonDayUsed'])#用户今天提现多少次
             canUseCoinAmount = float(res['data']['canUseCoinAmount'])
-            logger.info(f"用户账户[{self.name}]：当前余额[{canUseCoinAmount}]元")
+            logger.info(f"当前余额[{canUseCoinAmount}]元")
             if stockPersonDayUsed>=stockPersonDayLimit:
-                logger.info(f"用户账户[{self.name}]：当前提现次数已经达到上限[{stockPersonDayLimit}]次")
+                logger.info(f"当前提现次数已经达到上限[{stockPersonDayLimit}]次")
             elif 'exchangeRecordList' in res['data']:
-                logger.info(f"用户账户[{self.name}]：已有提现进行中，请等待完成！")
+                logger.info(f"已有提现进行中，请等待完成！")
             else:
                 for data in res['data']['cashExchangeRuleList'][::-1]:#倒序
                     if data['exchangeStatus']==1:
                         if canUseCoinAmount >= float(data['cashoutAmount']):
                             if float(data['cashoutAmount']) not in not_tx:
-                                logger.info(f"用户账户[{self.name}]：当前余额[{canUseCoinAmount}]元,符合提现规则[{data['cashoutAmount']}]门槛")
+                                logger.info(f"当前余额[{canUseCoinAmount}]元,符合提现规则[{data['cashoutAmount']}]门槛")
                                 rule_id = data['id']
                                 if self.tx(rule_id):break
-                            else:logger.info(f"用户账户[{self.name}]：当前余额[{canUseCoinAmount}]元,不提现[{not_tx}]门槛")
-                        else:logger.info(f"用户账户[{self.name}]：当前余额[{canUseCoinAmount}]元,不足提现[{data['cashoutAmount']}]门槛")
-                    elif data['exchangeStatus']==2:logger.info(f"用户账户[{self.name}]：当前余额[{canUseCoinAmount}]元,不够兑换[{data['name']}]！")
-                    elif data['exchangeStatus']==4:logger.info(f"用户账户[{self.name}]：当前[{data['name']}],库存不足！")
-                    else:logger.info(f"用户账户[{self.name}]：未知exchangeStatus状态[{data['exchangeStatus']}]")
+                            else:logger.info(f"当前余额[{canUseCoinAmount}]元,不提现[{not_tx}]门槛")
+                        else:logger.info(f"当前余额[{canUseCoinAmount}]元,不足提现[{data['cashoutAmount']}]门槛")
+                    elif data['exchangeStatus']==2:logger.info(f"当前余额[{canUseCoinAmount}]元,不够兑换[{data['name']}]！")
+                    elif data['exchangeStatus']==4:logger.info(f"当前[{data['name']}],库存不足！")
+                    else:logger.info(f"未知exchangeStatus状态[{data['exchangeStatus']}]")
 
     def tx(self, rule_id):
         url = f'https://wq.jd.com/prmt_exchange/client/exchange?g_ty=h5&g_tk=&appCode={appCode}&bizCode=makemoneyshop&ruleId={rule_id}&sceneval=2'
         res = requests.get(url=url, headers=self.headers).json()
         if res['ret'] == 0:
-            logger.info(f"用户账户[{self.name}]：提现成功")
+            logger.info(f"提现成功")
             return True
         #elif res['ret'] == 232:
-            #logger.info(f"用户账户[{self.name}]：{res['msg']}")
+            #logger.info(f"{res['msg']}")
             #return False
         elif res['ret'] == 604:#已有提现进行中，等待完成
-            logger.info(f"用户账户[{self.name}]：{res['msg']}")
+            logger.info(f"{res['msg']}")
             return True
         else:
-            logger.info(f"用户账户[{self.name}]：{res}")
+            logger.info(f"{res}")
             return False
 
 
@@ -141,6 +141,10 @@ def main():
         logger.info(f"没有找到用户:{helpPin}")
         sys.exit()
 
+    logger.info('Start print log')
+    logger.info('Finish')
+
+
     Users=[]
     NotUserList=helpPin
     for inviter in inviterList:
@@ -150,6 +154,7 @@ def main():
     logger.info(f"找到用户[{len(Users)}]:{Users}")
     logger.info(f"没有找到用户[{len(NotUserList)}]:{NotUserList}")
     for inviter in inviterList:
+        print("\n")
         logger.info(f"开启提现用户：{inviter.pt_pin}")
         inviter.UserTask()
     #time.sleep(round(random.uniform(0.7, 1.3), 2))
