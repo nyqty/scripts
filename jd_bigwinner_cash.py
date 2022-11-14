@@ -3,7 +3,9 @@
 Python 3.9.7
 作者：doubi
 日期：2022年10月30日
-export DYJ_TX="需要提现的pin值"  
+多个&隔开
+export DYJ_CashPin="需要提现的pin值"
+export DYJ_NotCash="不提现的金额"
 cron: 0 0 0 * * *
 new Env('赚钱大赢家-定时提现');
 TY在原作者基础上删减更改，优化提取
@@ -33,8 +35,6 @@ index = 0
 h5st_appid = 'd06f1'
 appCode = 'msc588d6d5'
 activeId = '63526d8f5fe613a6adb48f03'
-#not_tx = [0.3, 1, 3]
-not_tx = [0.3]
 
 class Userinfo:
     cookie_obj = []
@@ -117,46 +117,52 @@ class Userinfo:
 def getTime():
     return int(time.time() * 1000)
 
-
 def main():
     try:
         cookies = os.environ['JD_COOKIE'].split('&')
     except:
         with open(os.path.join(os.path.dirname(__file__), 'cklist.txt'), 'r') as f:
             cookies = f.read().split('\n')
-    helpPin = os.environ.get('DYJ_TX', "")
+    helpPin = os.environ.get('DYJ_CashPin', "")
     if helpPin == "":
-        logger.info("您尚未填写'DYJ_TX'-- pin1&pin2&pin")
+        logger.info('您尚未设置变量 DYJ_CashPin="pin1&pin2&pin3"')
         sys.exit()
     try:
         helpPin = helpPin.split('&')
     except:
-        logger.info("DYJ_TX填写格式错误，pin1&pin2&pin3")
+        logger.info("DYJ_CashPin 变量设置错误，pin1&pin2&pin3")
         sys.exit()
+
+    not_tx = os.environ.get('DYJ_NotCash', "")
+    if not_tx == "":
+        logger.info('您尚未设置变量 DYJ_NotCash="金额1&金额2&金额3"\n默认不提现0.3和1还有3，相当于 export DYJ_NotCash="0.3&1&3"')
+        not_tx = "0.3&1&3"
+    try:
+        not_tx = not_tx.split('&')
+        not_tx = [float(item) for item in not_tx]
+        print(not_tx)
+    except:
+        logger.info("DYJ_NotCash变量设置错误，金额1&金额2&金额3")
+
     [Userinfo(cookie) for cookie in cookies]
     inviterList = ([cookie_obj for cookie_obj in Userinfo.cookie_obj for name in helpPin if name in cookie_obj.pt_pin])
-
     #logger.info(f"helpPin:{helpPin}")
     if not inviterList:
         logger.info(f"没有找到用户:{helpPin}")
         sys.exit()
-
-    logger.info('Start print log')
-    logger.info('Finish')
-
-
     Users=[]
     NotUserList=helpPin
     for inviter in inviterList:
         if inviter.pt_pin in helpPin:
             Users.append(inviter.pt_pin)
             NotUserList.remove(inviter.pt_pin)
-    logger.info(f"找到用户[{len(Users)}]:{Users}")
-    logger.info(f"没有找到用户[{len(NotUserList)}]:{NotUserList}")
+    if len(Users):logger.info(f"找到用户[{len(Users)}]:{Users}")
+    if len(NotUserList):logger.info(f"没有找到用户[{len(NotUserList)}]:{NotUserList}")
+    print("")
     for inviter in inviterList:
-        print("\n")
         logger.info(f"开启提现用户：{inviter.pt_pin}")
         inviter.UserTask()
+        print("")
     #time.sleep(round(random.uniform(0.7, 1.3), 2))
 
 if __name__ == '__main__':

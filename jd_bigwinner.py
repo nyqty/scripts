@@ -8,7 +8,7 @@ Python 3.9.7
 作者要求 注释不能删除  否则后续不再更新
 作者授权发布KR库。搬运请完整保留注释。
 环境变量说明：
-export dyjpin="需要助力的pin值"  
+export DYJ_pin="需要助力的pin值"  
 
 cron: 6 6 6 6 *
 new Env('赚钱大赢家');
@@ -115,55 +115,8 @@ class Userinfo:
 
                 if self.invite_success >= need_invite:
                     logger.info(f"车头账户[{self.name}]：助力已满")
-                    return self.exchange_query()
                 Userinfo.index += 1
                 # time.sleep(round(random.uniform(0.7, 1.3), 2))
-
-        else:
-            return self.exchange_query()
-
-    def exchange_query(self):
-        url = f'https://wq.jd.com/makemoneyshop/exchangequery?g_ty=h5&g_tk=&appCode={appCode}&activeId={activeId}&sceneval=2'
-        res = requests.get(url=url, headers=self.headers).json()
-        if res['code'] == 0:
-            logger.info(f"用户账户[{self.name}]：获取微信提现信息成功")
-            stockPersonDayLimit=int(res['data']['stockPersonDayLimit'])#用户日库存限额
-            stockPersonDayUsed=int(res['data']['stockPersonDayUsed'])#用户今天提现多少次
-            canUseCoinAmount = float(res['data']['canUseCoinAmount'])
-            logger.info(f"用户账户[{self.name}]：当前余额[{canUseCoinAmount}]元")
-            if stockPersonDayUsed>=stockPersonDayLimit:
-                logger.info(f"用户账户[{self.name}]：当前提现次数已经达到上限[{stockPersonDayLimit}]次")
-            elif 'exchangeRecordList' in res['data']:
-                logger.info(f"用户账户[{self.name}]：已有提现进行中，请等待完成！")
-            else:
-                for data in res['data']['cashExchangeRuleList'][::-1]:#倒序
-                    if data['exchangeStatus']==1:
-                        if canUseCoinAmount >= float(data['cashoutAmount']):
-                            if float(data['cashoutAmount']) not in not_tx:
-                                logger.info(f"用户账户[{self.name}]：当前余额[{canUseCoinAmount}]元,符合提现规则[{data['cashoutAmount']}]门槛")
-                                rule_id = data['id']
-                                if self.tx(rule_id):break
-                            else:logger.info(f"用户账户[{self.name}]：当前余额[{canUseCoinAmount}]元,不提现[{not_tx}]门槛")
-                        else:logger.info(f"用户账户[{self.name}]：当前余额[{canUseCoinAmount}]元,不足提现[{data['cashoutAmount']}]门槛")
-                    elif data['exchangeStatus']==2:logger.info(f"用户账户[{self.name}]：当前余额[{canUseCoinAmount}]元,不够兑换[{data['name']}]！")
-                    elif data['exchangeStatus']==4:logger.info(f"用户账户[{self.name}]：当前[{data['name']}],库存不足！")
-                    else:logger.info(f"用户账户[{self.name}]：未知exchangeStatus状态[{data['exchangeStatus']}]")
-
-    def tx(self, rule_id):
-        url = f'https://wq.jd.com/prmt_exchange/client/exchange?g_ty=h5&g_tk=&appCode={appCode}&bizCode=makemoneyshop&ruleId={rule_id}&sceneval=2'
-        res = requests.get(url=url, headers=self.headers).json()
-        if res['ret'] == 0:
-            logger.info(f"用户账户[{self.name}]：提现成功")
-            return True
-        #elif res['ret'] == 232:
-            #logger.info(f"用户账户[{self.name}]：{res['msg']}")
-            #return False
-        elif res['ret'] == 604:#已有提现进行中，等待完成
-            logger.info(f"用户账户[{self.name}]：{res['msg']}")
-            return True
-        else:
-            logger.info(f"用户账户[{self.name}]：{res}")
-            return False
 
     def GetUserTaskStatusList(self):
         global invite_taskId, need_invite
@@ -249,14 +202,14 @@ def main():
     except:
         with open(os.path.join(os.path.dirname(__file__), 'cklist.txt'), 'r') as f:
             cookies = f.read().split('\n')
-    helpPin = os.environ.get('dyjpin', "")
+    helpPin = os.environ.get('DYJ_pin', "")
     if helpPin == "":
-        logger.info("您尚未填写'dyjpin'-- pin1&pin2&pin")
+        logger.info("您尚未填写'DYJ_pin'-- pin1&pin2&pin")
         sys.exit()
     try:
         helpPin = helpPin.split('&')
     except:
-        logger.info("dyjpin填写格式错误，pin1&pin2&pin3")
+        logger.info("DYJ_pin填写格式错误，pin1&pin2&pin3")
         sys.exit()
     [Userinfo(cookie) for cookie in cookies]
     black = black_user()
@@ -277,8 +230,8 @@ def main():
         if inviter.pt_pin in helpPin:
             Users.append(inviter.pt_pin)
             NotUserList.remove(inviter.pt_pin)
-    logger.info(f"找到车头[{len(Users)}]:{Users}")
-    logger.info(f"没有找到车头[{len(NotUserList)}]:{NotUserList}")
+    if len(Users):logger.info(f"找到车头[{len(Users)}]:{Users}")
+    if len(NotUserList):logger.info(f"没有找到车头[{len(NotUserList)}]:{NotUserList}")
     for inviter in inviterList:
         logger.info(f"开启助力车头：{inviter.pt_pin}")
         inviter.UserTask()
