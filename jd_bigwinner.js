@@ -61,7 +61,7 @@ if(process.env.DYJ_HelpWait){
             DYJ_HelpWait[1]=1500;
             console.log(`我真是无语了，你还是卸载青龙吧！`);
         }
-        console.log(`当前随机延时${DYJ_HelpWait[0]}-${DYJ_HelpWait[0]}Ms`);
+        console.log(`当前随机延时${DYJ_HelpWait[0]}-${DYJ_HelpWait[1]}Ms`);
     }else{
         console.log(`当前固定延时${DYJ_HelpWait[0]}Ms`);
     }
@@ -88,6 +88,33 @@ if ($.isNode()) {
 } else {
     cookiesArr = [$.getdata('CookieJD'), $.getdata('CookieJD2'), ...jsonParse($.getdata('CookiesJD') || "[]").map(item => item.cookie)].filter(item => !!item);
 }
+
+
+function getDate(extra){
+    var dat = new Date;//生成日期
+    var year = dat.getFullYear();//取得年
+    var month = dat.getMonth()+1;    //取得月,js从0开始取,所以+1
+    var date1 = dat.getDate(); //取得天
+    var hour = dat.getHours();//取得小时
+    var minutes = dat.getMinutes();//取得分钟
+    dat.getMilliseconds
+    var second = dat.getSeconds();//取得秒
+    var haomiao = dat.getMilliseconds();
+    dat = undefined;
+    //return year+"-"+month+"-"+date1+" "+hour+":"+minutes +":"+second+" "+haomiao + extra ;
+    return (hour>9?'':'0')+hour+":"+(minutes>9?'':'0')+minutes +":"+(second>9?'':'0')+second+" "+haomiao.toString().padStart(3, '0') + extra ;
+}
+
+function log(){
+    //-log
+    process.stdout.write(getDate(': '));
+    console.log.apply(console, arguments);
+    //console.oldlog.apply(console, arguments);
+}
+console.oldlog = console.log;
+console.time = log;
+
+
 !(async () => {
     if (!cookiesArr[0]) {
         $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
@@ -154,10 +181,10 @@ if ($.isNode()) {
             if(!helpinfo[sinfo.pin].invite_success) helpinfo[sinfo.pin].invite_success=0;
             if ( helpinfo[sinfo.pin].invite_success>=need_invite ) continue;
             console.log('\n去助力--> ' + sinfo.pin);
-            if ($.index === m) {console.log('已无账号可用于助力！结束\n');break};
+            if ($.index === m) {console.time('已无账号可用于助力！结束\n');break};
             for (let i = k; i < m - k; i++) {
                 if (helpinfo[sinfo.pin].invite_success >= need_invite) {
-                    console.log('助力已满，跳出！\n');k = i;break
+                    console.time('助力已满，跳出！\n');k = i;break
                 };
                 if (cookiesArr[i]) {
                     cookie = cookiesArr[i];
@@ -169,12 +196,12 @@ if ($.isNode()) {
                     let msg=data.msg;
                     if (data.code === 0) {
                         msg='助力成功！';
-                        console.log(`账号[${$.index}][${$.nickName || $.UserName}]：${msg}`);
+                        console.time(`账号[${$.index}][${$.nickName || $.UserName}]：${msg}`);
                         helpinfo[sinfo.pin].invite_success++;
                         if(helpinfo[sinfo.pin].invite_taskId){
                             UA = helpinfo[sinfo.pin].ua;
                             cookie = helpinfo[sinfo.pin].cookie;
-                            console.log(`车头[${sinfo.pin}]：去领取邀请好友打卡奖励`);
+                            console.time(`车头[${sinfo.pin}]：去领取邀请好友打卡奖励`);
                             await Award(helpinfo[sinfo.pin].invite_taskId);
                             await $.wait(500);
                         }
@@ -192,16 +219,16 @@ if ($.isNode()) {
                         break
                     } else {
                         if (data.msg.includes('火爆')) helpinfo[$.UserName].hot=1;
-						console.log('此CK助力可能黑了！');
+						console.time('此CK助力可能黑了！');
                         msg="code->"+data.code+":"+data.msg;
                     }
-                    if (data.code != 0) console.log(`账号[${$.index}][${$.nickName || $.UserName}]：${msg}`);
+                    if (data.code != 0) console.time(`账号[${$.index}][${$.nickName || $.UserName}]：${msg}`);
                     if( DYJ_HelpWait.length>1 ){
                         let s=randomNumber(DYJ_HelpWait[0],DYJ_HelpWait[1]);
-                        console.log(`随机等待${s}Ms`);
+                        console.time(`随机等待${s}Ms`);
                         await $.wait(s)
                     }else if(DYJ_HelpWait[0]){
-                        console.log(`固定等待${s}Ms`);
+                        console.time(`固定等待${s}Ms`);
                         await $.wait(DYJ_HelpWait[0])
                     }
                 }
@@ -224,13 +251,13 @@ if ($.isNode()) {
                 if( !black_user.includes($.UserName) ) black_user.push($.UserName)
                 continue;
             }
-            console.log(`\【`+(ct?"车头":"")+`账号${$.index}】${$.UserName}`);
+            console.time(`\【`+(ct?"车头":"")+`账号${$.index}】${$.UserName}`);
             await gettask();
             await $.wait(500);
             for (let item of $.tasklist) {
                 if (item.awardStatus !== 1) {
                     for (let k = 0; k < (item.realCompletedTimes - item.targetTimes + 1); k++) {
-                        console.log(`去领取${item.taskName}奖励`);
+                        console.time(`去领取${item.taskName}奖励`);
                         await Award(item.taskId);
                         await $.wait(500);
                     }
@@ -250,12 +277,13 @@ if ($.isNode()) {
         fs.writeFile(black_path, black_user.join("&"), function (err) {
             if (err) {
                 console.log(err);
-                console.log("\n【缓存文件${black_path}更新失败!】");
+                console.log(`\n缓存文件${black_path}更新失败!`);
             } else {
-                console.log("\n【缓存文件${black_path}更新成功!】");
+                console.log(`\n缓存文件${black_path}更新成功!`);
             }
         })
     }
+
 })()
     .catch((e) => {
         $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
