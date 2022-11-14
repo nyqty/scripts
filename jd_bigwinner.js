@@ -12,7 +12,7 @@ const 提示=`
 运行流程：设置助力信息--是否过滤黑号--助力--领取任务奖励！！！
 助力信息变量：多个助力信息用&隔开，助力信息里面包括用户名和助力码用:隔开。
 用户名和助力码可都填也可以只填用户名，若只有用户名就去ck里面筛选助力信息获取助力码。
-两个都有就依照ck中根据用户名获取更新助力码，若ck中没找用户名就照旧助力
+两个都有就不去获取更新，且设置不过滤黑号就直接开始直接助力了。
 DYJ_shareInfo='用户名&用户名:助力码'
 设置是否过滤黑号 true|false 默认不过滤黑号
 DYJ_filter='true'
@@ -80,12 +80,15 @@ if ($.isNode()) {
             helpinfo[$.UserName] = {};
             UA = UARAM();
             helpinfo[$.UserName].ua = UA;
+            let Pin_i=sharePins.indexOf($.UserName);
             if(DYJ_filter){
-                if( black_user.length && black_user.includes($.UserName) ){
+                if( black_user.length && black_user.includes($.UserName) && Pin_i==-1 ){
                     helpinfo[$.UserName].hot=1;
                     continue;
                 } 
-            }else if( sharePins.length && !sharePins.includes($.UserName) ) continue;
+            }else if( Pin_i==-1 || shareInfo[Pin_i].id ){
+                continue;
+            }
             //await TotalBean();
             console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********`);
             if (!$.isLogin) {
@@ -95,7 +98,6 @@ if ($.isNode()) {
                 }
                 continue
             }
-
             await getinfo(1);
             await $.wait(1000);
         }
