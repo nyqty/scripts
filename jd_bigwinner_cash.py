@@ -35,6 +35,7 @@ index = 0
 h5st_appid = 'd06f1'
 appCode = 'msc588d6d5'
 activeId = '63526d8f5fe613a6adb48f03'
+not_tx=[]
 
 class Userinfo:
     cookie_obj = []
@@ -68,9 +69,7 @@ class Userinfo:
         self.need_help = False
 
     def UserTask(self):
-        return self.exchange_query()
-
-    def exchange_query(self):
+        global not_tx
         url = f'https://wq.jd.com/makemoneyshop/exchangequery?g_ty=h5&g_tk=&appCode={appCode}&activeId={activeId}&sceneval=2'
         res = requests.get(url=url, headers=self.headers).json()
         if res['code'] == 0:
@@ -132,15 +131,15 @@ def main():
     except:
         logger.info("DYJ_CashPin 变量设置错误，pin1&pin2&pin3")
         sys.exit()
-
+    global not_tx
     not_tx = os.environ.get('DYJ_NotCash', "")
     if not_tx == "":
         logger.info('您尚未设置变量 DYJ_NotCash="金额1&金额2&金额3"\n默认不提现0.3和1还有3，相当于 export DYJ_NotCash="0.3&1&3"')
         not_tx = "0.3&1&3"
     try:
         not_tx = not_tx.split('&')
+        logger.info(f"不提现：[{not_tx}]")
         not_tx = [float(item) for item in not_tx]
-        print(not_tx)
     except:
         logger.info("DYJ_NotCash变量设置错误，金额1&金额2&金额3")
 
