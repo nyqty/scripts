@@ -84,7 +84,8 @@ class Userinfo:
                 logger.info(f"已有提现进行中，请等待完成！")
             else:
                 for data in res['data']['cashExchangeRuleList'][::-1]:#倒序
-                    if data['exchangeStatus']==1:
+                    if data['exchangeStatus']==1 or data['exchangeStatus']==2:
+                        #elif data['exchangeStatus']==2:logger.info(f"[{data['name']}]")
                         if canUseCoinAmount >= float(data['cashoutAmount']):
                             if float(data['cashoutAmount']) not in not_tx:
                                 logger.info(f"当前余额[{canUseCoinAmount}]元,符合提现规则[{data['cashoutAmount']}]门槛")
@@ -92,9 +93,8 @@ class Userinfo:
                                 if self.tx(rule_id):break
                             else:logger.info(f"当前余额[{canUseCoinAmount}]元,不提现[{not_tx}]门槛")
                         else:logger.info(f"当前余额[{canUseCoinAmount}]元,不足提现[{data['cashoutAmount']}]门槛")
-                    elif data['exchangeStatus']==2:logger.info(f"当前余额[{canUseCoinAmount}]元,不够兑换[{data['name']}]！")
                     elif data['exchangeStatus']==4:logger.info(f"当前[{data['name']}],库存不足！")
-                    else:logger.info(f"未知exchangeStatus状态[{data['exchangeStatus']}]")
+                    else:logger.info(f"未知状态：{data}")
 
     def tx(self, rule_id):
         url = f'https://wq.jd.com/prmt_exchange/client/exchange?g_ty=h5&g_tk=&appCode={appCode}&bizCode=makemoneyshop&ruleId={rule_id}&sceneval=2'
@@ -157,11 +157,11 @@ def main():
             NotUserList.remove(inviter.pt_pin)
     if len(Users):logger.info(f"找到用户[{len(Users)}]:{Users}")
     if len(NotUserList):logger.info(f"没有找到用户[{len(NotUserList)}]:{NotUserList}")
-    print("")
+    
     for inviter in inviterList:
+        print("")
         logger.info(f"开启提现用户：{inviter.pt_pin}")
         inviter.UserTask()
-        print("")
     #time.sleep(round(random.uniform(0.7, 1.3), 2))
 
 if __name__ == '__main__':
