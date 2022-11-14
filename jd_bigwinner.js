@@ -25,7 +25,6 @@ const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 //IOS等用户直接用NobyDa的jd cookie
 const {UARAM,randomNumber} = require('./USER_AGENTS');
 const fs = require('fs');
-const { isSet } = require('util/types');
 const DYJ_filter=process.env.DYJ_filter && process.env.DYJ_filter === 'true'
 let  black_path = './bigwinner_black.txt';
 let black_user = [];
