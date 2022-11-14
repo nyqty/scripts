@@ -84,8 +84,7 @@ class Userinfo:
                 logger.info(f"已有提现进行中，请等待完成！")
             else:
                 for data in res['data']['cashExchangeRuleList'][::-1]:#倒序
-                    if data['exchangeStatus']==1 or data['exchangeStatus']==2:
-                        #elif data['exchangeStatus']==2:logger.info(f"[{data['name']}]")
+                    if data['exchangeStatus']==1:
                         if canUseCoinAmount >= float(data['cashoutAmount']):
                             if float(data['cashoutAmount']) not in not_tx:
                                 logger.info(f"当前余额[{canUseCoinAmount}]元,符合提现规则[{data['cashoutAmount']}]门槛")
@@ -93,7 +92,9 @@ class Userinfo:
                                 if self.tx(rule_id):break
                             else:logger.info(f"当前余额[{canUseCoinAmount}]元,不提现[{not_tx}]门槛")
                         else:logger.info(f"当前余额[{canUseCoinAmount}]元,不足提现[{data['cashoutAmount']}]门槛")
-                    elif data['exchangeStatus']==4:logger.info(f"当前[{data['name']}],库存不足！")
+                    elif data['exchangeStatus']==2:logger.info(f"{data['name']},来晚了咯都被抢光了")
+                    elif data['exchangeStatus']==3:logger.info(f"{data['name']},已兑换")
+                    elif data['exchangeStatus']==4:logger.info(f"{data['name']},已抢光")
                     else:logger.info(f"未知状态：{data}")
 
     def tx(self, rule_id):
