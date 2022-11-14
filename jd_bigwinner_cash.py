@@ -3,12 +3,10 @@
 Python 3.9.7
 作者：doubi
 日期：2022年10月30日
-作者要求 注释不能删除  否则后续不再更新
-作者授权发布KR库。搬运请完整保留注释。
-环境变量说明：
 export DYJ_TX="需要提现的pin值"  
-cron: 0 0 * * *
+cron: 0 0 0 * * *
 new Env('赚钱大赢家-定时提现');
+TY在原作者基础上删减更改，优化提取
 """
 
 import os
@@ -24,7 +22,7 @@ import traceback
 from hashlib import sha1
 from urllib.parse import quote_plus, unquote_plus, quote
 
-activity_name = "京东极速版-赚钱大赢家"
+activity_name = "京东极速版-赚钱大赢家-定时提现"
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s %(levelname)s %(lineno)d %(message)s",
@@ -48,7 +46,7 @@ class Userinfo:
         self.user_index = index
         self.cookie = cookie
         try:
-            self.pt_pin = re.findall(r'pt_pin=(.*?);', self.cookie)[0]
+            self.pt_pin = unquote_plus(re.findall(r'pt_pin=(.*?);', self.cookie)[0])
         except Exception:
             logger.info(f"取值错误['pt_pin']：{traceback.format_exc()}")
             return
@@ -77,19 +75,27 @@ class Userinfo:
         res = requests.get(url=url, headers=self.headers).json()
         if res['code'] == 0:
             logger.info(f"用户账户[{self.name}]：获取微信提现信息成功")
+            stockPersonDayLimit=int(res['data']['stockPersonDayLimit'])#用户日库存限额
+            stockPersonDayUsed=int(res['data']['stockPersonDayUsed'])#用户今天提现多少次
             canUseCoinAmount = float(res['data']['canUseCoinAmount'])
             logger.info(f"用户账户[{self.name}]：当前余额[{canUseCoinAmount}]元")
-            for data in res['data']['cashExchangeRuleList'][::-1]:
-                if float(data['cashoutAmount']) not in not_tx:
-                    if canUseCoinAmount >= float(data['cashoutAmount']):
-                        logger.info(f"用户账户[{self.name}]：当前余额[{canUseCoinAmount}]元,符合提现规则[{data['cashoutAmount']}]门槛")
-                        rule_id = data['id']
-                        self.tx(rule_id)
-
-                    else:
-                        logger.info(f"用户账户[{self.name}]：当前余额[{canUseCoinAmount}]元,不足提现[{data['cashoutAmount']}]门槛")
-                else:
-                    logger.info(f"用户账户[{self.name}]：当前余额[{canUseCoinAmount}]元,不提现[{not_tx}]门槛")
+            if stockPersonDayUsed>=stockPersonDayLimit:
+                logger.info(f"用户账户[{self.name}]：当前提现次数已经达到上限[{stockPersonDayLimit}]次")
+            elif 'exchangeRecordList' in res['data']:
+                logger.info(f"用户账户[{self.name}]：已有提现进行中，请等待完成！")
+            else:
+                for data in res['data']['cashExchangeRuleList'][::-1]:#倒序
+                    if data['exchangeStatus']==1:
+                        if canUseCoinAmount >= float(data['cashoutAmount']):
+                            if float(data['cashoutAmount']) not in not_tx:
+                                logger.info(f"用户账户[{self.name}]：当前余额[{canUseCoinAmount}]元,符合提现规则[{data['cashoutAmount']}]门槛")
+                                rule_id = data['id']
+                                if self.tx(rule_id):break
+                            else:logger.info(f"用户账户[{self.name}]：当前余额[{canUseCoinAmount}]元,不提现[{not_tx}]门槛")
+                        else:logger.info(f"用户账户[{self.name}]：当前余额[{canUseCoinAmount}]元,不足提现[{data['cashoutAmount']}]门槛")
+                    elif data['exchangeStatus']==2:logger.info(f"用户账户[{self.name}]：当前余额[{canUseCoinAmount}]元,不够兑换[{data['name']}]！")
+                    elif data['exchangeStatus']==4:logger.info(f"用户账户[{self.name}]：当前[{data['name']}],库存不足！")
+                    else:logger.info(f"用户账户[{self.name}]：未知exchangeStatus状态[{data['exchangeStatus']}]")
 
     def tx(self, rule_id):
         url = f'https://wq.jd.com/prmt_exchange/client/exchange?g_ty=h5&g_tk=&appCode={appCode}&bizCode=makemoneyshop&ruleId={rule_id}&sceneval=2'
@@ -97,14 +103,15 @@ class Userinfo:
         if res['ret'] == 0:
             logger.info(f"用户账户[{self.name}]：提现成功")
             return True
-        if res['ret'] == 232:
-            logger.info(f"用户账户[{self.name}]：{res['msg']}")
-            return False
-        if res['ret'] == 604:
+        #elif res['ret'] == 232:
+            #logger.info(f"用户账户[{self.name}]：{res['msg']}")
+            #return False
+        elif res['ret'] == 604:#已有提现进行中，等待完成
             logger.info(f"用户账户[{self.name}]：{res['msg']}")
             return True
         else:
             logger.info(f"用户账户[{self.name}]：{res}")
+            return False
 
 
 def getTime():
@@ -128,14 +135,24 @@ def main():
         sys.exit()
     [Userinfo(cookie) for cookie in cookies]
     inviterList = ([cookie_obj for cookie_obj in Userinfo.cookie_obj for name in helpPin if name in cookie_obj.pt_pin])
+
+    #logger.info(f"helpPin:{helpPin}")
     if not inviterList:
         logger.info(f"没有找到用户:{helpPin}")
         sys.exit()
-    logger.info(f"共找到[{len(inviterList)}]用户")
+
+    Users=[]
+    NotUserList=helpPin
+    for inviter in inviterList:
+        if inviter.pt_pin in helpPin:
+            Users.append(inviter.pt_pin)
+            NotUserList.remove(inviter.pt_pin)
+    logger.info(f"找到用户[{len(Users)}]:{Users}")
+    logger.info(f"没有找到用户[{len(NotUserList)}]:{NotUserList}")
     for inviter in inviterList:
         logger.info(f"开启提现用户：{inviter.pt_pin}")
         inviter.UserTask()
-    time.sleep(round(random.uniform(0.7, 1.3), 2))
+    #time.sleep(round(random.uniform(0.7, 1.3), 2))
 
 if __name__ == '__main__':
     main()
