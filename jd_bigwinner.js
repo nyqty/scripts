@@ -1,6 +1,5 @@
-
 /*
-cron:0 0 * * *
+cron:0 0 0 * * *
 原脚本 https://raw.githubusercontent.com/6dylan6/jdpro/main/jd_makemoneyshop.js
 by、梦创星河 QQ1659670408
 TY二次修改优化
