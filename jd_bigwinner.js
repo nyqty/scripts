@@ -3,9 +3,7 @@ cron:0 0 0 * * *
 原脚本 https://raw.githubusercontent.com/6dylan6/jdpro/main/jd_makemoneyshop.js
 by、梦创星河 QQ1659670408
 TY二次修改优化
-updatetime: 2022/11/13
- */
-const 提示=`
+updatetime: 2022/11/14
 京东特价APP首页-赚钱大赢家
 进APP看看，能不能进去，基本都黑的！！！
 有的能进去，助力确是黑的！！每个人的助力码基本上是不变的。
@@ -15,8 +13,10 @@ const 提示=`
 两个都有就不去获取更新，且设置不过滤黑号就直接开始直接助力了。
 DYJ_shareInfo='用户名&用户名:助力码'
 设置是否过滤黑号 true|false 默认不过滤黑号
-DYJ_filter='true'
-`
+DYJ_filter='false'
+助力间隔时间单位是毫秒，可固定也可设置最小到最大的随机延时。也可为0
+DYJ_HelpWait='最小毫秒-最大毫秒'
+*/
 const Env=require('./utils/Env.js');
 const $ = new Env('特价版大赢家');
 const notify = $.isNode() ? require('./sendNotify') : '';
@@ -24,9 +24,51 @@ const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 //IOS等用户直接用NobyDa的jd cookie
 const {UARAM,randomNumber} = require('./USER_AGENTS');
 const fs = require('fs');
-const DYJ_filter=process.env.DYJ_filter && process.env.DYJ_filter === 'true'
-let  black_path = './bigwinner_black.txt';
-let black_user = [];
+let black_path = './bigwinner_black.txt',black_user = [],cookiesArr = [],
+need_invite=0,cookie = '',DYJ_filter=false,DYJ_HelpWait=[500,1500],
+shareInfo = [],sharePins=[],helpinfo = {};
+
+if (process.env.DYJ_shareInfo) {
+    let t=process.env.DYJ_shareInfo.split("&");
+    Object.keys(t).forEach((i) => {
+        let a=t[i].split(":");
+        sharePins.push(a[0]);
+        shareInfo.push({pin:a[0],id:a.length>1?a[1]:''})
+    })
+    console.log(`已设置${shareInfo.length}个助力信息\n`);
+}else{
+    console.log(`请设置助力信息：DYJ_shareInfo='用户名&用户名:助力码'\n`);
+}
+
+if(process.env.DYJ_filter){
+    DYJ_filter=process.env.DYJ_filter === 'true';
+    console.log(`当前开启过滤黑号`);
+}else{
+    console.log(`请设置是否过滤黑号：DYJ_filter='true|false'
+默认不过滤黑号\n`);
+}
+
+if(process.env.DYJ_HelpWait){
+    DYJ_HelpWait=process.env.DYJ_HelpWait.split("-");
+    DYJ_HelpWait[0]=parseInt(DYJ_HelpWait[0]);
+    if(isNaN(DYJ_HelpWait[0])){
+        DYJ_HelpWait[0]=500;
+        console.log(`我真是无语了，你还是卸载青龙吧！`);
+    }
+    if(DYJ_HelpWait.length>1){
+        DYJ_HelpWait[1]=parseInt(DYJ_HelpWait[1]);
+        if(isNaN(DYJ_HelpWait[1])){
+            DYJ_HelpWait[1]=1500;
+            console.log(`我真是无语了，你还是卸载青龙吧！`);
+        }
+        console.log(`当前随机延时${DYJ_HelpWait[0]}-${DYJ_HelpWait[0]}Ms`);
+    }else{
+        console.log(`当前固定延时${DYJ_HelpWait[0]}Ms`);
+    }
+}else{
+    console.log(`请设置助力间隔时间(毫秒)：DYJ_HelpWait='最小毫秒-最大毫秒'
+也可固定，默认是500-1500毫秒，也就是0.5秒到1.5秒`);
+}
 
 let Fileexists = fs.existsSync(black_path);
 if (Fileexists) {
@@ -37,19 +79,6 @@ if (Fileexists) {
         console.log(`检测到大赢家黑名单账号有${black_user.length}个`);
     }
 }
-
-let cookiesArr = [], cookie = '',
-shareInfo = [],sharePins=[],helpinfo = {};
-if (process.env.DYJ_shareInfo) {
-    let t=process.env.DYJ_shareInfo.split("&");
-    Object.keys(t).forEach((i) => {
-        let a=t[i].split(":");
-        sharePins.push(a[0]);
-        shareInfo.push({pin:a[0],id:a.length>1?a[1]:''})
-    })
-}
-
-var need_invite=0;
 
 if ($.isNode()) {
     Object.keys(jdCookieNode).forEach((item) => {
@@ -64,8 +93,6 @@ if ($.isNode()) {
         $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
         return;
     }
-    console.log(提示)
-    console.log('\n运行一遍可以看到助力码，然后设置需要助力的！')
     for (let i = 0; i < cookiesArr.length; i++) {
         if (cookiesArr[i]) {
             cookie = cookiesArr[i];
@@ -90,7 +117,7 @@ if ($.isNode()) {
                 continue;
             }
             //await TotalBean();
-            console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********`);
+            console.log(`\n******开始【京东`+(Pin_i!=-1?"车头":"")+`账号${$.index}】${$.nickName || $.UserName}*********`);
             if (!$.isLogin) {
                 $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
                 if ($.isNode()) {
@@ -169,9 +196,14 @@ if ($.isNode()) {
                         msg="code->"+data.code+":"+data.msg;
                     }
                     if (data.code != 0) console.log(`账号[${$.index}][${$.nickName || $.UserName}]：${msg}`);
-                    let s=randomNumber(10,20);
-                    //console.log(`随机等待${s/10}秒`);
-                    await $.wait(s*100)
+                    if( DYJ_HelpWait.length>1 ){
+                        let s=randomNumber(DYJ_HelpWait[0],DYJ_HelpWait[1]);
+                        console.log(`随机等待${s}Ms`);
+                        await $.wait(s)
+                    }else if(DYJ_HelpWait[0]){
+                        console.log(`固定等待${s}Ms`);
+                        await $.wait(DYJ_HelpWait[0])
+                    }
                 }
             }
         }
@@ -179,18 +211,20 @@ if ($.isNode()) {
         console.log('无助立马请设置！！\n')
     }
 
-    console.log('开始领取任务奖励...')
+    console.log('\n\n开始领取任务奖励...')
+    if(DYJ_filter) black_user=[];
     for (let i = 0; i < cookiesArr.length; i++) {
         if (cookiesArr[i]) {
             cookie = cookiesArr[i];
             $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
             $.index = i + 1;
             UA = helpinfo[$.UserName].ua;
-            if ( helpinfo[$.UserName].hot ){
+            let ct=sharePins.includes($.UserName);
+            if ( helpinfo[$.UserName].hot && !ct ){
                 if( !black_user.includes($.UserName) ) black_user.push($.UserName)
                 continue;
             }
-            console.log(`\n开始【账号${$.index}】${$.UserName}`);
+            console.log(`\【`+(ct?"车头":"")+`账号${$.index}】${$.UserName}`);
             await gettask();
             await $.wait(500);
             for (let item of $.tasklist) {
