@@ -41,7 +41,6 @@ activeId = '63526d8f5fe613a6adb48f03'
 task_fn = ['打扫店铺']
 invite_taskId = None
 need_invite = 0
-not_tx = [0.3, 1, 3]
 black_user_file = 'black'
 
 
