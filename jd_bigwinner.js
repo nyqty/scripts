@@ -42,7 +42,7 @@ if (process.env.DYJ_shareInfo) {
 
 if(process.env.DYJ_filter){
     DYJ_filter=process.env.DYJ_filter === 'true';
-    console.log(`当前开启过滤黑号`);
+    console.log(`当前`+(DYJ_filter?"开启":"关闭")+`过滤黑号`);
 }else{
     console.log(`请设置是否过滤黑号：DYJ_filter='true|false'
 默认不过滤黑号\n`);
