@@ -244,7 +244,7 @@ console.time = log;
     }
 
     console.log('\n\n开始领取任务奖励...')
-    if(DYJ_filter) black_user=[];
+    black_user=[];
     for (let i = 0; i < cookiesArr.length; i++) {
         if (cookiesArr[i]) {
             cookie = cookiesArr[i];
