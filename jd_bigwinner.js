@@ -303,10 +303,10 @@ function getinfo(xc,Pin_i) {
                     if (data.code == 0) {
                         helpinfo[$.UserName].hot = 0;
                         let sId = data.data.shareId;
+                        helpinfo[$.UserName].sId = `${sId}`;
+                        console.log('当前营业金：' + data.data.canUseCoinAmount);
                         if (xc) {
-                            helpinfo[$.UserName].sId = `${sId}`;
                             console.log('助力码：' + sId);
-                            console.log('当前营业金：' + data.data.canUseCoinAmount);
                         }
                         if( typeof Pin_i !== "undefined" && Pin_i!=-1 ){
                             await $.wait(500);
