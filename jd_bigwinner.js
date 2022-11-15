@@ -256,18 +256,11 @@ console.time = log;
                 if( !black_user.includes($.UserName) ) black_user.push($.UserName)
                 continue;
             }
-            console.time(`\【`+(ct?"车头":"")+`账号${$.index}】${$.UserName}`);
-            await gettask();
-            await $.wait(500);
-            for (let item of $.tasklist) {
-                if (item.awardStatus !== 1) {
-                    for (let k = 0; k < (item.realCompletedTimes - item.targetTimes + 1); k++) {
-                        console.time(`去领取${item.taskName}奖励`);
-                        await Award(item.taskId);
-                        await $.wait(500);
-                    }
-                }
-            }
+            console.log("\n");
+            console.time(`【`+(ct?"车头":"")+`账号${$.index}】${$.UserName}`);
+            await getinfo(0);
+            await $.wait(1000);
+            await gettask(ct,1);
             await $.wait(1000);
         }
     }
@@ -316,37 +309,8 @@ function getinfo(xc,Pin_i) {
                             console.log('当前营业金：' + data.data.canUseCoinAmount);
                         }
                         if( typeof Pin_i !== "undefined" && Pin_i!=-1 ){
-                            $.tasklist=false;
                             await $.wait(500);
-                            await gettask();
-                            //helpinfo[$.UserName].task_list=[];
-                            if($.tasklist) for (let item of $.tasklist) {
-                                let taskName = item['taskName'],
-                                reward = parseInt(item['reward']) / 100,
-                                taskId = item['taskId'],
-                                configTargetTimes = parseInt(item['configTargetTimes']),
-                                status = item.awardStatus;
-                                if(taskName == '邀请好友打卡'){
-                                    helpinfo[$.UserName].invite_success = item['realCompletedTimes']
-                                    helpinfo[$.UserName].invite_taskId = item['taskId']
-                                    helpinfo[$.UserName].cookie = cookie
-                                    if(need_invite == 0) need_invite = configTargetTimes
-                                    if (helpinfo[$.UserName].invite_success < need_invite){
-                                        helpinfo[$.UserName].need_help = true
-                                        console.log(`最高可邀请${need_invite}人,目前已邀请${helpinfo[$.UserName].invite_success}人,还需邀请${parseInt(need_invite) - parseInt(helpinfo[$.UserName].invite_success)}]人`)
-                                    }else{
-                                        console.log(`最高可邀请${need_invite}人,目前已邀请${helpinfo[$.UserName].invite_success}人,助力已满`)
-                                    }
-                                }
-                                console.log(`${taskId} : ${taskName} -- ${reward}个营业币 -- `+(status==1?'已完成':(status==2?'未完成':status)));
-                                if (status !== 1) {
-                                    for (let k = 0; k < (item.realCompletedTimes - item.targetTimes + 1); k++) {
-                                        console.log(`去领取${taskName}奖励`);
-                                        await Award(item.taskId);
-                                        await $.wait(500);
-                                    }
-                                }
-                            }
+                            await gettask(0,0);
                             if(shareInfo[Pin_i].id){
                                 if(shareInfo[Pin_i].id!=sId){
                                     shareInfo[Pin_i].id=sId;
@@ -372,7 +336,7 @@ function getinfo(xc,Pin_i) {
     })
 }
 
-function gettask() {
+function gettask(info,领取) {
     return new Promise(async (resolve) => {
         $.get(taskUrl('newtasksys/newtasksys_front/GetUserTaskStatusList', `__t=${Date.now}&source=makemoneyshop&bizCode=makemoneyshop`), async (err, resp, data) => {
             try {
@@ -384,6 +348,32 @@ function gettask() {
                     data = eval('(' + tostr + ')');
                     if (data.ret == 0) {
                         $.tasklist = data.data.userTaskStatusList;
+                        if($.tasklist) for (let item of $.tasklist) {
+                            let taskName = item['taskName'],
+                            reward = parseInt(item['reward']) / 100,
+                            taskId = item['taskId'],
+                            configTargetTimes = parseInt(item['configTargetTimes']),
+                            status = item.awardStatus;
+                            if(taskName == '邀请好友打卡'){
+                                helpinfo[$.UserName].invite_success = item['realCompletedTimes']
+                                helpinfo[$.UserName].invite_taskId = item['taskId']
+                                helpinfo[$.UserName].cookie = cookie
+                                if(need_invite == 0) need_invite = configTargetTimes
+                                if (helpinfo[$.UserName].invite_success < need_invite){
+                                    info && console.log(`最高可邀请${need_invite}人,目前已邀请${helpinfo[$.UserName].invite_success}人,还需邀请${parseInt(need_invite) - parseInt(helpinfo[$.UserName].invite_success)}人`)
+                                }else{
+                                    info && console.log(`最高可邀请${need_invite}人,目前已邀请${helpinfo[$.UserName].invite_success}人,助力已满`)
+                                }
+                            }
+                            info && console.log(`${taskId} : ${taskName} -- ${reward}个营业币 -- `+(status==1?'已完成':(status==2?'未完成':status)));
+                            if ( status !== 1 && 领取 ) {
+                                for (let k = 0; k < (item.realCompletedTimes - item.targetTimes + 1); k++) {
+                                    console.log(`去领取${taskName}奖励`);
+                                    await $.wait(500);
+                                    await Award(item.taskId);
+                                }
+                            }
+                        }
                     } else {
                         console.log(data.msg);
                     }
