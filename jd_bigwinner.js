@@ -27,6 +27,8 @@ const fs = require('fs');
 let black_path = './bigwinner_black.txt',black_user = [],cookiesArr = [],
 need_invite=0,cookie = '',DYJ_filter=false,DYJ_HelpWait=[500,1500],
 shareInfo = [],sharePins=[],helpinfo = {};
+const Hour = (new Date()).getHours()
+const query = Hour >= 9
 
 if (process.env.DYJ_shareInfo) {
     let t=process.env.DYJ_shareInfo.split("&");
@@ -140,9 +142,7 @@ console.time = log;
                     helpinfo[$.UserName].hot=1;
                     continue;
                 } 
-            }else if( Pin_i==-1 || shareInfo[Pin_i].id ){
-                continue;
-            }
+            }else if( Pin_i==-1 || (shareInfo[Pin_i].id && !query) ) continue;
             //await TotalBean();
             console.log(`\n******开始【京东`+(Pin_i!=-1?"车头":"")+`账号${$.index}】${$.nickName || $.UserName}*********`);
             if (!$.isLogin) {
@@ -152,7 +152,7 @@ console.time = log;
                 }
                 continue
             }
-            await getinfo(1);
+            await getinfo(1,Pin_i);
             await $.wait(1000);
         }
     }
@@ -174,30 +174,35 @@ console.time = log;
         if(txt) console.log(`export DYJ_shareInfo="${txt.slice(0,-1)}"\n`)
         if(need_invite == 0) need_invite = 10;
         $.index = 0;
-		let k = 0,m = cookiesArr.length,data;
+		let ck_i = 0,ck_length = cookiesArr.length,data;
         for (let j = 0,sinfo; j < shareInfo.length; j++) {
             sinfo=shareInfo[j];
             if(!helpinfo[sinfo.pin]) helpinfo[sinfo.pin]={};
             if(!helpinfo[sinfo.pin].invite_success) helpinfo[sinfo.pin].invite_success=0;
             if ( helpinfo[sinfo.pin].invite_success>=need_invite ) continue;
             console.log('\n去助力--> ' + sinfo.pin);
-            if ($.index === m) {console.time('已无账号可用于助力！结束\n');break};
-            for (let i = k; i < m - k; i++) {
+            if ($.index === ck_length) {console.time('已无账号可用于助力！结束\n');break};
+            for (let i = ck_i; i < ck_length - ck_i; i++) {
                 if (helpinfo[sinfo.pin].invite_success >= need_invite) {
-                    console.time('助力已满，跳出！\n');k = i;break
+                    console.time(`助力已满${need_invite}，跳出！`);ck_i = i;break
                 };
                 if (cookiesArr[i]) {
                     cookie = cookiesArr[i];
                     $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1]);
                     $.index = i + 1;
                     UA = helpinfo[$.UserName].ua;
-                    if ($.UserName==sinfo.pin || helpinfo[$.UserName].hot)  continue;
+                    if($.UserName==sinfo.pin){
+                        cookiesArr.push(cookie);
+                        ck_length=cookiesArr.length
+                        continue;
+                    }
+                    if(helpinfo[$.UserName].hot) continue;
                     data=await help(sinfo);
                     let msg=data.msg;
                     if (data.code === 0) {
-                        msg='助力成功！';
-                        console.time(`账号[${$.index}][${$.nickName || $.UserName}]：${msg}`);
                         helpinfo[sinfo.pin].invite_success++;
+                        msg=`助力成功${helpinfo[sinfo.pin].invite_success}次`;
+                        console.time(`账号[${$.index}][${$.nickName || $.UserName}]：${msg}`);
                         if(helpinfo[sinfo.pin].invite_taskId){
                             UA = helpinfo[sinfo.pin].ua;
                             cookie = helpinfo[sinfo.pin].cookie;
@@ -215,7 +220,7 @@ console.time = log;
                         msg='今日无助力次数了！';
                     } else if (data.code === 1009) {//助力任务已完成
                         helpinfo[sinfo.pin].invite_success=need_invite;
-                        k = i--;
+                        ck_i = i--;
                         break
                     } else {
                         if (data.msg.includes('火爆')) helpinfo[$.UserName].hot=1;
@@ -292,7 +297,7 @@ console.time = log;
         $.done();
     })
 
-function getinfo(xc) {
+function getinfo(xc,Pin_i) {
     return new Promise(async (resolve) => {
         $.get(taskUrl('makemoneyshop/home', 'activeId=63526d8f5fe613a6adb48f03&_stk=activeId&_ste=1'), async (err, resp, data) => {
             try {
@@ -304,53 +309,52 @@ function getinfo(xc) {
                     data = eval('(' + tostr + ')');
                     if (data.code == 0) {
                         helpinfo[$.UserName].hot = 0;
+                        let sId = data.data.shareId;
                         if (xc) {
-                            let sId = data.data.shareId;
                             helpinfo[$.UserName].sId = `${sId}`;
                             console.log('助力码：' + sId);
                             console.log('当前营业金：' + data.data.canUseCoinAmount);
-                            let i=sharePins.indexOf($.UserName);
-                            if( i!=-1 ){
-                                $.tasklist=false;
-                                await $.wait(500);
-                                await gettask();
-                                //helpinfo[$.UserName].task_list=[];
-                                if($.tasklist) for (let item of $.tasklist) {
-                                    let taskName = item['taskName'],
-                                    reward = parseInt(item['reward']) / 100,
-                                    taskId = item['taskId'],
-                                    configTargetTimes = parseInt(item['configTargetTimes']),
-                                    status = item.awardStatus;
-                                    if(taskName == '邀请好友打卡'){
-                                        helpinfo[$.UserName].invite_success = item['realCompletedTimes']
-                                        helpinfo[$.UserName].invite_taskId = item['taskId']
-                                        helpinfo[$.UserName].cookie = cookie
-                                        if(need_invite == 0) need_invite = configTargetTimes
-                                        if (helpinfo[$.UserName].invite_success < need_invite){
-                                            helpinfo[$.UserName].need_help = true
-                                            console.log(`最高可邀请${need_invite}人,目前已邀请${helpinfo[$.UserName].invite_success}人,还需邀请${parseInt(need_invite) - parseInt(helpinfo[$.UserName].invite_success)}]人`)
-                                        }else{
-                                            console.log(`最高可邀请${need_invite}人,目前已邀请${helpinfo[$.UserName].invite_success}人,助力已满`)
-                                        }
-                                    }
-                                    console.log(`${taskId} : ${taskName} -- ${reward}个营业币 -- `+(status==1?'已完成':(status==2?'未完成':status)));
-                                    if (status !== 1) {
-                                        for (let k = 0; k < (item.realCompletedTimes - item.targetTimes + 1); k++) {
-                                            console.log(`去领取${taskName}奖励`);
-                                            await Award(item.taskId);
-                                            await $.wait(500);
-                                        }
+                        }
+                        if( typeof Pin_i !== "undefined" && Pin_i!=-1 ){
+                            $.tasklist=false;
+                            await $.wait(500);
+                            await gettask();
+                            //helpinfo[$.UserName].task_list=[];
+                            if($.tasklist) for (let item of $.tasklist) {
+                                let taskName = item['taskName'],
+                                reward = parseInt(item['reward']) / 100,
+                                taskId = item['taskId'],
+                                configTargetTimes = parseInt(item['configTargetTimes']),
+                                status = item.awardStatus;
+                                if(taskName == '邀请好友打卡'){
+                                    helpinfo[$.UserName].invite_success = item['realCompletedTimes']
+                                    helpinfo[$.UserName].invite_taskId = item['taskId']
+                                    helpinfo[$.UserName].cookie = cookie
+                                    if(need_invite == 0) need_invite = configTargetTimes
+                                    if (helpinfo[$.UserName].invite_success < need_invite){
+                                        helpinfo[$.UserName].need_help = true
+                                        console.log(`最高可邀请${need_invite}人,目前已邀请${helpinfo[$.UserName].invite_success}人,还需邀请${parseInt(need_invite) - parseInt(helpinfo[$.UserName].invite_success)}]人`)
+                                    }else{
+                                        console.log(`最高可邀请${need_invite}人,目前已邀请${helpinfo[$.UserName].invite_success}人,助力已满`)
                                     }
                                 }
-                                if(shareInfo[i].id){
-                                    if(shareInfo[i].id!=sId){
-                                        shareInfo[i].id=sId;
-                                        console.log('检测到当前用户设置的助力码和获取的不匹配！');
+                                console.log(`${taskId} : ${taskName} -- ${reward}个营业币 -- `+(status==1?'已完成':(status==2?'未完成':status)));
+                                if (status !== 1) {
+                                    for (let k = 0; k < (item.realCompletedTimes - item.targetTimes + 1); k++) {
+                                        console.log(`去领取${taskName}奖励`);
+                                        await Award(item.taskId);
+                                        await $.wait(500);
                                     }
-                                }else{
-                                    shareInfo[i].id=sId;
-                                    console.log('检测到当前用户没有设置助力码哦！');
                                 }
+                            }
+                            if(shareInfo[Pin_i].id){
+                                if(shareInfo[Pin_i].id!=sId){
+                                    shareInfo[Pin_i].id=sId;
+                                    console.log('检测到当前用户设置的助力码和获取的不匹配！');
+                                }
+                            }else{
+                                shareInfo[Pin_i].id=sId;
+                                console.log('检测到当前用户没有设置助力码哦！');
                             }
                         }
                     } else {
@@ -454,10 +458,10 @@ function taskUrl(fn, body) {
 function TotalBean() {
     return new Promise((resolve) => {
         const options = {
-            url: 'https://plogin.m.jd.com/cgi-bin/ml/islogin',
+            url: 'https://plogin.ck_length.jd.com/cgi-bin/ml/islogin',
             headers: {
                 "Cookie": cookie,
-                "referer": "https://h5.m.jd.com/",
+                "referer": "https://h5.ck_length.jd.com/",
                 "User-Agent": UA,
             },
             timeout: 10000
