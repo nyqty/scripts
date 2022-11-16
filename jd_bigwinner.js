@@ -183,9 +183,6 @@ console.time = log;
             console.log('\n去助力--> ' + sinfo.pin);
             if ($.index === ck_length) {console.time('已无账号可用于助力！结束\n');break};
             for (let i = ck_i; i < ck_length - ck_i; i++) {
-                if (helpinfo[sinfo.pin].invite_success >= need_invite) {
-                    console.time(`助力已满${need_invite}，跳出！`);ck_i = i;break
-                };
                 if (cookiesArr[i]) {
                     cookie = cookiesArr[i];
                     $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1]);
@@ -220,8 +217,7 @@ console.time = log;
                         msg='今日无助力次数了！';
                     } else if (data.code === 1009) {//助力任务已完成
                         helpinfo[sinfo.pin].invite_success=need_invite;
-                        ck_i = i--;
-                        break
+                        i--;
                     } else {
                         if (data.msg.includes('火爆')) helpinfo[$.UserName].hot=1;
 						console.time('此CK助力可能黑了！');
@@ -236,6 +232,9 @@ console.time = log;
                         console.time(`固定等待${s}Ms`);
                         await $.wait(DYJ_HelpWait[0])
                     }
+                    if (helpinfo[sinfo.pin].invite_success >= need_invite) {
+                        console.time(`助力已满${need_invite}，跳出！`);ck_i = i;break
+                    };
                 }
             }
         }
