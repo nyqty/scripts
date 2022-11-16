@@ -309,7 +309,7 @@ function getinfo(xc,Pin_i) {
                         }
                         if( typeof Pin_i !== "undefined" && Pin_i!=-1 ){
                             await $.wait(500);
-                            await gettask(0,0);
+                            await gettask(1,0);
                             if(shareInfo[Pin_i].id){
                                 if(shareInfo[Pin_i].id!=sId){
                                     shareInfo[Pin_i].id=sId;
