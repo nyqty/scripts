@@ -6,14 +6,14 @@ IOS等用户直接用NobyDa的jd cookie
 ============Quantumultx===============
 [task_local]
 #组队分豆-新安怡
-1 1 1 1 * https://raw.githubusercontent.com/KingRan/KR/main/jd_teamXAY.js, tag=组队分豆-新安怡, enabled=true
+0 20 * * * https://raw.githubusercontent.com/KingRan/KR/main/jd_teamXAY.js, tag=组队分豆-新安怡, enabled=true
 ================Loon==============
 [Script]
-cron "1 1 1 1 *" script-path=https://raw.githubusercontent.com/KingRan/KR/main/jd_teamXAY.js,tag=组队分豆-新安怡
+cron "0 20 * * *" script-path=https://raw.githubusercontent.com/KingRan/KR/main/jd_teamXAY.js,tag=组队分豆-新安怡
 ===============Surge=================
-组队分豆-新安怡 = type=cron,cronexp="1 1 1 1 *",wake-system=1,timeout=3600,script-path=https://raw.githubusercontent.com/KingRan/KR/main/jd_teamXAY.js
+组队分豆-新安怡 = type=cron,cronexp="0 20 * * *",wake-system=1,timeout=3600,script-path=https://raw.githubusercontent.com/KingRan/KR/main/jd_teamXAY.js
 ============小火箭=========
-组队分豆-新安怡 = type=cron,script-path=https://raw.githubusercontent.com/KingRan/KR/main/jd_teamXAY.js, cronexpr="1 1 1 1 *", timeout=3600, enable=true
+组队分豆-新安怡 = type=cron,script-path=https://raw.githubusercontent.com/KingRan/KR/main/jd_teamXAY.js, cronexpr="0 20 * * *", timeout=3600, enable=true
 */
 const Env=require('./utils/Env.js');
 const $=new Env("新安怡组队分豆-加密");
@@ -44,7 +44,7 @@ if($.isNode()){
 		$.msg($.name,'【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取','https://bean.m.jd.com/bean/signIndex.action',{'open-url':'https://bean.m.jd.com/bean/signIndex.action'});
 		return;
 	}
-	authorCodeList=[];//await getAuthorCodeList('http://code.kingran.ga/xay.json');
+	authorCodeList=["90e8dff7749f4a31a9865c701b130a39"];//await getAuthorCodeList('http://code.kingran.ga/xay.json');
 	console.log('\n此活动需要新加入会员店铺才能加入队伍，\n若已经入会过，则无法重复入队。');
 	console.log('\n瓜分入口:\nhttps://lzkjdz-isv.isvjcloud.com/pool/captain/4330568?activityId=9dfd1384e00a411cbd9e82a34cc8d803');
 	for(let _0x4493c1=0;_0x4493c1<cookiesArr.length;_0x4493c1++){
@@ -111,7 +111,7 @@ async function xay(){
 			await task('pool/activityContent','activityId='+$.activityId+'&pin='+encodeURIComponent($.secretPin)+'&signUuid='+encodeURIComponent($.authorCode));
 			if($.activityContent){
 				if($.activityContent.canJoin){
-					$.log('加入队伍成功，请等待队长瓜分京豆');
+					console.log('加入队伍成功，请等待队长瓜分京豆');
 					await $.wait(2000);
 					await task('pool/saveCandidate','activityId='+$.activityId+'&pin='+encodeURIComponent($.secretPin)+'&signUuid='+encodeURIComponent($.authorCode)+'&pinImg='+encodeURIComponent('https://img10.360buyimg.com/imgzone/jfs/t1/21383/2/6633/3879/5c5138d8E0967ccf2/91da57c5e2166005.jpg'));
 					$.log('加入会员');
@@ -140,7 +140,7 @@ async function xay(){
 					await $.wait(2000);
 					if($.index===1){
 						if($.activityContent.canCreate){
-							$.log('创建队伍');
+							console.log('创建队伍');
 							await $.wait(2000);
 							await task('pool/saveCaptain','activityId='+$.activityId+'&pin='+encodeURIComponent($.secretPin)+'&pinImg='+encodeURIComponent('https://img10.360buyimg.com/imgzone/jfs/t1/21383/2/6633/3879/5c5138d8E0967ccf2/91da57c5e2166005.jpg'));
 							console.log('队伍ID：'+ownCode);
@@ -148,7 +148,7 @@ async function xay(){
 					}
 				}else{
 					if($.index===1){
-						$.log('创建队伍');
+						console.log('创建队伍');
 						if($.activityContent.canCreate){
 							await $.wait(2000);
 							await task('pool/saveCaptain','activityId='+$.activityId+'&pin='+encodeURIComponent($.secretPin)+'&pinImg='+encodeURIComponent('https://img10.360buyimg.com/imgzone/jfs/t1/21383/2/6633/3879/5c5138d8E0967ccf2/91da57c5e2166005.jpg'));
@@ -166,7 +166,7 @@ async function xay(){
 			$.log('没有成功获取到用户信息');
 		}
 	}else{
-		$.log('没有成功获取到用户鉴权信息');
+		console.log('没有成功获取到用户鉴权信息');
 	}
 }
 function task(_0x598b56,_0x4751df){

@@ -6,14 +6,14 @@ IOS等用户直接用NobyDa的jd cookie
 ============Quantumultx===============
 [task_local]
 #组队分豆-飞利浦
-1 1 1 1 * https://raw.githubusercontent.com/KingRan/KR/main/jd_teamFLP.js, tag=组队分豆-飞利浦, enabled=true
+30 19 * * * https://raw.githubusercontent.com/KingRan/KR/main/jd_teamFLP.js, tag=组队分豆-飞利浦, enabled=true
 ================Loon==============
 [Script]
-cron "1 1 1 1 *" script-path=https://raw.githubusercontent.com/KingRan/KR/main/jd_teamFLP.js,tag=组队分豆-飞利浦
+cron "30 19 * * *" script-path=https://raw.githubusercontent.com/KingRan/KR/main/jd_teamFLP.js,tag=组队分豆-飞利浦
 ===============Surge=================
-组队分豆-飞利浦 = type=cron,cronexp="1 1 1 1 *",wake-system=1,timeout=3600,script-path=https://raw.githubusercontent.com/KingRan/KR/main/jd_teamFLP.js
+组队分豆-飞利浦 = type=cron,cronexp="30 19 * * *",wake-system=1,timeout=3600,script-path=https://raw.githubusercontent.com/KingRan/KR/main/jd_teamFLP.js
 ============小火箭=========
-组队分豆-飞利浦 = type=cron,script-path=https://raw.githubusercontent.com/KingRan/KR/main/jd_teamFLP.js, cronexpr="1 1 1 1 *", timeout=3600, enable=true
+组队分豆-飞利浦 = type=cron,script-path=https://raw.githubusercontent.com/KingRan/KR/main/jd_teamFLP.js, cronexpr="30 19 * * *", timeout=3600, enable=true
 */
 const Env=require('./utils/Env.js');
 const $=new Env("飞利浦组队分豆-加密");
@@ -44,7 +44,7 @@ if($.isNode()){
 		$.msg($.name,'【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取','https://bean.m.jd.com/bean/signIndex.action',{'open-url':'https://bean.m.jd.com/bean/signIndex.action'});
 		return;
 	}
-	authorCodeList=[];//await getAuthorCodeList('http://code.kingran.ga/flp.json');
+	authorCodeList=["90e8dff7749f4a31a9865c701b130a39"];//await getAuthorCodeList('http://code.kingran.ga/flp.json');
 	console.log('\n此活动需要新加入会员店铺才能加入队伍，\n若已经入会过，则无法重复入队。');
 	console.log('\n瓜分入口:\nhttps://lzkjdz-isv.isvjd.com/pool/captain/4471266?activityId=49aad82a1afb4bd7b84eb6e79f633a67');
 	for(let _0x30624e=0;_0x30624e<cookiesArr.length;_0x30624e++){

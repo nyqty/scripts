@@ -19,7 +19,7 @@
 
 [task_local]
 #11.1-11.31 雅诗兰黛奢雅邀请入会有礼
-1 1 1 1 * jd_YSLD.js, tag=11.1-11.31 雅诗兰黛奢雅邀请入会有礼, enabled=true
+30 18 * * * jd_YSLD.js, tag=11.1-11.31 雅诗兰黛奢雅邀请入会有礼, enabled=true
 
 */
 const Env=require('./utils/Env.js');
@@ -51,7 +51,7 @@ let activityCookie='';
 		$.msg($.name,'【提示】请先获取cookie\n直接使用NobyDa的京东签到获取','https://bean.m.jd.com/',{'open-url':'https://bean.m.jd.com/'});
 		return;
 	}
-	authorCodeList=[];//await getAuthorCodeList('http://code.kingran.ga/ysld.json');
+	authorCodeList=["9e1fb949c20b44ee83e6560107bd485c"];//await getAuthorCodeList('http://code.kingran.ga/ysld.json');
 	$.joinStatus=false;
 	$.activityId='2211100037674501';
 	$.authorCode=authorCodeList[random(0,authorCodeList.length)];

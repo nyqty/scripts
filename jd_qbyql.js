@@ -15,13 +15,14 @@
 请求太频繁会被黑ip
 过10分钟再执行
 
-cron:1 1 1 1 *
+cron:0 18 * * *
 ============Quantumultx===============
 [task_local]
 #11.1-11.31 倩碧邀请礼
-1 1 1 1 * jd_qbyql.js, tag=11.1-11.31 倩碧邀请礼, enabled=true
+0 18 * * * jd_qbyql.js, tag=11.1-11.31 倩碧邀请礼, enabled=true
 
 */
+const Env=require('./utils/Env.js');
 const $=new Env('11.1-11.31 倩碧邀请礼');
 const jdCookieNode=$.isNode()?require('./jdCookie.js'):'';
 const notify=$.isNode()?require('./sendNotify'):'';
@@ -50,7 +51,7 @@ let activityCookie='';
 		return;
 	}
 	$.activityId='2201100037643113';
-	authorCodeList=[];//await getAuthorCodeList('http://code.kingran.ga/qbyql.json');
+	authorCodeList=["e6e9ced5fd784e598fabe10381a6991b"];//await getAuthorCodeList('http://code.kingran.ga/qbyql.json');
 	if(authorCodeList==='404: Not Found'){
 		authorCodeList=[''];
 	}

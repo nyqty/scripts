@@ -21,11 +21,11 @@
 请求太频繁会被黑ip
 过10分钟再执行
 
-cron:1 1 1 1 *
+cron:0 19 * * *
 ============Quantumultx===============
 [task_local]
 #11.1-11.31 安佳 邀新有礼
-1 1 1 1 * jd_AJYX.js, tag=11.1-11.31 安佳 邀新有礼, enabled=true
+0 19 * * * jd_AJYX.js, tag=11.1-11.31 安佳 邀新有礼, enabled=true
 
 */
 const Env=require('./utils/Env.js');
@@ -57,7 +57,7 @@ let activityCookie='';
 	console.log('请自行去活动页面兑换对应的奖励\n开卡火爆重新运行一次');
 	$.assistStatus=false;
 	$.activityId='2104100001448619';
-	authorCodeList=[];//=await getAuthorCodeList('http://code.kingran.ga/ajyq.json');
+	authorCodeList=["3fae513d37694efd9157a9f010adc8f3"];//=await getAuthorCodeList('http://code.kingran.ga/ajyq.json');
 	$.shareUuid=authorCodeList[Math.floor(Math.random()*authorCodeList.length)];
 	console.log('入口:\nhttps://lzkjdz-isv.isvjd.com/wx/anchor/inviteJune/activity?activityId=2104100001448619&InviteUuid='+$.shareUuid);
 	for(let _0x11880f=0;_0x11880f<cookiesArr.length;_0x11880f++){
