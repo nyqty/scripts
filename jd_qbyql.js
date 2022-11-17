@@ -15,11 +15,11 @@
 请求太频繁会被黑ip
 过10分钟再执行
 
-cron:0 18 * * *
+cron:0 13 * * *
 ============Quantumultx===============
 [task_local]
 #11.1-11.31 倩碧邀请礼
-0 18 * * * jd_qbyql.js, tag=11.1-11.31 倩碧邀请礼, enabled=true
+0 13 * * * jd_qbyql.js, tag=11.1-11.31 倩碧邀请礼, enabled=true
 
 */
 const Env=require('./utils/Env.js');

@@ -6,14 +6,14 @@ IOS等用户直接用NobyDa的jd cookie
 ============Quantumultx===============
 [task_local]
 #组队分豆-新安怡
-0 20 * * * https://raw.githubusercontent.com/KingRan/KR/main/jd_teamXAY.js, tag=组队分豆-新安怡, enabled=true
+0 15 * * * https://raw.githubusercontent.com/KingRan/KR/main/jd_teamXAY.js, tag=组队分豆-新安怡, enabled=true
 ================Loon==============
 [Script]
-cron "0 20 * * *" script-path=https://raw.githubusercontent.com/KingRan/KR/main/jd_teamXAY.js,tag=组队分豆-新安怡
+cron "0 15 * * *" script-path=https://raw.githubusercontent.com/KingRan/KR/main/jd_teamXAY.js,tag=组队分豆-新安怡
 ===============Surge=================
-组队分豆-新安怡 = type=cron,cronexp="0 20 * * *",wake-system=1,timeout=3600,script-path=https://raw.githubusercontent.com/KingRan/KR/main/jd_teamXAY.js
+组队分豆-新安怡 = type=cron,cronexp="0 15 * * *",wake-system=1,timeout=3600,script-path=https://raw.githubusercontent.com/KingRan/KR/main/jd_teamXAY.js
 ============小火箭=========
-组队分豆-新安怡 = type=cron,script-path=https://raw.githubusercontent.com/KingRan/KR/main/jd_teamXAY.js, cronexpr="0 20 * * *", timeout=3600, enable=true
+组队分豆-新安怡 = type=cron,script-path=https://raw.githubusercontent.com/KingRan/KR/main/jd_teamXAY.js, cronexpr="0 15 * * *", timeout=3600, enable=true
 */
 const Env=require('./utils/Env.js');
 const $=new Env("新安怡组队分豆-加密");

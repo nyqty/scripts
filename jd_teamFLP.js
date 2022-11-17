@@ -6,14 +6,14 @@ IOS等用户直接用NobyDa的jd cookie
 ============Quantumultx===============
 [task_local]
 #组队分豆-飞利浦
-30 19 * * * https://raw.githubusercontent.com/KingRan/KR/main/jd_teamFLP.js, tag=组队分豆-飞利浦, enabled=true
+0 14 * * * https://raw.githubusercontent.com/KingRan/KR/main/jd_teamFLP.js, tag=组队分豆-飞利浦, enabled=true
 ================Loon==============
 [Script]
-cron "30 19 * * *" script-path=https://raw.githubusercontent.com/KingRan/KR/main/jd_teamFLP.js,tag=组队分豆-飞利浦
+cron "0 14 * * *" script-path=https://raw.githubusercontent.com/KingRan/KR/main/jd_teamFLP.js,tag=组队分豆-飞利浦
 ===============Surge=================
-组队分豆-飞利浦 = type=cron,cronexp="30 19 * * *",wake-system=1,timeout=3600,script-path=https://raw.githubusercontent.com/KingRan/KR/main/jd_teamFLP.js
+组队分豆-飞利浦 = type=cron,cronexp="0 14 * * *",wake-system=1,timeout=3600,script-path=https://raw.githubusercontent.com/KingRan/KR/main/jd_teamFLP.js
 ============小火箭=========
-组队分豆-飞利浦 = type=cron,script-path=https://raw.githubusercontent.com/KingRan/KR/main/jd_teamFLP.js, cronexpr="30 19 * * *", timeout=3600, enable=true
+组队分豆-飞利浦 = type=cron,script-path=https://raw.githubusercontent.com/KingRan/KR/main/jd_teamFLP.js, cronexpr="0 14 * * *", timeout=3600, enable=true
 */
 const Env=require('./utils/Env.js');
 const $=new Env("飞利浦组队分豆-加密");

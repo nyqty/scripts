@@ -21,11 +21,11 @@
 请求太频繁会被黑ip
 过10分钟再执行
 
-cron:0 19 * * *
+cron:0 16 * * *
 ============Quantumultx===============
 [task_local]
 #11.1-11.31 安佳 邀新有礼
-0 19 * * * jd_AJYX.js, tag=11.1-11.31 安佳 邀新有礼, enabled=true
+0 16 * * * jd_AJYX.js, tag=11.1-11.31 安佳 邀新有礼, enabled=true
 
 */
 const Env=require('./utils/Env.js');

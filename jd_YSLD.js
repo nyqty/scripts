@@ -19,7 +19,7 @@
 
 [task_local]
 #11.1-11.31 雅诗兰黛奢雅邀请入会有礼
-30 18 * * * jd_YSLD.js, tag=11.1-11.31 雅诗兰黛奢雅邀请入会有礼, enabled=true
+0 17 * * * jd_YSLD.js, tag=11.1-11.31 雅诗兰黛奢雅邀请入会有礼, enabled=true
 
 */
 const Env=require('./utils/Env.js');
