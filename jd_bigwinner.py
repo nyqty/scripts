@@ -54,7 +54,7 @@ class Userinfo:
         self.user_index = index
         self.cookie = cookie
         try:
-            self.pt_pin = unquote_plus(re.findall(r'pt_pin=(.*?);', self.cookie)[0])
+            self.pt_pin = unquote_plus(re.findall(r'pt_pin=([^; ]+)(?=;?)', self.cookie)[0])
         except Exception:
             logger.info(f"取值错误['pt_pin']：{traceback.format_exc()}")
             return

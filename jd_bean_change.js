@@ -1,7 +1,6 @@
 /*
 cron "30 12,21 * * *" jd_bean_change.js, tag:资产变化强化版by-ccwav
  */
-
 //详细说明参考 https://github.com/ccwav/QLScript2
 
 // prettier-ignore
@@ -276,7 +275,7 @@ if(DisableIndex!=-1){
 }
 
 //京喜牧场
-let EnableJxMC=true;
+let EnableJxMC=false;
 DisableIndex= strDisableList.findIndex((item) => item === "京喜牧场");
 if(DisableIndex!=-1){
 	console.log("检测到设定关闭京喜牧场查询");
@@ -343,7 +342,7 @@ if(DisableIndex!=-1){
 }
 
 //汪汪赛跑
-let EnableJoyRun=true;
+let EnableJoyRun=false;
 DisableIndex=strDisableList.findIndex((item) => item === "汪汪赛跑");
 if(DisableIndex!=-1){
 	console.log("检测到设定关闭汪汪赛跑查询");
@@ -427,10 +426,9 @@ if(DisableIndex!=-1){
 			
 			TempBaipiao = "";
 			strGuoqi="";
-			
-			await TotalBean();
-		    //await TotalBean2();
 			console.log(`******开始查询【京东账号${$.index}】${$.nickName || $.UserName}*********`);
+			await TotalBean();			
+		    //await TotalBean2();
 			if ($.beanCount == 0) {
 				console.log("数据获取失败，等待30秒后重试....")
 				await $.wait(30*1000);
@@ -444,6 +442,7 @@ if(DisableIndex!=-1){
 			        $.beanCount = userdata.content.jdBean;
 			    }
 			}
+			
 			
 			if (!$.isLogin) {
 				await isLoginByX1a0He();
@@ -533,7 +532,7 @@ if(DisableIndex!=-1){
 
 						await notify.sendNotify(`${$.name}`, `${allMessage}`, {
 							url: `https://bean.m.jd.com/beanDetail/index.action?resourceValue=bean`
-						}, '\n\n本通知 By ccwav Mod',TempMessage)
+						}, '\n\n本通知 By https://github.com/KingRan/KR',TempMessage)
 					}
 					if ($.isNode() && allMessageMonth) {
 						await notify.sendNotify(`京东月资产变动`, `${allMessageMonth}`, {
@@ -613,7 +612,7 @@ if(DisableIndex!=-1){
 				
 				await notify.sendNotify(`${$.name}`, `${allMessage}`, {
 					url: `https://bean.m.jd.com/beanDetail/index.action?resourceValue=bean`
-				}, '\n\n本通知 By ccwav Mod',TempMessage)
+				}, '\n\n本通知 By https://github.com/KingRan/KR',TempMessage)
 			}
 			if ($.isNode() && allMessageMonth) {
 				await notify.sendNotify(`京东月资产变动`, `${allMessageMonth}`, {
@@ -629,7 +628,7 @@ if(DisableIndex!=-1){
 				allMessageGp2=strAllNotify+`\n`+allMessageGp2;
 			await notify.sendNotify(`${$.name}#2`, `${allMessageGp2}`, {
 				url: `https://bean.m.jd.com/beanDetail/index.action?resourceValue=bean`
-			}, '\n\n本通知 By ccwav Mod',TempMessage)
+			}, '\n\n本通知 By https://github.com/KingRan/KR',TempMessage)
 			await $.wait(10 * 1000);
 		}
 		if ($.isNode() && allMessageGp3) {
@@ -638,7 +637,7 @@ if(DisableIndex!=-1){
 				allMessageGp3=strAllNotify+`\n`+allMessageGp3;
 			await notify.sendNotify(`${$.name}#3`, `${allMessageGp3}`, {
 				url: `https://bean.m.jd.com/beanDetail/index.action?resourceValue=bean`
-			}, '\n\n本通知 By ccwav Mod',TempMessage)
+			}, '\n\n本通知 By https://github.com/KingRan/KR',TempMessage)
 			await $.wait(10 * 1000);
 		}
 		if ($.isNode() && allMessageGp4) {
@@ -647,7 +646,7 @@ if(DisableIndex!=-1){
 				allMessageGp4=strAllNotify+`\n`+allMessageGp4;
 			await notify.sendNotify(`${$.name}#4`, `${allMessageGp4}`, {
 				url: `https://bean.m.jd.com/beanDetail/index.action?resourceValue=bean`
-			}, '\n\n本通知 By ccwav Mod',TempMessage)
+			}, '\n\n本通知 By https://github.com/KingRan/KR',TempMessage)
 			await $.wait(10 * 1000);
 		}
 		if ($.isNode() && allMessage) {
@@ -657,7 +656,7 @@ if(DisableIndex!=-1){
 			
 			await notify.sendNotify(`${$.name}`, `${allMessage}`, {
 				url: `https://bean.m.jd.com/beanDetail/index.action?resourceValue=bean`
-			}, '\n\n本通知 By ccwav Mod',TempMessage)
+			}, '\n\n本通知 By https://github.com/KingRan/KR',TempMessage)
 			await $.wait(10 * 1000);
 		}
 
@@ -1152,7 +1151,7 @@ async function showMsg() {
 		if(strAllNotify)
 			ReturnMessage=strAllNotify+`\n`+ReturnMessage;
 		
-		await notify.sendNotifybyWxPucher(strTitle, `${ReturnMessage}`, `${$.UserName}`,'\n\n本通知 By ccwav Mod',strsummary);
+		await notify.sendNotifybyWxPucher(strTitle, `${ReturnMessage}`, `${$.UserName}`,'\n\n本通知 By https://github.com/KingRan/KR',strsummary);
 	}
 
 	//$.msg($.name, '', ReturnMessage , {"open-url": "https://bean.m.jd.com/beanDetail/index.action?resourceValue=bean"});
@@ -1492,6 +1491,9 @@ function TotalBean() {
                         } else {
                             $.nickName = $.UserName
                         }
+						
+							
+							
                     } else {
                         console.log(`京东服务器返回空数据`)
                     }
@@ -1838,10 +1840,8 @@ function getCoupon() {
 			timeout: 10000
         }
         $.get(options, async(err, resp, data) => {
-            try {
-				data=data.match(new RegExp(/jsonpCBK.?\((.*);*/))[1]
-                if( data ) data = JSON.parse(data)
-				else resolve();
+            try {				
+                data = JSON.parse(data.match(new RegExp(/jsonpCBK.?\((.*);*/))[1]);
                 let couponTitle = '';
                 let couponId = '';
                 // 删除可使用且非超市、生鲜、京贴;
@@ -1853,7 +1853,7 @@ function getCoupon() {
 					//console.log(useable[i]);
                     if (useable[i].limitStr.indexOf('全品类') > -1) {
                         $.beginTime = useable[i].beginTime;
-                        if ($.beginTime < new Date().getTime() && useable[i].quota < 20 && useable[i].coupontype === 1) {                           
+                        if ($.beginTime < new Date().getTime() && useable[i].quota <= 100 && useable[i].coupontype === 1) {                           
 							//$.couponEndTime = new Date(parseInt(useable[i].endTime)).Format('yyyy-MM-dd');
                             $.couponName = useable[i].limitStr;
 							if (useable[i].platFormInfo) 
