@@ -172,7 +172,7 @@ console.time = log;
         console.log('\n开始助力...')
         console.log(`${JSON.stringify(shareInfo)}\n`)
         if(txt) console.log(`export DYJ_shareInfo="${txt.slice(0,-1)}"\n`)
-        if(need_invite == 0) need_invite = 10;
+        if(need_invite == 0) need_invite = 5;
         $.index = 0;
 		let ck_i = 0,ck_length = cookiesArr.length,data;
         for (let j = 0,sinfo; j < shareInfo.length; j++) {
