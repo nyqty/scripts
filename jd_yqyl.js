@@ -58,13 +58,6 @@ if ($.isNode()) {
       }
       await helpme()
       await $.wait(500)
-      res = await invite2()
-      if(!res){
-        console.log(`应该是403了休息1分钟重试！`);
-        await $.wait(60*1000);
-        //{"code":605,"message":"被邀请者领取达到上限","class":"com.jd.market.task.bean.Response","isSuccess":false}
-        //console.log(data)
-      }
       if (zdtx == true) {
         for (let i = 0; i < 20; i++) {
           await $.wait(1000)
@@ -114,48 +107,6 @@ function helpme() {
         $.logErr(e, resp);
       } finally {
         resolve();
-      }
-    });
-  });
-}
-
-function invite2() {
-  return new Promise(async (resolve) => {
-    let inviterIdArr = [
-      "Y1J++FA6+wKsvX+R2C2bDw==",
-      "v7PbDLcmaFqxlAPSec3fHg=="
-    ]
-    let inviterId = inviterIdArr[Math.floor((Math.random() * inviterIdArr.length))]
-    let options = {
-      url: "https://api.m.jd.com/",
-      //encodeURIComponent
-      body: `functionId=TaskInviteService&body=${JSON.stringify({"method":"participateInviteTask","data":{"channel":"1","encryptionInviterPin":inviterId,"type":1}})}&appid=market-task-h5&uuid=&_t=${Date.now()}`,
-      headers: {
-        "Host": "api.m.jd.com",
-        "Accept": "application/json, text/plain, */*",
-        "Content-Type": "application/x-www-form-urlencoded",
-        "Origin": "https://assignment.jd.com",
-        "Accept-Language": "zh-CN,zh-Hans;q=0.9",
-        "User-Agent": $.isNode() ? (process.env.JS_USER_AGENT ? process.env.JS_USER_AGENT : (require('./JS_USER_AGENTS').USER_AGENT)) : ($.getdata('JSUA') ? $.getdata('JSUA') : "'jdltapp;iPad;3.1.0;14.4;network/wifi;Mozilla/5.0 (iPad; CPU OS 14_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1"),
-        "Referer": "https://assignment.jd.com/",
-        "Accept-Encoding": "gzip, deflate, br",
-        "Cookie": cookie
-      }
-    }
-    $.post(options, (err, resp, data) => {
-      try {
-        if (err) {
-          console.log(`${JSON.stringify(err)}`)
-          console.log(`TaskInviteService API请求失败，请检查网路重试`)
-        } else {
-          if (safeGet(data)) {
-            data = JSON.parse(data);
-          }
-        }
-      } catch (e) {
-        $.logErr(e, resp);
-      } finally {
-        resolve(data);
       }
     });
   });
