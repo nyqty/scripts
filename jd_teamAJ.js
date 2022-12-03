@@ -45,7 +45,7 @@ if($.isNode()){
 		$.msg($.name,'【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取','https://bean.m.jd.com/bean/signIndex.action',{'open-url':'https://bean.m.jd.com/bean/signIndex.action'});
 		return;
 	}
-	authorCodeList=[]//await getAuthorCodeList('http://code.kingran.ga/aj.json');
+	authorCodeList=["abee0c4cc44b4a7393c9694fece3b20a"]//await getAuthorCodeList('http://code.kingran.ga/aj.json');
 	console.log('\n此活动需要新加入会员店铺才能加入队伍，\n若已经入会过，则无法重复入队，\n瓜分限制20组，请自行换号运行。\n瓜分入口:\nhttps://lzkjdz-isv.isvjcloud.com/pool/captain/4471266?activityId=5280930d84294555b7a1e61cb97ce9de');
 	for(let _0x296f2c=0;_0x296f2c<cookiesArr.length;_0x296f2c++){
 		if(cookiesArr[_0x296f2c]){

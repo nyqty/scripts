@@ -44,7 +44,7 @@ let lz_cookie={};
 		return;
 	}
 	$.activityId='dze13a037aa9d84d838afe9836';
-	authorCodeList=[]//await getAuthorCodeList('http://code.kingran.ga/ajmh.json');
+	authorCodeList=["43aaf7886c3148109845111d14404112"]//await getAuthorCodeList('http://code.kingran.ga/ajmh.json');
 	$.shareUuid=authorCodeList[Math.floor(Math.random()*authorCodeList.length)];
 	console.log('入口:\nhttps://lzdz1-isv.isvjcloud.com/dingzhi/box618/activity/activity?activityId='+$.activityId+'&shareUuid='+$.shareUuid);
 	console.log('\n规则:\n1.每天完成任务共计：50积分。\n2.邀请一名好友50积分，不上限。\n3.每300积分可以开盲盒一次，每天限制开三次，每天限制中奖一次。');
