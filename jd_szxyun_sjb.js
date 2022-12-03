@@ -30,7 +30,7 @@ if(isGetCookie){
 	$.done();
 }
 !(async()=>{
-	authorCodeList=[]//await getAuthorCodeList('http://code.kingran.ga/1.json');
+	authorCodeList=["1598537446666477570"]//await getAuthorCodeList('http://code.kingran.ga/1.json');
 	$.activityId='guessWorldCupDG47nrRz';
 	$.authorCode=authorCodeList[random(0,authorCodeList.length)];
 	$.shareId=$.authorCode;

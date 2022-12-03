@@ -47,7 +47,7 @@ let activityUrl='https://lzkjdz-isv.isvjcloud.com/m/1000009821/99/22121000009821
 		return;
 	}
 	$.activityId='2212100000982112';
-	authorCodeList=[]//await getAuthorCodeList('http://code.kingran.ga/sk2.json');
+	authorCodeList=["5811725f169c425d8482130245953957"]//await getAuthorCodeList('http://code.kingran.ga/sk2.json');
 	if(authorCodeList==='404: Not Found'){
 		authorCodeList=[''];
 	}
@@ -133,8 +133,9 @@ async function run(){
 		}
 		if($.hotFlag)return;
 		if(!$.actorUuid){
+			$.actorUuid=$.shareUuid;/*
 			console.log('获取不到[actorUuid]退出执行，请重新执行');
-			return;
+			return;*/
 		}
 		for(let _0x4bdaa1=0;_0x4bdaa1<$.taskslist['length'];_0x4bdaa1++){
 			$.taskId=$.taskslist[_0x4bdaa1]['taskId'];

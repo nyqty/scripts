@@ -131,8 +131,9 @@ async function run(){
 		await takePostRequest('accessLogWithAD');
 		await takePostRequest('activityContent');
 		if(!$.actorUuid){
+			$.actorUuid=$.shareUuid;/*
 			console.log('获取不到[actorUuid]退出执行，请重新执行');
-			return;
+			return;*/
 		}
 		if($.openStatus==0){
 			console.log('开卡');

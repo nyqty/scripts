@@ -133,8 +133,9 @@ async function run(){
 		}
 		if($.hotFlag)return;
 		if(!$.actorUuid){
+			$.actorUuid=$.shareUuid;/*
 			console.log('获取不到[actorUuid]退出执行，请重新执行');
-			return;
+			return;*/
 		}
 		for(let _0x4d3e6c=0;_0x4d3e6c<$.taskslist['length'];_0x4d3e6c++){
 			$.taskId=$.taskslist[_0x4d3e6c]['taskId'];
