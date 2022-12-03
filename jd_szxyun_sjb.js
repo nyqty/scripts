@@ -7,6 +7,7 @@ cron:31 14 1-20 12 *
 #12.1-12.20 竞猜世界杯
 31 14 1-20 12 * jd_szxyun_sjb.js, tag=12.1-12.20 竞猜世界杯, enabled=true
 */
+const Env=require('./utils/Env.js');
 const $=new Env("12.1-12.20 竞猜世界杯");
 const notify=$.isNode()?require('./sendNotify'):'';
 const jdCookieNode=$.isNode()?require('./jdCookie.js'):'';

@@ -22,6 +22,7 @@ cron:11 11 11 11 *
 11 11 11 11 * jd_qbyql.js, tag=12.1-12.31 倩碧邀请礼, enabled=true
 
 */
+const Env=require('./utils/Env.js');
 const $=new Env('12.1-12.31 倩碧邀请礼');
 const jdCookieNode=$.isNode()?require('./jdCookie.js'):'';
 const notify=$.isNode()?require('./sendNotify'):'';

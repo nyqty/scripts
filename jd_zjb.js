@@ -112,7 +112,7 @@ function help() {
   return new Promise(async (resolve) => {
     let options = {
       url: `https://api.m.jd.com`,
-      body: `functionId=TaskInviteServiceNew&body={"method":"participateInviteTask","data":{"channel":"1","encryptionInviterPin":"${encodeURIComponent(InviterPin)}","type":1}}&appid=jx_h5&uuid=7303439343432346-7356431353233311&eu=7303439343432341&fv=7356431353233321&_t=1623475839367`,
+      body: `functionId=TaskInviteServiceNew&body=${JSON.stringify({"method":"participateInviteTask","data":{"channel":"1","encryptionInviterPin":encodeURIComponent(InviterPin),"type":1}})}&appid=jx_h5&uuid=&_t=${Date.now()}`,
       headers: {
         "Origin": "https://assignment.jd.com",
         "Host": "api.m.jd.com",
@@ -140,7 +140,7 @@ function help2(name,code) {
   return new Promise(async (resolve) => {
     let options = {
       url: `https://api.m.jd.com`,
-      body: `functionId=TaskInviteServiceNew&body={"method":"participateInviteTask","data":{"channel":"1","encryptionInviterPin":"${code}","type":1}}&appid=jx_h5&uuid=7303439343432346-7356431353233311&eu=7303439343432341&fv=7356431353233321&_t=1623475839367`,
+      body: `functionId=TaskInviteServiceNew&body=${JSON.stringify({"method":"participateInviteTask","data":{"channel":"1","encryptionInviterPin":encodeURIComponent(code),"type":1}})}&appid=jx_h5&uuid=&_t=${Date.now()}`,
       headers: {
         "Origin": "https://assignment.jd.com",
         "Host": "api.m.jd.com",

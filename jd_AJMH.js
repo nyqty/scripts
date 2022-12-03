@@ -15,6 +15,7 @@ cron:1 1 * * *
 1 1 * * * jd_AJMH.js, tag=12.1-12.31 安佳做任务开盲盒，赢好礼, enabled=true
 
 */
+const Env=require('./utils/Env.js');
 const $=new Env('12.1-12.31 安佳做任务开盲盒，赢好礼');
 const jdCookieNode=$.isNode()?require('./jdCookie.js'):'';
 const notify=$.isNode()?require('./sendNotify'):'';
