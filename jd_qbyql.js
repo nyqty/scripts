@@ -51,7 +51,7 @@ let activityCookie='';
 		return;
 	}
 	$.activityId='2201100037643114';
-	authorCodeList=await getAuthorCodeList('http://code.kingran.ga/qbyql.json');
+	authorCodeList=[]//await getAuthorCodeList('http://code.kingran.ga/qbyql.json');
 	if(authorCodeList==='404: Not Found'){
 		authorCodeList=[''];
 	}
