@@ -64,7 +64,7 @@ if (process.env.JD_CITY_SHARECODES) {
 }
 
 const JD_API_HOST = 'https://api.m.jd.com/client.action';
-let inviteCodes = ['eFtqjyeps_r0L17EBpfUh8U','-ryUM9lbJB8_PkmFPK6Du6olJhQnEtU','-ryUG_pYMDcGO2mVLZyUu84ZdHjbrIA','8ayyH_9SKihDL17VOs8','-ryUXqULZWVEMBaVGNiR9aGr-wpRyEE-','-ryUOd57JD8XKXaODqWPu98ipnknA_w','-ryUXalZYmdGYhfGSN3DonbDM-KbH3xD']
+let inviteCodes = [/*'eFtqjyeps_r0L17EBpfUh8U','-ryUM9lbJB8_PkmFPK6Du6olJhQnEtU','-ryUG_pYMDcGO2mVLZyUu84ZdHjbrIA',*/'8ayyH_9SKihDL17VOs8','-ryUXqULZWVEMBaVGNiR9aGr-wpRyEE-','-ryUOd57JD8XKXaODqWPu98ipnknA_w','-ryUXalZYmdGYhfGSN3DonbDM-KbH3xD']
 
 !(async () => {
   if (!cookiesArr[0]) {
@@ -200,20 +200,28 @@ let inviteCodes = ['eFtqjyeps_r0L17EBpfUh8U','-ryUM9lbJB8_PkmFPK6Du6olJhQnEtU','
           if(res.code === -30001){
             console.log(res.msg)
             break;
-          }else if(res.code===0 && res['data'] && res['data']['bizCode'] === 0) {
-            if (res['data']['result']['toasts'] && res['data']['result']['toasts'][0] && res['data']['result']['toasts'][0]['status'] === '3') {
-              console.log(`助力次数已耗尽，跳出`)
-              break
-            }
-            if (res['data']['result']['toasts']) {
-              if ( res['data']['result']['toasts'][0] ) {
-                shareCodes_success[j]++;
-                console.log(`助力 【${shareCodes[j]}】:${res.data.result.toasts[0].msg}`)
-              } else {
-                console.log(`未知错误，跳出：err`)
-                //console.log(`${JSON.stringify(res)}`)
+          }else if(res.code===0 && res['data']) {
+            let {bizCode,bizMsg}=res['data'];
+            if( bizCode=== 0 ){
+              if (res['data']['result']['toasts'] && res['data']['result']['toasts'][0] && res['data']['result']['toasts'][0]['status'] === '3') {
+                console.log(`助力次数已耗尽，跳出`)
                 break
               }
+              if (res['data']['result']['toasts']) {
+                if ( res['data']['result']['toasts'][0] ) {
+                  shareCodes_success[j]++;
+                  console.log(`助力 【${shareCodes[j]}】:${res.data.result.toasts[0].msg}`)
+                } else {
+                  console.log(`未知错误，跳出：err`)
+                  //console.log(`${JSON.stringify(res)}`)
+                  break
+                }
+              }
+            }else if(bizMsg=="活动太火爆啦"){//{"bizCode":-11, -12
+              console.log(bizMsg+"等待10秒");
+              await $.wait(10000)
+            }else{
+              console.log(bizMsg);
             }
           }else{
             console.log(`city_getHomeData失败:${JSON.stringify(res)}\n`)
