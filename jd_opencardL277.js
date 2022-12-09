@@ -49,16 +49,11 @@ let lz_cookie={};
 		$.msg($.name,'【提示】请先获取cookie\n直接使用NobyDa的京东签到获取','https://bean.m.jd.com/',{'open-url':'https://bean.m.jd.com/'});
 		return;
 	}
-	authorCodeList=[];//await getAuthorCodeList('http://code.kingran.ga/277.json');
+	authorCodeList=[]//await getAuthorCodeList('http://code.kingran.ga/277.json');
 	$.activityId='dz7943b5bf718c4701bb5eee36a17f';
 	$.authorCode=authorCodeList[random(0,authorCodeList.length)];
 	$.shareUuid=$.authorCode;
 	console.log('入口:\nhttps://lzdz1-isv.isvjcloud.com/dingzhi/drinkcategory/piecetoge1/activity?activityId='+$.activityId);
-	let _0x1c40ce=['22f0b7293d9c4edfb58815ef738d5cb0'];
-	let _0x364860=Math.floor(Math.random()*3);
-	let _0x42664f=0;
-	_0x42664f=Math.floor(Math.random()*_0x1c40ce.length);
-	$.shareUuid=_0x1c40ce[_0x42664f]?_0x1c40ce[_0x42664f]:$.shareUuid;
 	for(let _0x4ff2fe=0;_0x4ff2fe<cookiesArr.length;_0x4ff2fe++){
 		cookie=cookiesArr[_0x4ff2fe];
 		originCookie=cookiesArr[_0x4ff2fe];
