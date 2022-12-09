@@ -216,7 +216,7 @@ let inviteCodes = ['eFtqjyeps_r0L17EBpfUh8U','-ryUM9lbJB8_PkmFPK6Du6olJhQnEtU','
               }
             }
           }else{
-            console.log(`city_getHomeData失败:${JSON.stringify(data)}\n`)
+            console.log(`city_getHomeData失败:${JSON.stringify(res)}\n`)
           }
           if (( res['status'] && res['status'] === '3') || (res && res.data && res.data.bizCode === -11)) {
             // 助力次数耗尽 || 黑号
