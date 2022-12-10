@@ -35,7 +35,6 @@ let exchangeFlag = $.isNode() ? (process.env.JD_CITY_EXCHANGE === "true" ? true 
 let JD_CITY_TASK = process.env.JD_CITY_TASK === "true" ? true : false   //是否开启自动跑任务，默认关闭
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '', message;
-let uuid, UA;
 $.shareCodes = []//用户获取的互助码
 
 let shareCodes = []
@@ -127,7 +126,8 @@ let inviteCodes = [/*'eFtqjyeps_r0L17EBpfUh8U','-ryUM9lbJB8_PkmFPK6Du6olJhQnEtU'
       $.isLogin = true;
       $.nickName = '';
       message = '';
-      await TotalBean();
+      getUA()
+      //await TotalBean();
       console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
       if (!$.isLogin) {
         $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
@@ -137,8 +137,9 @@ let inviteCodes = [/*'eFtqjyeps_r0L17EBpfUh8U','-ryUM9lbJB8_PkmFPK6Du6olJhQnEtU'
         }
         continue
       }
-      UA = `jdapp;iPhone;10.2.0;13.1.2;${randomString(40)};M/5.0;network/wifi;ADID/;model/iPhone8,1;addressid/2308460611;appBuild/167853;jdSupportDarkMode/0;Mozilla/5.0 (iPhone; CPU iPhone OS 13_1_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1;`
-      uuid = UA.split(';')[4]
+      $.joyytoken = ''
+      $.uid = ''
+      let noHelpCount = 0
       $.joyytokenb = ($.getdata("jd_blog_joyytoken") && $.getdata("jd_blog_joyytoken")[$.UserName]) || ''
       if (JD_CITY_TASK){
         res = await getInfo('');
@@ -221,19 +222,20 @@ let inviteCodes = [/*'eFtqjyeps_r0L17EBpfUh8U','-ryUM9lbJB8_PkmFPK6Du6olJhQnEtU'
             let {bizCode,bizMsg}=res['data'];
             //console.log(`${JSON.stringify(res['data']['result'])}`)
             if( bizCode=== 0 ){
-              if (res['data']['result']['toasts'] && res['data']['result']['toasts'][0] && res['data']['result']['toasts'][0]['status'] === '3') {
-                console.log(`助力次数已耗尽，跳出`)
-                break
-              }
-              if (res['data']['result']['toasts']) {
-                if ( res['data']['result']['toasts'][0] ) {
-                  shareCodes_success[j]++;
-                  console.log(`助力 【${shareCodes[j]}】:${res.data.result.toasts[0].msg}`)
-                } else {
-                  console.log(`未知错误，跳出：err`)
-                  //console.log(`${JSON.stringify(res)}`)
+              let toasts=res['data']['result']['toasts'];
+              if(toasts){
+                if( toasts[0] && toasts[0]['status'] === '3'){
+                  console.log(`助力次数已耗尽，跳出`)
                   break
+                }else{
+                  shareCodes_success[j]++;
+                  console.log(toasts[0].msg)
                 }
+              }else{
+                console.log("无法助力")
+                noHelpCount++
+                if(noHelpCount > 1) break
+                
               }
             }else if(bizMsg=="活动太火爆啦"){//{"bizCode":-11, -12
               console.log(bizMsg+"等待10秒");
@@ -317,6 +319,7 @@ async function getInfo(inviteId) {
           console.log(`${JSON.stringify(err)}`)
           console.log(`${$.name} API请求失败，请检查网路重试`)
         } else {
+          //console.log(data)
           if (safeGet(data)) {
             data = JSON.parse(data);
           }else{
@@ -446,23 +449,27 @@ function city_doTaskByTk(taskId, taskToken, actionType = 0) {
 }
 
 function taskPostUrl(functionId, body) {
-  let t = Date.now()
   return {
     url: JD_API_HOST,
-    body: `functionId=${functionId}&body=${JSON.stringify(body)}&appid=signed_wh5&osVersion=15.0.1&timestamp=${t}&&client=ios&clientVersion=11.3.0&openudid=${uuid}`,
+    body: `functionId=${functionId}&appid=signed_wh5&body=${(JSON.stringify(body))}&client=wh5&clientVersion=1.0.0`,
     headers: {
       "Host": "api.m.jd.com",
       "Accept": "application/json, text/plain, */*",
       "Content-Type": "application/x-www-form-urlencoded",
       "Origin": "https://bunearth.m.jd.com",
       "Accept-Language": "zh-CN,zh-Hans;q=0.9",
-      "User-Agent":UA,
+      "User-Agent":$.UA,
       "Referer": "https://bunearth.m.jd.com/",
       "Accept-Encoding": "gzip, deflate, br",
       "Cookie": cookie
     }
   }
 }
+
+function getUA() {
+  $.UA = `jdapp;iPhone;10.2.0;14.3;${randomString(40)};M/5.0;network/wifi;ADID/;model/iPhone12,1;addressid/;appBuild/167853;jdSupportDarkMode/0;Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1;`
+}
+
 function randomString(e) {
   e = e || 32;
   let t = "abcdef0123456789", a = t.length, n = "";
