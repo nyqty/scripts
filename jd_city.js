@@ -71,7 +71,26 @@ let inviteCodes = [/*'eFtqjyeps_r0L17EBpfUh8U','-ryUM9lbJB8_PkmFPK6Du6olJhQnEtU'
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
     return;
   }
-
+  $.token="wbvfunwflgtvzjwf"
+  if(!$.token){
+    console.log("填写log token[gua_log_token]")
+    return
+  }
+  let urlArr = [
+      // "http://127.0.0.1",
+      "http://g.zxi7.cn",
+      "https://jd.smiek.tk",
+      "http://jd.smiek.ga",
+  ]
+  for(let i of urlArr){
+      $.getSignUrl = i
+      await toStatus()
+      if($.toStatus) break
+  }
+  if(!$.toStatus){
+      $.getSignUrl = ''
+  }
+  
   if (shareCodes.length) {
     console.log(`您提供了${shareCodes.length}个账号的${$.name}助力码，优先给你助力，如有剩余给作者\n`);
   } else {
@@ -120,55 +139,59 @@ let inviteCodes = [/*'eFtqjyeps_r0L17EBpfUh8U','-ryUM9lbJB8_PkmFPK6Du6olJhQnEtU'
       }
       UA = `jdapp;iPhone;10.2.0;13.1.2;${randomString(40)};M/5.0;network/wifi;ADID/;model/iPhone8,1;addressid/2308460611;appBuild/167853;jdSupportDarkMode/0;Mozilla/5.0 (iPhone; CPU iPhone OS 13_1_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1;`
       uuid = UA.split(';')[4]
+      $.joyytokenb = ($.getdata("jd_blog_joyytoken") && $.getdata("jd_blog_joyytoken")[$.UserName]) || ''
+      JD_CITY_TASK=1
       if (JD_CITY_TASK){
         res = await getInfo('');
         if (res.code === 0) {
           if (res.data && res['data']['bizCode'] === 0) {
               console.log(`互助码:${res.data && res.data.result.userActBaseInfo.inviteId}`);
-              if (res.data && res.data.result.userActBaseInfo.inviteId) {
+              /*if (res.data && res.data.result.userActBaseInfo.inviteId) {
                 $.shareCodes.push(res.data.result.userActBaseInfo.inviteId)
-              }
+              }*/
               console.log(`剩余金额：${res.data.result.userActBaseInfo.poolMoney}`)
-              for (let pop of res.data.result.popWindows || []) {
-                if (pop.res.cash && (pop.data.cash !== res.data.result.userActBaseInfo.poolMoney)) {
-                  await receiveCash("", "2");
-                }
+            for (let vo of data.data.result && data.data.result.popWindows || []) {
+              if (vo && vo.type === "dailycash_second") {
+                await receiveCash()
+                await $.wait(2 * 1000)
               }
-              const { taskDetailResultVo } = res.data.result.taskInfo;
-              const { lotteryTaskVos, taskVos } = taskDetailResultVo;
-              for (let lotteryTask of lotteryTaskVos) {
-                if (lotteryTask.times >= lotteryTask.maxTimes && lotteryTask.times !== undefined) {
-                  for (let lo of lotteryTask?.badgeAwardVos || []) {
-                    if (lo.status === 3) {
-                      await receiveCash("", "6");
-                    }
-                  }
-                }
+            }
+            for (let vo of data.data.result && data.data.result.mainInfos || []) {
+              if (vo && vo.remaingAssistNum === 0 && vo.status === "1") {
+                await receiveCash(vo.roundNum)
+                await $.wait(2 * 1000)
               }
-              /* */
-              for (let task of taskVos || []) {
-                const t = Date.now();
-                if (task.status === 1 && t >= task.taskBeginTime && t < task.taskEndTime) {
-                  const id = task.taskId, max = task.maxTimes;
-                  const waitDuration = task.waitDuration || 0;
-                  let time = task?.times || 0;
-                  for (let ltask of task.shoppingActivityVos) {
-                    if (ltask.status === 1) {
-                      console.log(`去做任务：${ltask.title}`);
-                      if (waitDuration) {
-                        await $.wait(1500);
-                        await city_doTaskByTk(id, ltask.taskToken, 1);
-                        await $.wait(waitDuration * 1000);
+            }
+            for (let task of data.data.result && data.data.result.taskInfo.taskDetailResultVo.taskVos && false || []) {
+              if (task && task.status == 1) {
+                  console.log(task.taskName)
+                  console.log(task.roundNum)
+                  await receiveCash(task.roundNum)
+                  await $.wait(2*1000)
+                  /*
+                  const t = Date.now();
+                  if ( t >= task.taskBeginTime && t < task.taskEndTime) {
+                    const id = task.taskId, max = task.maxTimes;
+                    const waitDuration = task.waitDuration || 0;
+                    let time = task?.times || 0;
+                    for (let ltask of task.shoppingActivityVos) {
+                      if (ltask.status === 1) {
+                        console.log(`去做任务：${ltask.title}`);
+                        if (waitDuration) {
+                          await $.wait(1500);
+                          await city_doTaskByTk(id, ltask.taskToken, 1);
+                          await $.wait(waitDuration * 1000);
+                        }
+                        await city_doTaskByTk(id, ltask.taskToken);
+                        time++;
+                        if (time >= max) break;
                       }
-                      await city_doTaskByTk(id, ltask.taskToken);
-                      time++;
-                      if (time >= max) break;
                     }
-                  }
-                  await $.wait(2500);
-                }
+                    await $.wait(2500);
+                  }*/
               }
-            
+            }
+
             for (let vo of res.data.result && res.data.result.mainInfos || []) {
               if (vo && vo.remaingAssistNum === 0 && vo.status === "1") {
                 console.log(vo.roundNum)
@@ -197,10 +220,7 @@ let inviteCodes = [/*'eFtqjyeps_r0L17EBpfUh8U','-ryUM9lbJB8_PkmFPK6Du6olJhQnEtU'
         await $.wait(1000)
         res = await getInfo(shareCodes[j])
         if(res){
-          if(res.code === -30001){
-            console.log(res.msg)
-            break;
-          }else if(res.code===0 && res['data']) {
+          if(res.code===0 && res['data']) {
             let {bizCode,bizMsg}=res['data'];
             if( bizCode=== 0 ){
               if (res['data']['result']['toasts'] && res['data']['result']['toasts'][0] && res['data']['result']['toasts'][0]['status'] === '3') {
@@ -223,18 +243,32 @@ let inviteCodes = [/*'eFtqjyeps_r0L17EBpfUh8U','-ryUM9lbJB8_PkmFPK6Du6olJhQnEtU'
             }else{
               console.log(bizMsg);
             }
+          }else if (( res['status'] && res['status'] === '3') || (res && res.data && res.data.bizCode === -11)) {
+            // 助力次数耗尽 || 黑号
+            break
+          }else if(/火爆|登陆失败/.test($.toStr(res, res))){
+            $.isLogin = false
+            break
           }else{
             console.log(`city_getHomeData失败:${JSON.stringify(res)}\n`)
-          }
-          if (( res['status'] && res['status'] === '3') || (res && res.data && res.data.bizCode === -11)) {
-            // 助力次数耗尽 || 黑号
+            $.isLogin = false
             break
           }
         }else{
           console.log("助力解析失败！")
         }
       }
-
+      if(!$.isLogin){
+        continue
+      }
+      let jd_blog_joyytoken = $.getdata("jd_blog_joyytoken") || {}
+      if($.joyytokenb){
+        jd_blog_joyytoken[$.UserName] = $.joyytokenb
+        $.setdata(jd_blog_joyytoken, 'jd_blog_joyytoken')
+      }else if (jd_blog_joyytoken[$.UserName]){
+        delete jd_blog_joyytoken[$.UserName]
+        $.setdata(jd_blog_joyytoken, 'jd_blog_joyytoken')
+      }
       await $.wait(1000)
       await getInviteInfo();//雇佣
       if (exchangeFlag) {
@@ -275,8 +309,9 @@ let inviteCodes = [/*'eFtqjyeps_r0L17EBpfUh8U','-ryUM9lbJB8_PkmFPK6Du6olJhQnEtU'
     $.done();
   })
 
-function getInfo(inviteId) {
-  let body = {"lbsCity":"15","realLbsCity":"1233","inviteId":inviteId,"headImg":"","userName":"","taskChannel":"1","location":"120.609447,28.008608","safeStr":""}
+async function getInfo(inviteId) {
+  let log = JSON.stringify(await getLogs("inviteId", { }))
+  let body = { "lbsCity": "16", "realLbsCity": "1315", "inviteId": inviteId, "headImg": "", "userName": "", "taskChannel": "1" ,"location":"","safeStr":`${log}`}
   return new Promise((resolve) => {
     $.post(taskPostUrl("city_getHomeDatav1", body), async (err, resp, data) => {
       try {
@@ -297,42 +332,36 @@ function getInfo(inviteId) {
   })
 }
 
-function receiveCash(roundNum, type = '') {
-  let body = { "cashType": 1, "roundNum": roundNum }
-  if (type) body = { "cashType": type }
+function receiveCash(roundNum = '') {
+  let body = { "cashType": 2 }
+  if (roundNum) body = { "cashType": 1, "roundNum": roundNum }
+  if (roundNum == -1) body = { "cashType": 4 }
   return new Promise((resolve) => {
-    $.post(taskPostUrl("city_receiveCash", body), async (err, resp, data) => {
-      try {
-        if (err) {
-          console.log(`${JSON.stringify(err)}`)
-          console.log(`${$.name} API请求失败，请检查网路重试`)
-        } else {
-          if (safeGet(data)) {
-            //console.log(`领红包结果${data}`);
-            data = JSON.parse(data);
-						// console.log(`抽奖结果：${JSON.stringify(data)}`);
-            if(data){
-							if(data['code'] === 410) {
-								console.log(data.msg)
-							} else if (data['data']['bizCode'] === 0) {
-								console.log(`获得 ${data.data.result.currentTimeCash} 元，共计 ${data.data.result.totalCash} 元`)
-							}  else if (data['data']['bizCode'] === -99) {
-								console.log(`${data.data.bizMsg}`)
-							} else {
-								console.log(JSON.stringify(data))
-							}
-						}
-
+      $.post(taskPostUrl("city_receiveCash", body), async (err, resp, data) => {
+          try {
+              if (err) {
+                  console.log(`${JSON.stringify(err)}`)
+                  console.log(`${$.name} API请求失败，请检查网路重试`)
+              } else {
+                  if (safeGet(data)) {
+                      // console.log(`领红包结果${data}`);
+                      data = JSON.parse(data);
+                      if (data['data']['bizCode'] === 0) {
+                          console.log(`获得 ${data.data.result.currentTimeCash} 元，共计 ${data.data.result.totalCash} 元`)
+                      } else {
+                          console.log(`领红包结果${data}`);
+                      }
+                  }
+              }
+          } catch (e) {
+              $.logErr(e, resp)
+          } finally {
+              resolve(data);
           }
-        }
-      } catch (e) {
-        $.logErr(e, resp)
-      } finally {
-        resolve(data);
-      }
-    })
+      })
   })
 }
+
 function getInviteInfo() {
   let body = {}
   return new Promise((resolve) => {
@@ -344,11 +373,9 @@ function getInviteInfo() {
         } else {
           if (safeGet(data)) {
             data = JSON.parse(data);
-            if (data && (data.code === 0 && data.data.bizCode === 0)) {
-              if (data.data.result.masterData.actStatus === 2) {
-                await receiveCash("", "4")
-                await $.wait(2000)
-              }
+            if (data.data.result.masterData.actStatus == 2) {
+              console.log('领取赚赏金')
+              await receiveCash(-1)
             }
           }
         }
@@ -363,27 +390,33 @@ function getInviteInfo() {
 function city_lotteryAward() {
   let body = {}
   return new Promise((resolve) => {
-    $.post(taskPostUrl("city_lotteryAward", body), async (err, resp, data) => {
-      try {
-        if (err) {
-          console.log(`${JSON.stringify(err)}`)
-          console.log(`${$.name} API请求失败，请检查网路重试`)
-        } else {
-          if (safeGet(data)) {
-            console.log(`抽奖结果：${JSON.stringify(data)}`);
-            data = JSON.parse(data);
-            if (data['data']['bizCode'] === 0) {
-              const lotteryNum = data['data']['result']['lotteryNum'];
-              resolve(lotteryNum);
-            }
+      $.post(taskPostUrl("city_lotteryAward", body), async (err, resp, data) => {
+          try {
+              if (err) {
+                  console.log(`${JSON.stringify(err)}`)
+                  console.log(`${$.name} API请求失败，请检查网路重试`)
+              } else {
+                  if (safeGet(data)) {
+                      try{
+                          let res = $.toObj(data, data)
+                          console.log("抽奖结果："+(res.data.result.hongbao ? "红包" : res.data.result.coupon ? "优惠券" : ""))
+                          console.log((res.data.result.hongbao || res.data.result.coupon || data))
+                      }catch(e){
+                          console.log(`抽奖结果：${data}`);
+                      }
+                      data = JSON.parse(data);
+                      if (data['data']['bizCode'] === 0) {
+                          const lotteryNum = data['data']['result']['lotteryNum'];
+                          resolve(lotteryNum);
+                      }
+                  }
+              }
+          } catch (e) {
+              $.logErr(e, resp)
+          } finally {
+              resolve();
           }
-        }
-      } catch (e) {
-        $.logErr(e, resp)
-      } finally {
-        resolve();
-      }
-    })
+      })
   })
 }
 function city_doTaskByTk(taskId, taskToken, actionType = 0) {
@@ -479,6 +512,175 @@ function TotalBean() {
         })
     })
 }
+
+
+async function getLogs(functionId, body = {}) {
+  if(!$.getSignUrl){
+      return {
+          ...body,
+          "log":-1,
+          "sceneid":"CHFhPageh5",
+          "random":""
+      }
+  }
+  let num = ''
+  let log = ''
+  let res = ''
+  let joyytoken = ''
+  let joyytokenb = ''
+  if (!$.joyytoken) {
+      // $.joyytoken = await gettoken("50074")
+      $.joyytoken = ""
+  }
+  joyytoken = $.joyytoken
+  if (!$.joyytokenb) {
+      $.joyytokenb = await gettoken("50999")
+  }
+  joyytokenb = $.joyytokenb
+  let resBody = { "fn": "city", "id": functionId, "riskData": '', "pin": $.UserName, "joyytoken": joyytoken, "uid": $.uid || "", "joyytokenb": joyytokenb }
+  let log_res = await getLog(resBody)
+  res = log_res.data
+  let resCount = 0
+  while (!res && resCount <= 4) {
+      resCount++
+      console.log(`重新获取算法 第${resCount}次`)
+      log_res = await getLog(resBody)
+      res = log_res.data
+      await $.wait(2000)
+  }
+  
+  if (!res) {
+      console.log('获取不到算法')
+      process.exit(1)
+  }
+  if (res.joyytoken) {
+      $.joyytoken = res.joyytoken
+  }
+  if (res.ua) {
+      $.UA = res.ua
+  }
+  if (res.uid) {
+      $.uid = res.uid
+  }
+  if (res.abcv) {
+      $.abcv = res.abcv
+  }
+  log = res.log || -1
+  num = res.random || ''
+  return {
+      ...body,
+      "log":log,
+      "sceneid":"CHFhPageh5",
+      "random":num
+  }
+}
+function gettoken(appname) {
+  return new Promise(resolve => {
+      let body = `content={"appname":"50074","whwswswws":"","jdkey":"a","body":{"platform":"1"}}`
+      if (appname != "50074") {
+          body = `content={"appname":"50999","whwswswws":"","jdkey":"a","body":{"platform":"2"}}`
+      }
+      opts = {
+          url: `https://rjsb-token-m.jd.com/gettoken`,
+          headers: {
+              "accept": "*/*",
+              "Origin": "https://bunearth.m.jd.com",
+              "Referer": "https://bunearth.m.jd.com/",
+              "User-Agent": $.UA,
+          },
+          body: body
+      }
+      let msg = ''
+      $.post(opts, async (err, resp, data) => {
+          try {
+              if (err) {
+                  console.log(`${$.toStr(err, err)}`)
+                  console.log(`gettoken API请求失败，请检查网路重试`)
+              } else {
+                  let res = $.toObj(data, data);
+                  if (typeof res == 'object') {
+                      if (res.joyytoken) {
+                          msg = res.joyytoken
+                      } else {
+                          console.log(data)
+                      }
+                  } else {
+                      console.log(data)
+                  }
+              }
+          } catch (e) {
+              console.log(e, resp)
+          } finally {
+              resolve(msg);
+          }
+      })
+  })
+}
+//log算法
+async function getLog(body) {
+  return new Promise(resolve => {
+      let options = {
+          url: `${$.getSignUrl}/jdlog`,
+          body: JSON.stringify({ "token": $.token, "body": body }),
+          headers: {
+              "Content-Type": "application/json",
+          },
+          timeout: 30000
+      }
+      let msg = ''
+      $.post(options, async (err, resp, data) => {
+          try {
+              if (err) {
+                  console.log(`${JSON.stringify(err)}`)
+                  console.log(`${$.name} 算法 API请求失败，请检查网路重试`)
+              } else {
+                  data = $.toObj(data, data);
+                  if (data && data.code && data.code == 200) {
+                      msg = data
+                      if (data.msg && data.msg != "success") {
+                          console.log(data.msg)
+                          if (/次数不够/.test(data.msg)) process.exit(1)
+                      }
+                  }
+              }
+          } catch (e) {
+              console.log(e)
+          } finally {
+              resolve(msg);
+          }
+      })
+  })
+}
+function toStatus() {
+  return new Promise(resolve => {
+      let get = {
+          url: `${$.getSignUrl}/to_status`,
+          timeout: 10000
+      }
+      $.get(get, async (err, resp, data) => {
+          try {
+              if (err) {
+                  $.getSignErr = err
+                  // console.log(`${$.toStr(err)}`)
+                  // console.log(`${$.name} 连接服务器 API请求失败，请检查网路重试`)
+              } else {
+                  let res = $.toObj(data, data)
+                  if (res && typeof res == 'object') {
+                      if (res.msg === "success") {
+                          $.toStatus = true
+                      }
+                  }
+              }
+          } catch (e) {
+              $.logErr(e, resp)
+          } finally {
+              resolve()
+          }
+      })
+  })
+}
+
+
 function safeGet(data) {
   try {
     if (typeof JSON.parse(data) == "object") {
