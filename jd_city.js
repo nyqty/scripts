@@ -73,7 +73,7 @@ let inviteCodes = [/*'eFtqjyeps_r0L17EBpfUh8U','-ryUM9lbJB8_PkmFPK6Du6olJhQnEtU'
   }
   $.token="wbvfunwflgtvzjwf"
   if(!$.token){
-    console.log("填写log token[gua_log_token]")
+    console.log("填写log token")
     return
   }
   let urlArr = [
@@ -100,7 +100,7 @@ let inviteCodes = [/*'eFtqjyeps_r0L17EBpfUh8U','-ryUM9lbJB8_PkmFPK6Du6olJhQnEtU'
   if (exchangeFlag) {
     console.log(`脚本自动抽奖`)
   } else {
-    console.log(`脚本不会自动抽奖，建议活动快结束开启，默认关闭(在1.21日自动开启抽奖),如需自动抽奖请设置环境变量  JD_CITY_EXCHANGE 为 true`);
+    console.log(`脚本不会自动抽奖，建议活动快结束开启，默认关闭(在12.12日自动开启抽奖),如需自动抽奖请设置环境变量  JD_CITY_EXCHANGE 为 true`);
   }
   if (JD_CITY_TASK) {
     console.log(`脚本自动跑任务`)
@@ -140,7 +140,6 @@ let inviteCodes = [/*'eFtqjyeps_r0L17EBpfUh8U','-ryUM9lbJB8_PkmFPK6Du6olJhQnEtU'
       UA = `jdapp;iPhone;10.2.0;13.1.2;${randomString(40)};M/5.0;network/wifi;ADID/;model/iPhone8,1;addressid/2308460611;appBuild/167853;jdSupportDarkMode/0;Mozilla/5.0 (iPhone; CPU iPhone OS 13_1_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1;`
       uuid = UA.split(';')[4]
       $.joyytokenb = ($.getdata("jd_blog_joyytoken") && $.getdata("jd_blog_joyytoken")[$.UserName]) || ''
-      JD_CITY_TASK=1
       if (JD_CITY_TASK){
         res = await getInfo('');
         if (res.code === 0) {
@@ -150,22 +149,20 @@ let inviteCodes = [/*'eFtqjyeps_r0L17EBpfUh8U','-ryUM9lbJB8_PkmFPK6Du6olJhQnEtU'
                 $.shareCodes.push(res.data.result.userActBaseInfo.inviteId)
               }*/
               console.log(`剩余金额：${res.data.result.userActBaseInfo.poolMoney}`)
-            for (let vo of data.data.result && data.data.result.popWindows || []) {
+            for (let vo of res.data.result && res.data.result.popWindows || []) {
               if (vo && vo.type === "dailycash_second") {
                 await receiveCash()
                 await $.wait(2 * 1000)
               }
             }
-            for (let vo of data.data.result && data.data.result.mainInfos || []) {
+            for (let vo of res.data.result && res.data.result.mainInfos || []) {
               if (vo && vo.remaingAssistNum === 0 && vo.status === "1") {
                 await receiveCash(vo.roundNum)
                 await $.wait(2 * 1000)
               }
             }
-            for (let task of data.data.result && data.data.result.taskInfo.taskDetailResultVo.taskVos && false || []) {
+            for (let task of res.data.result && res.data.result.taskInfo.taskDetailResultVo.taskVos && false || []) {
               if (task && task.status == 1) {
-                  console.log(task.taskName)
-                  console.log(task.roundNum)
                   await receiveCash(task.roundNum)
                   await $.wait(2*1000)
                   /*
@@ -222,6 +219,7 @@ let inviteCodes = [/*'eFtqjyeps_r0L17EBpfUh8U','-ryUM9lbJB8_PkmFPK6Du6olJhQnEtU'
         if(res){
           if(res.code===0 && res['data']) {
             let {bizCode,bizMsg}=res['data'];
+            //console.log(`${JSON.stringify(res['data']['result'])}`)
             if( bizCode=== 0 ){
               if (res['data']['result']['toasts'] && res['data']['result']['toasts'][0] && res['data']['result']['toasts'][0]['status'] === '3') {
                 console.log(`助力次数已耗尽，跳出`)
@@ -321,7 +319,9 @@ async function getInfo(inviteId) {
         } else {
           if (safeGet(data)) {
             data = JSON.parse(data);
-          }else data=false;
+          }else{
+            data=false;
+          }
         }
       } catch (e) {
         $.logErr(e, resp)
@@ -349,7 +349,7 @@ function receiveCash(roundNum = '') {
                       if (data['data']['bizCode'] === 0) {
                           console.log(`获得 ${data.data.result.currentTimeCash} 元，共计 ${data.data.result.totalCash} 元`)
                       } else {
-                          console.log(`领红包结果${data}`);
+                        console.log(`领红包结果${JSON.stringify(data)}`);
                       }
                   }
               }
