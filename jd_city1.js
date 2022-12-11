@@ -242,8 +242,8 @@ JD_CITY_TASK=new Date().getHours() >= 6;
                 
               }
             }else if(bizMsg=="活动太火爆啦"){//{"bizCode":-11, -12
-              console.log(bizMsg+"等待10秒");
-              await $.wait(10000)
+              console.log(bizMsg);
+              break
             }else{
               console.log(bizMsg);
             }
