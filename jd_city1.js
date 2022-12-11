@@ -16,7 +16,7 @@
 
 =================================Loon===================================
 [Script]
-cron "0 0,12 9-12 12 *" script-path=https://raw.githubusercontent.com/atyvcn/jd_scripts/jd_city.js,tag=城城分现金
+cron "0 0,12,16,20 9-12 12 *" script-path=https://raw.githubusercontent.com/atyvcn/jd_scripts/jd_city.js,tag=城城分现金
 
 ===================================Surge================================
 城城分现金 = type=cron,cronexp="0 0,12 9-12 12 *",wake-system=1,timeout=3600,script-path=https://raw.githubusercontent.com/atyvcn/jd_scripts/jd_city.js
@@ -64,7 +64,10 @@ if (process.env.JD_CITY_SHARECODES) {
 
 const JD_API_HOST = 'https://api.m.jd.com/client.action';
 let inviteCodes = ['eFtqjyeps_r0L17EBpfUh8U','-ryUM9lbJB8_PkmFPK6Du6olJhQnEtU','-ryUG_pYMDcGO2mVLZyUu84ZdHjbrIA','8ayyH_9SKihDL17VOs8','-ryUXqULZWVEMBaVGNiR9aGr-wpRyEE-','-ryUOd57JD8XKXaODqWPu98ipnknA_w','-ryUXalZYmdGYhfGSN3DonbDM-KbH3xD']
-inviteCodes=[inviteCodes[2],inviteCodes[3],inviteCodes[4]];
+inviteCodes=[inviteCodes[5],inviteCodes[6],inviteCodes[1]];
+
+JD_CITY_TASK=new Date().getHours() >= 6;
+
 !(async () => {
   if (!cookiesArr[0]) {
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
@@ -162,11 +165,21 @@ inviteCodes=[inviteCodes[2],inviteCodes[3],inviteCodes[4]];
                 await $.wait(2 * 1000)
               }
             }
-            for (let task of res.data.result && res.data.result.taskInfo.taskDetailResultVo.taskVos && false || []) {
+            const { taskDetailResultVo } = res.data.result.taskInfo;
+            const { lotteryTaskVos, taskVos } = taskDetailResultVo;
+            for (let lotteryTask of lotteryTaskVos) {
+              //if (lotteryTask.times >= lotteryTask.maxTimes && lotteryTask.times !== undefined) {
+                for (let lo of lotteryTask?.badgeAwardVos || []) {
+                  if (lo.status === 3) {
+                    await receiveCash("", "6");
+                    await $.wait(2 * 1000)
+                  }
+                }
+              //}
+            }
+            
+            for (let task of taskVos || []) {
               if (task && task.status == 1) {
-                  await receiveCash(task.roundNum)
-                  await $.wait(2*1000)
-                  /*
                   const t = Date.now();
                   if ( t >= task.taskBeginTime && t < task.taskEndTime) {
                     const id = task.taskId, max = task.maxTimes;
@@ -186,15 +199,7 @@ inviteCodes=[inviteCodes[2],inviteCodes[3],inviteCodes[4]];
                       }
                     }
                     await $.wait(2500);
-                  }*/
-              }
-            }
-
-            for (let vo of res.data.result && res.data.result.mainInfos || []) {
-              if (vo && vo.remaingAssistNum === 0 && vo.status === "1") {
-                console.log(vo.roundNum)
-                await receiveCash(vo.roundNum)
-                await $.wait(2 * 1000)
+                  }
               }
             }
           } else {
@@ -310,8 +315,8 @@ inviteCodes=[inviteCodes[2],inviteCodes[3],inviteCodes[4]];
   })
 
 async function getInfo(inviteId) {
-  let log = JSON.stringify(await getLogs("inviteId", { }))
-  let body = { "lbsCity": "16", "realLbsCity": "1315", "inviteId": inviteId, "headImg": "", "userName": "", "taskChannel": "1" ,"location":"","safeStr":`${log}`}
+  let safeStr = JSON.stringify(await getLogs("inviteId", { }))
+  let body = { "lbsCity": "16", "realLbsCity": "1315", "inviteId": inviteId, "headImg": "", "userName": "", "taskChannel": "1" ,"location":"","safeStr":`${safeStr}`}
   return new Promise((resolve) => {
     $.post(taskPostUrl("city_getHomeDatav1", body), async (err, resp, data) => {
       try {
@@ -335,10 +340,11 @@ async function getInfo(inviteId) {
   })
 }
 
-function receiveCash(roundNum = '') {
+async function receiveCash(roundNum = '',type) {
   let body = { "cashType": 2 }
   if (roundNum) body = { "cashType": 1, "roundNum": roundNum }
-  if (roundNum == -1) body = { "cashType": 4 }
+  if (roundNum == -1) body.cashType=4;
+  if(type) body.cashType=type;
   return new Promise((resolve) => {
       $.post(taskPostUrl("city_receiveCash", body), async (err, resp, data) => {
           try {
@@ -422,9 +428,11 @@ function city_lotteryAward() {
       })
   })
 }
-function city_doTaskByTk(taskId, taskToken, actionType = 0) {
+
+async function city_doTaskByTk(taskId, taskToken, actionType = 0) {
+  let safeStr = JSON.stringify(await getLogs("city_doTaskByTk", { }))
   return new Promise((resolve) => {
-    $.post(taskPostUrl("city_doTaskByTk", { "taskToken": taskToken, "taskId": taskId, "actionType": actionType, "appId": "1GVRRwK4", "safeStr": "" }), async (err, resp, data) => {
+    $.post(taskPostUrl("city_doTaskByTk", { "taskToken": taskToken, "taskId": taskId, "actionType": actionType, "appId": "1GVRQwqc", "safeStr": safeStr }), async (err, resp, data) => {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
@@ -645,7 +653,7 @@ async function getLog(body) {
                   if (data && data.code && data.code == 200) {
                       msg = data
                       if (data.msg && data.msg != "success") {
-                          console.log(data.msg)
+                          //console.log(data.msg)
                           if (/次数不够/.test(data.msg)) process.exit(1)
                       }
                   }
