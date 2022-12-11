@@ -203,7 +203,6 @@ JD_CITY_TASK=new Date().getHours() >= 6;
               }
             }
           } else {
-            console.log(`${inviteId ? '助力好友' : '获取邀请码'}失败:${res.data.bizMsg}`)
             if (res.data && !res.data.result.userActBaseInfo.inviteId) {
               console.log(`账号已黑，看不到邀请码`);
             }
