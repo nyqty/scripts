@@ -24,6 +24,7 @@ cron "0 0,12,16,20 9-12 12 *" script-path=https://raw.githubusercontent.com/atyv
 ====================================小火箭=============================
 城城分现金 = type=cron,script-path=https://raw.githubusercontent.com/atyvcn/jd_scripts/jd_city.js, cronexpr="0 0,12 9-12 12 *", timeout=3600, enable=true
  */
+
 const Env=require('./utils/Env.js');
 const $ = new Env('城城分现金');
 const notify = $.isNode() ? require('./sendNotify') : '';
@@ -40,6 +41,7 @@ $.shareCodes = []//用户获取的互助码
 let shareCodes = []
 let shareCodesMax = []
 let shareCodes_success = []
+
 
 if ($.isNode()) {
   Object.keys(jdCookieNode).forEach((item) => {
@@ -64,9 +66,9 @@ if (process.env.JD_CITY_SHARECODES) {
 
 const JD_API_HOST = 'https://api.m.jd.com/client.action';
 let inviteCodes = ['eFtqjyeps_r0L17EBpfUh8U','-ryUM9lbJB8_PkmFPK6Du6olJhQnEtU','-ryUG_pYMDcGO2mVLZyUu84ZdHjbrIA','8ayyH_9SKihDL17VOs8','-ryUXqULZWVEMBaVGNiR9aGr-wpRyEE-','-ryUOd57JD8XKXaODqWPu98ipnknA_w','-ryUXalZYmdGYhfGSN3DonbDM-KbH3xD']
-inviteCodes=[inviteCodes[0],inviteCodes[5],inviteCodes[6]];
+inviteCodes=[];//[inviteCodes[0],inviteCodes[5],inviteCodes[6]];
 
-JD_CITY_TASK=new Date().getHours() >= 6;
+JD_CITY_TASK=false;
 
 !(async () => {
   if (!cookiesArr[0]) {
@@ -144,7 +146,7 @@ JD_CITY_TASK=new Date().getHours() >= 6;
       $.uid = ''
       let noHelpCount = 0
       $.joyytokenb = ($.getdata("jd_blog_joyytoken") && $.getdata("jd_blog_joyytoken")[$.UserName]) || ''
-      if (JD_CITY_TASK){
+      if (JD_CITY_TASK||1){
         res = await getInfo('');
         if (res.code === 0) {
           if (res.data && res['data']['bizCode'] === 0) {
@@ -178,7 +180,7 @@ JD_CITY_TASK=new Date().getHours() >= 6;
               //}
             }
             
-            for (let task of taskVos || []) {
+            if(JD_CITY_TASK) for (let task of taskVos || []) {
               if (task && task.status == 1) {
                   const t = Date.now();
                   if ( t >= task.taskBeginTime && t < task.taskEndTime) {
@@ -551,6 +553,8 @@ async function getLogs(functionId, body = {}) {
       $.joyytokenb = await gettoken("50999")
   }
   joyytokenb = $.joyytokenb
+  
+  /*
   let resBody = { "fn": "city", "id": functionId, "riskData": '', "pin": $.UserName, "joyytoken": joyytoken, "uid": $.uid || "", "joyytokenb": joyytokenb }
   let log_res = await getLog(resBody)
   res = log_res.data
@@ -580,7 +584,8 @@ async function getLogs(functionId, body = {}) {
       $.abcv = res.abcv
   }
   log = res.log || -1
-  num = res.random || ''
+  num = res.random || ''*/
+  
   return {
       ...body,
       "log":log,
@@ -665,6 +670,7 @@ async function getLog(body) {
       })
   })
 }
+
 function toStatus() {
   return new Promise(resolve => {
       let get = {
