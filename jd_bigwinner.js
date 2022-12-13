@@ -25,7 +25,7 @@ const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 const {UARAM,randomNumber} = require('./USER_AGENTS');
 const fs = require('fs');
 let black_path = './bigwinner_black.txt',black_user = [],cookiesArr = [],
-need_invite=0,cookie = '',DYJ_filter=false,DYJ_HelpWait=[500,1500],
+need_invite=20,cookie = '',DYJ_filter=false,DYJ_HelpWait=[500,1500],
 shareInfo = [],sharePins=[],helpinfo = {};
 const Hour = (new Date()).getHours()
 const query = Hour >= 9
@@ -172,7 +172,6 @@ console.time = log;
         console.log('\n开始助力...')
         console.log(`${JSON.stringify(shareInfo)}\n`)
         if(txt) console.log(`export DYJ_shareInfo="${txt.slice(0,-1)}"\n`)
-        if(need_invite == 0) need_invite = 10;
         $.index = 0;
 		let ck_i = 0,ck_length = cookiesArr.length,data;
         for (let j = 0,sinfo; j < shareInfo.length; j++) {
@@ -365,7 +364,7 @@ function gettask(info,领取) {
                                 helpinfo[$.UserName].invite_success = item['realCompletedTimes']
                                 helpinfo[$.UserName].invite_taskId = item['taskId']
                                 helpinfo[$.UserName].cookie = cookie
-                                if(need_invite == 0) need_invite = configTargetTimes
+                                if(configTargetTimes!=0 && configTargetTimes!=need_invite) need_invite = configTargetTimes
                                 if (helpinfo[$.UserName].invite_success < need_invite){
                                     info && console.log(`最高可邀请${need_invite}人,目前已邀请${helpinfo[$.UserName].invite_success}人,还需邀请${parseInt(need_invite) - parseInt(helpinfo[$.UserName].invite_success)}人`)
                                 }else{
