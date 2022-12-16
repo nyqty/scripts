@@ -427,6 +427,8 @@ function help(sinfo) {
                     console.log(`${JSON.stringify(err)}`)
                     console.log(` API请求失败，请检查网路重试`)
                 } else {
+                    //console.log(data);
+                    //data = JSON.parse(data);
                     let tostr = data.match(/\((\{.*?\})\)/)[1];
                     data = eval('(' + tostr + ')');
                 }
