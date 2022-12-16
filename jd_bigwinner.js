@@ -29,6 +29,10 @@ need_invite=20,cookie = '',DYJ_filter=false,DYJ_HelpWait=[500,1500],
 shareInfo = [],sharePins=[],helpinfo = {};
 const Hour = (new Date()).getHours()
 const query = Hour >= 9
+const CryptoJS = require("crypto-js");
+$.CryptoJS=CryptoJS
+
+const moment = require("moment");
 
 if (process.env.DYJ_shareInfo) {
     let t=process.env.DYJ_shareInfo.split("&");
@@ -122,6 +126,7 @@ console.time = log;
         $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
         return;
     }
+    
     for (let i = 0; i < cookiesArr.length; i++) {
         if (cookiesArr[i]) {
             cookie = cookiesArr[i];
@@ -157,6 +162,7 @@ console.time = log;
         }
     }
     let txt=''
+    shareInfo=[];
     if(shareInfo.length){
         console.log('\n检查是否存在空助力码.')
         for (let j = 0,l=shareInfo.length,uname; j < l; j++) {
@@ -167,7 +173,6 @@ console.time = log;
             }else txt+=uname+':'+shareInfo[j].id+'&';
         }
     }
-
     if (shareInfo.length) {
         console.log('\n开始助力...')
         console.log(`${JSON.stringify(shareInfo)}\n`)
@@ -193,6 +198,7 @@ console.time = log;
                         continue;
                     }
                     if(helpinfo[$.UserName].hot) continue;
+                    await requestAlgo("638ee",randomString(16))
                     data=await help(sinfo);
                     let msg=data.msg;
                     if (data.code === 0) {
@@ -203,6 +209,7 @@ console.time = log;
                             UA = helpinfo[sinfo.pin].ua;
                             cookie = helpinfo[sinfo.pin].cookie;
                             console.time(`车头[${sinfo.pin}]：去领取邀请好友打卡奖励`);
+                            await requestAlgo("d06f1",generateFp(16))
                             await Award(helpinfo[sinfo.pin].invite_taskId);
                             await $.wait(500);
                         }
@@ -354,6 +361,7 @@ function gettask(info,领取) {
                     data = eval('(' + tostr + ')');
                     if (data.ret == 0) {
                         $.tasklist = data.data.userTaskStatusList;
+                        let Algo=0;
                         if($.tasklist) for (let item of $.tasklist) {
                             let taskName = item['taskName'],
                             reward = parseInt(item['reward']) / 100,
@@ -376,6 +384,11 @@ function gettask(info,领取) {
                                 for (let k = 0; k < (item.realCompletedTimes - item.targetTimes + 1); k++) {
                                     console.log(`去领取${taskName}奖励`);
                                     await $.wait(500);
+                                    if( !Algo ){
+                                        await requestAlgo("d06f1",generateFp(16))
+                                        Algo=1
+                                    }
+                                    await $.wait(500);
                                     await Award(item.taskId);
                                 }
                             }
@@ -394,8 +407,10 @@ function gettask(info,领取) {
 }
 
 function Award(id) {
+    let _stk="__t,bizCode,isSecurity,source,taskId",__t=Date.now(),
+    h5st=H5ST31(_stk,{__t:__t,isSecurity:true,source:"makemoneyshop",taskId:id});
     return new Promise(async (resolve) => {
-        $.get(taskUrl('newtasksys/newtasksys_front/Award', `__t=${Date.now()}&source=makemoneyshop&taskId=${id}&bizCode=makemoneyshop`), async (err, resp, data) => {
+        $.get(taskUrl('newtasksys/newtasksys_front/Award', `__t=${__t}&source=makemoneyshop&taskId=${id}&isSecurity=true&bizCode=makemoneyshop&_stk=${encodeURIComponent(_stk)}&_ste=1&h5st=${encodeURIComponent(h5st)}`), async (err, resp, data) => {
             try {
                 if (err) {
                     console.log(`${JSON.stringify(err)}`)
@@ -418,19 +433,33 @@ function Award(id) {
     })
 }
 
-
 function help(sinfo) {
     return new Promise(async (resolve) => {
-        $.get(taskUrl('makemoneyshop/guesthelp', `activeId=63526d8f5fe613a6adb48f03&shareId=${sinfo.id}&_stk=activeId,shareId&_ste=1`), async (err, resp, data) => {
+        /*
+        jdltapp;android;4.5.0;;;appBuild/2370;ef/1;ep/%7B%22hdid%22%3A%22JM9F1ywUPwflvMIpYPok0tt5k9kW4ArJEU3lfLhxBqw%3D%22%2C%22ts%22%3A1671188241287%2C%22ridx%22%3A-1%2C%22cipher%22%3A%7B%22sv%22%3A%22CJS%3D%22%2C%22ad%22%3A%22CQU3CQC3DtG5Y2TtDwSnYm%3D%3D%22%2C%22od%22%3A%22DNK0YWDwYJSnYtTvYtK2Cq%3D%3D%22%2C%22ov%22%3A%22CzO%3D%22%2C%22ud%22%3A%22CQU3CQC3DtG5Y2TtDwSnYm%3D%3D%22%7D%2C%22ciphertype%22%3A5%2C%22version%22%3A%221.2.0%22%2C%22appname%22%3A%22com.jd.jdlite%22%7D;Mozilla/5.0 (Linux; Android 12; M2006J10C Build/SP1A.210812.016; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/89.0.4389.72 MQQBrowser/6.2 TBS/046011 Mobile Safari/537.36
+        */
+        let body={"activeId":"63526d8f5fe613a6adb48f03","shareId":sinfo.id,"operType":1};
+        let h5st=H5ST("activeId,shareId",body);
+        console.log(h5st);
+        let opt= {
+            url: `https://api.m.jd.com/api?g_ty=h5&g_tk=&appCode=msc588d6d5&body=${escape(JSON.stringify(body))}&appid=jdlt_h5&client=jxh5&functionId=makemoneyshop_querysharevenderinfo&clientVersion=1.2.5&h5st=${h5st}&loginType=2&sceneval=2`,
+            headers: {
+                'Origin': 'https://wq.jd.com',
+                'Referer': 'https://wqs.jd.com/',
+                'User-Agent': UA,
+                'Cookie': cookie
+            }
+        };
+        //taskUrl('makemoneyshop/guesthelp', `activeId=63526d8f5fe613a6adb48f03&shareId=${sinfo.id}&_stk=activeId,shareId&_ste=1`)
+        $.get(opt, async (err, resp, data) => {
             try {
                 if (err) {
                     console.log(`${JSON.stringify(err)}`)
                     console.log(` API请求失败，请检查网路重试`)
                 } else {
-                    //console.log(data);
-                    //data = JSON.parse(data);
-                    let tostr = data.match(/\((\{.*?\})\)/)[1];
-                    data = eval('(' + tostr + ')');
+                    if (safeGet(data)) {
+                        data = JSON.parse(data);
+                    }else console.log(`解析失败！`)
                 }
             } catch (e) {
                 $.logErr(e, resp)
@@ -443,10 +472,10 @@ function help(sinfo) {
 
 function taskUrl(fn, body) {
     return {
-        url: `https://wq.jd.com/${fn}?g_ty=h5&g_tk=&appCode=msc588d6d5&${body}&h5st=&sceneval=2&callback=__jsonp1667344808184`,
+        url: `https://wq.jd.com/${fn}?g_ty=h5&g_tk=&appCode=msc588d6d5&${body}&sceneval=2&callback=__jsonp${Date.now()}`,
         headers: {
             'Origin': 'https://wq.jd.com',
-            'Referer': 'https://wqs.jd.com/sns/202210/20/make-money-shop/index.html?activeId=63526d8f5fe613a6adb48f03',
+            'Referer': 'https://wqs.jd.com/',//sns/202210/20/make-money-shop/index.html?activeId=63526d8f5fe613a6adb48f03
             'User-Agent': UA,
             'Cookie': cookie
         }
@@ -481,6 +510,161 @@ function TotalBean() {
             }
         });
     });
+}
+
+Date.prototype.Format = function (fmt) {
+	var e,
+	n = this,
+	d = fmt,
+	l = {
+		"M+": n.getMonth() + 1,
+		"d+": n.getDate(),
+		"D+": n.getDate(),
+		"h+": n.getHours(),
+		"H+": n.getHours(),
+		"m+": n.getMinutes(),
+		"s+": n.getSeconds(),
+		"w+": n.getDay(),
+		"q+": Math.floor((n.getMonth() + 3) / 3),
+		"S+": n.getMilliseconds()
+	};
+	/(y+)/i.test(d) && (d = d.replace(RegExp.$1, "".concat(n.getFullYear()).substr(4 - RegExp.$1.length)));
+	for (var k in l) {
+		if (new RegExp("(".concat(k, ")")).test(d)) {
+			var t,
+			a = "S+" === k ? "000" : "00";
+			d = d.replace(RegExp.$1, 1 == RegExp.$1.length ? l[k] : ("".concat(a) + l[k]).substr("".concat(l[k]).length))
+		}
+	}
+	return d;
+}
+
+function H5ST(stk,body) {
+    let a='f28308408a6bad45ead939c02e9cf1e48c388a5c93a65cc5402e80317abfd7a2de55d9cb4a8621d63f7e99f47fc5087ee97d3c9c59725ee6ada9268315fd771420487f30b2b3874bef1e72aa7036cbb685538ea214403ffb4580cb345d91e3259c2eb7c70db314c7c5a90c12ff734289847762712a5ed01826268313cbfd9c60a136fccbb1d5a4b50bca2ced84ba93d65cd314fb431a6335f743b11baf1adac418b9d12d5cdbd303f86360387f7ad5ae';
+    const timestamp=Date.now();
+	const date = new Date(timestamp).Format("yyyyMMddhhmmssSSS");
+	let hash1 = '';
+	if ($.fingerprint && $.Jxmctoken && $.enCryptMethodJD) {
+		hash1 = $.enCryptMethodJD($.Jxmctoken, $.fingerprint.toString(), date, $.appId.toString(), $.CryptoJS).toString($.CryptoJS.enc.Hex);
+    }else{
+        console.log('H5ST参数有空！')
+    }
+	let st = '';
+	stk.split(',').map((item, index) => {
+        st += `${item}:${body[item]}${index === stk.split(',').length - 1 ? '' : '&'}`;
+	})
+	let hash2 = $.CryptoJS.HmacSHA256(st, hash1.toString()).toString($.CryptoJS.enc.Hex);
+    hash2=hash2.substr(0,40)
+	return encodeURIComponent([date,$.fingerprint.toString(),$.appId.toString(),$.Jxmctoken,hash2,"400",timestamp.toString(),a].join(";"))
+}
+
+function H5ST31(stk,body) {
+    let a='f28308408a6bad45ead939c02e9cf1e48c388a5c93a65cc5402e80317abfd7a2de55d9cb4a8621d63f7e99f47fc5087ee97d3c9c59725ee6ada9268315fd771420487f30b2b3874bef1e72aa7036cbb685538ea214403ffb4580cb345d91e3259c2eb7c70db314c7c5a90c12ff734289847762712a5ed01826268313cbfd9c60a136fccbb1d5a4b50bca2ced84ba93d65cd314fb431a6335f743b11baf1adac418b9d12d5cdbd303f86360387f7ad5ae';
+    const timestamp=Date.now();
+    const date = new Date(timestamp).Format("yyyyMMddhhmmssSSS");
+	let hash1 = '';
+	if ($.fingerprint && $.Jxmctoken && $.enCryptMethodJD) {
+		hash1 = $.enCryptMethodJD($.Jxmctoken, $.fingerprint.toString(), date, $.appId.toString(), $.CryptoJS).toString($.CryptoJS.enc.Hex);
+	}else{
+        console.log('H5ST31参数有空！')
+    }
+	let st = '';
+        stk.split(',').map((item, index) => {
+        st += `${item}:${body[item]}${index === stk.split(',').length - 1 ? '' : '&'}`;
+	})
+	let hash2 = $.CryptoJS.HmacSHA256(st, hash1.toString()).toString($.CryptoJS.enc.Hex);
+    return encodeURIComponent([date,$.fingerprint.toString(),$.appId.toString(),$.Jxmctoken,hash2,"3.1",timestamp.toString(),a].join(";"))
+}
+
+async function requestAlgo(appId,fp) {
+	$.fingerprint = fp;
+	$.appId = appId;
+	const options = {
+		"url": `https://cactus.jd.com/request_algo?g_ty=ajax`,
+		"headers": {
+			'Authority': 'cactus.jd.com',
+			'Pragma': 'no-cache',
+			'Cache-Control': 'no-cache',
+			'Accept': 'application/json',
+			'User-Agent': UA,//$.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('./USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.4.4;14.3;network/4g;Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1"),
+			'Content-Type': 'application/json',
+			'Origin': 'https://st.jingxi.com',
+			'Sec-Fetch-Site': 'cross-site',
+			'Sec-Fetch-Mode': 'cors',
+			'Sec-Fetch-Dest': 'empty',
+			'Referer': 'https://st.jingxi.com/',
+			'Accept-Language': 'zh-CN,zh;q=0.9,zh-TW;q=0.8,en;q=0.7'
+		},
+		'body': JSON.stringify({
+			"version": "1.0",
+			"fp": $.fingerprint,
+			"appId": appId,
+			"timestamp": Date.now(),
+			"platform": "web",
+			"expandParams": ""
+		})
+	}
+	new Promise(async resolve => {
+		$.post(options, (err, resp, data) => {
+			try {
+				if (err) {
+					console.log(`${JSON.stringify(err)}`)
+					console.log(`request_algo 签名参数API请求失败，请检查网路重试`)
+					llgeterror = true;
+				} else {
+					if (data) {
+						data = JSON.parse(data);
+						if (data['status'] === 200) {
+							$.Jxmctoken = data.data.result.tk;
+							let enCryptMethodJDString = data.data.result.algo;
+							if (enCryptMethodJDString)
+								$.enCryptMethodJD = new Function(`return ${enCryptMethodJDString}`)();
+						} else {
+							console.log('request_algo 签名参数API请求失败:')
+						}
+					} else {
+						llgeterror = true;
+						console.log(`京东服务器返回空数据`)
+					}
+				}
+			} catch (e) {
+				llgeterror = true;
+				$.logErr(e, resp)
+			}
+			finally {
+				resolve();
+			}
+		})
+	})
+}
+
+function randomString(e) {
+    e = e || 32;
+    let t = "abcdefghijklmnopqrstuvwxyz0123456789", a = t.length, n = "";
+    for (i = 0; i < e; i++)
+      n += t.charAt(Math.floor(Math.random() * a));
+    return n
+}
+
+function generateFp(a) {
+	let e = "0123456789";
+	a = a || 13;
+	let i = '';
+	for (; a--; )
+		i += e[Math.random() * e.length | 0];
+	return (i + Date.now()).slice(0, 16)
+}
+
+function safeGet(data) {
+    try {
+        if (typeof JSON.parse(data) == "object") {
+            return true;
+        }
+    } catch (e) {
+        console.log(e);
+        console.log(`京东服务器访问数据为空，请检查自身设备网络情况`);
+        return false;
+    }
 }
 
 function jsonParse(str) {
