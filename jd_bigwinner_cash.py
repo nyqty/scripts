@@ -45,6 +45,7 @@ class Userinfo:
         global index
         index += 1
         self.user_index = index
+        self.uuid=''.join(str(uuid.uuid4()).split('-')) #15587980619082418
         self.cookie = cookie
         try:
             self.pt_pin = unquote_plus(re.findall(r'pt_pin=([^; ]+)(?=;?)', self.cookie)[0])
@@ -58,10 +59,12 @@ class Userinfo:
         Userinfo.cookie_obj.append(self)
         self.sha = sha1(str(self.pt_pin).encode('utf-8')).hexdigest()
         self.headers = {
-            "Host": "wq.jd.com",
-            "Cookie": self.cookie + f"sid={self.sha}",
+            "Host": "api.m.jd.com",
+            "Cookie": self.cookie + f"; sid={self.sha}; visitkey={uuid}",
             "User-Agent": self.UA,
-            "Referer": f"https://wqs.jd.com/sns/202210/20/make-money-shop/guest.html?activeId={activeId}&type=sign&shareId=&__navVer=1",
+            "origin": "https://wqs.jd.com",
+            #"Referer": f"https://wqs.jd.com/sns/202210/20/make-money-shop/guest.html?activeId={activeId}&type=sign&shareId=&__navVer=1",
+            "Referer": "https://wqs.jd.com/"
         }
         self.shareUuid = ""
         self.invite_success = 0
@@ -70,7 +73,11 @@ class Userinfo:
 
     def UserTask(self):
         global not_tx
-        url = f'https://wq.jd.com/makemoneyshop/exchangequery?g_ty=h5&g_tk=&appCode={appCode}&activeId={activeId}&sceneval=2'
+        t=int(time.time() * 1000) #1671188533831
+        body=quote(json.dumps({"activeId":activeId,"sceneval":2,"buid":325,"appCode":appCode,"time":t,"signStr":""})) #07a9d66103b6ae8c0afd1dec831027bf
+        t=t+1
+        url = f'https://api.m.jd.com/api?functionId=makemoneyshop_exchangequery&appid=jdlt_h5&channel=jxh5&cv=1.2.5&clientVersion=1.2.5&client=jxh5&uuid={self.uuid}&cthr=1&body={body}&t={t}&loginType=2'
+        self.headers["Host"]="api.m.jd.com"
         res = requests.get(url=url, headers=self.headers).json()
         if res['code'] == 0:
             logger.info(f"获取微信提现信息成功")
@@ -96,8 +103,11 @@ class Userinfo:
                     elif data['exchangeStatus']==3:logger.info(f"{data['name']},已兑换")
                     elif data['exchangeStatus']==4:logger.info(f"{data['name']},已抢光")
                     else:logger.info(f"未知状态：{data}")
+        else:
+            print(res)
 
     def tx(self, rule_id):
+        self.headers["Host"]="wq.jd.com"
         url = f'https://wq.jd.com/prmt_exchange/client/exchange?g_ty=h5&g_tk=&appCode={appCode}&bizCode=makemoneyshop&ruleId={rule_id}&sceneval=2'
         res = requests.get(url=url, headers=self.headers).json()
         if res['ret'] == 0:
