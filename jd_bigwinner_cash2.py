@@ -169,6 +169,7 @@ def main():
     if len(Users):logger.info(f"找到用户[{len(Users)}]:{Users}")
     if len(NotUserList):logger.info(f"没有找到用户[{len(NotUserList)}]:{NotUserList}")
     
+    random.shuffle(inviterList)#随机排序
     for inviter in inviterList:
         print("")
         logger.info(f"开启提现用户：{inviter.pt_pin}")
