@@ -6,7 +6,7 @@ Python 3.9.7
 多个&隔开
 export DYJ_CashPin="需要提现的pin值"
 export DYJ_NotCash="不提现的金额"
-cron: 55 12/1 * * *
+cron: 58 11-23/1 * * *
 new Env('赚钱大赢家-定时提现加强版');
 TY在原作者基础上删减更改，优化提取
 """
