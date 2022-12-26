@@ -1,17 +1,17 @@
 /*
-cron "0 0-23/4 * * *" jd_cxxb2.js, tag:穿行寻宝,移除组队和互助
+cron "0 0-23/8 * * *" jd_cxxb1.js, tag:炸年兽,移除组队和互助
 */
 const Env=require('./utils/Env.js');
-var {window,document,get_log}=require('./utils/JDcxxb.log.min.js');
+var {window,document,get_log}=require('./utils/JDzns.log.min.js');
 
 const CryptoJS = require("crypto-js");
-const $ = new Env('穿行寻宝-2');
+const $ = new Env('炸年兽-1');
 const notify = $.isNode() ? require('./sendNotify') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
 let cookiesArr = [], cookie = '', message, helpCodeArr = [], helpPinArr = [], wxCookie = "";
 let wxCookieArr = process.env.WXCookie?.split("@") || []
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
-let appid = '50074'
+let appid = '50174'
 var timestamp = Math.round(new Date().getTime()).toString();
 $.curlCmd = ""
 const h = (new Date()).getHours()
@@ -34,7 +34,7 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
         return;
     }
     const helpSysInfoArr = []
-    for (let i = 60; i < cookiesArr.length; i++) {
+    for (let i = 0; i < 60; i++) {
         if (cookiesArr[i]) {
             cookie = cookiesArr[i];
             wxCookie = wxCookieArr[i] ?? "";
@@ -195,7 +195,7 @@ async function travel() {
             await sleep(3000)
         }
     }
-    /*
+
     try {
         $.WxUA = getWxUA()
         const WxHomeData = await doWxApi("getHomeData", { inviteId: "" })
@@ -215,7 +215,7 @@ async function travel() {
         await doJrAppTask()
     } catch (e) {
         console.log(e)
-    }*/
+    }
 }
 
 try {

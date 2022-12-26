@@ -1,11 +1,12 @@
 /*
 建议手动先点开一次
-cron "1 8,12 * * *" jd_cxxb_team.js, tag:自动组队
+cron "1 8,12 * * *" jd_zns_team.js, tag:自动组队
 */
-const Env=require('./utils/Env.js');
-var {window,document,get_log}=require('./utils/JDcxxb.log.min.js');
 
-const $ = new Env('穿行寻宝-自动组队');
+const Env=require('./utils/Env.js');
+var {window,document,get_log}=require('./utils/JDzns.log.min.js');
+
+const $ = new Env('炸年兽-自动组队');
 
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 
@@ -32,7 +33,6 @@ let groups=[],g_i=0;
     }
     console.log('\n仅加战队\n')
     await getUA()
-
 
     let 队长用户名=[],队伍数量=cookiesArr.length>0?Math.ceil(cookiesArr.length/30):0;
     for (let i = 0; i < cookiesArr.length; i++) {
@@ -74,7 +74,7 @@ let groups=[],g_i=0;
                         res = await collectFriendRecordColor(groups[g_i].mpin)
                         res = await promote_pk_joinGroup(groups[g_i].groupJoinInviteId)
                         if(res && res.data){
-                            console.log(`promote_pk_joinGroup:\n${JSON.stringify(res)}`)
+                            //console.log(`promote_pk_joinGroup:\n${JSON.stringify(res)}`)
                             console.log('\n当前人数：',groups[g_i].num,"\n")
                             if (res.data.bizCode === 0) {
                                 groups[g_i].num++;
@@ -105,7 +105,6 @@ let groups=[],g_i=0;
     }
 
     console.log('组队完成！')
-
 })()
     .catch((e) => {
         $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')

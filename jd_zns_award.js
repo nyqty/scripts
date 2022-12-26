@@ -1,8 +1,8 @@
 
 /*
 穿越寻宝组队奖励领取
-10 10 10 10 * jd_cxxb_award.js
-updatetime：2022/10/23
+30 22 * * * jd_zns_award.js
+updatetime：2022/12/26
  */
 const Env=require('./utils/Env.js');
 const $ = new Env('穿行组队奖励领取');

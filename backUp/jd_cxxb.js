@@ -1,5 +1,5 @@
 /*
-cron "0 0-23/4 * * *" jd_cxxb_b.js, tag:穿行寻宝,移除组队
+cron "0 0-23/4 * * *" jd_cxxb.js, tag:穿行寻宝,移除组队
 */
 
 const CryptoJS = require("crypto-js");
@@ -10,7 +10,7 @@ let cookiesArr = [], cookie = '', message, helpCodeArr = [], helpPinArr = [], wx
 let wxCookieArr = process.env.WXCookie?.split("@") || []
 const teamLeaderArr = [], teamPlayerAutoTeam = {}
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
-let appid = '50074'
+let appid = '50174'
 var timestamp = Math.round(new Date().getTime()).toString();
 $.curlCmd = ""
 const h = (new Date()).getHours()

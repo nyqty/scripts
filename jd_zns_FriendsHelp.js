@@ -1,11 +1,11 @@
 /*
 建议手动先点开一次
-cron "10 9 * * *" jd_cxxb_help.js, tag:快速签到升级，助力跑一次即可
+cron "10 9 * * *" jd_zns_help.js, tag:快速签到升级，助力跑一次即可
 */
 const Env=require('../utils/Env.js');
-var {window,document,get_log}=require('../utils/JDcxxb.log.min.js');
+var {window,document,get_log}=require('../utils/JDzns.log.min.js');
 
-const $ = new Env('穿行寻宝-好友助力');
+const $ = new Env('炸年兽-好友助力');
 
 const jdCookieNode = $.isNode() ? require('../jdCookie.js') : '';
 
