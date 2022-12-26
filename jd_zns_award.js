@@ -1,11 +1,11 @@
 
 /*
-穿越寻宝组队奖励领取
+炸年兽组队奖励领取
 30 22 * * * jd_zns_award.js
 updatetime：2022/12/26
  */
 const Env=require('./utils/Env.js');
-const $ = new Env('穿行组队奖励领取');
+const $ = new Env('炸年兽组队奖励领取');
 const notify = $.isNode() ? require('./sendNotify') : '';
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 let jdNotify = true;
