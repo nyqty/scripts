@@ -24,8 +24,12 @@ if ($.isNode()) {
 }
 const JD_API_HOST = 'https://api.m.jd.com/client.action';
 
-
 let groups=[],g_i=0;
+
+if(process.env.ZNS_GEOUPS){
+    groups=process.env.ZNS_GEOUPS.split("&");
+}
+
 !(async () => {
     if (!cookiesArr[0]) {
         $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
@@ -46,7 +50,6 @@ let groups=[],g_i=0;
             console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
             $.newShareCodes = []
             document.cookie=cookie;
-            
             //此处修改组队人数
             if ( 队伍数量>groups.length ) {
                 res = await promote_pk_getHomeData()
@@ -100,7 +103,10 @@ let groups=[],g_i=0;
                     }else console.log('跳过组队！')
                 }else console.log(`promote_pk_getHomeData:\n${JSON.stringify(res)}`)
                 await $.wait(3000)
-            }else break;
+            }else{
+                队伍数量++;
+                //break;
+            }
         }
     }
 
