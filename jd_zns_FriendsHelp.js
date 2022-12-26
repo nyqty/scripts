@@ -7,7 +7,7 @@ var {window,document,get_log}=require('./utils/JDzns.log.min.js');
 
 const $ = new Env('炸年兽-好友助力');
 
-const jdCookieNode = $.isNode() ? require('../jdCookie.js') : '';
+const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 
 let cookiesArr = [],
     cookie = '',
