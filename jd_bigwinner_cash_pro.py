@@ -37,7 +37,14 @@ h5st_appid = 'd06f1'
 appCode = 'msc588d6d5'
 activeId = '63526d8f5fe613a6adb48f03'
 not_tx=[]
-cashExchangeRuleList=[]
+cashExchangeRuleList=[
+    {'id': '1848d61655f979f8eac0dd36235586ba', 'name': '0.3元现金', 'exchangeStatus': 1, 'cashoutAmount': '0.3'},
+    {'id': 'dac84c6bf0ed0ea9da2eca4694948440', 'name': '1元现金', 'exchangeStatus': 1, 'cashoutAmount': '1'},
+    {'id': '53515f286c491d66de3e01f64e3810b2', 'name': '现金奖励3元', 'exchangeStatus': 1, 'cashoutAmount': '3'},
+    {'id': 'da3fc8218d2d1386d3b25242e563acb8', 'name': '8元现金', 'exchangeStatus': 1, 'cashoutAmount': '8'},
+    {'id': '7ea791839f7fe3168150396e51e30917', 'name': '20元现金', 'exchangeStatus': 1, 'cashoutAmount': '20'},
+    {'id': '02b48428177a44a4110034497668f808', 'name': '100元现金', 'exchangeStatus': 1, 'cashoutAmount': '100'}
+]
 
 def getTimestamp():
     return int(round(time.time() * 1000))
@@ -191,13 +198,17 @@ def main():
     while 1:
         current_time = getTimestamp()
         if current_time >= nextHourStamp:
+            SERL=[]
             logger.info(f"开始查询库存")
             for e in CashOutList:
-                global cashExchangeRuleList
-                cashExchangeRuleList=e.QueryCash()
-                if len(cashExchangeRuleList)>0:
+                SERL=e.QueryCash()
+                if len(SERL)>0:
+                    global cashExchangeRuleList
+                    cashExchangeRuleList=SERL
                     logger.info("查询成功")
-                    break
+                else:
+                    logger.info("查询失败,强制提现")
+                break
 
             print("")
             logger.info(f"开始提现")
