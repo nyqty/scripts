@@ -27,7 +27,11 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
 let groups=[],g_i=0;
 
 if(process.env.ZNS_GEOUPS){
-    groups=process.env.ZNS_GEOUPS.split("&");
+    console.log('检测到设置了组队码，优先加入');
+    let ZNS_GEOUPS=process.env.ZNS_GEOUPS.split("&");
+    Object.keys(ZNS_GEOUPS).forEach((item) => {
+        groups.push({ mpin: '', groupJoinInviteId: ZNS_GEOUPS[item],num:0 })
+    })
 }
 
 !(async () => {
