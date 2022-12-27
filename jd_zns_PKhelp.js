@@ -61,7 +61,7 @@ let shareCodes = []
     }
     console.log(`\n\n为以下膨胀码膨胀：${JSON.stringify(shareCodes)}\n`)
     let code,inviteCode;
-    for (let i = 102; i < cookiesArr.length && shareCodes .length; i++) {
+    for (let i = 0; i < cookiesArr.length && shareCodes .length; i++) {
         if (cookiesArr[i]) {
             cookie = cookiesArr[i];
             $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
