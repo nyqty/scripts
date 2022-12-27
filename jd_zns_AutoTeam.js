@@ -104,7 +104,9 @@ if(process.env.ZNS_GEOUPS){
                         } 
                         await $.wait(3000)
                         //res = await promote_pk_getHomeData()
-                    }else console.log('跳过组队！')
+                    }else{
+                        console.log(`当前已加入“${res.data.result.groupInfo.groupJoinInviteId}”共${memberCount}人，跳过组队！`)
+                    }
                 }else console.log(`promote_pk_getHomeData:\n${JSON.stringify(res)}`)
                 await $.wait(3000)
             }else{
