@@ -118,7 +118,7 @@ class Userinfo:
                                 logger.info(f"提现成功")
                                 break
                             elif res['ret'] == 232:#没货
-                                cashExchangeRuleList[i].exchangeStatus=4
+                                cashExchangeRuleList[i]['exchangeStatus']=4
                                 logger.info(f"{res['msg']}")
                             elif res['ret'] == 604:#已有提现进行中，等待完成
                                 logger.info(f"{res['msg']}")
