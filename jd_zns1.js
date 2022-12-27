@@ -140,9 +140,9 @@ async function travel() {
             const collectAutoScore = await doApi("collectAutoScore", null, null, true)
             collectAutoScore.produceScore && formatMsg(collectAutoScore.produceScore, "定时收集")
             console.log("\n去做主App任务\n")
-            //for (let i = 0; i < 4; i++) {
+            for (let i = 0; i < 4; i++) {
                 await doAppTask()
-            //}
+            }
             //if (puzzleFlag) {
             //    console.log("\n去做做拼图任务")
             //    const { doPuzzle } = require('./jd_travel_puzzle')
