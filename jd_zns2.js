@@ -205,7 +205,7 @@ async function travel() {
     } catch (e) {
         console.log(e)
     }
-
+    /*
     try {
         console.log("\n去做金融App任务\n")
         $.sdkToken = "jdd01" + randomUUID({
@@ -215,7 +215,7 @@ async function travel() {
         await doJrAppTask()
     } catch (e) {
         console.log(e)
-    }
+    }*/
 }
 
 try {
@@ -1057,39 +1057,6 @@ function promote_collectScore(extraBody) {
         })
     })
 }
-
-// 开宝箱
-function promote_getBadgeAward(...extraBody){
-    let random=window.smashUtils.getRandom(8);
-    let body = {"random":random,"log":get_log(random),...extraBody}
-    return new Promise((resolve) => {
-        $.post(taskPostUrl("promote_getBadgeAward", body), async(err, resp, data) => {
-            try {
-                if (err) {
-                    console.log(`${JSON.stringify(err)}`)
-                    console.log(`${$.name} API请求失败，请检查网路重试`)
-                } else {
-                    if (safeGet(data)) {
-                        data = JSON.parse(data);
-                        if (data.code === 0) {
-                            if (data.data && data['data']['bizCode'] === 0 && data.data.result.score) {
-                                console.log(`成功领取${data.data.result.score}个币`)
-                            }
-                        } else {
-                            //签到失败:{"code":-40300,"msg":"运行环境异常，请您从正规途径参与活动，谢谢~"}
-                            console.log(`\n${JSON.stringify(data)}\n`)
-                        }
-                    }
-                }
-            } catch (e) {
-                $.logErr(e, resp)
-            } finally {
-                resolve(data);
-            }
-        })
-    })
-}
-
 
 function taskPostUrl(functionId, body) {
     let bodyMain = ""

@@ -27,12 +27,12 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
 let groups=[],g_i=0;
 
 if(process.env.ZNS_GEOUPS){
-    console.log('检测到设置了组队码，优先加入');
+    console.log(`检测到设置了组队码，优先加入。\n注：组队码每天都会变哦！`);
     let ZNS_GEOUPS=process.env.ZNS_GEOUPS.split("&");
     Object.keys(ZNS_GEOUPS).forEach((item) => {
         groups.push({ mpin: '', groupJoinInviteId: ZNS_GEOUPS[item],num:0 })
     })
-}
+}else console.log(`可以设置变量 ZNS_GEOUPS 指定加入组队码，多个组队码用&隔开。\n默认自动计算队伍数量顺序创建队伍组队`);
 
 !(async () => {
     if (!cookiesArr[0]) {
@@ -42,6 +42,7 @@ if(process.env.ZNS_GEOUPS){
     await getUA()
 
     let 队长用户名=[],队伍数量=cookiesArr.length>0?Math.ceil(cookiesArr.length/30):0;
+    if(队伍数量>1) 队伍数量=-1;
     for (let i = 0; i < cookiesArr.length; i++) {
         if (cookiesArr[i]) {
             cookie = cookiesArr[i];
@@ -168,7 +169,6 @@ function getEncryptedPinColor() {
     })
 }
 
-
 function collectFriendRecordColor(mpin) {
     return new Promise((resolve) => {
         //"assistType": "2"
@@ -255,12 +255,6 @@ function taskPostUrl2(functionId, body) {
 function getUA() {
     $.UUID = randomString(40)
     $.UA = `jdapp;android;10.3.2`
-}
-
-function randomNum(min, max) {
-    if (arguments.length === 0) return Math.random()
-    if (!max) max = 10 ** (Math.log(min) * Math.LOG10E + 1 | 0) - 1
-    return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
 function randomString(min, max = 0) {

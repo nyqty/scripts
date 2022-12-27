@@ -57,10 +57,12 @@ if ($.isNode()) {
 	})
 
 function run(fn) {
-	let body = `functionId=${fn}&client=m&clientVersion=-1&appid=signed_wh5&body={}`;
+	let body = {};
+	/*	body.random=window.smashUtils.getRandom(8);
+	body.log = get_log(body.random);*/
 	let opt = {
 		url: `https://api.m.jd.com/client.action?functionId=${fn}`,
-		body,
+		body:`functionId=${fn}&client=m&clientVersion=-1&appid=signed_wh5&body=${encodeURIComponent(JSON.stringify(body))}`,
 		headers: {
 			'Cookie': cookie,
 			'Content-Type': 'application/x-www-form-urlencoded',
