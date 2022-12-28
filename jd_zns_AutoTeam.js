@@ -43,6 +43,7 @@ if(process.env.ZNS_GEOUPS){
 
     let 队长用户名=[],队伍数量=cookiesArr.length>0?Math.ceil(cookiesArr.length/30):0;
     if(队伍数量>1) 队伍数量-=1;
+    队伍数量=1;//凉凉咯，就创一个战队，满了再创
     console.log(`共${cookiesArr.length}个账号计算出最少可创建${队伍数量}队`)
     for (let i = 0; i < cookiesArr.length; i++) {
         if (cookiesArr[i]) {
