@@ -42,7 +42,8 @@ if(process.env.ZNS_GEOUPS){
     await getUA()
 
     let 队长用户名=[],队伍数量=cookiesArr.length>0?Math.ceil(cookiesArr.length/30):0;
-    if(队伍数量>1) 队伍数量=-1;
+    if(队伍数量>1) 队伍数量-=1;
+    console.log(`共${cookiesArr.length}个账号计算出最少可创建${队伍数量}队`)
     for (let i = 0; i < cookiesArr.length; i++) {
         if (cookiesArr[i]) {
             cookie = cookiesArr[i];
@@ -56,18 +57,20 @@ if(process.env.ZNS_GEOUPS){
             document.cookie=cookie;
             //此处修改组队人数
             if ( 队伍数量>groups.length ) {
+                console.log('开始创建队伍')
                 res = await promote_pk_getHomeData()
                 if (res && res.data?.result?.groupInfo?.memberList) {
                     let memberCount = res.data.result.groupInfo.memberList.length
                     console.log('当前队伍有', memberCount, '人')
                     let groupJoinInviteId = ""
                     if (memberCount < 30) {
-                        //队伍数量--;
                         队长用户名.push($.UserName);
                         groupJoinInviteId = res.data.result.groupInfo.groupJoinInviteId
                         res = await getEncryptedPinColor()
                         groups.push({ mpin: res.result, groupJoinInviteId: groupJoinInviteId,num:memberCount  })
                         console.log('队伍未满:', groupJoinInviteId)
+                    }else{
+                        队伍数量--;
                     }
                 }else{
                     console.log('错误:', res)
@@ -77,7 +80,7 @@ if(process.env.ZNS_GEOUPS){
                 if (res?.data?.result?.groupInfo?.memberList) {
                     let memberCount = res.data.result.groupInfo.memberList.length
                     if (memberCount === 1) {
-                        console.log('\n开始加入队伍：', groups[g_i].groupJoinInviteId)
+                        console.log('开始加入队伍：', groups[g_i].groupJoinInviteId)
                         res = await collectFriendRecordColor(groups[g_i].mpin)
                         res = await promote_pk_joinGroup(groups[g_i].groupJoinInviteId)
                         if(res && res.data){
