@@ -6,7 +6,7 @@ Python 3.9.7
 多个&隔开
 export DYJ_CashPin="需要提现的pin值"
 export DYJ_NotCash="不提现的金额"
-cron: 59 11-23/1 * * *
+cron: 59,29 23,11-18/1 * * *
 new Env('赚钱大赢家-定时提现加强版');
 TY在原作者基础上删减更改，优化提取
 """
@@ -187,7 +187,7 @@ def main():
         tdList.append(threading.Thread(target=e.CashOut, args=()))
 
     print("")
-    unit = 36e5
+    unit = 18e5
     current_time = getTimestamp()
     nextHourStamp = current_time - ( current_time % unit ) + unit
     #nextHourStamp = current_time+10000
