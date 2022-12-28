@@ -115,18 +115,18 @@ class Userinfo:
                             url = f'https://wq.jd.com/prmt_exchange/client/exchange?g_ty=h5&g_tk=&appCode={appCode}&bizCode=makemoneyshop&ruleId={data["id"]}&sceneval=2'
                             res = requests.get(url=url, headers=self.headers).json()
                             if res['ret'] == 0:
-                                logger.info(f"提现成功")
+                                logger.info(f"{self.name}提现成功")
                                 break
-                            elif res['ret'] == 232:#没货
+                            elif res['ret'] == 224:#库存不足
                                 cashExchangeRuleList[i]['exchangeStatus']=4
-                                logger.info(f"{res['msg']}")
+                                logger.info(f"{self.name}提现:{res['msg']}")
                             elif res['ret'] == 604:#已有提现进行中，等待完成
-                                logger.info(f"{res['msg']}")
+                                logger.info(f"{self.name}提现:{res['msg']}")
                                 break
                             else:
                                 logger.info(f"{res}")
                         else:logger.info(f"当前余额[{self.canUseCoinAmount}]元,不提现[{not_tx}]门槛")
-                    else:logger.info(f"当前余额[{self.canUseCoinAmount}]元,不足提现[{data['cashoutAmount']}]门槛")
+                    #else:logger.info(f"当前余额[{self.canUseCoinAmount}]元,不足提现[{data['cashoutAmount']}]门槛")
                 elif data['exchangeStatus']==2:
                     logger.info(f"{data['name']},来晚了咯都被抢光了")
                     if i==0:loop=False
