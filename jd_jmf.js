@@ -8,7 +8,7 @@ cron:2 0 26-31,1 12,1 *
 ============Quantumultx===============
 [task_local]
 #集魔方
-2 0 26-31,1 12,1 * jd_jmf.js, tag=集魔方, enabled=true
+2 20 26-31,1 12,1 * jd_jmf.js, tag=集魔方, enabled=true
  */
 
 const $ = new Env('12.26-1.1 京东集魔方');
