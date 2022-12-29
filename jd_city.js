@@ -67,7 +67,7 @@ if (process.env.JD_CITY_SHARECODES) {
 const JD_API_HOST = 'https://api.m.jd.com/client.action';
 let inviteCodes = ['WTcvwEemlsDnIWC_cqR6QFs','29DRfLlUASUsMHf-SJ0tfJhanWC-fgY','29DRVJpXFQ0VNVfuWa86fLbJD01ay4Q','0MD3UJ9dDxJQIWCuTvw','29DRdr50AQUEJ0j1epYhfNDx_1mcZIU','29DREslWR11VbCm9PO5tZYupe10ExP6w']
 //inviteCodes=[inviteCodes[0],inviteCodes[1],inviteCodes[2]];
-inviteCodes=[]
+//inviteCodes=[]
 
 !(async () => {
   if (!cookiesArr[0]) {
