@@ -39,7 +39,7 @@ if($.isNode()){
 }else{
 	cookiesArr=[$.getdata('CookieJD'),$.getdata('CookieJD2'),...jsonParse($.getdata('CookiesJD')||"[]").map(item=>item.cookie)].filter(item=>!!item);
 }
-if(!rebateCodes)rebateCodes='https://u.jd.com/mM94LiU';
+if(!rebateCodes)rebateCodes='https://u.jd.com/mtUJDRt';
 if(!rebatePin)rebatePin='';
 rebateCodes=$.isNode()?process.env['JD_nhj_rebateCode']?process.env['JD_nhj_rebateCode']:''+rebateCodes:$.getdata('JD_nhj_rebateCode')?$.getdata('JD_nhj_rebateCode'):''+rebateCodes;
 rebatePin=$.isNode()?process.env['JD_nhj_rebatePin']?process.env['JD_nhj_rebatePin']:''+rebatePin:$.getdata('JD_nhj_rebatePin')?$.getdata('JD_nhj_rebatePin'):''+rebatePin;
