@@ -65,23 +65,21 @@ if (process.env.JD_CITY_SHARECODES) {
 }
 
 const JD_API_HOST = 'https://api.m.jd.com/client.action';
-let inviteCodes = ['eFtqjyeps_r0L17EBpfUh8U','-ryUM9lbJB8_PkmFPK6Du6olJhQnEtU','-ryUG_pYMDcGO2mVLZyUu84ZdHjbrIA','8ayyH_9SKihDL17VOs8','-ryUXqULZWVEMBaVGNiR9aGr-wpRyEE-','-ryUOd57JD8XKXaODqWPu98ipnknA_w','-ryUXalZYmdGYhfGSN3DonbDM-KbH3xD']
-inviteCodes=[];//[inviteCodes[0],inviteCodes[5],inviteCodes[6]];
-
-JD_CITY_TASK=false;
+let inviteCodes = ['WTcvwEemlsDnIWC_cqR6QFs','29DRfLlUASUsMHf-SJ0tfJhanWC-fgY','29DRVJpXFQ0VNVfuWa86fLbJD01ay4Q','0MD3UJ9dDxJQIWCuTvw','29DRdr50AQUEJ0j1epYhfNDx_1mcZIU','29DREslWR11VbCm9PO5tZYupe10ExP6w']
+//inviteCodes=[inviteCodes[0],inviteCodes[1],inviteCodes[2]];
+inviteCodes=[]
 
 !(async () => {
   if (!cookiesArr[0]) {
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
     return;
   }
-  $.token="wbvfunwflgtvzjwf"
+  $.token="trxpmpmkwe3437l1"
   if(!$.token){
     console.log("填写log token")
     return
   }
   let urlArr = [
-      // "http://127.0.0.1",
       "http://g.zxi7.cn",
       "https://jd.smiek.tk",
       "http://jd.smiek.ga",
@@ -146,7 +144,7 @@ JD_CITY_TASK=false;
       $.uid = ''
       let noHelpCount = 0
       $.joyytokenb = ($.getdata("jd_blog_joyytoken") && $.getdata("jd_blog_joyytoken")[$.UserName]) || ''
-      if (JD_CITY_TASK||1){
+      if (JD_CITY_TASK){
         res = await getInfo('');
         if (res.code === 0) {
           if (res.data && res['data']['bizCode'] === 0) {
@@ -180,6 +178,7 @@ JD_CITY_TASK=false;
               //}
             }
             
+            //console.log(JSON.stringify(taskVos));
             if(JD_CITY_TASK) for (let task of taskVos || []) {
               if (task && task.status == 1) {
                   const t = Date.now();
@@ -316,7 +315,8 @@ JD_CITY_TASK=false;
   })
 
 async function getInfo(inviteId) {
-  let safeStr = JSON.stringify(await getLogs("inviteId", { }))
+  //let safeStr = JSON.stringify(await getLogs("inviteId", { }))
+  let safeStr="{\"log\":\"${(new Date()).getTime()}~\",\"sceneid\":\"CHFhPageh5\",\"random\":\"51624039\"}"
   let body = { "lbsCity": "16", "realLbsCity": "1315", "inviteId": inviteId, "headImg": "", "userName": "", "taskChannel": "1" ,"location":"","safeStr":`${safeStr}`}
   return new Promise((resolve) => {
     $.post(taskPostUrl("city_getHomeDatav1", body), async (err, resp, data) => {
@@ -470,7 +470,7 @@ function taskPostUrl(functionId, body) {
       "User-Agent":$.UA,
       "Referer": "https://bunearth.m.jd.com/",
       "Accept-Encoding": "gzip, deflate, br",
-      "Cookie": cookie
+      "Cookie": ($.abcv ? $.abcv : "")+cookie,
     }
   }
 }
@@ -553,9 +553,7 @@ async function getLogs(functionId, body = {}) {
       $.joyytokenb = await gettoken("50999")
   }
   joyytokenb = $.joyytokenb
-  
-  /*
-  let resBody = { "fn": "city", "id": functionId, "riskData": '', "pin": $.UserName, "joyytoken": joyytoken, "uid": $.uid || "", "joyytokenb": joyytokenb }
+  let resBody = { "fn": "city1", "id": functionId, "riskData": '', "pin": $.UserName, "joyytoken": joyytoken, "uid": $.uid || "", "joyytokenb": joyytokenb }
   let log_res = await getLog(resBody)
   res = log_res.data
   let resCount = 0
@@ -584,8 +582,7 @@ async function getLogs(functionId, body = {}) {
       $.abcv = res.abcv
   }
   log = res.log || -1
-  num = res.random || ''*/
-  
+  num = res.random || ''
   return {
       ...body,
       "log":log,
@@ -657,7 +654,7 @@ async function getLog(body) {
                   if (data && data.code && data.code == 200) {
                       msg = data
                       if (data.msg && data.msg != "success") {
-                          //console.log(data.msg)
+                          console.log(data.msg)
                           if (/次数不够/.test(data.msg)) process.exit(1)
                       }
                   }
@@ -670,7 +667,6 @@ async function getLog(body) {
       })
   })
 }
-
 function toStatus() {
   return new Promise(resolve => {
       let get = {
