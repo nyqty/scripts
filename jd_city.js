@@ -1,6 +1,6 @@
 /*
 城城分现金
-活动时间：2022-12-09~12
+活动时间：2022-12-09~2023-01-02
 没填指定助力码默认给作者助力，填了先给你填的助力，剩余助力给作者
 自动抽奖 JD_CITY_EXCHANGE="true"
 指定助力码 JD_CITY_SHARECODES="eFtqjyeps_r0L17EBpfUh8U" 多个助力码用“@”或者“&”分割
@@ -12,17 +12,17 @@
 =================================Quantumultx=========================
 [task_local]
 #城城分现金
-0 0,12 9-12 12 * https://raw.githubusercontent.com/atyvcn/jd_scripts/jd_city.js, tag=城城分现金, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
+0 0,12 1-2,29-31 12,1 * https://raw.githubusercontent.com/atyvcn/jd_scripts/jd_city.js, tag=城城分现金, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
 
 =================================Loon===================================
 [Script]
-cron "0 0,12,16,20 9-12 12 *" script-path=https://raw.githubusercontent.com/atyvcn/jd_scripts/jd_city.js,tag=城城分现金
+cron "0 0,12 1-2,29-31 12,1 *" script-path=https://raw.githubusercontent.com/atyvcn/jd_scripts/jd_city.js,tag=城城分现金
 
 ===================================Surge================================
-城城分现金 = type=cron,cronexp="0 0,12 9-12 12 *",wake-system=1,timeout=3600,script-path=https://raw.githubusercontent.com/atyvcn/jd_scripts/jd_city.js
+城城分现金 = type=cron,cronexp="0 0,12 1-2,29-31 12,1 *",wake-system=1,timeout=3600,script-path=https://raw.githubusercontent.com/atyvcn/jd_scripts/jd_city.js
 
 ====================================小火箭=============================
-城城分现金 = type=cron,script-path=https://raw.githubusercontent.com/atyvcn/jd_scripts/jd_city.js, cronexpr="0 0,12 9-12 12 *", timeout=3600, enable=true
+城城分现金 = type=cron,script-path=https://raw.githubusercontent.com/atyvcn/jd_scripts/jd_city.js, cronexpr="0 0,12 1-2,29-31 12,1 *", timeout=3600, enable=true
  */
 
 const Env=require('./utils/Env.js');
@@ -32,8 +32,8 @@ const notify = $.isNode() ? require('./sendNotify') : '';
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 //自动抽奖 ，环境变量  JD_CITY_EXCHANGE
 let exchangeFlag = $.isNode() ? (process.env.JD_CITY_EXCHANGE === "true" ? true : false) : ($.getdata('jdJxdExchange') === "true" ? true : false)  //是否开启自动抽奖，建议活动快结束开启，默认关闭
-//是否跑任务 环境变量  JD_CITY_TASK
-let JD_CITY_TASK = process.env.JD_CITY_TASK === "true" ? true : false   //是否开启自动跑任务，默认关闭
+//是否跑任务 环境变量  
+let JD_CITY_TASK = (process.env.JD_CITY_TASK === "true" ? true : false)   //是否开启自动跑任务，默认关闭
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '', message;
 $.shareCodes = []//用户获取的互助码
@@ -654,7 +654,7 @@ async function getLog(body) {
                   if (data && data.code && data.code == 200) {
                       msg = data
                       if (data.msg && data.msg != "success") {
-                          console.log(data.msg)
+                          //console.log(data.msg)
                           if (/次数不够/.test(data.msg)) process.exit(1)
                       }
                   }
