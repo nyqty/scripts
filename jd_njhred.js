@@ -1,7 +1,7 @@
 /*
 年货节红包
 变量 export NHJCODE='xxxxx'
-30,12,20 * * * jd_njhred.js
+30 12,20 * * * jd_njhred.js
 */
 const Env=require('./utils/Env.js');
 const $ = new Env('年货节红包');
