@@ -771,7 +771,7 @@ function getPostRequest(_0x2a41f4,_0x1b9cb2,_0x58e082='POST'){
 }
 function getCk(){
 	return new Promise(_0x40488c=>{
-		let _0x1f81b5={'url':'https://lzdz1-isv.isvjd.comgzhi/mengniumilk/grow/activity?activityId='+$.activityId+'&shareUuid='+$.shareUuid,'followRedirect':false,'headers':{'User-Agent':$.UA},'timeout':30000};
+		let _0x1f81b5={'url':'https://lzdz1-isv.isvjd.com/dingzhi/mengniumilk/grow/activity?activityId='+$.activityId+'&shareUuid='+$.shareUuid,'followRedirect':false,'headers':{'User-Agent':$.UA},'timeout':30000};
 		$.get(_0x1f81b5,async(_0xd5bffb,_0x63dec2,_0x4bfc9e)=>{
 			try{
 				if(_0xd5bffb){
