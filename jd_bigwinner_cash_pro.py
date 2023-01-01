@@ -113,18 +113,24 @@ class Userinfo:
                             logger.info(f"当前余额[{self.canUseCoinAmount}]元,符合提现规则[{data['cashoutAmount']}]门槛")
                             self.headers["Host"]="wq.jd.com"
                             url = f'https://wq.jd.com/prmt_exchange/client/exchange?g_ty=h5&g_tk=&appCode={appCode}&bizCode=makemoneyshop&ruleId={data["id"]}&sceneval=2'
-                            res = requests.get(url=url, headers=self.headers).json()
-                            if res['ret'] == 0:
-                                logger.info(f"{self.name}提现{data['cashoutAmount']}成功")
-                                break
-                            elif res['ret'] == 224:#库存不足
-                                cashExchangeRuleList[i]['exchangeStatus']=4
-                                logger.info(f"{self.name}提现{data['cashoutAmount']}:{res['msg']}")
-                            elif res['ret'] == 604:#已有提现进行中，等待完成
-                                logger.info(f"{self.name}提现{data['cashoutAmount']}:{res['msg']}")
-                                break
-                            else:
-                                logger.info(f"{res}")
+                            proxies={}
+                            try:
+                                res = requests.get(url=url, headers=self.headers,proxies=proxies,timeout=10).text
+                                try:
+                                    exchange = json.loads(res)
+                                    if exchange['ret'] == 0:
+                                        logger.info(f"{self.name}提现{data['cashoutAmount']}成功")
+                                        break
+                                    elif exchange['ret'] == 224:#库存不足
+                                        cashExchangeRuleList[i]['exchangeStatus']=4
+                                        logger.info(f"{self.name}提现{data['cashoutAmount']}:{exchange['msg']}")
+                                    elif exchange['ret'] == 604:#已有提现进行中，等待完成
+                                        logger.info(f"{self.name}提现{data['cashoutAmount']}:{exchange['msg']}")
+                                        break
+                                except Exception as e:
+                                    logger.info(f"{self.name}提现{data['cashoutAmount']}解析异常：{str(e)}")
+                            except Exception as e:
+                                logger.info(f"{self.name}提现{data['cashoutAmount']}:超过10s请求超时...")
                         else:logger.info(f"当前余额[{self.canUseCoinAmount}]元,不提现[{not_tx}]门槛")
                     #else:logger.info(f"当前余额[{self.canUseCoinAmount}]元,不足提现[{data['cashoutAmount']}]门槛")
                 elif data['exchangeStatus']==2:
@@ -216,7 +222,7 @@ def main():
                 if loop:
                     try:
                         tdItem.start()
-                        time.sleep(0.1)
+                        time.sleep(0.3) #0.3 秒一个
                     except Exception as e:
                         logger.info(f'提现异常：{str(e)}')
                 else:

@@ -173,6 +173,7 @@ function GetRawFollowAuthor() {
         $.get(options, (err, resp, data) => {
             let userInfo = {}, users = []
             try {
+                //console.log(data)                
                 data = JSON.parse(getStr(data, 'jsonpCBKB(', ');'));
                 if (data.iRet === 0) {
                     for (let i = 0; i < data['data']['LiveIng'].length; i++) {
