@@ -63,6 +63,8 @@ let activityCookie='';
 	authorCodeList=["507ebc4852bd495ba86ca58b2e0fd6b4"]//await getAuthorCodeList('http://code.kingran.ga/ajyq.json');
 	$.shareUuid=authorCodeList[Math.floor(Math.random()*authorCodeList.length)];
 	console.log('入口:\nhttps://lzkjdz-isv.isvjd.com/wx/anchor/inviteJune/activity?activityId=2104100001448621&InviteUuid='+$.shareUuid);
+
+	$.actorUuid=$.shareUuid;
 	for(let _0x550c19=0;_0x550c19<cookiesArr.length;_0x550c19++){
 		cookie=cookiesArr[_0x550c19];
 		originCookie=cookiesArr[_0x550c19];
@@ -415,9 +417,11 @@ async function dealReturn(_0x304f2a,_0x191ac2){
 function getPostRequest(_0x4d4a78,_0x3a5539,_0x5177de='POST'){
 	let _0x2545cd={'Accept':'application/json','Accept-Encoding':'gzip, deflate, br','Accept-Language':'zh-cn','Connection':'keep-alive','Content-Type':'application/x-www-form-urlencoded','Cookie':cookie,'User-Agent':$.UA,'X-Requested-With':'XMLHttpRequest'};
 	if(_0x4d4a78.indexOf('https://lzkjdz-isv.isvjd.com')>-1){
-		_0x2545cd.Referer='https://lzkjdz-isv.isvjd.com/wx/anchor/inviteJune/activity?activityId=2203100000178202/?helpUuid='+$.shareUuid;
+		_0x2545cd.Referer='https://lzkjdz-isv.isvjd.com/wx/anchor/inviteJune/activity?activityId=2104100001448621/?helpUuid='+$.shareUuid;
 		_0x2545cd.Cookie=''+(lz_jdpin_token_cookie&&lz_jdpin_token_cookie||'')+($.Pin&&'AUTH_C_USER='+$.Pin+';'||'')+activityCookie;
 	}
+	//_0x2545cd.Cookie=_0x2545cd.Cookie.replace(/;;/g,";").replace(/;/g,"; ").replace(/; /g,";")
+	//console.log(_0x2545cd.Cookie);
 	return{'url':_0x4d4a78,'method':_0x5177de,'headers':_0x2545cd,'body':_0x3a5539,'timeout':30000};
 }
 function getCk(){
