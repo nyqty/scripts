@@ -126,7 +126,6 @@ console.time = log;
         $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
         return;
     }
-    
     for (let i = 0; i < cookiesArr.length; i++) {
         if (cookiesArr[i]) {
             cookie = cookiesArr[i];
@@ -149,6 +148,8 @@ console.time = log;
                 } 
             }else if( Pin_i==-1 || (shareInfo[Pin_i].id && !query) ) continue;
             //await TotalBean();
+            continue;
+
             console.log(`\n******开始【京东`+(Pin_i!=-1?"车头":"")+`账号${$.index}】${$.nickName || $.UserName}*********`);
             if (!$.isLogin) {
                 $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
@@ -440,7 +441,7 @@ function help(sinfo) {
         */
         let body={"activeId":"63526d8f5fe613a6adb48f03","shareId":sinfo.id,"operType":1};
         let h5st=H5ST("activeId,shareId",body);
-        console.log(h5st);
+        //console.log(h5st);
         let opt= {
             url: `https://api.m.jd.com/api?g_ty=h5&g_tk=&appCode=msc588d6d5&body=${escape(JSON.stringify(body))}&appid=jdlt_h5&client=jxh5&functionId=makemoneyshop_querysharevenderinfo&clientVersion=1.2.5&h5st=${h5st}&loginType=2&sceneval=2`,
             headers: {
