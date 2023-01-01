@@ -1,3 +1,24 @@
+/*
+1.1-1.31 云养牛，免费赢好礼
+
+第一个账号助力作者 其他依次助力CK1
+第一个CK失效会退出脚本
+
+
+入口：[ 1.1-1.31 云养牛，免费赢好礼]
+
+请求太频繁会被黑ip
+过10分钟再执行
+
+cron:11 11 11 11 *
+============Quantumultx===============
+[task_local]
+#1.1-1.31 云养牛，免费赢好礼
+11 11 11 11 * jd_mnyyn.js, tag=1.1-1.31 云养牛，免费赢好礼, enabled=true
+
+*/
+
+const Env=require('./utils/Env.js');
 const $=new Env('1.1-1.31 云养牛，免费赢好礼');
 const jdCookieNode=$.isNode()?require('./jdCookie.js'):'';
 const notify=$.isNode()?require('./sendNotify'):'';
@@ -750,11 +771,7 @@ function getPostRequest(_0x2a41f4,_0x1b9cb2,_0x58e082='POST'){
 }
 function getCk(){
 	return new Promise(_0x40488c=>{
-<<<<<<< HEAD:jd_mnyyn1.js
 		let _0x1f81b5={'url':'https://lzdz1-isv.isvjd.com/dingzhi/mengniumilk/grow/activity?activityId='+$.activityId+'&shareUuid='+$.shareUuid,'followRedirect':false,'headers':{'User-Agent':$.UA},'timeout':30000};
-=======
-		let _0x1f81b5={'url':'https://lzdz1-isv.isvjcloud.com/dingzhi/mengniumilk/grow/activity?activityId='+$.activityId+'&shareUuid='+$.shareUuid,'followRedirect':false,'headers':{'User-Agent':$.UA},'timeout':30000};
->>>>>>> parent of 04ace7c (更新):jd_mnyyn.js
 		$.get(_0x1f81b5,async(_0xd5bffb,_0x63dec2,_0x4bfc9e)=>{
 			try{
 				if(_0xd5bffb){

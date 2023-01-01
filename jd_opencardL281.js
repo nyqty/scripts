@@ -602,11 +602,7 @@ function getPostRequest(_0x21a3c9,_0x5dec0a,_0x495ce3='POST'){
 }
 function getCk(){
 	return new Promise(_0x19a6ea=>{
-<<<<<<< HEAD
-		let _0x16e7b0={'url':'https://lzdz1-isv.isvjd.com/dingzhi/joinCommon/activity/activity?activityId='+$.activityId+'&shareUuid='+$.shareUuid,'followRedirect':false,'headers':{'User-Agent':$.UA},'timeout':30000};
-=======
 		let _0x16e7b0={'url':'https://lzdz1-isv.isvjcloud.com/dingzhi/joinCommon/activity/activity?activityId='+$.activityId+'&shareUuid='+$.shareUuid,'followRedirect':false,'headers':{'User-Agent':$.UA},'timeout':30000};
->>>>>>> parent of 04ace7c (更新)
 		$.get(_0x16e7b0,async(_0x20ef06,_0x19ccb5,_0x5138b8)=>{
 			try{
 				if(_0x20ef06){

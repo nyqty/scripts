@@ -40,11 +40,7 @@ if ($.isNode()) {
         $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
         return;
     }
-<<<<<<< HEAD
-	console.log(`\n入口：https://lzdz1-isv.isvjd.com/dingzhi/tiger/gold/activity/15725835?activityId=dz2201100014002401&shareUuid=78d52d2b13af4861b6f6e2012c21cc11\n`);
-=======
 	console.log(`\n入口：https://lzdz1-isv.isvjcloud.com/dingzhi/tiger/gold/activity/15725835?activityId=dz2201100014002401&shareUuid=78d52d2b13af4861b6f6e2012c21cc11\n`);
->>>>>>> parent of 04ace7c (更新)
     for (let i = 0; i < cookiesArr.length; i++) {
         if (cookiesArr[i]) {
             cookie = cookiesArr[i]
