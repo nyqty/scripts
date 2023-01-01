@@ -49,6 +49,23 @@ except Exception as err:  # 异常捕捉
 
 ver = 21212  # 版本号
 
+
+def notify_send(name,text):
+    if "WSKEY_SEND" in os.environ and os.environ["WSKEY_SEND"] == 'disable':
+        return True
+    else:
+        try:  # 异常捕捉
+            res = api.post(url=notify_api,params={},data=json.dumps({"title":"WSKEY转换","message":text,"name":name,"env_name":"JD_WSCK"}))
+        except Exception as err:  # 异常捕捉
+            logger.debug(str(err))  # 调试日志输出
+            logger.info("发信失败：TY接口错误")  # 标准日志输出
+            return False
+        else:  # 判断分支
+            data=json.loads(res.text)
+            if data["code"]==200:
+                logger.info(data["msg"])
+            return True
+
 def ql_send(text):
     if "WSKEY_SEND" in os.environ and os.environ["WSKEY_SEND"] == 'disable':
         return True
@@ -350,7 +367,8 @@ def ql_AddUp(uid):
             logger.info("{0}  账号禁用".format(userName))  # 标准日志输出
             ql_disable(row["id"])  # 执行方法[ql_disable] 传递 eid
             text = "账号: {0} WsKey疑似失效, 已禁用Cookie".format(userName)  # 设置推送内容
-            ql_send(text)
+            notify_send(userName,text)
+            #ql_send(text)
     logger.info("暂停{0}秒\n".format(sleepTime))  # 标准日志输出
     time.sleep(sleepTime)  # 脚本休眠
 
@@ -370,6 +388,8 @@ if __name__ == '__main__':  # Python主函数执行入口
     else:  # 判断分支
         logger.info("未添加变量TYQLDG_URL或TYQLDG_TOKEN")  # 标准日志输出
         sys.exit(0)  # 脚本退出
+
+    notify_api='{0}/api/notify.php?access_token={1}'.format(TYQLDG_URL,TYQLDG_TOKEN)
     ck_api='{0}/api/cookie.php?access_token={1}'.format(TYQLDG_URL,TYQLDG_TOKEN)
     tryCount = 1  # 重试次数 1次
     if "WSKEY_TRY_COUNT" in os.environ and os.environ["WSKEY_TRY_COUNT"].isdigit():  # 判断 [WSKEY_TRY_COUNT] 是否存在于系统变量 且 判断 [WSKEY_TRY_COUNT] 是否为数字
