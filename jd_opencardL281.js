@@ -23,7 +23,7 @@ const notify=$.isNode()?require('./sendNotify'):'';
 let opencard_draw=$.isNode()?process.env['opencard_draw']?process.env['opencard_draw']:'0':$.getdata('opencard_draw')?$.getdata('opencard_draw'):'0';
 let opencard_addCart=$.isNode()?process.env['opencard_addCart']?process.env['opencard_addCart']:false:$.getdata('opencard_addCart')?$.getdata('opencard_addCart'):false;
 const getToken=require('./function/krgetToken');
-let domains='https://lzdz1-isv.isvjd.com';
+let domains='https://lzdz1-isv.isvjcloud.com';
 let cookiesArr=[],cookie='';
 let lz_cookie={};
 if($.isNode()){
@@ -62,7 +62,7 @@ $.errMsgPin=[];
 	$.activityId='c0ca7dbcef2143f59799855eb67bcf90';
 	$.authorCode=authorCodeList[random(0,authorCodeList.length)];
 	$.shareUuid=$.authorCode;
-	console.log('活动入口:\nhttps://lzdz1-isv.isvjd.com/dingzhi/joinCommon/activity/activity?activityId='+$.activityId+'&shareUuid='+$.shareUuid);
+	console.log('活动入口:\nhttps://lzdz1-isv.isvjcloud.com/dingzhi/joinCommon/activity/activity?activityId='+$.activityId+'&shareUuid='+$.shareUuid);
 	console.log('❖ 默认不加购，如需加购请设置环境变量 [opencard_addCart]，变量值为 true');
 	console.log('❖ 默认不抽奖，如需抽奖请设置环境变量 [opencard_draw]，变量值为抽奖次数');
 	for(let _0x270963=0;_0x270963<cookiesArr.length;_0x270963++){
@@ -228,7 +228,7 @@ async function run(){
 }
 async function takePostRequest(_0x320816){
 	if($.outFlag)return;
-	let _0x40212e='https://lzdz1-isv.isvjd.com';
+	let _0x40212e='https://lzdz1-isv.isvjcloud.com';
 	let _0x3a5ac2='';
 	let _0x40653a='POST';
 	let _0xf558e0='';
@@ -594,15 +594,19 @@ async function dealReturn(_0x347afa,_0x298cb0){
 }
 function getPostRequest(_0x21a3c9,_0x5dec0a,_0x495ce3='POST'){
 	let _0x5cc678={'Accept':'application/json','Accept-Encoding':'gzip, deflate, br','Accept-Language':'zh-cn','Connection':'keep-alive','Content-Type':'application/x-www-form-urlencoded','Cookie':cookie,'User-Agent':$.UA,'X-Requested-With':'XMLHttpRequest'};
-	if(_0x21a3c9.indexOf('https://lzdz1-isv.isvjd.com')>-1){
-		_0x5cc678.Referer='https://lzdz1-isv.isvjd.com/dingzhi/joinCommon/activity/activity?activityId='+$.activityId+'&shareUuid='+$.shareUuid;
+	if(_0x21a3c9.indexOf('https://lzdz1-isv.isvjcloud.com')>-1){
+		_0x5cc678.Referer='https://lzdz1-isv.isvjcloud.com/dingzhi/joinCommon/activity/activity?activityId='+$.activityId+'&shareUuid='+$.shareUuid;
 		_0x5cc678.Cookie=''+(lz_jdpin_token_cookie&&lz_jdpin_token_cookie||'')+($.Pin&&'AUTH_C_USER='+$.Pin+';'||'')+activityCookie;
 	}
 	return{'url':_0x21a3c9,'method':_0x495ce3,'headers':_0x5cc678,'body':_0x5dec0a,'timeout':30000};
 }
 function getCk(){
 	return new Promise(_0x19a6ea=>{
+<<<<<<< HEAD
 		let _0x16e7b0={'url':'https://lzdz1-isv.isvjd.com/dingzhi/joinCommon/activity/activity?activityId='+$.activityId+'&shareUuid='+$.shareUuid,'followRedirect':false,'headers':{'User-Agent':$.UA},'timeout':30000};
+=======
+		let _0x16e7b0={'url':'https://lzdz1-isv.isvjcloud.com/dingzhi/joinCommon/activity/activity?activityId='+$.activityId+'&shareUuid='+$.shareUuid,'followRedirect':false,'headers':{'User-Agent':$.UA},'timeout':30000};
+>>>>>>> parent of 04ace7c (更新)
 		$.get(_0x16e7b0,async(_0x20ef06,_0x19ccb5,_0x5138b8)=>{
 			try{
 				if(_0x20ef06){

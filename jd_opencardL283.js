@@ -26,7 +26,7 @@ let opencard_draw=$.isNode()?process.env['opencard_draw']?process.env['opencard_
 let opencard_addCart=$.isNode()?process.env['opencard_addCart']?process.env['opencard_addCart']:false:$.getdata('opencard_addCart')?$.getdata('opencard_addCart'):false;
 const getToken=require('./function/krgetToken');
 const getH5st=require('./function/krh5st');
-let domains='https://lzdz1-isv.isvjd.com';
+let domains='https://lzdz1-isv.isvjcloud.com';
 let cookiesArr=[],cookie='';
 let lz_cookie={};
 if($.isNode()){
@@ -231,7 +231,7 @@ async function run(){
 }
 async function takePostRequest(_0x4da2ba){
 	if($.outFlag)return;
-	let _0x1e70c3='https://lzdz1-isv.isvjd.com';
+	let _0x1e70c3='https://lzdz1-isv.isvjcloud.com';
 	let _0x135e1f='';
 	let _0x3298c6='POST';
 	let _0x5cceee='';
@@ -602,15 +602,15 @@ async function dealReturn(_0x2541bf,_0x1a73a5){
 }
 function getPostRequest(_0x5e93ec,_0x517759,_0x40024d='POST'){
 	let _0x4879ef={'Accept':'application/json','Accept-Encoding':'gzip, deflate, br','Accept-Language':'zh-cn','Connection':'keep-alive','Content-Type':'application/x-www-form-urlencoded','Cookie':cookie,'User-Agent':$.UA,'X-Requested-With':'XMLHttpRequest'};
-	if(_0x5e93ec.indexOf('https://lzdz1-isv.isvjd.com')>-1){
-		_0x4879ef.Referer='https://lzdz1-isv.isvjd.com/dingzhi/joinCommon/activity/activity?activityId='+$.activityId+'&shareUuid='+$.shareUuid;
+	if(_0x5e93ec.indexOf('https://lzdz1-isv.isvjcloud.com')>-1){
+		_0x4879ef.Referer='https://lzdz1-isv.isvjcloud.com/dingzhi/joinCommon/activity/activity?activityId='+$.activityId+'&shareUuid='+$.shareUuid;
 		_0x4879ef.Cookie=''+(lz_jdpin_token_cookie&&lz_jdpin_token_cookie||'')+($.Pin&&'AUTH_C_USER='+$.Pin+';'||'')+activityCookie;
 	}
 	return{'url':_0x5e93ec,'method':_0x40024d,'headers':_0x4879ef,'body':_0x517759,'timeout':30000};
 }
 function getCk(){
 	return new Promise(_0x2f1903=>{
-		let _0x57ebdb={'url':'https://lzdz1-isv.isvjd.comnCommon/activity/activity?activityId='+$.activityId+'&shareUuid='+$.shareUuid,'followRedirect':false,'headers':{'User-Agent':$.UA},'timeout':30000};
+		let _0x57ebdb={'url':'https://lzdz1-isv.isvjcloud.com/dingzhi/joinCommon/activity/activity?activityId='+$.activityId+'&shareUuid='+$.shareUuid,'followRedirect':false,'headers':{'User-Agent':$.UA},'timeout':30000};
 		$.get(_0x57ebdb,async(_0x14ae9a,_0x5d51af,_0x3caf43)=>{
 			try{
 				if(_0x14ae9a){
