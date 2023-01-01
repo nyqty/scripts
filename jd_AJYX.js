@@ -34,7 +34,7 @@ const jdCookieNode=$.isNode()?require('./jdCookie.js'):'';
 const notify=$.isNode()?require('./sendNotify'):'';
 const getToken=require('./function/krgetToken');
 const getH5st=require('./function/krh5st');
-let domains='https://lzdz1-isv.isvjcloud.com';
+let domains='https://lzdz1-isv.isvjd.com';
 let cookiesArr=[],cookie='';
 if($.isNode()){
 	Object.keys(jdCookieNode)['forEach'](_0x4d0949=>{

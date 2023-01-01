@@ -272,7 +272,7 @@ function shopactivityId(functionId) {
       'accept': '*/*',
       'User-Agent': $.UA,
       'content-type': 'application/x-www-form-urlencoded',
-      'Referer': `https://shopmember.m.jd.com/shopcard/?venderId=${functionId}&shopId=${functionId}&venderType=5&channel=401&returnUrl=https://lzdz1-isv.isvjcloud.com/dingzhi/dz/openCard/activity/7768835?activityId=${$.activityId}&shareUuid=${$.shareUuid}`,
+      'Referer': `https://shopmember.m.jd.com/shopcard/?venderId=${functionId}&shopId=${functionId}&venderType=5&channel=401&returnUrl=https://lzdz1-isv.isvjd.com/dingzhi/dz/openCard/activity/7768835?activityId=${$.activityId}&shareUuid=${$.shareUuid}`,
       'Cookie': $.cookie
     }
   }
@@ -322,7 +322,7 @@ function ruhui(functionId) {
       'accept': '*/*',
       'User-Agent': $.UA,
       'content-type': 'application/x-www-form-urlencoded',
-      'Referer': `https://shopmember.m.jd.com/shopcard/?venderId=${functionId}&shopId=${functionId}&venderType=5&channel=401&returnUrl=https://lzdz1-isv.isvjcloud.com/dingzhi/dz/openCard/activity/7768835?activityId=${$.activityId}&shareUuid=${$.shareUuid}`,
+      'Referer': `https://shopmember.m.jd.com/shopcard/?venderId=${functionId}&shopId=${functionId}&venderType=5&channel=401&returnUrl=https://lzdz1-isv.isvjd.com/dingzhi/dz/openCard/activity/7768835?activityId=${$.activityId}&shareUuid=${$.shareUuid}`,
       'Cookie': $.cookie
     }
   }

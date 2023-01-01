@@ -21,7 +21,7 @@ const jdCookieNode=$.isNode()?require('./jdCookie.js'):'';
 const notify=$.isNode()?require('./sendNotify'):'';
 const getToken=require('./function/krgetToken');
 const getH5st=require('./function/krh5st');
-let domains='https://lzdz1-isv.isvjcloud.com';
+let domains='https://lzdz1-isv.isvjd.com';
 let cookiesArr=[],cookie='';
 if($.isNode()){
 	Object.keys(jdCookieNode)['forEach'](_0x39d79d=>{
@@ -47,7 +47,7 @@ let lz_cookie={};
 	$.activityId='dzce5c54a2d979472880188d77';
 	authorCodeList=["7b23d39af2d64e02ad668e0bf1d1bd9c"];//await getAuthorCodeList('http://code.kingran.ga/ajmh.json');
 	$.shareUuid=authorCodeList[Math.floor(Math.random()*authorCodeList.length)];
-	console.log('入口:\nhttps://lzdz1-isv.isvjcloud.com/dingzhi/box618/activity/activity?activityId='+$.activityId+'&shareUuid='+$.shareUuid);
+	console.log('入口:\nhttps://lzdz1-isv.isvjd.com/dingzhi/box618/activity/activity?activityId='+$.activityId+'&shareUuid='+$.shareUuid);
 	console.log('\n规则:\n1.每天完成任务共计：50积分。\n2.邀请一名好友50积分，不上限。\n3.每300积分可以开盲盒一次，每天限制开三次，每天限制中奖一次。');
 	for(let _0x3fb934=0;_0x3fb934<cookiesArr.length;_0x3fb934++){
 		cookie=cookiesArr[_0x3fb934];
@@ -175,7 +175,7 @@ async function run(){
 }
 async function takePostRequest(_0x84564){
 	if($.outFlag)return;
-	let _0x2cf5e7='https://lzdz1-isv.isvjcloud.com';
+	let _0x2cf5e7='https://lzdz1-isv.isvjd.com';
 	let _0x109d89='';
 	let _0x5de276='POST';
 	let _0x5879f8='';
@@ -467,15 +467,15 @@ async function dealReturn(_0x3a145b,_0x85d1e4){
 }
 function getPostRequest(_0xbbd2d6,_0x3c4f28,_0x2c860f='POST'){
 	let _0x56874b={'Accept':'application/json','Accept-Encoding':'gzip, deflate, br','Accept-Language':'zh-cn','Connection':'keep-alive','Content-Type':'application/x-www-form-urlencoded','Cookie':cookie,'User-Agent':$.UA,'X-Requested-With':'XMLHttpRequest'};
-	if(_0xbbd2d6.indexOf('https://lzdz1-isv.isvjcloud.com')>-1){
-		_0x56874b.Referer='https://lzdz1-isv.isvjcloud.com/dingzhi/box618/activity/activity?activityId='+$.activityId+'&shareUuid='+$.shareUuid;
+	if(_0xbbd2d6.indexOf('https://lzdz1-isv.isvjd.com')>-1){
+		_0x56874b.Referer='https://lzdz1-isv.isvjd.com/dingzhi/box618/activity/activity?activityId='+$.activityId+'&shareUuid='+$.shareUuid;
 		_0x56874b.Cookie=''+(lz_jdpin_token_cookie&&lz_jdpin_token_cookie||'')+($.Pin&&'AUTH_C_USER='+$.Pin+';'||'')+activityCookie;
 	}
 	return{'url':_0xbbd2d6,'method':_0x2c860f,'headers':_0x56874b,'body':_0x3c4f28,'timeout':30000};
 }
 function getCk(){
 	return new Promise(_0x42ba7d=>{
-		let _0x3ee3b3={'url':'https://lzdz1-isv.isvjcloud.com/dingzhi/box618/activity/activity?activityId='+$.activityId+'&shareUuid='+$.shareUuid,'followRedirect':false,'headers':{'User-Agent':$.UA},'timeout':30000};
+		let _0x3ee3b3={'url':'https://lzdz1-isv.isvjd.com/dingzhi/box618/activity/activity?activityId='+$.activityId+'&shareUuid='+$.shareUuid,'followRedirect':false,'headers':{'User-Agent':$.UA},'timeout':30000};
 		$.get(_0x3ee3b3,async(_0x36dedd,_0x432f8b,_0x58f424)=>{
 			try{
 				if(_0x36dedd){

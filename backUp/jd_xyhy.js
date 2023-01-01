@@ -40,7 +40,7 @@ if ($.isNode()) {
         $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
         return;
     }
-	console.log(`\n入口：https://lzdz1-isv.isvjcloud.com/dingzhi/tiger/gold/activity/15725835?activityId=dz2201100014002401&shareUuid=78d52d2b13af4861b6f6e2012c21cc11\n`);
+	console.log(`\n入口：https://lzdz1-isv.isvjd.comgzhi/tiger/gold/activity/15725835?activityId=dz2201100014002401&shareUuid=78d52d2b13af4861b6f6e2012c21cc11\n`);
     for (let i = 0; i < cookiesArr.length; i++) {
         if (cookiesArr[i]) {
             cookie = cookiesArr[i]
@@ -62,7 +62,7 @@ if ($.isNode()) {
             $.authorNum = `${random(1000000, 9999999)}`
             $.activityId = 'dz2201100014002401'
             $.activityShopId = '1000140024'
-            $.activityUrl = `https://lzdz1-isv.isvjcloud.com/dingzhi/tiger/gold/activity/${$.authorNum}?activityId=${$.activityId}&shareUuid=${encodeURIComponent($.authorCode)}&adsource=null&shareuserid4minipg=null&shopid=${$.activityShopId}&lng=00.000000&lat=00.000000&sid=&un_area=`
+            $.activityUrl = `https://lzdz1-isv.isvjd.com/dingzhi/tiger/gold/activity/${$.authorNum}?activityId=${$.activityId}&shareUuid=${encodeURIComponent($.authorCode)}&adsource=null&shareuserid4minipg=null&shopid=${$.activityShopId}&lng=00.000000&lat=00.000000&sid=&un_area=`
 			await xuanyuanhuyue();
             await $.wait(2000);
             if ($.bean > 0) {

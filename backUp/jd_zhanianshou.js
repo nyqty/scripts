@@ -520,7 +520,7 @@ function join(venderId, channel, shopId) {
                 'Content-Type': 'application/x-www-form-urlencoded',
                 "User-Agent": $.UA,
                 'Accept-Language': 'zh-cn',
-                'Referer': `https://shopmember.m.jd.com/shopcard/?venderId=${venderId}&shopId=${venderId}&venderType=5&channel=401&returnUrl=https://lzdz1-isv.isvjcloud.com/dingzhi/personal/care/activity/4540555?activityId=dz210768869313`,
+                'Referer': `https://shopmember.m.jd.com/shopcard/?venderId=${venderId}&shopId=${venderId}&venderType=5&channel=401&returnUrl=https://lzdz1-isv.isvjd.com/dingzhi/personal/care/activity/4540555?activityId=dz210768869313`,
                 'Accept-Encoding': 'gzip, deflate, br'
             }
         }, async(err, resp, data) => {

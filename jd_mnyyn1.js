@@ -1,9 +1,30 @@
+/*
+1.1-1.31 云养牛，免费赢好礼
+
+第一个账号助力作者 其他依次助力CK1
+第一个CK失效会退出脚本
+
+
+入口：[ 1.1-1.31 云养牛，免费赢好礼]
+
+请求太频繁会被黑ip
+过10分钟再执行
+
+cron:11 11 11 11 *
+============Quantumultx===============
+[task_local]
+#1.1-1.31 云养牛，免费赢好礼
+11 11 11 11 * jd_mnyyn.js, tag=1.1-1.31 云养牛，免费赢好礼, enabled=true
+
+*/
+
+const Env=require('./utils/Env.js');
 const $=new Env('1.1-1.31 云养牛，免费赢好礼');
 const jdCookieNode=$.isNode()?require('./jdCookie.js'):'';
 const notify=$.isNode()?require('./sendNotify'):'';
 const getToken=require('./function/krgetToken');
 const getH5st=require('./function/krh5st');
-let domains='https://lzdz1-isv.isvjcloud.com';
+let domains='https://lzdz1-isv.isvjd.com';
 let lz_cookie={};
 let cookiesArr=[],cookie='';
 if($.isNode()){
@@ -30,7 +51,7 @@ let activityCookie='';
 	$.activityId='dz980fde043f6a29ebc909a8e15e9';
 	$.authorCode=authorCodeList[random(0,authorCodeList.length)];
 	$.shareUuid=$.authorCode;
-	console.log('入口:\nhttps://lzdz1-isv.isvjcloud.com/dingzhi/mengniumilk/grow/activity?activityId='+$.activityId+'&shareUuid='+$.shareUuid);
+	console.log('入口:\nhttps://lzdz1-isv.isvjd.com/dingzhi/mengniumilk/grow/activity?activityId='+$.activityId+'&shareUuid='+$.shareUuid);
 	for(let _0x5a3f6f=0;_0x5a3f6f<cookiesArr.length;_0x5a3f6f++){
 		cookie=cookiesArr[_0x5a3f6f];
 		originCookie=cookiesArr[_0x5a3f6f];
@@ -205,7 +226,7 @@ async function run(){
 }
 async function takePostRequest(_0x19837b){
 	if($.outFlag)return;
-	let _0x5a7aad='https://lzdz1-isv.isvjcloud.com';
+	let _0x5a7aad='https://lzdz1-isv.isvjd.com';
 	let _0x1cc91c='';
 	let _0x54ac7d='POST';
 	let _0x4faa39='';
@@ -742,15 +763,15 @@ async function dealReturn(_0x1a6705,_0x27ad8f){
 }
 function getPostRequest(_0x2a41f4,_0x1b9cb2,_0x58e082='POST'){
 	let _0x369baa={'Accept':'application/json','Accept-Encoding':'gzip, deflate, br','Accept-Language':'zh-cn','Connection':'keep-alive','Content-Type':'application/x-www-form-urlencoded','Cookie':cookie,'User-Agent':$.UA,'X-Requested-With':'XMLHttpRequest'};
-	if(_0x2a41f4.indexOf('https://lzdz1-isv.isvjcloud.com')>-1){
-		_0x369baa.Referer='https://lzdz1-isv.isvjcloud.com/dingzhi/mengniumilk/grow/activity?activityId='+$.activityId+'&shareUuid='+$.shareUuid;
+	if(_0x2a41f4.indexOf('https://lzdz1-isv.isvjd.com')>-1){
+		_0x369baa.Referer='https://lzdz1-isv.isvjd.com/dingzhi/mengniumilk/grow/activity?activityId='+$.activityId+'&shareUuid='+$.shareUuid;
 		_0x369baa.Cookie=''+(lz_jdpin_token_cookie&&lz_jdpin_token_cookie||'')+($.Pin&&'AUTH_C_USER='+$.Pin+';'||'')+activityCookie;
 	}
 	return{'url':_0x2a41f4,'method':_0x58e082,'headers':_0x369baa,'body':_0x1b9cb2,'timeout':30000};
 }
 function getCk(){
 	return new Promise(_0x40488c=>{
-		let _0x1f81b5={'url':'https://lzdz1-isv.isvjcloud.com/dingzhi/mengniumilk/grow/activity?activityId='+$.activityId+'&shareUuid='+$.shareUuid,'followRedirect':false,'headers':{'User-Agent':$.UA},'timeout':30000};
+		let _0x1f81b5={'url':'https://lzdz1-isv.isvjd.comgzhi/mengniumilk/grow/activity?activityId='+$.activityId+'&shareUuid='+$.shareUuid,'followRedirect':false,'headers':{'User-Agent':$.UA},'timeout':30000};
 		$.get(_0x1f81b5,async(_0xd5bffb,_0x63dec2,_0x4bfc9e)=>{
 			try{
 				if(_0xd5bffb){
