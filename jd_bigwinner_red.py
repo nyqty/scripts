@@ -101,8 +101,10 @@ class Userinfo:
             i=len(RedExchangeRuleList)
             for data in RedExchangeRuleList[::-1]:#倒序
                 i-=1
-                #{"id":"b0795152caef79b07ba0e1d7482be60e","name":"0.5元红包","exchangeStatus":1,"cashoutAmount":"0.5"},
-                if data['exchangeStatus']==1:
+                if self.stockPersonDayUsed>=self.stockPersonDayLimit:
+                    logger.info(f"当前兑换次数已经达到上限[{self.stockPersonDayLimit}]次")
+                    break
+                elif data['exchangeStatus']==1:
                     if self.canUseCoinAmount >= float(data['cashoutAmount']):
                         if float(data['cashoutAmount']) not in NotRed:
                             logger.info(f"当前余额[{self.canUseCoinAmount}]元,开始尝试兑换[{data['cashoutAmount']}]红包")
@@ -115,13 +117,14 @@ class Userinfo:
                                     exchange = json.loads(res)
                                     if exchange['ret'] == 0:
                                         logger.info(f"{self.name}兑换{data['cashoutAmount']}红包成功")
+                                        self.stockPersonDayUsed+=1
                                         #break
-                                    elif exchange['ret'] == 224:#库存不足
+                                    elif exchange['ret'] == 232:#日库存不足
                                         RedExchangeRuleList[i]['exchangeStatus']=4
                                         logger.info(f"{self.name}兑换{data['cashoutAmount']}红包失败:{exchange['msg']}")
-                                    elif exchange['ret'] == 604:#已有兑换进行中，等待完成
+                                    elif exchange['ret'] == 246 or exchange['ret'] == 604:#达到个人日兑换上限|已有提现进行中，等待完成
                                         logger.info(f"{self.name}兑换{data['cashoutAmount']}红包失败:{exchange['msg']}")
-                                        #break
+                                        break
                                     else:
                                         logger.info(f"{self.name}兑换{data['cashoutAmount']}红包失败{exchange['ret']}:{exchange['msg']}")
                                 except Exception as e:

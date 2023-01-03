@@ -121,10 +121,10 @@ class Userinfo:
                                     if exchange['ret'] == 0:
                                         logger.info(f"{self.name}提现{data['cashoutAmount']}成功")
                                         break
-                                    elif exchange['ret'] == 224:#库存不足
+                                    elif exchange['ret'] == 232:#日库存不足
                                         cashExchangeRuleList[i]['exchangeStatus']=4
                                         logger.info(f"{self.name}提现{data['cashoutAmount']}失败:{exchange['msg']}")
-                                    elif exchange['ret'] == 604:#已有提现进行中，等待完成
+                                    elif exchange['ret'] == 246 or exchange['ret'] == 604:#达到个人日兑换上限|已有提现进行中，等待完成
                                         logger.info(f"{self.name}提现{data['cashoutAmount']}失败:{exchange['msg']}")
                                         break
                                     else:
