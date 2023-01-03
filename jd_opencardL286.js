@@ -49,7 +49,7 @@ let activityCookie='';
 		$.msg($.name,'【提示】请先获取cookie\n直接使用NobyDa的京东签到获取','https://bean.m.jd.com/',{'open-url':'https://bean.m.jd.com/'});
 		return;
 	}
-	authorCodeList=[]//await getAuthorCodeList('http://code.kingran.ga/286.json');
+	authorCodeList=["e45d445e8f314b2cbc3c4198b78f919e"]//await getAuthorCodeList('http://code.kingran.ga/286.json');
 	$.activityId='dzf14d339243649ac29a2e350dshop';
 	$.authorCode=authorCodeList[random(0,authorCodeList.length)];
 	$.shareUuid=$.authorCode;

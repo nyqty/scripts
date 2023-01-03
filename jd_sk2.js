@@ -47,10 +47,7 @@ let activityUrl='https://lzkjdz-isv.isvjcloud.com/m/1000009821/99/23011000009821
 		return;
 	}
 	$.activityId='2301100000982123';
-	authorCodeList=await getAuthorCodeList('http://code.kingran.ga/sk2.json');
-	if(authorCodeList==='404: Not Found'){
-		authorCodeList=[''];
-	}
+	authorCodeList=["ca801f09ac01483abca1c8df57c3bac5"]//await getAuthorCodeList('http://code.kingran.ga/sk2.json');
 	$.shareUuid=authorCodeList[Math.floor(Math.random()*authorCodeList.length)];
 	console.log('入口:\nhttps://lzkjdz-isv.isvjcloud.com/m/1000009821/99/2301100000982123/?helpUuid='+$.shareUuid);
 	for(let _0xbe0a14=0;_0xbe0a14<cookiesArr.length;_0xbe0a14++){
@@ -215,6 +212,7 @@ async function run(){
 		}else console.log('如需抽奖请设置环境变量[opencard_draw]为"3" 3为次数');
 		if($.index==1){
 			$.shareUuid=$.actorUuid;
+			console.log('后面的号都会助力:'+$.shareUuid);
 		}
 		if($.index%3==0)await $.wait(parseInt(Math.random()*5000+5000,10));
 	}catch(_0x3a63fe){
