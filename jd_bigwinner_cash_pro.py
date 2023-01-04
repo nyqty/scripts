@@ -23,7 +23,7 @@ from hashlib import sha1
 from urllib.parse import quote_plus, unquote_plus, quote
 import threading
 
-activity_name = "京东极速版-赚钱大赢家-定时提现"
+activity_name = "京东特价版-赚钱大赢家-定时提现"
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s %(message)s",#%(levelname)s %(lineno)d 
