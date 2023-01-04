@@ -4,8 +4,8 @@
 多个&隔开
 export DYJ_CashPin="需要提现的pin值"
 export DYJ_NotCash="不提现的金额"
-cron: 59,29 23,11-18/1 * * *
-new Env('赚钱大赢家-定时提现加强版');
+cron: 59,29 0,23,11-18/1 * * *
+new Env('赚钱大赢家-定时提现');
 TY在原作者(doubi)基础上删减更改，优化提取
 """
 
@@ -82,17 +82,23 @@ class Userinfo:
         body=quote(json.dumps({"activeId":activeId,"sceneval":2,"buid":325,"appCode":appCode,"time":t,"signStr":""})) #07a9d66103b6ae8c0afd1dec831027bf
         t=t+1
         url = f'https://api.m.jd.com/api?functionId=makemoneyshop_exchangequery&appid=jdlt_h5&channel=jxh5&cv=1.2.5&clientVersion=1.2.5&client=jxh5&uuid={self.uuid}&cthr=1&body={body}&t={t}&loginType=2'
-        self.headers["Host"]="api.m.jd.com"
-        res = requests.get(url=url, headers=self.headers).json()
-        if res['code'] == 0:
-            self.stockPersonDayLimit=int(res['data']['stockPersonDayLimit'])#用户日库存限额
-            self.stockPersonDayUsed=int(res['data']['stockPersonDayUsed'])#用户今天提现多少次
-            self.canUseCoinAmount = float(res['data']['canUseCoinAmount'])
-            logger.info(f"用户“{self.name}”余额[{self.canUseCoinAmount}]元")
-            return res['data']['cashExchangeRuleList']
-        else:
-            print(res)
-            return []
+        try:
+            res = requests.get(url=url, headers=self.headers,proxies={},timeout=2).text
+            try:
+                res = json.loads(res)
+                if res['code'] == 0:
+                    self.stockPersonDayLimit=int(res['data']['stockPersonDayLimit'])#用户日库存限额
+                    self.stockPersonDayUsed=int(res['data']['stockPersonDayUsed'])#用户今天兑换多少次
+                    self.canUseCoinAmount = float(res['data']['canUseCoinAmount'])
+                    logger.info(f"用户“{self.name}”余额[{self.canUseCoinAmount}]元")
+                    return res['data']['hbExchangeRuleList']
+                else:
+                    print(res)
+            except Exception as e:
+                logger.info(f"{self.name}查询余额解析异常：{str(e)}")
+        except Exception as e:
+            logger.info(f"{self.name}查询余额超过2s请求超时...")
+        return []
 
     def CashOut(self):
         global loop,not_tx,cashExchangeRuleList
