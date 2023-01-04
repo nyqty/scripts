@@ -99,9 +99,12 @@ class Userinfo:
         if self.stockPersonDayUsed>=self.stockPersonDayLimit:
             logger.info(f"当前兑换次数已经达到上限[{self.stockPersonDayLimit}]次")
         else:
+            get=False
             i=len(RedExchangeRuleList)
-            for data in RedExchangeRuleList[::-1]:#倒序
+            #for data in cashExchangeRuleList[::-1]:#倒序
+            while i>0:
                 i-=1
+                data=RedExchangeRuleList[i]
                 if self.stockPersonDayUsed>=self.stockPersonDayLimit:
                     logger.info(f"当前兑换次数已经达到上限[{self.stockPersonDayLimit}]次")
                     break
@@ -113,7 +116,9 @@ class Userinfo:
                             url = f'https://wq.jd.com/prmt_exchange/client/exchange?g_ty=h5&g_tk=&appCode={appCode}&bizCode=makemoneyshop&ruleId={data["id"]}&sceneval=2'
                             proxies={}
                             try:
-                                res = requests.get(url=url, headers=self.headers,proxies=proxies,timeout=3).text
+                                if get:time.sleep(1)
+                                else:get=True
+                                res = requests.get(url=url, headers=self.headers,proxies=proxies,timeout=2).text
                                 try:
                                     exchange = json.loads(res)
                                     if exchange['ret'] == 0:
@@ -123,7 +128,11 @@ class Userinfo:
                                     elif exchange['ret'] == 232:#日库存不足
                                         RedExchangeRuleList[i]['exchangeStatus']=4
                                         logger.info(f"{self.name}兑换{data['cashoutAmount']}红包失败:{exchange['msg']}")
-                                    elif exchange['ret'] == 246 or exchange['ret'] == 604:#达到个人日兑换上限|已有提现进行中，等待完成
+                                    elif exchange['ret'] == 248:#操作过快，请稍后重试
+                                        logger.info(f"{self.name}兑换{data['cashoutAmount']}红包失败:{exchange['msg']}")
+                                        i+=1
+                                        time.sleep(1)
+                                    elif int(exchange['ret']) in [246,604,103]:#达到个人日兑换上限|已有提现进行中，等待完成|jimDB操作异常
                                         logger.info(f"{self.name}兑换{data['cashoutAmount']}红包失败:{exchange['msg']}")
                                         break
                                     else:
@@ -131,17 +140,17 @@ class Userinfo:
                                 except Exception as e:
                                     logger.info(f"{self.name}兑换{data['cashoutAmount']}红包失败解析异常：{str(e)}")
                             except Exception as e:
-                                logger.info(f"{self.name}兑换{data['cashoutAmount']}红包失败:超过3s请求超时...")
+                                logger.info(f"{self.name}兑换{data['cashoutAmount']}红包失败:超过2s请求超时...")
                         else:logger.info(f"当前余额[{self.canUseCoinAmount}]元,不兑换[{NotRed}]门槛")
                     #else:logger.info(f"当前余额[{self.canUseCoinAmount}]元,不足兑换[{data['cashoutAmount']}]红包门槛")
                 elif data['exchangeStatus']==2:
-                    logger.info(f"{data['name']},来晚了咯都被抢光了")
+                    logger.info(f"{self.name},来晚了咯{data['name']}都被抢光了")
                     if i==0:loop=False
-                elif data['exchangeStatus']==3:logger.info(f"{data['name']},已兑换")
+                elif data['exchangeStatus']==3:logger.info(f"{self.name},{data['name']}已兑换")
                 elif data['exchangeStatus']==4:
-                    logger.info(f"{data['name']},已抢光")
+                    logger.info(f"{self.name},{data['name']}已抢光")
                     if i==0:loop=False
-                else:logger.info(f"未知状态：{data}")
+                else:logger.info(f"{self.name}未知状态：{data}")
 
 def main():
     try:
