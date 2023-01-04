@@ -2,7 +2,7 @@
 购物抵现金
 [task_local]
 #购物抵现金
-11 11 11 11 ** jd_lotty2.js, tag=购物抵现金, enabled=true
+20 22 * * * jd_lotty.js, tag=购物抵现金, enabled=true
 */
 const Env=require('./utils/Env.js');
 const $=new Env('购物抵现金');
