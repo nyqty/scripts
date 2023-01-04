@@ -134,11 +134,11 @@ class Userinfo:
                                     elif exchange['ret'] == 232:#日库存不足
                                         RedExchangeRuleList[i]['exchangeStatus']=4
                                         logger.info(f"{self.name}兑换{data['cashoutAmount']}红包失败:{exchange['msg']}")
-                                    elif exchange['ret'] == 248:#操作过快，请稍后重试
+                                    elif int(exchange['ret']) in [248,103]:#操作过快，请稍后重试|jimDB操作异常
                                         logger.info(f"{self.name}兑换{data['cashoutAmount']}红包失败:{exchange['msg']}")
                                         i+=1
                                         time.sleep(1)
-                                    elif int(exchange['ret']) in [246,604,103]:#达到个人日兑换上限|已有提现进行中，等待完成|jimDB操作异常
+                                    elif int(exchange['ret']) in [246,604]:#达到个人日兑换上限|已有提现进行中，等待完成
                                         logger.info(f"{self.name}兑换{data['cashoutAmount']}红包失败:{exchange['msg']}")
                                         break
                                     else:
