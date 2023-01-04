@@ -1,14 +1,12 @@
 # -*- coding:utf-8 -*-
 """
-Python 3.9.7
-作者：doubi
-日期：2022年10月30日
+作者：atyvcn
 多个&隔开
 export DYJ_CashPin="需要提现的pin值"
 export DYJ_NotCash="不提现的金额"
 cron: 59,29 23,11-18/1 * * *
 new Env('赚钱大赢家-定时提现加强版');
-TY在原作者基础上删减更改，优化提取
+TY在原作者(doubi)基础上删减更改，优化提取
 """
 
 import os

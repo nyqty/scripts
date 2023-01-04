@@ -1,10 +1,11 @@
 # -*- coding:utf-8 -*-
 """
+作者：atyvcn
 export DYJ_RedPin="需要兑换红包的pin值"
 export DYJ_NotRed="不兑换红包的金额"
 cron: 59,29 23,11-18/1 * * *
 new Env('赚钱大赢家-定时兑换红包');
-TY在原作者基础上删减更改，优化提取
+TY在原作者(doubi)基础上删减更改，优化提取
 """
 
 import os
