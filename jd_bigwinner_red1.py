@@ -136,6 +136,7 @@ class Userinfo:
                                         logger.info(f"{self.name}兑换{data['cashoutAmount']}红包失败:{exchange['msg']}")
                                     elif int(exchange['ret']) in [248,103]:#操作过快，请稍后重试|jimDB操作异常
                                         logger.info(f"{self.name}兑换{data['cashoutAmount']}红包失败:{exchange['msg']}")
+                                        logger.info(f"等待1s，后将重试。")
                                         i+=1
                                         time.sleep(1)
                                     elif int(exchange['ret']) in [246,604]:#达到个人日兑换上限|已有提现进行中，等待完成
@@ -147,6 +148,7 @@ class Userinfo:
                                     logger.info(f"{self.name}兑换{data['cashoutAmount']}红包失败解析异常：{str(e)}")
                             except Exception as e:
                                 logger.info(f"{self.name}兑换{data['cashoutAmount']}红包失败:超过2s请求超时...")
+                                get=False
                         else:logger.info(f"当前余额[{self.canUseCoinAmount}]元,不兑换[{NotRed}]门槛")
                     #else:logger.info(f"当前余额[{self.canUseCoinAmount}]元,不足兑换[{data['cashoutAmount']}]红包门槛")
                 elif data['exchangeStatus']==2:
