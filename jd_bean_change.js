@@ -275,18 +275,11 @@ if(DisableIndex!=-1){
 }
 
 //京喜牧场
-let EnableJxMC=false;
+let EnableJxMC=true;
 DisableIndex= strDisableList.findIndex((item) => item === "京喜牧场");
 if(DisableIndex!=-1){
 	console.log("检测到设定关闭京喜牧场查询");
 	EnableJxMC=false;	
-}
-//京喜工厂
-let EnableJxGC=false;
-DisableIndex=strDisableList.findIndex((item) => item === "京喜工厂");
-if(DisableIndex!=-1){
-	console.log("检测到设定关闭京喜工厂查询");
-	EnableJxGC=false;	
 }
 
 // 京东工厂
@@ -335,7 +328,7 @@ if(DisableIndex!=-1){
 }
 
 //汪汪赛跑
-let EnableJoyRun=false;
+let EnableJoyRun=true;
 DisableIndex=strDisableList.findIndex((item) => item === "汪汪赛跑");
 if(DisableIndex!=-1){
 	console.log("检测到设定关闭汪汪赛跑查询");
@@ -505,7 +498,6 @@ if(DisableIndex!=-1){
 			        cash(), //极速金币
 			        jdJxMCinfo(), //京喜牧场
 			        bean(), //京豆查询
-			        getJxFactory(), //京喜工厂
 			        getDdFactoryInfo(), // 京东工厂
 			        jdCash(), //领现金
 			        GetJxBeaninfo(), //喜豆查询
@@ -525,7 +517,7 @@ if(DisableIndex!=-1){
 
 						await notify.sendNotify(`${$.name}`, `${allMessage}`, {
 							url: `https://bean.m.jd.com/beanDetail/index.action?resourceValue=bean`
-						}, '\n\n本通知 By https://github.com/KingRan/KR',TempMessage)
+						}, '\n\n本通知 By ccwav Mod',TempMessage)
 					}
 					if ($.isNode() && allMessageMonth) {
 						await notify.sendNotify(`京东月资产变动`, `${allMessageMonth}`, {
@@ -605,7 +597,7 @@ if(DisableIndex!=-1){
 				
 				await notify.sendNotify(`${$.name}`, `${allMessage}`, {
 					url: `https://bean.m.jd.com/beanDetail/index.action?resourceValue=bean`
-				}, '\n\n本通知 By https://github.com/KingRan/KR',TempMessage)
+				}, '\n\n本通知 By ccwav Mod',TempMessage)
 			}
 			if ($.isNode() && allMessageMonth) {
 				await notify.sendNotify(`京东月资产变动`, `${allMessageMonth}`, {
@@ -621,7 +613,7 @@ if(DisableIndex!=-1){
 				allMessageGp2=strAllNotify+`\n`+allMessageGp2;
 			await notify.sendNotify(`${$.name}#2`, `${allMessageGp2}`, {
 				url: `https://bean.m.jd.com/beanDetail/index.action?resourceValue=bean`
-			}, '\n\n本通知 By https://github.com/KingRan/KR',TempMessage)
+			}, '\n\n本通知 By ccwav Mod',TempMessage)
 			await $.wait(10 * 1000);
 		}
 		if ($.isNode() && allMessageGp3) {
@@ -630,7 +622,7 @@ if(DisableIndex!=-1){
 				allMessageGp3=strAllNotify+`\n`+allMessageGp3;
 			await notify.sendNotify(`${$.name}#3`, `${allMessageGp3}`, {
 				url: `https://bean.m.jd.com/beanDetail/index.action?resourceValue=bean`
-			}, '\n\n本通知 By https://github.com/KingRan/KR',TempMessage)
+			}, '\n\n本通知 By ccwav Mod',TempMessage)
 			await $.wait(10 * 1000);
 		}
 		if ($.isNode() && allMessageGp4) {
@@ -639,7 +631,7 @@ if(DisableIndex!=-1){
 				allMessageGp4=strAllNotify+`\n`+allMessageGp4;
 			await notify.sendNotify(`${$.name}#4`, `${allMessageGp4}`, {
 				url: `https://bean.m.jd.com/beanDetail/index.action?resourceValue=bean`
-			}, '\n\n本通知 By https://github.com/KingRan/KR',TempMessage)
+			}, '\n\n本通知 By ccwav Mod',TempMessage)
 			await $.wait(10 * 1000);
 		}
 		if ($.isNode() && allMessage) {
@@ -649,7 +641,7 @@ if(DisableIndex!=-1){
 			
 			await notify.sendNotify(`${$.name}`, `${allMessage}`, {
 				url: `https://bean.m.jd.com/beanDetail/index.action?resourceValue=bean`
-			}, '\n\n本通知 By https://github.com/KingRan/KR',TempMessage)
+			}, '\n\n本通知 By ccwav Mod',TempMessage)
 			await $.wait(10 * 1000);
 		}
 
@@ -1088,7 +1080,7 @@ async function showMsg() {
 		if(strAllNotify)
 			ReturnMessage=strAllNotify+`\n`+ReturnMessage;
 		
-		await notify.sendNotifybyWxPucher(strTitle, `${ReturnMessage}`, `${$.UserName}`,'\n\n本通知 By https://github.com/KingRan/KR',strsummary);
+		await notify.sendNotifybyWxPucher(strTitle, `${ReturnMessage}`, `${$.UserName}`,'\n\n本通知 By ccwav Mod',strsummary);
 	}
 
 	//$.msg($.name, '', ReturnMessage , {"open-url": "https://bean.m.jd.com/beanDetail/index.action?resourceValue=bean"});
@@ -2240,132 +2232,6 @@ async function JxmcGetRequest() {
 				}
 			} catch (e) {
 				console.log(data);
-				$.logErr(e, resp)
-			}
-			finally {
-				resolve();
-			}
-		})
-	})
-}
-
-// 惊喜工厂信息查询
-async function getJxFactory() {
-	if (!EnableJxGC)
-		return;
-	return new Promise(async resolve => {
-		let infoMsg = "";
-		let strTemp = "";
-		await $.get(jxTaskurl('userinfo/GetUserInfo', `pin=&sharePin=&shareType=&materialTuanPin=&materialTuanId=&source=`, '_time,materialTuanId,materialTuanPin,pin,sharePin,shareType,source,zone'), async(err, resp, data) => {
-			try {
-				if (err) {
-					$.jxFactoryInfo = "";
-					//console.log("jx工厂查询失败"  + err)
-				} else {
-					if (safeGet(data)) {
-						data = JSON.parse(data);
-						if (data['ret'] === 0) {
-							data = data['data'];
-							$.unActive = true; //标记是否开启了京喜活动或者选购了商品进行生产
-							if (data.factoryList && data.productionList) {
-								const production = data.productionList[0];
-								const factory = data.factoryList[0];
-								//const productionStage = data.productionStage;
-								$.commodityDimId = production.commodityDimId;
-								// subTitle = data.user.pin;
-								await GetCommodityDetails(); //获取已选购的商品信息
-								infoMsg = `${$.jxProductName}(${((production.investedElectric / production.needElectric) * 100).toFixed(0)}%`;
-								if (production.investedElectric >= production.needElectric) {
-									if (production['exchangeStatus'] === 1) {
-										infoMsg = `${$.jxProductName}已可兑换`;
-										$.jxFactoryReceive = `${$.jxProductName}`;
-									}
-									if (production['exchangeStatus'] === 3) {
-										if (new Date().getHours() === 9) {
-											infoMsg = `兑换超时，请重选商品!`;
-										}
-									}
-									// await exchangeProNotify()
-								} else {
-									strTemp = `,${((production.needElectric - production.investedElectric) / (2 * 60 * 60 * 24)).toFixed(0)}天)`;
-									if (strTemp == ",0天)")
-										infoMsg += ",今天)";
-									else
-										infoMsg += strTemp;
-								}
-								if (production.status === 3) {
-									infoMsg = "商品已失效，请重选商品!";
-								}
-							} else {
-								$.unActive = false; //标记是否开启了京喜活动或者选购了商品进行生产
-								if (!data.factoryList) {
-									infoMsg = ""
-										// $.msg($.name, '【提示】', `京东账号${$.index}[${$.nickName}]京喜工厂活动未开始\n请手动去京东APP->游戏与互动->查看更多->京喜工厂 开启活动`);
-								} else if (data.factoryList && !data.productionList) {
-									infoMsg = ""
-								}
-							}
-						}
-					} else {
-						console.log(`GetUserInfo异常：${JSON.stringify(data)}`)
-					}
-				}
-				$.jxFactoryInfo = infoMsg;
-				// console.log(infoMsg);
-			} catch (e) {
-				$.logErr(e, resp)
-			}
-			finally {
-				resolve();
-			}
-		})
-	})
-}
-
-// 惊喜的Taskurl
-function jxTaskurl(functionId, body = '', stk) {
-	let url = `https://m.jingxi.com/dreamfactory/${functionId}?zone=dream_factory&${body}&sceneval=2&g_login_type=1&_time=${Date.now()}&_=${Date.now() + 2}&_ste=1`
-		url += `&h5st=${decrypt(Date.now(), stk, '', url)}`
-		if (stk) {
-			url += `&_stk=${encodeURIComponent(stk)}`;
-		}
-		return {
-		url,
-		headers: {
-			'Cookie': cookie,
-			'Host': 'm.jingxi.com',
-			'Accept': '*/*',
-			'Connection': 'keep-alive',
-			'User-Agent': functionId === 'AssistFriend' ? "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36" : 'jdpingou',
-			'Accept-Language': 'zh-cn',
-			'Referer': 'https://wqsd.jd.com/pingou/dream_factory/index.html',
-			'Accept-Encoding': 'gzip, deflate, br',
-		},
-		timeout: 10000
-	}
-}
-
-//惊喜查询当前生产的商品名称
-function GetCommodityDetails() {
-	return new Promise(async resolve => {
-		// const url = `/dreamfactory/diminfo/GetCommodityDetails?zone=dream_factory&sceneval=2&g_login_type=1&commodityId=${$.commodityDimId}`;
-		$.get(jxTaskurl('diminfo/GetCommodityDetails', `commodityId=${$.commodityDimId}`, `_time,commodityId,zone`), (err, resp, data) => {
-			try {
-				if (err) {
-					console.log(`${JSON.stringify(err)}`)
-					console.log(`GetCommodityDetails API请求失败，请检查网路重试`)
-				} else {
-					if (safeGet(data)) {
-						data = JSON.parse(data);
-						if (data['ret'] === 0) {
-							data = data['data'];
-							$.jxProductName = data['commodityList'][0].name;
-						} else {
-							console.log(`GetCommodityDetails异常：${JSON.stringify(data)}`)
-						}
-					}
-				}
-			} catch (e) {
 				$.logErr(e, resp)
 			}
 			finally {
