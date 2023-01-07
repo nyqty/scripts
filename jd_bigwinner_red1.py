@@ -41,7 +41,6 @@ hbExchangeRuleList=[
     {"id":"4402f53ff9f20e19e683db329e8748b6","name":"50元红包","exchangeStatus":2,"cashoutAmount":"50"}
 ]
 
-
 def getTimestamp():
     return int(round(time.time() * 1000))
 
@@ -99,18 +98,18 @@ class Userinfo:
         return []
 
     def RedOut(self):
-        global loop,NotRed,RedExchangeRuleList
+        global loop,NotRed,hbExchangeRuleList
         print("")
         logger.info(f"{self.name}兑换红包")
         if self.stockPersonDayUsed>=self.stockPersonDayLimit:
             logger.info(f"当前兑换次数已经达到上限[{self.stockPersonDayLimit}]次")
         else:
             get=False
-            i=len(RedExchangeRuleList)
+            i=len(hbExchangeRuleList)
             #for data in cashExchangeRuleList[::-1]:#倒序
             while i>0:
                 i-=1
-                data=RedExchangeRuleList[i]
+                data=hbExchangeRuleList[i]
                 if self.stockPersonDayUsed>=self.stockPersonDayLimit:
                     logger.info(f"当前兑换次数已经达到上限[{self.stockPersonDayLimit}]次")
                     break
@@ -132,7 +131,7 @@ class Userinfo:
                                         self.stockPersonDayUsed+=1
                                         #break
                                     elif exchange['ret'] == 232:#日库存不足
-                                        RedExchangeRuleList[i]['exchangeStatus']=4
+                                        hbExchangeRuleList[i]['exchangeStatus']=4
                                         logger.info(f"{self.name}兑换{data['cashoutAmount']}红包失败:{exchange['msg']}")
                                     elif int(exchange['ret']) in [248,103]:#操作过快，请稍后重试|jimDB操作异常
                                         logger.info(f"{self.name}兑换{data['cashoutAmount']}红包失败:{exchange['msg']}")
