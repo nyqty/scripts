@@ -1,13 +1,11 @@
 /*
-城城领现金
+城城分现金
 
-[task_local]
-#城城领现金
-0 0-23/5,22 6-11 1 * gua_city.js, tag=城城领现金, enabled=true
+cron "0 0-23/5,22 6-11 1 *" jd_city.js, tag:城城分现金
 
  */
 const Env=require('./utils/Env.js');
-const $ = new Env('城城领现金');
+const $ = new Env('城城分现金');
 //Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 const notify = $.isNode() ? require('./sendNotify') : '';
