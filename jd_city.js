@@ -33,7 +33,7 @@ if ($.isNode()) {
     cookiesArr = [$.getdata('CookieJD'), $.getdata('CookieJD2'), ...jsonParse($.getdata('CookiesJD') || "[]").map(item => item.cookie)].filter(item => !!item);
 }
 const JD_API_HOST = 'https://api.m.jd.com/client.action';
-let inviteCodes = ['29DRVJpXFQ0VNVfuWa86fLbJD01ay4Q','0MD3UJ9dDxJQIWCuTvw','WTcvwEemlsDnIWC_cqR6QFs','29DRdr50AQUEJ0j1epYhfNDx_1mcZIU','29DRfLlUASUsMHf-SJ0tfJhanWC-fgY','29DREcUEQF9XPijubOs_MsGdzrf9UJjZ','29DREslWR11VbCm9PO5tZYupe10ExP6w']
+let inviteCodes = []
 $.shareCodesArr = [];
 $.toStatus = false
 let token = '7gu4cyy9akhbf5gj'
@@ -70,7 +70,8 @@ $.token = process.env.gua_log_token || token // token
         await $.wait(1000)
         res = await getAuthorShareCode('https://raw.fastgit.org/atyvcn/updateTeam/master/shareCodes/jd/city.json')
     }
-    if (res) inviteCodes = res;
+    inviteCodes = res?res:['29DRVJpXFQ0VNVfuWa86fLbJD01ay4Q','0MD3UJ9dDxJQIWCuTvw','WTcvwEemlsDnIWC_cqR6QFs','29DRdr50AQUEJ0j1epYhfNDx_1mcZIU','29DRfLlUASUsMHf-SJ0tfJhanWC-fgY','29DREcUEQF9XPijubOs_MsGdzrf9UJjZ','29DREslWR11VbCm9PO5tZYupe10ExP6w'];
+    console.log(`助力${inviteCodes.length}个账号的${$.name}助力码\n`);
 
     await requireConfig();
     if (helpShareFlag + "" == "true") {
