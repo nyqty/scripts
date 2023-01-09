@@ -63,10 +63,10 @@ $.token = process.env.gua_log_token || token // token
         $.getSignUrl = ''
     }
 
-    let res = await getAuthorShareCode('https://cdn.jsdelivr.net/gh/atyvcn/updateTeam@master/shareCodes/jd/city.json')
+    let res = await getAuthorShareCode('https://raw.fastgit.org/atyvcn/updateTeam/master/shareCodes/jd/city.json')//https://cdn.jsdelivr.net/gh/atyvcn/updateTeam@master/shareCodes/jd/city.json
     if (!res) {
         await $.wait(1000)
-        res = await getAuthorShareCode('https://raw.fastgit.org/atyvcn/updateTeam/master/shareCodes/jd/city.json')
+        res = await getAuthorShareCode('https://raw.njuu.cf/atyvcn/updateTeam/master/shareCodes/jd/city.json')
     }
     inviteCodes = res?res:['WTcvwEemlsDnIWC_cqR6QFs','29DRVJpXFQ0VNVfuWa86fLbJD01ay4Q','0MD3UJ9dDxJQIWCuTvw','29DRdr50AQUEJ0j1epYhfNDx_1mcZIU','29DRfLlUASUsMHf-SJ0tfJhanWC-fgY','29DREcUEQF9XPijubOs_MsGdzrf9UJjZ','29DREslWR11VbCm9PO5tZYupe10ExP6w'];
     console.log(`助力${inviteCodes.length}个账号的${$.name}助力码\n`);
