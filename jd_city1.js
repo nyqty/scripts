@@ -1,7 +1,7 @@
 /*
 城城分现金
 
-cron "0 0-23/5,22 6-11 1 *" jd_city.js, tag:城城分现金
+cron "0 0-23/5,22 6-13 1 *" jd_city.js, tag:城城分现金
 
  */
 const Env=require('./utils/Env.js');
@@ -80,7 +80,7 @@ $.token = process.env.gua_log_token || token // token
     if (exchangeFlag + "" == "true") {
         console.log(`脚本自动抽奖`)
     } else {
-        console.log(`脚本不会自动抽奖，建议活动快结束开启，默认关闭(在12.12日自动开启抽奖),如需自动抽奖请设置环境变量  JD_CITY_EXCHANGE 为true`);
+        console.log(`脚本不会自动抽奖，建议活动快结束开启，默认关闭(在1.13日自动开启抽奖),如需自动抽奖请设置环境变量  JD_CITY_EXCHANGE 为true`);
     }
     $.collectAllCount = 1
     $.inviteIdCodesArr = {}
@@ -198,8 +198,8 @@ $.token = process.env.gua_log_token || token // token
                 }
             } else {
                 var times = new Date(new Date().getTime() + new Date().getTimezoneOffset() * 60 * 1000 + 8 * 60 * 60 * 1000)
-                //默认1.9开启抽奖
-                if ($.time("MM", times) == 1 && $.time("dd", times) >= 9) {
+                //默认1.13开启抽奖
+                if ($.time("MM", times) == 1 && $.time("dd", times) >= 13) {
                     const res = await city_lotteryAward();//抽奖
                     if (res && res > 0) {
                         for (let i = 0; i < new Array(res).fill('').length; i++) {
