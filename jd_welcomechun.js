@@ -75,8 +75,8 @@ if ($.isNode()) {
                     }
                     await $.wait(1000)
                 }
-                await party_lottery();
-                if($.coupon<2) await party_lottery();
+                if($.coupon==0) await party_lottery();
+                if($.coupon==1) await party_lottery();
                 
             }else console.log(`party_home ${bizCode}:${bizMsg}`);
         }else{
