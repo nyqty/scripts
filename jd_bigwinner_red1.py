@@ -101,7 +101,7 @@ class Userinfo:
         global loop,NotRed,hbExchangeRuleList
         print("")
         logger.info(f"{self.name}兑换红包")
-        if self.stockPersonDayUsed>=self.stockPersonDayLimit:
+        if self.stockPersonDayUsed>=self.stockPersonDayLimit and self.stockPersonDayLimit!=0:
             logger.info(f"当前兑换次数已经达到上限[{self.stockPersonDayLimit}]次")
         else:
             get=False

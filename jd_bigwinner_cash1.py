@@ -104,7 +104,7 @@ class Userinfo:
         global loop,not_tx,cashExchangeRuleList
         print("")
         logger.info(f"{self.name}提现")
-        if self.stockPersonDayUsed>=self.stockPersonDayLimit:
+        if self.stockPersonDayUsed>=self.stockPersonDayLimit and self.stockPersonDayLimit!=0:
             logger.info(f"当前提现次数已经达到上限[{self.stockPersonDayLimit}]次")
         #elif 'exchangeRecordList' in res['data']:logger.info(f"已有提现进行中，请等待完成！")
         else:
