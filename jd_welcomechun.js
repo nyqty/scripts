@@ -98,7 +98,7 @@ if ($.isNode()) {
     $.done();
 })
 
-function currentRoundAward(cras) {
+function award(cras) {
     if(cras) for(let u=0,cl=cras.length,cra;u<cl;u++){
         cra=cras[u];
         if(cra.type==1){
@@ -123,7 +123,7 @@ async function party_lottery() {
             $.coupon=result.awardInfo?.coupon;
             //console.log(JSON.stringify(result));
             console.log(`${result.title}当前红包${result.awardInfo?.hongbao}，击鼓${$.coupon}次`)
-            currentRoundAward(result.currentRoundAward?result.currentRoundAward:result.award);
+            award(result.award);//result.currentRoundAward?result.currentRoundAward:
         }else if(bizCode==-302){
             console.log(bizMsg);
         }else console.log(`party_lottery ${bizCode}:${bizMsg}`);
