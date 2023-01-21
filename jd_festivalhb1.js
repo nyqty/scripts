@@ -5,7 +5,7 @@ CK1助力作者
 运行流程：助力--任务--抽奖
 未设置助力码变量运行会输出助力码
 也可通过分享口令使用口令转链接获得
-10 9 * * * https://raw.githubusercontent.com/6dylan6/jdpro/main/jd_festivalhb.js
+2 0,9 * * * https://raw.githubusercontent.com/6dylan6/jdpro/main/jd_festivalhb.js
 变量格式(多个@分割):
 export TYCODE='shareId=53_100XXXXXXXXXXXXXXXXXXXXXXX_65_61_61&itemId=SXXXXXXX-w'
  */
