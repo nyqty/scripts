@@ -4,7 +4,7 @@
 多个&隔开
 export DYJ_CashPin="需要提现的pin值"
 export DYJ_NotCash="不提现的金额"
-cron: 55,25 0,23,11-18/1 * * *
+cron: 53,22 0,23,11-18/1 * * *
 new Env('赚钱大赢家-定时提现');
 TY在原作者(doubi)基础上删减更改，优化提取
 """
@@ -212,10 +212,10 @@ def main():
     unit = 18e5
     current_time = getTimestamp()
     nextHourStamp = current_time - ( current_time % unit ) + unit
-    #nextHourStamp = current_time+10000
+    #nextHourStamp = current_time+1000
     nextHour=time.strftime("%H:%M:%S", time.localtime(nextHourStamp/1000))
     logger.info(f"开始等待{nextHour}提现")
-    global loop,cashExchangeRuleList
+    global loop
     loop=True
     while 1:
         current_time = getTimestamp()
