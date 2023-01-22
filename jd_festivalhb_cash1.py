@@ -4,7 +4,7 @@
 多个&隔开
 export TYHB_CashPin="需要提现的pin值"
 export TYHB_NotCash="不提现的金额"
-cron: 53 0,23,11,16,17 * * *
+cron: 50 0,11,16,17,23 * * *
 new Env('团圆红包-定时提现');
 """
 import os
@@ -214,6 +214,7 @@ def main():
     tdList = []
     for e in CashOutList:
         e.Query()
+        time.sleep(1)
         tdList.append(threading.Thread(target=e.CashOut, args=()))
 
     print("")
@@ -223,7 +224,7 @@ def main():
     #nextHourStamp = current_time+2000
     nextHour=time.strftime("%H:%M:%S", time.localtime(nextHourStamp/1000))
     logger.info(f"开始等待{nextHour}提现")
-    global loop
+    global loop,cashExchangeRuleList
     loop=True
     while 1:
         current_time = getTimestamp()
@@ -233,11 +234,10 @@ def main():
             for e in CashOutList:
                 SERL=e.Query()
                 if len(SERL)>0:
-                    global cashExchangeRuleList
                     cashExchangeRuleList=SERL
                     logger.info("查询成功")
                 else:
-                    logger.info("查询失败,强制提现")
+                    logger.info(f"查询失败,强制提现{len(cashExchangeRuleList)}个")
                 break
 
             print("")

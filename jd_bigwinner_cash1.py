@@ -4,7 +4,7 @@
 多个&隔开
 export DYJ_CashPin="需要提现的pin值"
 export DYJ_NotCash="不提现的金额"
-cron: 53,22 0,23,11-18/1 * * *
+cron: 50,20 0,11,13,15,16,17,23 * * *
 new Env('赚钱大赢家-定时提现');
 TY在原作者(doubi)基础上删减更改，优化提取
 """
@@ -206,16 +206,17 @@ def main():
     tdList = []
     for e in CashOutList:
         e.Query()
+        time.sleep(1)
         tdList.append(threading.Thread(target=e.CashOut, args=()))
 
     print("")
     unit = 18e5
     current_time = getTimestamp()
     nextHourStamp = current_time - ( current_time % unit ) + unit
-    #nextHourStamp = current_time+1000
+    nextHourStamp = current_time+1000
     nextHour=time.strftime("%H:%M:%S", time.localtime(nextHourStamp/1000))
     logger.info(f"开始等待{nextHour}提现")
-    global loop
+    global loop,cashExchangeRuleList
     loop=True
     while 1:
         current_time = getTimestamp()
@@ -225,11 +226,10 @@ def main():
             for e in CashOutList:
                 SERL=e.Query()
                 if len(SERL)>0:
-                    global cashExchangeRuleList
                     cashExchangeRuleList=SERL
                     logger.info("查询成功")
                 else:
-                    logger.info("查询失败,强制提现")
+                    logger.info(f"查询失败,强制提现{len(cashExchangeRuleList)}个")
                 break
 
             print("")
