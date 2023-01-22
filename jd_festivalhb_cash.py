@@ -122,8 +122,10 @@ class Userinfo:
                     if self.canUseCoinAmount >= float(data['cashoutAmount']):
                         if float(data['cashoutAmount']) not in not_tx:
                             logger.info(f"当前余额[{self.canUseCoinAmount}]元,开始尝试提现[{data['cashoutAmount']}]")
+                            t=int(time.time() * 1000)
                             body=quote(json.dumps({"bizCode":"festivalhb","ruleId":data["id"],"sceneval":2,"buid":325,"appCode":appCode,"time":t,"signStr":""}))#1674029812147 15a5143f4b6d60a74d59cda5b98bc0c5
                             h5st='20230118161652120%3Bzmngn956qqctu1q5%3Baf89e%3Btk02wf6811d3118nI9e6wfteqkATwcZtrxdhtYq8EuqdvTefye%2B3wdx4jV47dTyh5p9w0QJhy0jW3C2SNRNKIHgAei7z%3B4e8eae376746a1201de5fe83166665063aabf725e5a47eb18c9ad8f412179c59%3B400%3B1674029812120%3B234d597e4bbee03fed04c11bddbceda56c28b9f38e03d90d5e300b95750f47df4206442e06e95f59b5a61da07c5731f7a4eeffa21ea3449ebc3671be48a9d1f080ef01c140a6125f7df6c6c59a60547797665043f6ea4cf8b0b02ffb43e617a14efac1e782764db638a957155545faa6c99369f42a61c15a88bd3b4b3a94169fe9e24db55876ee7cee9079e3e4160abf4e909fbd5011ef7b3c57700661a42d88b63fe431f1eba3032cf7883bac784312'
+                            t=t+1
                             url = f'https://api.m.jd.com/api?functionId=jxPrmtExchange_exchange&appid=cs_h5&t={t}&channel=jxh5&cv=1.2.5&clientVersion=1.2.5&client=jxh5&uuid={self.uuid}&cthr=1&loginType=2&h5st={h5st}&body={body}'
                             proxies={}
                             try:
@@ -218,7 +220,7 @@ def main():
     unit = 18e5
     current_time = getTimestamp()
     nextHourStamp = current_time - ( current_time % unit ) + unit
-    #nextHourStamp = current_time+10000
+    #nextHourStamp = current_time+2000
     nextHour=time.strftime("%H:%M:%S", time.localtime(nextHourStamp/1000))
     logger.info(f"开始等待{nextHour}提现")
     global loop,cashExchangeRuleList
