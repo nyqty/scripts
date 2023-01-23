@@ -70,7 +70,7 @@ class Userinfo:
             #"Referer": f"https://wqs.jd.com/sns/202210/20/make-money-shop/guest.html?activeId={activeId}&type=sign&shareId=&__navVer=1",
             "Referer": "https://wqs.jd.com/"
         }
-        self.stockPersonDayLimit=10
+        self.stockPersonDayLimit=0
         self.stockPersonDayUsed=0
         self.canUseCoinAmount=0
         #print(self.name)
@@ -102,7 +102,7 @@ class Userinfo:
         global loop,NotRed,hbExchangeRuleList
         print("")
         logger.info(f"{self.name}兑换红包")
-        if self.stockPersonDayUsed>=self.stockPersonDayLimit:
+        if self.stockPersonDayUsed>=self.stockPersonDayLimit and self.stockPersonDayLimit!=0:
             logger.info(f"当前兑换次数已经达到上限[{self.stockPersonDayLimit}]次")
         else:
             get=False
@@ -115,7 +115,7 @@ class Userinfo:
                     logger.info(f"当前兑换次数已经达到上限[{self.stockPersonDayLimit}]次")
                     break
                 elif data['exchangeStatus']==1:
-                    if self.canUseCoinAmount >= float(data['cashoutAmount']):
+                    if self.canUseCoinAmount >= float(data['cashoutAmount']) or self.stockPersonDayLimit==0:
                         if float(data['cashoutAmount']) not in NotRed:
                             logger.info(f"当前余额[{self.canUseCoinAmount}]元,开始尝试兑换[{data['cashoutAmount']}]红包")
                             self.headers["Host"]="wq.jd.com"

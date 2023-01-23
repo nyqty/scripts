@@ -72,7 +72,7 @@ class Userinfo:
             #"Referer": f"https://wqs.jd.com/sns/202210/20/make-money-shop/guest.html?activeId={activeId}&type=sign&shareId=&__navVer=1",
             "Referer": "https://wqs.jd.com/"
         }
-        self.stockPersonDayLimit=10
+        self.stockPersonDayLimit=0
         self.stockPersonDayUsed=0
         self.canUseCoinAmount=0
         #print(self.name)
@@ -104,7 +104,7 @@ class Userinfo:
         global loop,not_tx,cashExchangeRuleList
         print("")
         logger.info(f"{self.name}提现")
-        if self.stockPersonDayUsed>=self.stockPersonDayLimit:
+        if self.stockPersonDayUsed>=self.stockPersonDayLimit and self.stockPersonDayLimit!=0:
             logger.info(f"当前提现次数已经达到上限[{self.stockPersonDayLimit}]次")
         #elif 'exchangeRecordList' in res['data']:logger.info(f"已有提现进行中，请等待完成！")
         else:
@@ -114,7 +114,7 @@ class Userinfo:
                 i-=1
                 data=cashExchangeRuleList[i]
                 if data['exchangeStatus']==1:
-                    if self.canUseCoinAmount >= float(data['cashoutAmount']):
+                    if self.canUseCoinAmount >= float(data['cashoutAmount']) or self.stockPersonDayLimit==0:
                         if float(data['cashoutAmount']) not in not_tx:
                             logger.info(f"当前余额[{self.canUseCoinAmount}]元,开始尝试提现[{data['cashoutAmount']}]")
                             self.headers["Host"]="wq.jd.com"
@@ -213,7 +213,7 @@ def main():
     unit = 18e5
     current_time = getTimestamp()
     nextHourStamp = current_time - ( current_time % unit ) + unit
-    nextHourStamp = current_time+1000
+    #nextHourStamp = current_time+1000
     nextHour=time.strftime("%H:%M:%S", time.localtime(nextHourStamp/1000))
     logger.info(f"开始等待{nextHour}提现")
     global loop,cashExchangeRuleList
