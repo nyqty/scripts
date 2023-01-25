@@ -19,7 +19,8 @@ import random
 import logging
 import requests
 import traceback
-from hashlib import sha1
+from hashlib import sha1,md5
+import base64
 from urllib.parse import quote_plus, unquote_plus, quote
 import threading
 
@@ -32,7 +33,7 @@ logging.basicConfig(
 logger = logging.getLogger(activity_name)
 index = 0
 h5st_appid = 'd06f1'
-appCode = 'msc588d6d5'
+appCode = 'ms2362fc9e'
 activeId = '63526d8f5fe613a6adb48f03'
 not_tx=[]
 cashExchangeRuleList=[
@@ -46,6 +47,12 @@ cashExchangeRuleList=[
 
 def getTimestamp():
     return int(round(time.time() * 1000))
+
+string1 = "KLMNOPQRSTABCDEFGHIJUVWXYZabcdopqrstuvwxefghijklmnyz0123456789+/"
+string2 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
+
+def base64Encode(string):
+    return base64.b64encode(string.encode("utf-8")).decode('utf-8').translate(str.maketrans(string1, string2))
 
 class Userinfo:
     cookie_obj = []
@@ -79,9 +86,11 @@ class Userinfo:
 
     def Query(self):
         t=int(time.time() * 1000)
-        body=quote(json.dumps({"activeId":activeId,"sceneval":2,"buid":325,"appCode":appCode,"time":t,"signStr":""})) #07a9d66103b6ae8c0afd1dec831027bf
+        body={"activeId":activeId,"sceneval":2,"buid":325,"appCode":appCode,"time":t,"signStr":""}
         t=t+1
-        url = f'https://api.m.jd.com/api?functionId=makemoneyshop_exchangequery&appid=jdlt_h5&channel=jxh5&cv=1.2.5&clientVersion=1.2.5&client=jxh5&uuid={self.uuid}&cthr=1&body={body}&t={t}&loginType=2'
+        str="functionId=%s&body=%s&uuid=%s&client=%s&clientVersion=%s&st=%s" % ("makemoneyshop_exchangequery", body, base64Encode(self.uuid), "iPhone", "1.2.5", t)
+        body["signStr"]=md5(str.encode(encoding='UTF-8')).hexdigest()
+        url = f'https://api.m.jd.com/api?functionId=makemoneyshop_exchangequery&appid=jdlt_h5&channel=jxh5&cv=1.2.5&clientVersion=1.2.5&client=jxh5&uuid={self.uuid}&cthr=1&body={quote(json.dumps(body))}&t={t}&loginType=2'
         try:
             res = requests.get(url=url, headers=self.headers,proxies={},timeout=2).text
             try:
