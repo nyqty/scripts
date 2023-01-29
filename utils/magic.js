@@ -55,8 +55,7 @@ const USER_AGENTS = [
 
 const $ = axios.create({timeout: 24000});
 $.defaults.headers['Accept'] = '*/*';
-$.defaults.headers['User-Agent'] = USER_AGENTS[randomNumber(0,
-    USER_AGENTS.length)];
+$.defaults.headers['User-Agent'] = USER_AGENTS[randomNumber(0,USER_AGENTS.length)];
 $.defaults.headers['Connection'] = 'keep-alive';
 $.defaults.headers['Accept-Language'] = "zh-CN,zh-Hans;q=0.9";
 $.defaults.headers['Accept-Encoding'] = "gzip, deflate, br";

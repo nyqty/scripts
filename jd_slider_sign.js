@@ -23,8 +23,8 @@ const Env=require('./utils/Env.js');
 const $ = new Env('京东滑块签到');
 const b4 = $.isNode() ? require('./sendNotify') : '',
     b5 = $.isNode() ? require('./jdCookie.js') : '',
-    b6 = require('crypto-js'),
-    b7 = require('axios');
+    CryptoJS = require('crypto-js'),
+    axios = require('axios');
 
 let b8 = [],
     b9 = '';
@@ -334,7 +334,7 @@ async function bw(i) {
     };
     let p = [n, {
         key: 'body',
-        value: b6.SHA256($.toStr(l, l)).toString()
+        value: CryptoJS.SHA256($.toStr(l, l)).toString()
     }, {
             key: 'client',
             value: ''
@@ -405,7 +405,7 @@ async function bx(j) {
     };
     let p = [n, {
         key: 'body',
-        value: b6.SHA256($.toStr(m, m)).toString()
+        value: CryptoJS.SHA256($.toStr(m, m)).toString()
     }, {
             key: 'client',
             value: ''
@@ -535,8 +535,8 @@ function bA(b) {
         g = Date.now();
     let h = '',
         i = bB('yyyyMMddhhmmssSSS', g);
-    h = $.genKey($.token, $.fp.toString(), i.toString(), $.appId.toString(), b6).toString();
-    const j = b6.HmacSHA256(f, h.toString()).toString();
+    h = $.genKey($.token, $.fp.toString(), i.toString(), $.appId.toString(), CryptoJS).toString();
+    const j = CryptoJS.HmacSHA256(f, h.toString()).toString();
     let k = [''.concat(i.toString()), ''.concat($.fp.toString()), ''.concat($.appId.toString()), ''.concat($.token), ''.concat(j), '3.0', ''.concat(g)].join(';');
     return k;
 }
@@ -850,7 +850,7 @@ async function bL(f) {
     };
     let {
         data: k
-    } = await b7.post('https://cactus.jd.com/request_algo?g_ty=ajax', _0x8a8aa8, j);
+    } = await axios.post('https://cactus.jd.com/request_algo?g_ty=ajax', _0x8a8aa8, j);
     let l = k,
         m = l.data.result,
         n = new Function('return ' + m.algo)();
@@ -1099,17 +1099,17 @@ async function bR(e, f, g) {
     var o = n,
         p = 'wm0!@w-s#ll1flo(';
     var q = '0102030405060708',
-        r = b6.AES.encrypt(JSON.stringify(o, null, 2), b6.enc.Utf8.parse(p), {
-            iv: b6.enc.Utf8.parse(q),
-            mode: b6.mode.CBC,
-            padding: b6.pad.Pkcs7
+        r = CryptoJS.AES.encrypt(JSON.stringify(o, null, 2), CryptoJS.enc.Utf8.parse(p), {
+            iv: CryptoJS.enc.Utf8.parse(q),
+            mode: CryptoJS.mode.CBC,
+            padding: CryptoJS.pad.Pkcs7
         });
     $.expandParams = r.ciphertext.toString();
     $._start = new Date().getTime();
     await bL($.appId);
     $.timestamp = new Date().getTime(), $.ts = bW($.timestamp, 'yyyyMMddhhmmssSSS');
     j = $.dict[$.appId];
-    j.encrypt = await j.func(j.tk, $.fp, $.ts, $.appId, b6).toString(b6.enc.Hex);
+    j.encrypt = await j.func(j.tk, $.fp, $.ts, $.appId, CryptoJS).toString(CryptoJS.enc.Hex);
     var s = {
         appid: 'jdchoujiang_h5',
         functionId: e,
@@ -1123,7 +1123,7 @@ async function bR(e, f, g) {
     let v = ['appid', 'body', 'client', 'clientVersion', 'functionId', 't'];
     delete s.h5st;
     u = s;
-    t = v.filter(H => u[H]).map(H => H + ':' + (H == 'body' ? b6.SHA256(s[H]).toString() : s[H])).join('&');
+    t = v.filter(H => u[H]).map(H => H + ':' + (H == 'body' ? CryptoJS.SHA256(s[H]).toString() : s[H])).join('&');
     let w = {};
 
     for (let H of v) {
@@ -1131,7 +1131,7 @@ async function bR(e, f, g) {
     }
 
     u = w;
-    var z = b6.HmacSHA256(t, j.encrypt).toString(b6.enc.Hex),
+    var z = CryptoJS.HmacSHA256(t, j.encrypt).toString(CryptoJS.enc.Hex),
         A = '0102030405060708';
     var B = '';
 
@@ -1148,10 +1148,10 @@ async function bR(e, f, g) {
             K && (C.pp.p1 = decodeURIComponent(K[1]));
         }
 
-        var r = b6.AES.encrypt(JSON.stringify(C, null, 2), b6.enc.Utf8.parse('wm0!@w_s#ll1flo('), {
-            iv: b6.enc.Utf8.parse(A),
-            mode: b6.mode.CBC,
-            padding: b6.pad.Pkcs7
+        var r = CryptoJS.AES.encrypt(JSON.stringify(C, null, 2), CryptoJS.enc.Utf8.parse('wm0!@w_s#ll1flo('), {
+            iv: CryptoJS.enc.Utf8.parse(A),
+            mode: CryptoJS.mode.CBC,
+            padding: CryptoJS.pad.Pkcs7
         });
         B = r.ciphertext.toString();
     }
