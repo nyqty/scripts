@@ -28,7 +28,7 @@ activity_name = "京东特价版-赚钱大赢家-定时兑换红包"
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s %(message)s",#%(levelname)s %(lineno)d 
-    datefmt="%H:%M:%S"
+    datefmt="%H:%M:%S.%f"
 )
 logger = logging.getLogger(activity_name)
 index = 0
@@ -126,7 +126,9 @@ class Userinfo:
                     logger.info(f"用户“{self.name}”余额[{self.canUseCoinAmount}]元")
                     return res['data']['hbExchangeRuleList']
                 else:
-                    logger.info(f"用户“{self.name}”查询余额失败：{json.dumps(res)}")
+                    self.stockPersonDayLimit=-1
+                    #{"code": 147, "msg": "活动太火爆，请稍后再试！"}
+                    logger.info(f"用户“{self.name}”查询余额失败：{res['msg']}")#json.dumps(res)
                     #print(res)
             except Exception as e:
                 logger.info(f"{self.name}查询余额解析异常：{str(e)}")
@@ -138,7 +140,7 @@ class Userinfo:
         global loop,NotRed,hbExchangeRuleList
         print("")
         logger.info(f"{self.name}兑换红包")
-        if self.stockPersonDayUsed>=self.stockPersonDayLimit and self.stockPersonDayLimit!=0:
+        if self.stockPersonDayUsed>=self.stockPersonDayLimit and self.stockPersonDayLimit!=-1:
             logger.info(f"当前兑换次数已经达到上限[{self.stockPersonDayLimit}]次")
         else:
             get=False
@@ -147,19 +149,19 @@ class Userinfo:
             while i>0:
                 i-=1
                 data=hbExchangeRuleList[i]
-                if self.stockPersonDayUsed>=self.stockPersonDayLimit:
+                if self.stockPersonDayUsed>=self.stockPersonDayLimit and self.stockPersonDayLimit!=-1:
                     logger.info(f"当前兑换次数已经达到上限[{self.stockPersonDayLimit}]次")
                     break
                 elif data['exchangeStatus']==1:
-                    if self.canUseCoinAmount >= float(data['cashoutAmount']) or self.stockPersonDayLimit==0:
+                    if self.canUseCoinAmount >= float(data['cashoutAmount']) or self.stockPersonDayLimit==-1:
                         if float(data['cashoutAmount']) not in NotRed:
                             logger.info(f"当前余额[{self.canUseCoinAmount}]元,开始尝试兑换[{data['cashoutAmount']}]红包")
                             self.headers["Host"]="wq.jd.com"
                             url = f'https://wq.jd.com/prmt_exchange/client/exchange?g_ty=h5&g_tk=&appCode={appCode}&bizCode=makemoneyshop&ruleId={data["id"]}&sceneval=2'
                             proxies={}
                             try:
-                                if get:time.sleep(1)
-                                else:get=True
+                                #if get:time.sleep(1)
+                                #else:get=True
                                 res = requests.get(url=url, headers=self.headers,proxies=proxies,timeout=2).text
                                 try:
                                     exchange = json.loads(res)
@@ -167,6 +169,8 @@ class Userinfo:
                                         logger.info(f"{self.name}兑换{data['cashoutAmount']}红包成功")
                                         self.stockPersonDayUsed+=1
                                         #break
+                                    elif exchange['ret'] == 223:#积分不足
+                                        logger.info(f"{self.name}兑换{data['cashoutAmount']}红包失败:{exchange['msg']}")
                                     elif exchange['ret'] == 232:#日库存不足
                                         hbExchangeRuleList[i]['exchangeStatus']=4
                                         logger.info(f"{self.name}兑换{data['cashoutAmount']}红包失败:{exchange['msg']}")
@@ -174,7 +178,7 @@ class Userinfo:
                                         logger.info(f"{self.name}兑换{data['cashoutAmount']}红包失败:{exchange['msg']}")
                                         logger.info(f"等待1s，后将重试。")
                                         i+=1
-                                        time.sleep(1)
+                                        time.sleep(0.5)
                                     elif int(exchange['ret']) in [246,604]:#达到个人日兑换上限|已有提现进行中，等待完成
                                         logger.info(f"{self.name}兑换{data['cashoutAmount']}红包失败:{exchange['msg']}")
                                         break
