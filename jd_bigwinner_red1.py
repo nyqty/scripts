@@ -242,15 +242,21 @@ def main():
     print("")
     logger.info(f"开始查询用户余额信息")
     tdList = []
+    c=len(RedOutList)
     for e in RedOutList:
         if e.getHome()==True:#print('白号')
             time.sleep(1)
             e.Query()
-            time.sleep(2)
             tdList.append(threading.Thread(target=e.RedOut, args=()))
         else:
-            print(f'e.name 出错，跳过兑换')
-        
+            print(f'e.name 出错，跳过提现')
+        if c>2:
+            logger.info(f"等待10秒查询下一个")
+            time.sleep(10)
+        elif c>1:
+            logger.info(f"等待2秒查询下一个")
+            time.sleep(2)
+
     print("")
     unit = 18e5
     current_time = getTimestamp()
@@ -263,16 +269,17 @@ def main():
     while 1:
         current_time = getTimestamp()
         if current_time >= nextHourStamp:
-            SERL=[]
-            logger.info(f"开始查询库存")
-            for e in RedOutList:
-                SERL=e.Query()
-                if len(SERL)>0:
-                    hbExchangeRuleList=SERL
-                    logger.info("查询成功")
-                else:
-                    logger.info(f"查询失败,强制兑换{len(hbExchangeRuleList)}个")
-                break
+            if nextHour!="00:00:00":
+                SERL=[]
+                logger.info(f"开始查询库存")
+                for e in RedOutList:
+                    SERL=e.Query()
+                    if len(SERL)>0:
+                        hbExchangeRuleList=SERL
+                        logger.info("查询成功")
+                    else:
+                        logger.info(f"查询失败,强制兑换{len(hbExchangeRuleList)}个")
+                    break
 
             print("")
             logger.info(f"开始兑换红包")
