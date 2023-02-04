@@ -248,19 +248,22 @@ def main():
     logger.info(f"开始查询提现用户余额信息")
     tdList = []
     c=len(CashOutList)
+    i=0
     for e in CashOutList:
+        i+=1
         if e.getHome()==True:#print('白号')
             time.sleep(1)
             e.Query()
             tdList.append(threading.Thread(target=e.CashOut, args=()))
         else:
             print(f'e.name 出错，跳过提现')
-        if c>2:
-            logger.info(f"等待10秒查询下一个")
-            time.sleep(10)
-        elif c>1:
-            logger.info(f"等待2秒查询下一个")
-            time.sleep(2)
+        if i!=c:
+            if c>2:
+                logger.info(f"等待15秒查询下一个")
+                time.sleep(15)
+            elif c>1:
+                logger.info(f"等待3秒查询下一个")
+                time.sleep(3)
 
     print("")
     unit = 18e5
