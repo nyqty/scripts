@@ -1,6 +1,5 @@
 /*
-多余助力会给作者助力
-击鼓迎春抽红包
+击鼓迎春助力
 入口：https://h5.m.jd.com/pb/014182900/46nLG86c4z4z7Na48CBoC6oX3MVd/index.html?babelChannel=ttt4
 11 11 11 11 * jd_welcomechun_help.js
 */
@@ -99,8 +98,6 @@ if ($.isNode()) {
             $.UserName == inviteList[j].pin;
             helpObj[$.UserName]=0;
         }
-        inviteList.push({ pin: 'TY', id: 'ycXdOSZSbNpDrcPMzabLLqV-' });
-        helpObj["TY"]=0;
         console.log(`\n\n为以下分享码助力：`)//${JSON.stringify(inviteList)}\n
         console.log(inviteList);console.log("\n")
     
