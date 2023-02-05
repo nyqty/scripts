@@ -15,7 +15,9 @@ const h5st_appid='5a721'
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '', message;
 
-let inviteId, inviteList = [],inviteObj={};
+let inviteId, inviteList = [
+    { pin: 'TY', id: 'ycXdOSZSbNpDrcPMzabLLqV-' },
+],inviteObj={};
 let ok_UserNames=[];
 
 
@@ -117,7 +119,6 @@ if ($.isNode()) {
                 if ($.UserName == inviteList[j].pin) { console.log(`不能给自己助力，跳过`); continue; }
                 inviteId = inviteList[j].id;
                 //console.log(`给 ${inviteList[j].pin} 进行助力`);
-                //{"code":0,"data":{"bizCode":0,"bizMsg":"success","result":{"nickname":"梦创星河"},"success":true},"msg":"调用成功"}
                 res = await taskPost("party_assistWindow",{"area":"0_0_0_0","inviteCode":inviteId});
                 if ( res && res?.code === 0 && res?.data ) {
                     let {bizCode,bizMsg,result}=res['data'];
@@ -130,11 +131,12 @@ if ($.isNode()) {
                     console.log(`获取助力信息失败:${JSON.stringify(res)}`)
                     continue;
                 }
+                await $.wait(1000)
                 res = await taskPost("party_assist",{"area":"0_0_0_0","inviteCode":inviteId,"uuid":$.UUID},true);
                 if ( res && res?.code === 0 && res?.data ) {
                     let {bizCode,bizMsg}=res['data'];
                     if( bizCode==0 ){
-                        console.log(`助力成功:${bizMsg}`);
+                        console.log(`${bizMsg}`);
                         helpObj[$.UserName]++;
                         if(max_i) max_i--;
                         if(max_i==0){
@@ -152,32 +154,31 @@ if ($.isNode()) {
                         //{"code":0,"data":{"bizCode":-103,"bizMsg":"不能为自己助力哦~","result":null,"success":false},"msg":"调用成功"}
                         console.log(`助力:${bizMsg}`)
                         continue
-                    /*}else if( bizCode==-9 ){//您今天的助力次数已用完|今天不能再助力啦~
+                    }else if( bizCode==-105 ){//你已经帮助太多人啦
                         console.log(`助力:${bizMsg}`)
                         break;
-                    }else if( bizCode==-1001 ){//-1001活动太火爆了~还是去买买买吧
+                    }else if( bizCode==-4001 ){//手速太快啦，慢一点~
                         error_Hot++;
                         if(error_Hot>2){
                             millisecond=randomNum(8e3,15e3);
                             console.log(`${bizMsg}，休息${(millisecond/1000).toFixed(1)}秒跳出！`);
                             await $.wait(millisecond);
                             break;
-                        }*/
+                        }
                     }else{
                         console.log(`助力错误:${bizCode}:${bizMsg}`)
                     }
-                } else {
-                    /*if(res?.code === -40300 || res?.code==-30001){
-                        console.log(`助力失败:${JSON.stringify(res)}\n`)
-                        break;
-                    }else{
-                        console.log(`助力失败:${JSON.stringify(res)}\n`)
-                    }*/
+                } else if(res?.code === 131600){//助力要排队哦，先去玩会吧
+                    millisecond=randomNum(4e3,8e3);
+                    console.log(`排队中~休息${(millisecond/1000).toFixed(1)}秒继续`);
+                }else{
                     console.log(`助力失败:${JSON.stringify(res)}\n`)
                 }
-                await $.wait(2000)
+                millisecond=randomNum(4e3,8e3);
+                console.log(`休息${(millisecond/1000).toFixed(1)}秒继续`);
+                await $.wait(millisecond);
             }
-            await $.wait(1000)
+            await $.wait(2000)
         }
     }
 
