@@ -1,4 +1,5 @@
 /*
+多余助力会给作者助力
 击鼓迎春抽红包
 入口：https://h5.m.jd.com/pb/014182900/46nLG86c4z4z7Na48CBoC6oX3MVd/index.html?babelChannel=ttt4
 11 11 11 11 * jd_welcomechun_help.js
@@ -15,9 +16,7 @@ const h5st_appid='5a721'
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '', message;
 
-let inviteId, inviteList = [
-    { pin: 'TY', id: 'ycXdOSZSbNpDrcPMzabLLqV-' },
-],inviteObj={};
+let inviteId, inviteList = [],inviteObj={};
 let ok_UserNames=[];
 
 
@@ -100,8 +99,11 @@ if ($.isNode()) {
             $.UserName == inviteList[j].pin;
             helpObj[$.UserName]=0;
         }
+        inviteList.push({ pin: 'TY', id: 'ycXdOSZSbNpDrcPMzabLLqV-' });
+        helpObj["TY"]=0;
         console.log(`\n\n为以下分享码助力：`)//${JSON.stringify(inviteList)}\n
         console.log(inviteList);console.log("\n")
+    
         var millisecond,error_Hot=0,max=0,max_i=-1;
         for (let i = 0; i < cookiesArr.length && inviteList.length; i++) {
             cookie = cookiesArr[i];
