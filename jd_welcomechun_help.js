@@ -152,13 +152,17 @@ if ($.isNode()) {
                                 console.log(`已到设置的最大助力${helpMax}个。`);
                             }
                         }
-                    }else if( [-103].includes(bizCode) ){
+                    }else if( bizCode==-103 ){//[-103].includes(bizCode)
                         //{"code":0,"data":{"bizCode":-103,"bizMsg":"不能为自己助力哦~","result":null,"success":false},"msg":"调用成功"}
                         console.log(`助力:${bizMsg}`)
                         continue
                     }else if( bizCode==-105 ){//你已经帮助太多人啦
                         console.log(`助力:${bizMsg}`)
                         break;
+                    }else if( bizCode==-106 ){//好友人气太高 不需要助力啦~
+                        ok_UserNames.push(inviteList[j].pin);
+                        inviteList.splice(j, 1);j--;
+                        console.log(`助力:${bizMsg}`)
                     }else if( bizCode==-4001 ){//手速太快啦，慢一点~
                         error_Hot++;
                         if(error_Hot>2){
