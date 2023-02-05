@@ -116,7 +116,7 @@ if ($.isNode()) {
             for (let j = 0; j < inviteList.length; j++) {
                 if ($.UserName == inviteList[j].pin) { console.log(`不能给自己助力，跳过`); continue; }
                 inviteId = inviteList[j].id;
-                console.log(`给 ${inviteList[j].pin} 进行助力`);
+                //console.log(`给 ${inviteList[j].pin} 进行助力`);
                 //{"code":0,"data":{"bizCode":0,"bizMsg":"success","result":{"nickname":"胡**宇"},"success":true},"msg":"调用成功"}
                 res = await taskPost("party_assistWindow",{"area":"0_0_0_0","inviteCode":inviteId});
                 if ( res && res?.code === 0 && res?.data ) {
