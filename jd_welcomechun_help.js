@@ -1,11 +1,11 @@
 /*
 击鼓迎春抽红包
 入口：https://h5.m.jd.com/pb/014182900/46nLG86c4z4z7Na48CBoC6oX3MVd/index.html?babelChannel=ttt4
-2 12,20 * * * jd_welcomechun.js
+11 11 11 11 * jd_welcomechun_help.js
 */
 
 const Env=require('./utils/Env.js');
-const $=new Env('击鼓迎春');
+const $=new Env('击鼓迎春-助力');
 const notify = $.isNode() ? require('./sendNotify') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
@@ -14,6 +14,18 @@ const h5st_appid='5a721'
 
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '', message;
+
+let inviteId, inviteList = [],inviteObj={};
+let ok_UserNames=[];
+
+
+let TYUserName=[];
+if( process.env.TYUserName ){
+    TYUserName=process.env.TYUserName.split("@");
+}else{
+    console.log(`请设置变量 TYUserName 来指定用户，多个用@分隔`)
+    return false
+}
 
 if ($.isNode()) {
     Object.keys(jdCookieNode).forEach((item) => {
@@ -29,8 +41,10 @@ if ($.isNode()) {
         $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
         return;
     }
-    
-    for (let i = 0; i < cookiesArr.length; i++) {
+
+
+    if(TYUserName.length) console.log(`\n开始获取指定用户的邀请码\n`);
+    for (let i = 0; i < cookiesArr.length && TYUserName.length; i++) {
         cookie = cookiesArr[i];
         if (!cookie) continue
         $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
@@ -39,6 +53,7 @@ if ($.isNode()) {
         $.nickName = '';
         message = '';
         //await TotalBean();
+        if( !$.UserName || TYUserName.indexOf($.UserName)===-1 ) continue;
         console.log(`\n*******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
         if (!$.isLogin) {
             $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
@@ -49,42 +64,121 @@ if ($.isNode()) {
             continue
         }
         getUA()
-        res=await taskPost("party_home", {"area":"0_0_0_0"});
+        res=await taskPost("party_inviteWindow", {"area":"0_0_0_0","showAssistorsSwitch":true});
         if(res && res.data && res.code==0){
             let {bizCode,bizMsg,result}=res.data
             if(bizCode==0){
-                $.coupon=result.awardInfo.coupon
-                $.lotteryTimes=result.lotteryInfo.lotteryTimes;
-                console.log(`当前红包${result.awardInfo?.hongbao}，击鼓${$.coupon}次可击鼓${$.lotteryTimes}。(${result.lotteryFillTimes})`);
-                //"lotteryCountDown":8,"lotteryFillTimes":10,
-                //console.log(JSON.stringify(result));
-                if(result.needSendWelcomeHongbao){
-                    console.log("领取欢迎红包");
-                    //20230114181226535%3B7uu4u77ljf8v0442%3B5a721%3Btk02wbe221bf518nhZhSbeMEDPhuLVjZZg9KrfDl70TtyHi1cnSGyMlbq%2FOmHesHghGo9TNPB4%2BjV8zB%2F4iZOU%2BYQ%2Ban%3Ba6a1dc9365781935bc4bb648d454315186534005cfd8412700005be1e7c2a16e%3B400%3B1673691146535%3B9f6f03516f2946977ccb57d9c252fa77e14e0735072fb4673b8a44e169d34266e97fd675aa50724b54791ec0119c6b0d4ec4355020416d9e141269ee1ec8346ca9b99fecddc35e691dfda86d8dc01224698eefd7afc4589ebb87fa5e38d14238167e4cfc0e4183244bef34befacff1555c70f68e98a102420dad3c98838dfac71e0c9f8bfe1649804f860c97dd6bdbe1165a4b634245f0a85ee52bfe67419ce5
-                    //"np2ZiBbQwR3Jp2wS" 安卓16位
-                    res=await taskPost("party_welcome", {"area":"0_0_0_0","uuid":$.UUID},"",true);
-                    if(res && res.data && res.code==0){
-                        let {bizCode,bizMsg,result}=res.data
-                        if(bizCode==0){
-                            console.log(`${result.title}`);//console.log(JSON.stringify(result));
-                            award(result.award);
-                        }else console.log(`party_welcome ${bizCode}:${bizMsg}`);
-                    }else{
-                        console.log("party_welcome错误：",JSON.stringify(res));
-                    }
-                    await $.wait(1000)
+                let p=result?.inviteCode
+                if(p){
+                    console.log(`当前邀请${result.assistNum}人，共获得${result.hongbaoSum}红包。\n邀请码：`+p)
+                    inviteObj[$.UserName]=p;
                 }
-                while($.lotteryTimes){
-                    $.lotteryTimes--;
-                    await party_lottery();
-                }
-                
-            }else console.log(`party_home ${bizCode}:${bizMsg}`);
+            }else console.log(`party_inviteWindow ${bizCode}:${bizMsg}`);
         }else{
-            console.log("party_home错误：",JSON.stringify(res));
+            console.log("party_inviteWindow 错误：",JSON.stringify(res));
             break;
         }
         await $.wait(1000)
+    }
+
+    var helpObj={},helpMax=0;
+    if ( inviteList.length || JSON.stringify(inviteObj) !== '{}' ) {
+        if( TYUserName.length && JSON.stringify(inviteObj) !== '{}' ){
+            console.log(`\n按照TYUserName顺序跳转助力顺序\n`)
+            for(var i=0;i<TYUserName.length;i++){
+                $.UserName=TYUserName[i];
+                if( inviteObj[$.UserName] ){
+                    inviteList.push({ pin: $.UserName, id: inviteObj[$.UserName] });
+                }else{
+                    console.log("助力码为空："+$.UserName)
+                }
+            }
+        }
+        for (let j = 0; j < inviteList.length; j++) {
+            $.UserName == inviteList[j].pin;
+            helpObj[$.UserName]=0;
+        }
+        console.log(`\n\n为以下分享码助力：`)//${JSON.stringify(inviteList)}\n
+        console.log(inviteList);console.log("\n")
+        var millisecond,error_Hot=0,max=0,max_i=-1;
+        for (let i = 0; i < cookiesArr.length && inviteList.length; i++) {
+            cookie = cookiesArr[i];
+            if (!cookie) continue
+            $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
+            $.index = i + 1;
+            $.isLogin = true;
+            $.nickName = '';
+            getUA()
+            console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
+            console.log(`${new Date().toLocaleString()}`);
+            if(max) max_i=max;
+            error_Hot=0;
+            for (let j = 0; j < inviteList.length; j++) {
+                if ($.UserName == inviteList[j].pin) { console.log(`不能给自己助力，跳过`); continue; }
+                inviteId = inviteList[j].id;
+                console.log(`给 ${inviteList[j].pin} 进行助力`);
+                //{"code":0,"data":{"bizCode":0,"bizMsg":"success","result":{"nickname":"胡**宇"},"success":true},"msg":"调用成功"}
+                res = await taskPost("party_assistWindow",{"area":"0_0_0_0","inviteCode":inviteId});
+                if ( res && res?.code === 0 && res?.data ) {
+                    let {bizCode,bizMsg,result}=res['data'];
+                    if( bizCode==0 ) console.log(`给 ${result.nickname} 进行助力`);
+                    else{
+                        console.log(`获取助力信息失败:${bizCode}:${bizMsg}`)
+                        continue;
+                    }
+                }else{
+                    console.log(`获取助力信息失败:${JSON.stringify(res)}`)
+                    continue;
+                }
+                res = await taskPost("party_assistWindow",{"area":"0_0_0_0","inviteCode":inviteId});
+                if ( res && res?.code === 0 && res?.data ) {
+                    let {bizCode,bizMsg}=res['data'];
+                    if( bizCode==0 ){
+                        console.log(`助力成功:${bizMsg}`);
+                        helpObj[$.UserName]++;
+                        if(max_i) max_i--;
+                        if(max_i==0){
+                            console.log(`助力${max}次了，跳过`);
+                            await $.wait(randomNum(2e3,3e3));break;
+                        }
+                        if( helpMax ){
+                            if( helpObj[$.UserName]>=helpMax ){
+                                ok_UserNames.push(inviteList[j].pin);
+                                inviteList.splice(j, 1);j--;
+                                console.log(`已到设置的最大助力${helpMax}个。`);
+                            }
+                        }
+                    }else if( [-103].includes(bizCode) ){
+                        //{"code":0,"data":{"bizCode":-103,"bizMsg":"不能为自己助力哦~","result":null,"success":false},"msg":"调用成功"}
+                        console.log(`助力:${bizMsg}`)
+                        continue
+                    /*}else if( bizCode==-9 ){//您今天的助力次数已用完|今天不能再助力啦~
+                        console.log(`助力:${bizMsg}`)
+                        break;
+                    }else if( bizCode==-1001 ){//-1001活动太火爆了~还是去买买买吧
+                        error_Hot++;
+                        if(error_Hot>2){
+                            millisecond=randomNum(8e3,15e3);
+                            console.log(`${bizMsg}，休息${(millisecond/1000).toFixed(1)}秒跳出！`);
+                            await $.wait(millisecond);
+                            break;
+                        }*/
+                    }else{
+                        console.log(`助力错误:${bizCode}:${bizMsg}`)
+                    }
+                } else {
+                    /*if(res?.code === -40300 || res?.code==-30001){
+                        console.log(`助力失败:${JSON.stringify(res)}\n`)
+                        break;
+                    }else{
+                        console.log(`助力失败:${JSON.stringify(res)}\n`)
+                    }*/
+                    console.log(`助力失败:${JSON.stringify(res)}\n`)
+                }
+                await $.wait(2000)
+            }
+            await $.wait(1000)
+        }
     }
 
 })()
@@ -93,38 +187,6 @@ if ($.isNode()) {
 }).finally(() => {
     $.done();
 })
-
-function award(cras) {
-    if(cras) for(let u=0,cl=cras.length,cra;u<cl;u++){
-        cra=cras[u];
-        if(cra.type==1){
-            //满199元可用-20(仅可购买京东健康部分商品)
-            console.log(`优惠券：${cra.usageThreshold}-${cra.amount}(${cra.useRange})`);//"createTime":1673693461359,
-        }else if(cra.type==2){
-            console.log(`红包：${cra.amount}`);
-        }else if(cra.type==5){
-            console.log(`文字祝福：${cra.text1+','+cra.text2}`);
-        }else{
-            console.log(JSON.stringify(cra));
-        }
-    }
-}
-async function party_lottery() {
-    console.log(`开始击鼓~`);
-    let res=await taskPost("party_lottery", {"area":"0_0_0_0","uuid":$.UUID},"",true);
-    if(res && res.data && res.code==0){
-        let {bizCode,bizMsg,result}=res.data
-        if(bizCode==0){
-            $.lotteryTimes=result.restLotteryTimes;
-            $.coupon=result.awardInfo?.coupon;
-            //console.log(JSON.stringify(result));
-            console.log(`${result.title}当前红包${result.awardInfo?.hongbao}，击鼓${$.coupon}次`)
-            award(result.award);//result.currentRoundAward?result.currentRoundAward:
-        }else if(bizCode==-302){
-            console.log(bizMsg);
-        }else console.log(`party_lottery ${bizCode}:${bizMsg}`);
-    }else console.log("party_lottery错误：",JSON.stringify(res));
-}
 
 function taskPostUrl(functionId, body,get='') {
     return {
