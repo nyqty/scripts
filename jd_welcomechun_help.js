@@ -170,7 +170,9 @@ if ($.isNode()) {
                     }
                 } else if(res?.code === 131600){//助力要排队哦，先去玩会吧
                     millisecond=randomNum(4e3,8e3);
-                    console.log(`排队中~休息${(millisecond/1000).toFixed(1)}秒继续`);
+                    console.log(`排队中~休息${(millisecond/1000).toFixed(1)}秒重试`);
+                    j--;
+                    await $.wait(millisecond);
                 }else{
                     console.log(`助力失败:${JSON.stringify(res)}\n`)
                 }
@@ -282,4 +284,10 @@ function getUUID(x = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", t = 0) {
         n = "x" == x ? r : (3 & r) | 8;
         return (uuid = t ? n.toString(36).toUpperCase() : n.toString(36)), uuid;
     });
+}
+
+function randomNum(min, max) {
+    if (arguments.length === 0) return Math.random()
+    if (!max) max = 10 ** (Math.log(min) * Math.LOG10E + 1 | 0) - 1
+    return Math.floor(Math.random() * (max - min + 1) + min);
 }
