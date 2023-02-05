@@ -130,7 +130,7 @@ if ($.isNode()) {
                     console.log(`获取助力信息失败:${JSON.stringify(res)}`)
                     continue;
                 }
-                res = await taskPost("party_assistWindow",{"area":"0_0_0_0","inviteCode":inviteId});
+                res = await taskPost("party_assist",{"area":"0_0_0_0","inviteCode":inviteId,"uuid":$.UUID},true);
                 if ( res && res?.code === 0 && res?.data ) {
                     let {bizCode,bizMsg}=res['data'];
                     if( bizCode==0 ){
