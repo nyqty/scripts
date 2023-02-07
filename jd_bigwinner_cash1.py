@@ -187,6 +187,7 @@ class Userinfo:
                                         logger.info(f"{self.name}提现{data['cashoutAmount']}失败{exchange['ret']}:{exchange['msg']}")
                                 except Exception as e:
                                     logger.info(f"{self.name}提现{data['cashoutAmount']}失败解析异常：{str(e)}")
+                                    print(res)
                             except Exception as e:
                                 logger.info(f"{self.name}提现{data['cashoutAmount']}失败:超过2s请求超时...")
                                 get=False
