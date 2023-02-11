@@ -197,7 +197,9 @@ class Userinfo:
                             except Exception as e:
                                 logger.info(f"{self.name}提现{data['cashoutAmount']}失败:超过2s请求超时...")
                                 get=False
-                        else:logger.info(f"当前余额[{self.canUseCoinAmount}]元,不提现[{not_tx}]门槛")
+                        else:
+                            logger.info(f"当前余额[{self.canUseCoinAmount}]元,不提现[{not_tx}]门槛")
+                            if i==0:loop=False
                     #else:logger.info(f"当前余额[{self.canUseCoinAmount}]元,不足提现[{data['cashoutAmount']}]门槛")
                 elif data['exchangeStatus']==2:
                     logger.info(f"{self.name},来晚了咯{data['name']}都被抢光了")

@@ -37,10 +37,10 @@ appCode = 'ms2362fc9e'
 activeId = '63526d8f5fe613a6adb48f03'
 NotRed=[]
 hbExchangeRuleList=[
-    {"id":"b0795152caef79b07ba0e1d7482be60e","name":"0.5元红包","exchangeStatus":1,"cashoutAmount":"0.5"},
-    {"id":"fc37ac22a0813602a3ca75082e6efe78","name":"3元红包","exchangeStatus":2,"cashoutAmount":"3"},
-    {"id":"6d5a889b9ed7b47703a0c59301c90cc0","name":"8元红包","exchangeStatus":2,"cashoutAmount":"8"},
-    {"id":"4402f53ff9f20e19e683db329e8748b6","name":"50元红包","exchangeStatus":2,"cashoutAmount":"50"}
+    {"id":"d71b23a381ada0934039d890ad22ab8d","name":"0.5元红包","exchangeStatus":1,"cashoutAmount":"0.5"},
+    {"id":"66d9058514891de12e96588697cc3bb3","name":"3元红包","exchangeStatus":1,"cashoutAmount":"3"},
+    {"id":"b141ddd915d20f078d69f6910b02a60a","name":"8元红包","exchangeStatus":1,"cashoutAmount":"8"},
+    {"id":"8609ec76a8a70db9a5443376d34fa26a","name":"50元红包","exchangeStatus":1,"cashoutAmount":"50"}
 ]
 
 def getTimestamp():
@@ -191,7 +191,9 @@ class Userinfo:
                             except Exception as e:
                                 logger.info(f"{self.name}兑换{data['cashoutAmount']}红包失败:超过2s请求超时...")
                                 get=False
-                        else:logger.info(f"当前余额[{self.canUseCoinAmount}]元,不兑换[{NotRed}]门槛")
+                        else:
+                            logger.info(f"当前余额[{self.canUseCoinAmount}]元,不兑换[{NotRed}]门槛")
+                            if i==0:loop=False
                     #else:logger.info(f"当前余额[{self.canUseCoinAmount}]元,不足兑换[{data['cashoutAmount']}]红包门槛")
                 elif data['exchangeStatus']==2:
                     logger.info(f"{self.name},来晚了咯{data['name']}都被抢光了")
