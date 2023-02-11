@@ -109,7 +109,7 @@ class Userinfo:
         return False
 
     def Query(self):
-        t=getTimestamp
+        t=getTimestamp()
         body={"activeId":activeId,"sceneval":2,"buid":325,"appCode":appCode,"time":t,"signStr":""}
         str="functionId=%s&body=%s&uuid=%s&client=%s&clientVersion=%s&st=%s" % ("makemoneyshop_exchangequery", body, base64Encode(self.uuid), "jxh5", "1.2.5", t)
         body["signStr"]=md5(str.encode(encoding='UTF-8')).hexdigest()
