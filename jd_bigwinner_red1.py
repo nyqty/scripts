@@ -85,7 +85,7 @@ class Userinfo:
             #"Referer": f"https://wqs.jd.com/sns/202210/20/make-money-shop/guest.html?activeId={activeId}&type=sign&shareId=&__navVer=1",
             "Referer": "https://wqs.jd.com/"
         }
-        self.stockPersonDayLimit=0
+        self.stockPersonDayLimit=-1
         self.stockPersonDayUsed=0
         self.canUseCoinAmount=0
         #print(self.name)
@@ -125,7 +125,6 @@ class Userinfo:
                     logger.info(f"用户“{self.name}”余额[{self.canUseCoinAmount}]元")
                     return res['data']['hbExchangeRuleList']
                 else:
-                    self.stockPersonDayLimit=-1
                     #{"code": 147, "msg": "活动太火爆，请稍后再试！"}
                     logger.info(f"用户“{self.name}”查询余额失败：{res['msg']}")#json.dumps(res)
                     #print(res)
@@ -161,8 +160,8 @@ class Userinfo:
                             url = f'https://api.m.jd.com/api?functionId=jxPrmtExchange_exchange&appid=cs_h5&body={quote(json.dumps(body))}'
                             proxies={}
                             try:
-                                #if get:time.sleep(1)
-                                #else:get=True
+                                if get:time.sleep(0.5)
+                                else:get=True
                                 res = requests.get(url=url, headers=self.headers,proxies=proxies,timeout=2).text
                                 try:
                                     exchange = json.loads(res)
