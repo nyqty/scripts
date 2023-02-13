@@ -27,8 +27,8 @@ import threading
 activity_name = "京东特价版-赚钱大赢家-定时提现"
 logging.basicConfig(
     level=logging.INFO,
-    format="%(asctime)s %(message)s",#%(levelname)s %(lineno)d 
-    datefmt="%H:%M:%S.%f"
+    format="%(asctime)s.%(msecs)03d %(message)s",#%(levelname)s %(lineno)d 
+    datefmt="%M:%S"
 )
 logger = logging.getLogger(activity_name)
 index = 0
