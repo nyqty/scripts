@@ -357,7 +357,7 @@ def ql_AddUp(uid):
     if return_ws[0]:  # 判断 [return_ws]返回值 Bool类型
         nt_key = str(return_ws[1])  # 从 return_ws[1] 取出 -> nt_key
         logger.info("wskey转换成功")  # 标准日志输出
-        Data = post_cookie({"ac":"addUp","check":True,"eid":ckEid,"uid":uid,"value":nt_key,"uid":uid,"nickName":""})
+        Data = post_cookie({"ac":"addUp","check":True,"eid":ckEid,"uid":uid,"value":nt_key,"nickName":""})
         logger.info(Data["msg"])
     else:  # 判断分支
         if "WSKEY_AUTO_DISABLE" in os.environ:  # 从系统变量中获取 WSKEY_AUTO_DISABLE
@@ -431,7 +431,7 @@ if __name__ == '__main__':  # Python主函数执行入口
                 if not check_ck(return_serch[1]):  # bool: False 判定 JD_COOKIE 有效性
                     ql_AddUp(row["uid"])
             else:  # 判断分支
-                logger.info("新wskey")  # 标准日志分支
+                logger.info("更新账号ck")  # 标准日志分支
                 ql_AddUp(row["uid"])
         else:  # 判断分支
             logger.info("WSKEY格式错误\n--------------------\n")  # 标准日志输出
