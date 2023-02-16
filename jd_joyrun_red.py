@@ -176,9 +176,9 @@ class Userinfo:
                                 else:get=True
                                 headers=self.headers
                                 headers["content-type"]="application/x-www-form-urlencoded"
-                                res = requests.post(url=url, headers=self.headers,data=post,proxies=proxies,timeout=2).text
+                                res = requests.post(url=url, headers=self.headers,data=post,proxies=proxies,timeout=2)
                                 try:
-                                    exchange = json.loads(res)                                    
+                                    exchange = json.loads(res.text)                                    
                                     if exchange['code'] == 0:
                                         logger.info(f"{self.name}兑换{data['amount']}红包成功")
                                         #break

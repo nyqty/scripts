@@ -169,9 +169,9 @@ class Userinfo:
                             try:
                                 if get:time.sleep(0.5)
                                 else:get=True
-                                res = requests.get(url=url, headers=self.headers,proxies=proxies,timeout=2).text
+                                res = requests.get(url=url, headers=self.headers,proxies=proxies,timeout=2)
                                 try:
-                                    exchange = json.loads(res)
+                                    exchange = json.loads(res.text)
                                     if exchange['ret'] == 0:
                                         logger.info(f"{self.name}提现{data['cashoutAmount']}成功")
                                         break

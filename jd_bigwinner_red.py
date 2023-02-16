@@ -162,9 +162,9 @@ class Userinfo:
                             try:
                                 if get:time.sleep(0.5)
                                 else:get=True
-                                res = requests.get(url=url, headers=self.headers,proxies=proxies,timeout=2).text
+                                res = requests.get(url=url, headers=self.headers,proxies=proxies,timeout=2)
                                 try:
-                                    exchange = json.loads(res)
+                                    exchange = json.loads(res.text)
                                     if exchange['ret'] == 0:
                                         logger.info(f"{self.name}兑换{data['cashoutAmount']}红包成功")
                                         self.stockPersonDayUsed+=1
