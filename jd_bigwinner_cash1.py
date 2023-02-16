@@ -4,7 +4,7 @@
 多个&隔开
 export DYJ_CashPin="需要提现的pin值"
 export DYJ_NotCash="不提现的金额"
-cron: 50 0,1,11,13,15,16,17,23 * * *
+cron: 50 16,23 * * *
 new Env('赚钱大赢家-定时提现');
 TY在原作者(doubi)基础上删减更改，优化提取
 """
@@ -93,7 +93,7 @@ class Userinfo:
             "referer": "https://wqs.jd.com/",
             "accept-encoding": "gzip, deflate, br",
             "accept-language": "zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7",       
-            "Cookie": self.cookie + f"; appCode={appCode}; sid={self.sha}; visitkey={uuid}",
+            "Cookie": self.cookie + f"; appCode={appCode}; sid={self.sha}; visitkey={self.uuid}",
         }
         self.stockPersonDayLimit=-1
         self.stockPersonDayUsed=0

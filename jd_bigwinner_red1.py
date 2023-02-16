@@ -4,7 +4,7 @@
 多个&隔开
 export DYJ_RedPin="需要兑换红包的pin值"
 export DYJ_NotRed="不兑换红包的金额"
-cron: 50 0,1,11,13,15,16,17,23 * * *
+cron: 50 16,23 * * *
 new Env('赚钱大赢家-定时兑换红包');
 TY在原作者(doubi)基础上删减更改，优化提取
 """
@@ -79,7 +79,7 @@ class Userinfo:
         self.sha = sha1(str(self.name).encode('utf-8')).hexdigest()
         self.headers = {
             "Host": "api.m.jd.com",
-            "Cookie": self.cookie + f"; sid={self.sha}; visitkey={uuid}",
+            "Cookie": self.cookie + f"; sid={self.sha}; visitkey={self.uuid}",
             "User-Agent": self.UA,
             "origin": "https://wqs.jd.com",
             #"Referer": f"https://wqs.jd.com/sns/202210/20/make-money-shop/guest.html?activeId={activeId}&type=sign&shareId=&__navVer=1",
