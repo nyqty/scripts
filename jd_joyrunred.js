@@ -27,7 +27,7 @@ if ($.isNode()) {
         return;
     }
 
-	for(let i=0;i<cookiesArr[__Oxf544a[29]];i++){
+	for(let i=0;i<cookiesArr.length;i++){
 		if(cookiesArr[i]){
 			cookie = cookiesArr[i];
 			$.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
