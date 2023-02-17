@@ -35,9 +35,9 @@ linkId="L-sOanK_5RJCz7I314FpnQ"
 
 NotRed=[]
 redBagStatus=[
-    {"level":1,"status":0,"amount":0.5},
-    {"level":2,"status":0,"amount":3},
-    {"level":3,"status":2,"amount":10}
+    {"level":1,"status":1,"amount":0.5},
+    {"level":2,"status":1,"amount":3},
+    {"level":3,"status":1,"amount":10}
 ]
 
 
@@ -100,6 +100,7 @@ class Userinfo:
             "Cookie": self.cookie + f"; sid={self.sha}; visitkey={self.uuid}",
         }
         self.rewardAmount=0
+        self.runningNumLimit=False
         #print(self.name)
 
     def runningPageHome(self):
@@ -114,6 +115,7 @@ class Userinfo:
                 res = json.loads(res)
                 if res['code'] == 0:
                     self.rewardAmount=res["data"]["runningHomeInfo"]["prizeValue"]
+                    self.runningNumLimit=res["data"]["runningHomeInfo"]["runningNumLimit"]#兑换数量限制
                     logger.info(f"用户“{self.name}”奖金余额[{self.rewardAmount}]元")
                     return self.rewardAmount
                 else:
@@ -148,21 +150,24 @@ class Userinfo:
         global loop,NotRed,redBagStatus
         print("")
         logger.info(f"{self.name}兑换红包")
-        if 0:
-            logger.info(f"当前兑换次数已经达到上限")
+        if self.runningNumLimit:
+            logger.info(f"今日已兑换OR提现")
         else:
+            not_count=0
             get=False
-            i=len(redBagStatus)
+            c=len(redBagStatus)
+            i=c
             while i>0:
                 i-=1
                 data=redBagStatus[i]
-                if 0:
+                if self.runningNumLimit or data['status']==-1:
                     logger.info(f"当前兑换次数已经达到上限")
                     break
-                elif data['status']==0:
-                    logger.info(f"{self.name},{data['amount']}已抢光")
-                    if i==0:loop=False
-                elif data['status']==1 or data['status']==2:
+                #elif data['status']==0:
+                    #not_count+=1
+                    #logger.info(f"{self.name},{data['amount']}已抢光")
+                    #if not_count>=c:loop=False
+                elif 1:#data['status']==1 or data['status']==2:
                     if self.rewardAmount >= float(data['amount']):
                         if float(data['amount']) not in NotRed:
                             logger.info(f"当前奖金余额[{self.rewardAmount}]元,开始尝试兑换[{data['amount']}]红包")
@@ -181,12 +186,19 @@ class Userinfo:
                                     exchange = json.loads(res.text)                                    
                                     if exchange['code'] == 0:
                                         logger.info(f"{self.name}兑换{data['amount']}红包成功")
-                                        #break
+                                        self.runningNumLimit=True
+                                        break
+                                    elif exchange['code'] == 7104:#已经领取过奖励
+                                        logger.info(f"{self.name}兑换{data['amount']}红包失败:{exchange['errMsg']}")
+                                        self.runningNumLimit=True
+                                        break
                                     elif exchange['code'] == 7105:#今日奖池已发光
-                                        redBagStatus[i]['status']=0
+                                        #redBagStatus[i]['status']=0
+                                        not_count+=1
+                                        if not_count>=c:loop=False
                                         logger.info(f"{self.name}兑换{data['amount']}红包失败:{exchange['errMsg']}")
                                     else:
-                                        logger.info(f"{self.name}兑换{data['amount']}红包失败{exchange['code']}:{exchange['msg']}")
+                                        logger.info(f"{self.name}兑换{data['amount']}红包失败{exchange['code']}:{exchange['errMsg']}")
                                 except Exception as e:
                                     logger.info(f"{self.name}兑换{data['amount']}红包失败解析异常：{str(e)}")
                                     print(res)
@@ -194,8 +206,9 @@ class Userinfo:
                                 logger.info(f"{self.name}兑换{data['amount']}红包失败:超过2s请求超时...")
                                 get=False
                         else:
+                            not_count+=1
+                            if not_count>=c:loop=False
                             logger.info(f"当前奖金余额[{self.rewardAmount}]元,不兑换[{NotRed}]门槛")
-                            if i==0:loop=False
                     #else:logger.info(f"当前奖金余额[{self.rewardAmount}]元,不足兑换[{data['amount']}]红包门槛")
                 elif data['status']==2:
                     logger.info(f"{self.name},奖金不足兑换{data['amount']}")
@@ -258,8 +271,8 @@ def main():
         tdList.append(threading.Thread(target=e.RedOut, args=()))
         if i!=c:
             if c>2:
-                logger.info(f"等待15秒查询下一个")
-                time.sleep(15)
+                logger.info(f"等待5秒查询下一个")
+                time.sleep(5)
             elif c>1:
                 logger.info(f"等待3秒查询下一个")
                 time.sleep(3)
@@ -276,13 +289,14 @@ def main():
     while 1:
         current_time = getTimestamp()
         if current_time >= nextHourStamp:
-            if nextHour!="00:00:00":
+            if 1:#nextHour!="00:00:00":
                 SERL=[]
                 logger.info(f"开始查询库存")
                 for e in RedOutList:
                     SERL=e.runningMyPrize()
                     if len(SERL)>0:
                         redBagStatus=SERL
+                        print(redBagStatus)
                         logger.info("查询成功")
                     else:
                         logger.info(f"查询失败,强制兑换{len(redBagStatus)}个")
@@ -298,7 +312,7 @@ def main():
                     except Exception as e:
                         logger.info(f'兑换异常：{str(e)}')
                 else:
-                    logger.info(f"最后一个也没得咯，多线程提前结束！")
+                    logger.info(f"没有符合可兑换的红包，多线程提前结束！")
                     break
             break
         #else: printf("等待开始...")
