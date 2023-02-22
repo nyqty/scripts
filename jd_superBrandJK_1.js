@@ -155,7 +155,7 @@ async function main(_0x14f2ac){
         } if (_0x4a424c.assignmentType === 1) {
             for (let i = 0;i<(_0x4a424c.assignmentTimesLimit - _0x4a424c.completionCnt);i++) {
                 console.log('任务：' + _0x4a424c.assignmentName + ',去执行');
-				let _0x3c7f29 = _0x4a424c.ext.shoppingActivity && _0x4a424c.ext.shoppingActivity[i].itemId || _0x4a424c.ext.productsInfo[i].itemId ||'';
+                let _0x3c7f29 = _0x4a424c.ext.shoppingActivity && _0x4a424c.ext.shoppingActivity[i].itemId || _0x4a424c.ext.productsInfo[i].itemId ||'';
                 if (!_0x3c7f29) {
                     console.log('任务：' + _0x4a424c.assignmentName + ',信息异常');
                 }
@@ -187,7 +187,7 @@ async function main(_0x14f2ac){
 			let _0x1e4481=_0x4a424c.ext.sign2||[];
 			if(_0x1e4481.length===0){
 				console.log('任务：'+_0x4a424c.assignmentName+',信息异常');
-			}if(_0x4a424c.assignmentName==='首页限时下拉'){
+			}if(_0x4a424c.assignmentName.includes("首页限时")){
 				for(let _0x5d0f56=0;_0x5d0f56<_0x1e4481.length;_0x5d0f56++){
 					if(_0x1e4481[_0x5d0f56].status===1){
 						console.log('任务：'+_0x4a424c.assignmentName+',去执行');
