@@ -463,11 +463,9 @@ function _0x5953cf(_0x488c6c) {
 async function _0x645a8b(_0x1913db, _0x217a57, _0x5779ab) {
     let _0x5b6445 = "3.1",
         _0x2ff784 = _0x5b6614(_0x5b6445);
-    const _0x1e1f00 = {
+    var _0x59fb59 = {}
+    _0x59fb59[_0x5779ab]={
         "fp": _0x2ff784
-    };
-    const _0x59fb59 = {
-        "_0x5779ab": _0x1e1f00
     };
     $.dy = _0x59fb59;
     let _0x4e60df = ["pp"],
