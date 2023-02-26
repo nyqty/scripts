@@ -11,22 +11,21 @@ author: https://github.com/6dylan6/jdpro
 */
 const Env = require('./utils/Env.js');
 const $ = new Env("东哥爱消除");
-const aN = require("crypto-js"),
-    aO = $.isNode() ? require("./jdCookie.js") : "",
-    aP = $.isNode() ? require("./sendNotify") : "";
-let aQ = [],
-    aR = "",
-    aS = process.env.XXLDOUBLE || false;
+const CryptoJS = require('crypto-js'),
+    jdCookieNode = $.isNode() ? require("./jdCookie.js") : "",
+    notify = $.isNode() ? require("./sendNotify") : "";
+let cookiesArr = [],
+    cookie = "",
+    XXLDOUBLE = process.env.XXLDOUBLE || false;
 if ($.isNode()) {
-    var aT = new Buffer.from("44796c616e", "Hex").toString("utf8");
-    Object.keys(aO).forEach(a => {
-        aQ.push(aO[a]);
+    Object.keys(jdCookieNode).forEach(a => {
+        cookiesArr.push(jdCookieNode[a]);
     });
     if (process.env.JD_DEBUG && process.env.JD_DEBUG === "false") {
         console.log = () => { };
     }
 } else {
-    aQ = [$.getdata("CookieJD"), $.getdata("CookieJD2"), ...b3($.getdata("CookiesJD") || "[]").map(a => a.cookie)].filter(a => !!a);
+    cookiesArr = [$.getdata("CookieJD"), $.getdata("CookieJD2"), ...jsonParse($.getdata("CookiesJD") || "[]").map(a => a.cookie)].filter(a => !!a);
 }
 allMessage = "";
 message = "";
@@ -41,22 +40,19 @@ aV = Math.floor(Math.random() * aU.length);
     $.log("入口： APP-我的-更多游戏,只运行前10个CK，未进过游戏的，第一次运行可能有问题，建议手动进游戏完成新手引导！");
     $.log("默认不开启双倍奖励，会加购，如需XXLDOUBLE=\"true\"开启！");
     $.log("\n问题建议or代抢1888豆：https://t.me/dylan_jdpro");
-    if (!aQ[0]) {
+    if (!cookiesArr[0]) {
         $.msg($.name, "【提示】请先获取cookie\n直接使用NobyDa的京东签到获取", "https://bean.m.jd.com/", {
             "open-url": "https://bean.m.jd.com/"
         });
         return;
     }
-    const b = require("child_process").exec;
-    await b("grep " + aT + " jdCookie.js", async function (f, g, h) {
-        !g;
-    });
-    for (let f = 0; f < aQ.length; f++) { }
-    await b4();
+    //const b = require("child_process").exec;
+    //await b("grep Dylan jdCookie.js", async function (f, g, h) {!g;});
+    await SetUA();
     for (let g = 0; g < 10; g++) {
-        aR = aQ[g];
-        if (aR) {
-            $.UserName = decodeURIComponent(aR.match(/pt_pin=([^; ]+)(?=;?)/) && aR.match(/pt_pin=([^; ]+)(?=;?)/)[1]);
+        cookie = cookiesArr[g];
+        if (cookie) {
+            $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1]);
             $.index = g + 1;
             $.hotFlag = false;
             console.log("\n\n******开始【京东账号" + $.index + "】" + $.UserName + "*********\n");
@@ -70,16 +66,16 @@ aV = Math.floor(Math.random() * aU.length);
         let k = "此ip已被限制，请过10分钟后再执行脚本";
         $.msg($.name, k);
         if ($.isNode()) {
-            await aP.sendNotify("" + $.name, "" + k);
+            await notify.sendNotify("" + $.name, "" + k);
         }
     }
     $.log("\n开始内部互助...");
     for (let m = 0; m < 10; m++) {
-        aR = aQ[m];
-        if (!aR) {
+        cookie = cookiesArr[m];
+        if (!cookie) {
             break;
         }
-        $.UserName = decodeURIComponent(aR.match(/pt_pin=([^; ]+)(?=;?)/) && aR.match(/pt_pin=([^; ]+)(?=;?)/)[1]);
+        $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1]);
         $.index = m + 1;
         $.full = false;
         console.log("\n******开始【账号" + $.index + "】" + $.UserName + "*********\n");
@@ -109,7 +105,7 @@ aV = Math.floor(Math.random() * aU.length);
                 "loginToken": $.token2,
                 "pltId": $.pltId,
                 "loginEnc": $.token2.slice(8, 16) + $.token2.slice(24, 32),
-                "loginDec": aN.MD5($.pltId).toString().slice(0, 16),
+                "loginDec": CryptoJS.MD5($.pltId).toString().slice(0, 16),
                 "authCode": $.authCode
             };
             await $.wait(500);
@@ -284,7 +280,7 @@ async function aX() {
             let G = await aY("endLevel");
             await $.wait(2000);
             await aY("setsingleinfo");
-            if ($.adflag && aS) {
+            if ($.adflag && XXLDOUBLE) {
                 if ($.api !== "") {
                     await $.wait(1000);
                     await aY("execute");
@@ -304,7 +300,7 @@ async function aX() {
             if (S == 0) {
                 $.matchlevelId = 40103;
             } else {
-                $.matchlevelId = b2(40101, 40107);
+                $.matchlevelId = rand(40101, 40107);
             }
             let T = await aY("beginDailyMatch");
             if (T.dayInfo && T.dayInfo.curLevel) {
@@ -363,7 +359,6 @@ async function aY(B, C) {
     if ($.outFlag) {
         return;
     }
-    let F = "POST";
     switch (B) {
         case "token":
             url = "https://jdjoy.jd.com/saas/framework/user/token?appId=dafbe42d5bff9d82298e5230eb8c3f79&client=m&url=pengyougou.m.jd.com";
@@ -422,7 +417,7 @@ async function aY(B, C) {
                 "gameId": $.gameId,
                 "token": $.token3,
                 "levelId": $.levelId,
-                "score": b2(250000, 500000),
+                "score": rand(250000, 500000),
                 "reqsId": $.reqsId
             };
             break;
@@ -683,15 +678,15 @@ async function aY(B, C) {
     }
     if (C && C.token && B !== "login" && B !== "inviter") {
         let a9 = C.token == $.datalist.loginToken ? 1 : 2,
-            aa = b1(16);
+            aa = randomString(16);
         C = {
-            "__data__": b5(C, aa, a9),
+            "__data__": GetData(C, aa, a9),
             "__iv__": aa,
             "__id__": a9 == 1 ? $.datalist.pltId : $.datalist.gameId
         };
         $._id_ = C.__id__;
     }
-    let G = b0(url, C, F);
+    let G = b0(url, C, "POST");
     return new Promise(async ab => {
         $.post(G, (ae, af, ag) => {
             try {
@@ -713,6 +708,7 @@ async function aY(B, C) {
         });
     });
 }
+
 async function aZ(a, b) {
     let g = "";
     try {
@@ -720,7 +716,7 @@ async function aZ(a, b) {
             g = JSON.parse(b);
             if (g.__data__) {
                 let i = $._id_ == $.datalist.gameId ? 4 : 3,
-                    j = b5(g, g.__iv__, i);
+                    j = GetData(g, g.__iv__, i);
                 g = JSON.parse(j);
             }
         }
@@ -789,11 +785,11 @@ async function aZ(a, b) {
                             "gameId": $.gameId,
                             "token": $.token3,
                             "enc": $.token3.slice(8, 16) + $.token3.slice(24, 32),
-                            "dec": aN.MD5($.gameId).toString().slice(0, 16),
+                            "dec": CryptoJS.MD5($.gameId).toString().slice(0, 16),
                             "loginToken": $.token2,
                             "pltId": $.pltId,
                             "loginEnc": $.token2.slice(8, 16) + $.token2.slice(24, 32),
-                            "loginDec": aN.MD5($.pltId).toString().slice(0, 16),
+                            "loginDec": CryptoJS.MD5($.pltId).toString().slice(0, 16),
                             "authCode": $.authCode
                         };
                     } else {
@@ -959,7 +955,7 @@ function b0(e, f, g = "POST") {
         "Accept-Language": "zh-cn",
         "Connection": "keep-alive",
         "Content-Type": "application/json",
-        "Cookie": aR,
+        "Cookie": cookie,
         "User-Agent": $.UA,
         "X-Requested-With": "XMLHttpRequest"
     };
@@ -972,68 +968,71 @@ function b0(e, f, g = "POST") {
         "timeout": 30000
     };
 }
-function b1(f) {
-    f = f || 32;
-    let j = "abcdef0123456789",
-        k = j.length,
-        l = "";
-    for (let m = 0; m < f; m++) {
-        l += j.charAt(Math.floor(Math.random() * k));
-    }
-    return l;
+
+function randomString(e) {
+    e = e || 32;
+    let t = "abcdef0123456789", a = t.length, n = "";
+    for (i = 0; i < e; i++)
+      n += t.charAt(Math.floor(Math.random() * a));
+    return n
 }
-function b2(b, e) {
-    var h = Math.floor(Math.random() * (e - b + 1) + b);
-    return h;
-}
-function b3(f) {
-    if (typeof f == "string") {
+
+function jsonParse(str) {
+    if (typeof str == "string") {
         try {
-            return JSON.parse(f);
-        } catch (j) {
-            console.log(j);
-            $.msg($.name, "", "请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie");
+            return JSON.parse(str);
+        } catch (e) {
+            console.log(e);
+            $.msg($.name, '', '请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie')
             return [];
         }
     }
 }
-async function b4() {
-    $.UA = "jdapp;iPhone;10.1.4;13.1.2;" + b1(40) + ";network/wifi;model/iPhone8,1;addressid/2308460611;appBuild/167814;jdSupportDarkMode/0;Mozilla/5.0 (iPhone; CPU iPhone OS 13_1_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1";
+
+function rand(b, e) {
+    var h = Math.floor(Math.random() * (e - b + 1) + b);
+    return h;
 }
-function b5(b, e, f) {
-    (f == 1 || f == 2) && typeof b == "object" && (b = JSON.stringify(b));
-    switch (f) {
+
+async function SetUA() {
+    $.UA = "jdapp;iPhone;10.1.4;13.1.2;" + randomString(40) + ";network/wifi;model/iPhone8,1;addressid/2308460611;appBuild/167814;jdSupportDarkMode/0;Mozilla/5.0 (iPhone; CPU iPhone OS 13_1_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1";
+}
+
+function GetData(body, iv, i) {
+    (i == 1 || i == 2) && typeof body == "object" && (body = JSON.stringify(body));
+    switch (i) {
         case 1:
-            var i = $.datalist.loginEnc;
+            var key = $.datalist.loginEnc;
             break;
         case 2:
-            var i = $.datalist.enc;
+            var key = $.datalist.enc;
             break;
         case 3:
-            var i = $.datalist.loginDec;
+            var key = $.datalist.loginDec;
             break;
         case 4:
-            var i = $.datalist.dec;
+            var key = $.datalist.dec;
             break;
     }
-    if (!b.__data__) {
-        var j = aN.AES.encrypt(b, aN.enc.Utf8.parse(i), {
-            "iv": aN.enc.Utf8.parse(e),
-            "mode": aN.mode.CBC,
-            "padding": aN.pad.Pkcs7
+    if (!body.__data__) {
+        var j = CryptoJS.AES.encrypt(body, CryptoJS.enc.Utf8.parse(key), {
+            "iv": CryptoJS.enc.Utf8.parse(iv),
+            "mode": CryptoJS.mode.CBC,
+            "padding": CryptoJS.pad.Pkcs7
         }),
             k = j.toString();
         return k;
     } else {
-        var l = aN.AES.decrypt(b.__data__, aN.enc.Utf8.parse(i), {
-            "iv": aN.enc.Utf8.parse(e),
-            "mode": aN.mode.CBC,
-            "padding": aN.pad.Pkcs7
+        var l = CryptoJS.AES.decrypt(body.__data__, CryptoJS.enc.Utf8.parse(key), {
+            "iv": CryptoJS.enc.Utf8.parse(iv),
+            "mode": CryptoJS.mode.CBC,
+            "padding": CryptoJS.pad.Pkcs7
         }),
-            m = l.toString(aN.enc.Utf8);
+            m = l.toString(CryptoJS.enc.Utf8);
         return m.toString();
     }
 }
+
 function b6(b, e) {
     var h = b.slice(0),
         i = b.length,
