@@ -144,7 +144,7 @@ function _0x1777e7(_0x407604, _0x4e5d98, _0x37c4b2, _0x3c3a3b, _0x34993d) {
         });
     });
 }
-async function _0xc3cc9e(_0x6d7030) {
+async function getbody(_0x6d7030) {
     let _0x3f4664 = "3.1",
         {
             body: _0x52f4a8,
@@ -153,14 +153,14 @@ async function _0xc3cc9e(_0x6d7030) {
             ver: _0x1b1a70,
             cl: _0x1affd8,
             fn: _0x512e9c,
-            appId: _0x4da009,
+            appId: appId,
             code: _0x4c3bcb,
             apid: _0x2e36af,
             flag: _0x221c64
         } = _0x6d7030;
-    if (!_0x2f4091[_0x4da009] || _0x221c64) {
-        _0x2f4091[_0x4da009] = {};
-        _0x2f4091[_0x4da009].fp = _0x23a6fd(_0x3f4664);
+    if (!_0x2f4091[appId] || _0x221c64) {
+        _0x2f4091[appId] = {};
+        _0x2f4091[appId].fp = _0x23a6fd(_0x3f4664);
     }
     _0x52f4a8 = typeof _0x52f4a8 !== "string" ? JSON.stringify(_0x52f4a8) : _0x52f4a8;
     let _0x451cac = ["wc", "wd", "l", "ls", "ml", "pl", "av", "ua", "sua", "pp", "pp1", "w", "h", "ow", "oh", "url", "og", "pr", "re"],
@@ -173,8 +173,8 @@ async function _0xc3cc9e(_0x6d7030) {
         _0x22b2be[_0x451cac[_0x43eb42]] = _0x283643[_0x43eb42];
     }
     const _0x52e5e5 = {
-        "ai": _0x4da009,
-        "fp": _0x2f4091[_0x4da009].fp
+        "ai": appId,
+        "fp": _0x2f4091[appId].fp
     };
     const _0x2f1bbd = {
         ..._0x22b2be,
@@ -188,16 +188,16 @@ async function _0xc3cc9e(_0x6d7030) {
     }),
         _0x21a817 = _0x354e09.ciphertext.toString(),
         _0x2b0f5a = new Date().getTime();
-    if (!_0x2f4091[_0x4da009].tk || _0x221c64) {
-        let _0x34ec3d = await _0x1777e7(_0x4da009, _0x2f4091[_0x4da009].fp, _0x3a0ee9, _0x21a817, _0x3f4664);
-        _0x2f4091[_0x4da009].tk = _0x34ec3d.tk;
-        _0x2f4091[_0x4da009].algo = _0x34ec3d.algo;
+    if (!_0x2f4091[appId].tk || _0x221c64) {
+        let _0x34ec3d = await _0x1777e7(appId, _0x2f4091[appId].fp, _0x3a0ee9, _0x21a817, _0x3f4664);
+        _0x2f4091[appId].tk = _0x34ec3d.tk;
+        _0x2f4091[appId].algo = _0x34ec3d.algo;
     }
     let _0x403ddc = new Date().getTime(),
         _0x5d4825 = _0x12fe11(_0x403ddc, "yyyyMMddhhmmssSSS"),
-        _0x143c48 = _0x2f4091[_0x4da009].tk,
-        _0x5a4231 = new Function("return " + _0x2f4091[_0x4da009].algo)();
-    let _0x46ef80 = await _0x5a4231(_0x143c48, _0x2f4091[_0x4da009].fp, _0x5d4825, _0x4da009, _0x596d79).toString();
+        _0x143c48 = _0x2f4091[appId].tk,
+        _0x5a4231 = new Function("return " + _0x2f4091[appId].algo)();
+    let _0x46ef80 = await _0x5a4231(_0x143c48, _0x2f4091[appId].fp, _0x5d4825, appId, _0x596d79).toString();
     const _0x1a368b = {
         "appid": _0x2e36af,
         "functionId": _0x512e9c,
@@ -216,7 +216,7 @@ async function _0xc3cc9e(_0x6d7030) {
     let _0x50f284 = {
         "sua": _0x3a0ee9.match(/\(([^\)]+)\)/)[1],
         "pp": {},
-        "fp": _0x2f4091[_0x4da009].fp
+        "fp": _0x2f4091[appId].fp
     };
     _0x50f284.pp.p1 = _0x1acb9c;
     let _0x38e17a = _0x596d79.AES.encrypt(JSON.stringify(_0x50f284, null, 2), _0x596d79.enc.Utf8.parse("wm0!@w_s#ll1flo("), {
@@ -226,7 +226,7 @@ async function _0xc3cc9e(_0x6d7030) {
     });
     _0x32a7f8 = _0x38e17a.ciphertext.toString();
     __dirname.split(/[\\/]/).pop() !== "function" && (_0x5d4825 = _0x5d4825 - 1);
-    let _0x5e25d7 = [_0x5d4825, _0x2f4091[_0x4da009].fp, _0x4da009, _0x143c48, _0x4a6360, _0x3f4664, _0x403ddc, _0x32a7f8].join(";");
+    let _0x5e25d7 = [_0x5d4825, _0x2f4091[appId].fp, appId, _0x143c48, _0x4a6360, _0x3f4664, _0x403ddc, _0x32a7f8].join(";");
     return "functionId=" + _0x512e9c + "&body=" + encodeURIComponent(_0x52f4a8) + "&t=" + _0x2b0f5a + "&appid=" + _0x2e36af + "&client=" + _0x1affd8 + "&clientVersion=" + _0x1b1a70 + "&h5st=" + encodeURIComponent(_0x5e25d7);
 }
 function _0xfd836d(_0x299cc6, _0x6ae723 = () => { }) {
@@ -311,6 +311,6 @@ class _0x1bfc1c {
     }
 }
 const _0x4049e4 = {
-    "getbody": _0xc3cc9e
+    "getbody": getbody
 };
 module.exports = _0x4049e4;
