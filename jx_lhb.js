@@ -243,6 +243,7 @@ async function festivalhb_draw() {
 }
 
 async function festivalhb_help(code) {
+    code=code.split("@");
     let shareId = code[0],itemId = code[1];
     return new Promise(async _0x28bd1f => {
         $.get(await JDtaskUrl("festivalhb_help",{activeId,shareId,itemId}), async (_0x188f90, _0x5e10bd, _0x1cf19f) => {
