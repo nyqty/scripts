@@ -7,6 +7,11 @@ export JoyRun_RedPin="需要兑换红包的pin值"
 export JoyRun_NotRed="不兑换红包的金额"
 cron: 50 16,23 * * *
 new Env('汪汪赛跑-定时兑换红包');
+
+11和我一起跑步赢现金！
+1.打开链接：bgxxrq.com/1-006ef3L 
+2.点击去App按钮跳转或下载，参与活动
+或者￥A1Rci5bppo￥ https:/JVTjj4jq8ZSwRF复制这段话￥A1Rci5bppo￥⇾【Jℹng▴崠特价】
 """
 
 import os

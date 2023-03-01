@@ -7,6 +7,8 @@ export DYJ_NotCash="不提现的金额"
 cron: 50 16,23 * * *
 new Env('赚钱大赢家-定时提现');
 TY在原作者(doubi)基础上删减更改，优化提取
+
+17【赚钱大赢家】海量低价好物  http:/JCFwCHKcjf3l1H复制这段话￥A8tNOCPQkw3B%↦【鯨▻𝓧𝒾特价】
 """
 
 import os
@@ -54,7 +56,7 @@ string2 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
 def get_ep(jduuid : str=''):
     if not jduuid:
         jduuid = ''.join(str(uuid.uuid4()).split('-'))
-    ts = str(getTimestamp())    
+    ts = str(getTimestamp())
     return '{"hdid":"JM9F1ywUPwflvMIpYPok0tt5k9kW4ArJEU3lfLhxBqw=","ts":%s,"ridx":-1,"cipher":{"sv":"CJC=","ad":"ZWOyD2YnDNU0ENC4C2YnEK==","od":"DNS5YwG5DQSnD2YyEQHuDG==","ov":"CzC=","ud":"ZWOyD2YnDNU0ENC4C2YnEK=="},"ciphertype":5,"version":"1.2.0","appname":"com.jd.jdlite"}' % (
         int(ts) - random.randint(100, 1000)), jduuid, ts
 
@@ -77,6 +79,7 @@ class Userinfo:
             return
         #jdltapp;android;4.8.0;;;appBuild/2384;ef/1;ep/%7B%22hdid%22%3A%22JM9F1ywUPwflvMIpYPok0tt5k9kW4ArJEU3lfLhxBqw%3D%22%2C%22ts%22%3A1675835201639%2C%22ridx%22%3A-1%2C%22cipher%22%3A%7B%22sv%22%3A%22CJC%3D%22%2C%22ad%22%3A%22ZWOyD2YnDNU0ENC4C2YnEK%3D%3D%22%2C%22od%22%3A%22DNS5YwG5DQSnD2YyEQHuDG%3D%3D%22%2C%22ov%22%3A%22CzC%3D%22%2C%22ud%22%3A%22ZWOyD2YnDNU0ENC4C2YnEK%3D%3D%22%7D%2C%22ciphertype%22%3A5%2C%22version%22%3A%221.2.0%22%2C%22appname%22%3A%22com.jd.jdlite%22%7D;Mozilla/5.0 (Linux; Android 13; 22081212C Build/TKQ1.220829.002; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/89.0.4389.72 MQQBrowser/6.2 TBS/046129 Mobile Safari/537.36
         self.UA = f'jdltapp;android;4.6.0;;;appBuild/2374;ef/1;ep/{quote(json.dumps(ep))};Mozilla/5.0 (Linux; Android 13; 22081212C Build/TKQ1.220829.002; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/104.0.5112.97 Mobile Safari/537.36'
+        #jdltapp;android;4.9.0;;;appBuild/2394;ef/1;ep/;Mozilla/5.0 (Linux; Android 13; 22081212C Build/TKQ1.220829.002; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/89.0.4389.72 MQQBrowser/6.2 TBS/046141 Mobile Safari/537.36
         self.cookie = cookie
         Userinfo.cookie_obj.append(self)
         self.sha = sha1(str(self.name).encode('utf-8')).hexdigest()
@@ -122,7 +125,7 @@ class Userinfo:
         t=getTimestamp()
         body={"activeId":activeId,"sceneval":2,"buid":325,"appCode":appCode,"time":t,"signStr":""}
         str="functionId=%s&body=%s&uuid=%s&client=%s&clientVersion=%s&st=%s" % ("makemoneyshop_exchangequery", body, base64Encode(self.uuid), "jxh5", "1.2.5", t)
-        body["signStr"]=md5(str.encode(encoding='UTF-8')).hexdigest()
+        body["signStr"]=md5(str.encode(encoding='UTF-8')).hexdigest()#12ce5fc966da1cd10a41bebbca10b38b
         url = f'https://api.m.jd.com/api?functionId=makemoneyshop_exchangequery&appid=jdlt_h5&t={t}&channel=jxh5&cv=1.2.5&clientVersion=1.2.5&client=jxh5&uuid={self.uuid}&cthr=1&loginType=2&body={quote(json.dumps(body))}'
         try:
             res = requests.get(url=url, headers=self.headers,proxies={},timeout=2).text
