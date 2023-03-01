@@ -263,14 +263,6 @@ if(DisableIndex!=-1){
 	EnableJdSpeed=false;	
 }
 
-//京喜牧场
-let EnableJxMC=true;
-DisableIndex= strDisableList.findIndex((item) => item === "京喜牧场");
-if(DisableIndex!=-1){
-	console.log("检测到设定关闭京喜牧场查询");
-	EnableJxMC=false;	
-}
-
 // 京东工厂
 let EnableJDGC=true;
 DisableIndex=strDisableList.findIndex((item) => item === "京东工厂");
@@ -376,7 +368,6 @@ if(DisableIndex!=-1){
 			$.JdwaterD = 0;
 			$.JDwaterEveryDayT = 0;
 			$.JDtotalcash = 0;
-			$.JDEggcnt = 0;
 			$.Jxmctoken = '';
 			$.DdFactoryReceive = '';
 			$.jxFactoryInfo = '';
@@ -493,7 +484,6 @@ if(DisableIndex!=-1){
 			        getJoyBaseInfo(), //汪汪乐园
 			        getJdZZ(), //京东赚赚		        
 			        cash(), //特价金币
-			        jdJxMCinfo(), //京喜牧场
 			        bean(), //京豆查询
 			        getDdFactoryInfo(), // 京东工厂
 			        jdCash(), //领现金
@@ -851,10 +841,6 @@ async function showMsg() {
 	    strsummary += `【当前喜豆】${$.xibeanCount}豆(≈${($.xibeanCount/ 100).toFixed(2)}元)\n`;
 	}
 
-
-	if ($.JDEggcnt) {		
-		ReturnMessage += `【京喜牧场】${$.JDEggcnt}枚鸡蛋\n`;
-	}
 	if ($.JDtotalcash) {
 		ReturnMessage += `【特价金币】${$.JDtotalcash}币(≈${($.JDtotalcash / 10000).toFixed(2)}元)\n`;
 	}
@@ -2223,38 +2209,6 @@ function taskcashUrl(_0x7683x2, _0x7683x3 = {}) {
 		_0x7683xc(_0x7683xd)
 	}
 })({})
-
-async function JxmcGetRequest() {
-	let url = ``;
-	let myRequest = ``;
-	url = `https://m.jingxi.com/jxmc/queryservice/GetHomePageInfo?channel=7&sceneid=1001&activeid=null&activekey=null&isgift=1&isquerypicksite=1&_stk=channel%2Csceneid&_ste=1`;
-	url += `&h5st=${decrypt(Date.now(), '', '', url)}&_=${Date.now() + 2}&sceneval=2&g_login_type=1&callback=jsonpCBK${String.fromCharCode(Math.floor(Math.random() * 26) + "A".charCodeAt(0))}&g_ty=ls`;
-	myRequest = getGetRequest(`GetHomePageInfo`, url);
-
-	return new Promise(async resolve => {
-		$.get(myRequest, (err, resp, data) => {
-			try {
-				if (err) {
-					console.log(`${JSON.stringify(err)}`)
-					console.log(`JxmcGetRequest API请求失败，请检查网路重试`)
-					$.runFlag = false;
-					console.log(`请求失败`)
-				} else {
-					data = JSON.parse(data.match(new RegExp(/jsonpCBK.?\((.*);*/))[1]);
-					if (data.ret === 0) {
-						$.JDEggcnt = data.data.eggcnt;
-					}
-				}
-			} catch (e) {
-				console.log(data);
-				$.logErr(e, resp)
-			}
-			finally {
-				resolve();
-			}
-		})
-	})
-}
 
 // 东东工厂信息查询
 async function getDdFactoryInfo() {
