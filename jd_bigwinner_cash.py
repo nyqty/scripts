@@ -257,7 +257,7 @@ def main():
     
     print("")
     logger.info(f"开始查询提现用户余额信息")
-    tdList = []
+    
     c=len(CashOutList)
     i=0
     for e in CashOutList:
@@ -265,7 +265,6 @@ def main():
         ##if e.getHome()==True:#print('白号')
         time.sleep(1)
         e.Query()
-        tdList.append(threading.Thread(target=e.CashOut, args=()))
         #else:
             #print(f'e.name 出错，跳过提现')
         if i!=c:
@@ -302,6 +301,8 @@ def main():
 
             print("")
             logger.info(f"开始提现")
+            tdList = []
+            for e in CashOutList:tdList.append(threading.Thread(target=e.CashOut, args=()))
             for tdItem in tdList:
                 if loop:
                     try:

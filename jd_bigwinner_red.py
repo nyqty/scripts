@@ -248,7 +248,6 @@ def main():
     
     print("")
     logger.info(f"开始查询用户余额信息")
-    tdList = []
     c=len(RedOutList)
     i=0
     for e in RedOutList:
@@ -256,7 +255,6 @@ def main():
         #if e.getHome()==True:#print('白号')
         time.sleep(1)
         e.Query()
-        tdList.append(threading.Thread(target=e.RedOut, args=()))
         #else:
             #print(f'e.name 出错，跳过提现')
         if i!=c:
@@ -293,6 +291,8 @@ def main():
 
             print("")
             logger.info(f"开始兑换红包")
+            tdList = []
+            for e in RedOutList:tdList.append(threading.Thread(target=e.RedOut, args=()))
             for tdItem in tdList:
                 if loop:
                     try:
