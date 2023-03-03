@@ -61,7 +61,7 @@ let _0x829415 = [];
                 $.isLogin = true;
                 $.nickName = "";
                 get_UA();
-                $.nohelp = false;
+                $.nohelp = $.Hot = false;
                 await islogin();
                 console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
                 if (!$.isLogin) {
@@ -83,7 +83,7 @@ let _0x829415 = [];
                         $.full = false;
                         console.log("去助力 " + code);
                         await festivalhb_help(code);
-                        if ($.nohelp) {
+                        if ( $.nohelp || $.Hot ) {
                             break;
                         }
                         if ($.full) {
@@ -122,6 +122,7 @@ let _0x829415 = [];
                 $.isNode() && (await notify.sendNotify($.name + "cookie已失效 - " + $.UserName, "京东账号" + $.index + " " + $.UserName + "\n请重新登录获取cookie"));
                 continue;
             }
+            $.Hot = false;
             await festivalhb_home();
             $.flag = 0;
             await $.wait(500);
@@ -134,9 +135,10 @@ let _0x829415 = [];
                 console.log("去做 " + task.assignmentName);
                 await festivalhb_browse(task.encryptAssignmentId, task.shoppingActivityList[0].itemId);
                 await $.wait(1000);
+                if( $.Hot ) break;
             }
             console.log("\n开始抽奖...");
-            for (let _0x3ce394 = 0; _0x3ce394 < $.lottery; _0x3ce394++) {
+            for (let u = 0; u < $.lottery; u++) {
                 await festivalhb_draw();
                 await $.wait(1000);
             }
@@ -301,8 +303,10 @@ async function festivalhb_browse(taskId, itemId) {
                     if (_0x20a0a0.code == 0) {
                         console.log("任务完成，" + _0x20a0a0.data.drawChanceNum + "抽奖次数");
                         $.lottery = _0x20a0a0.data.drawChanceNum;
-                    } else {
-                        console.log(_0x20a0a0.msg);
+                    } else if(_0x20a0a0.code == 2000){//活动火爆
+                        $.Hot = true;
+                    }else{
+                        console.log(_0x20a0a0);
                     }
                 }
             } catch (_0x809451) {
@@ -362,30 +366,25 @@ async function festivalhb_help(code) {
                     console.log(" API请求失败，请检查网路重试");
                 } else {
                     _0x1cf19f = JSON.parse(_0x1cf19f);
-                    if (_0x1cf19f.code == 0) {
-                        console.log("助力成功！");
-                    } else {
-                        if (_0x1cf19f.code == 104) {
-                            console.log("已助力过TA");
-                        } else {
-                            if (_0x1cf19f.code == 108) {
-                                console.log("无助力次数");
-                                $.nohelp = true;
-                            } else {
-                                if (_0x1cf19f.code == 103) {
-                                    console.log("助力已满");
-                                    if ($.index > 1) {
-                                        $.full = true;
-                                    }
-                                } else {
-                                    if (_0x1cf19f.code == -120) {
-                                        console.log("不能助力自己");
-                                    } else {
-                                        console.log(_0x1cf19f.msg);
-                                    }
-                                }
-                            }
-                        }
+                    console.log(_0x1cf19f.msg);
+                    switch(_0x1cf19f.code){
+                        case 0:
+                            //console.log("助力成功！");
+                        break;
+                        case 103://"助力已满"
+                            if ($.index > 1) $.full = true;
+                        break;
+                        case 104:break;//已助力过TA
+                        case 108:
+                            console.log("无助力次数");
+                            $.nohelp = true;
+                        break;
+                        case -120:break;//不能助力自己
+                        case -130://活动火爆，请稍后尝试
+                            $.Hot = true;
+                        break;
+                        default:
+                            console.log(_0x1cf19f);
                     }
                 }
             } catch (_0x5530e4) {
