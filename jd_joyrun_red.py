@@ -257,7 +257,6 @@ def main():
         i+=1
         time.sleep(1)
         e.runningMyPrize()
-        tdList.append(threading.Thread(target=e.RedOut, args=()))
         if i!=c:
             if c>2:
                 logger.info(f"等待5秒查询下一个")
