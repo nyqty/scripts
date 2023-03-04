@@ -180,7 +180,7 @@ function createUA(app="jd",os="android") {
         app="jdapp";
     }else{
         app="jdpingou";
-        var session=mt_rand(51,99);//53
+        var session=mt_rand(10,99);//53
     }
     //22081212C Build/TKQ1.220829.002
     if( os=="android" ){
@@ -371,7 +371,7 @@ async function festivalhb_help(code) {
                         case 0:
                             //console.log("助力成功！");
                         break;
-                        case 103://"助力已满"
+                        case 103://"助力已满" 今日领好友红包个数已达上限
                             if ($.index > 1) $.full = true;
                         break;
                         case 104:break;//已助力过TA
