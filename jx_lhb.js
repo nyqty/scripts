@@ -113,6 +113,7 @@ process.env.JX_LHB_CODE && (process.env.JX_LHB_CODE.indexOf("&") > -1 ? JX_LHB_C
             $.flag = 1;
             let data = await jx_get("festivalhb_home", { activeId })
             if (data.code == 0) {
+                data = data.data;
                 $.lottery = data.drawChanceNum;
                 $.tasklist = data.browseTaskList;
                 $.cash = data.totalCoinAmount;
@@ -142,7 +143,7 @@ process.env.JX_LHB_CODE && (process.env.JX_LHB_CODE.indexOf("&") > -1 ? JX_LHB_C
                 }
                 await $.wait(1000);
             }
-            console.log("\n开始抽奖...");
+            if($.lottery) console.log("\n开始抽奖...");
             for (let u = 0; u < $.lottery; u++) {
                 data = await jx_get("festivalhb_draw", { activeId });
                 if (data.code == 0) {
