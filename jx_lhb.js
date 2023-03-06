@@ -57,6 +57,7 @@ process.env.JX_LHB_CODE && (process.env.JX_LHB_CODE.indexOf("&") > -1 ? JX_LHB_C
         JX_LHB_CODE = [...new Set([...JX_LHB_CODE, ...authorCodeList])];
         console.log("多余助力会助力TY");
         console.log("\n开始助力...");
+        console.log(JX_LHB_CODE);
         let Start = 0;
         for (let SC of JX_LHB_CODE) {
             if (SC == undefined) continue;
