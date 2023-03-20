@@ -38,13 +38,14 @@ h5st_appid = 'd06f1'
 appCode = 'ms2362fc9e'
 activeId = '63526d8f5fe613a6adb48f03'
 not_tx=[]
+
 cashExchangeRuleList=[
-    {'id': '1848d61655f979f8eac0dd36235586ba', 'name': '0.3元现金', 'exchangeStatus': 1, 'cashoutAmount': '0.3'},
-    {'id': 'dac84c6bf0ed0ea9da2eca4694948440', 'name': '1元现金', 'exchangeStatus': 1, 'cashoutAmount': '1'},
-    {'id': '53515f286c491d66de3e01f64e3810b2', 'name': '现金奖励3元', 'exchangeStatus': 1, 'cashoutAmount': '3'},
-    {'id': 'da3fc8218d2d1386d3b25242e563acb8', 'name': '8元现金', 'exchangeStatus': 1, 'cashoutAmount': '8'},
-    {'id': '7ea791839f7fe3168150396e51e30917', 'name': '20元现金', 'exchangeStatus': 1, 'cashoutAmount': '20'},
-    {'id': '02b48428177a44a4110034497668f808', 'name': '100元现金', 'exchangeStatus': 1, 'cashoutAmount': '100'}
+    {"id":"1848d61655f979f8eac0dd36235586ba","name":"0.3元现金","exchangeStatus":1,"consumeScore":"0.30","cashoutAmount":"0.3"},
+    {"id":"dac84c6bf0ed0ea9da2eca4694948440","name":"1元现金","exchangeStatus":1,"consumeScore":"1.00","cashoutAmount":"1"},
+    {"id":"53515f286c491d66de3e01f64e3810b2","name":"现金奖励3元","exchangeStatus":1,"consumeScore":"3.00","cashoutAmount":"3"},
+    {"id":"da3fc8218d2d1386d3b25242e563acb8","name":"8元现金","exchangeStatus":1,"consumeScore":"8.00","cashoutAmount":"8"},
+    {"id":"7ea791839f7fe3168150396e51e30917","name":"20元现金","exchangeStatus":1,"consumeScore":"20.00","cashoutAmount":"20"},
+    {"id":"02b48428177a44a4110034497668f808","name":"100元现金","exchangeStatus":1,"consumeScore":"100.00","cashoutAmount":"100"}
 ]
 
 def getTimestamp():
@@ -104,9 +105,12 @@ class Userinfo:
         #print(self.name)
 
     def getHome(self):
-        body={"activeId":activeId,"isFirst":1,"operType":1}
-        h5st="20221202224421183%3B5zi6yg6hy6dijtc6%3B638ee%3Btk02waef91cf118n77Hw3bHueBsVVy52Wbcx9h4HMPM7fpi9ntRoot7vaa118bRqqEnduYVLqW8kyzHpNsDp5PtrZ8tJ%3B8e13afd153316da1c4878705d9e1f17b27db283c%3B400%3B1669992261183%3Bf28308408a6bad45ead939c02e9cf1e489ad7a120db68c73bdee607bdb6db9daaf6fd9e2d4b87320f4ec869d11fb7fa97ea7bffc29059dfb373214547287d0a2f8d2de03200d84c4776d0464313a08e3488339db94ee9194cfb8237a7678d9020d0c6d9df83ea6c18193626f396ff6f9d41ff0a831b19868640ee15d264ac55bdd144f2a8323f8168cb761f298ab19b00bc20f917401a5f65df079011591dba83f9ee65e3fc211cbadb9211443680603";
-        url = f'https://api.m.jd.com/api?g_ty=h5&g_tk=&appCode={appCode}&body={quote(json.dumps(body))}&appid=jdlt_h5&client=jxh5&functionId=makemoneyshop_home&clientVersion=1.2.5&h5st={h5st}&loginType=2&sceneval=2'
+        #t=getTimestamp()
+        t=1679328409259
+        body={"activeId":activeId,"isFirst":0,"visitChannel":1,"sceneval":2,"buid":325,"appCode":appCode,"time":t,"signStr":"5368dcae5888b1c3c10c294d5ecabca5"}
+        uuid='7032320889511194760'
+        h5st="20230321000649319%3B3511412639154514%3B638ee%3Btk02wbf501c7118nt4Hq7vwKnYIfe4Wrxq2Ydk4aaFh9sC2XfUT%2BovBV8dYmLXz9ki%2FM%2BfkTiiDlQXrCQyHZeP%2BcLKKX%3Bd3633724d9fa6787469f6a99745086a388f1d7cf9611604f308340355b48f6fb%3B3.1%3B1679328409319%3B62f4d401ae05799f14989d31956d3c5fe48e6438a35ea5b8b8d12ecf8c7f7c07712a08d6f8fe670c8b04cdb873be6623efd95a79a8f1d6b344a8e15f4961df8e5186840e5cddf6049f64b4d68b150fb9fc05a42a62f933d59c3e351607c9397b06cc1824c6ff68e816fe7dbc493d6c097c7c8a08666819ebf484a183c2d28eac5b142ffc3cc63e5860c804d2263874af";
+        url = f'https://api.m.jd.com/api?functionId=makemoneyshop_home&appid=jdlt_h5&t={t}&channel=jxh5&cv=1.2.5&clientVersion=1.2.5&client=jxh5&uuid={uuid}&cthr=1&loginType=2&body={quote(json.dumps(body))}&h5st={h5st}'
         try:
             res = requests.get(url=url, headers=self.headers,proxies={},timeout=2).text
             try:
@@ -122,10 +126,10 @@ class Userinfo:
         return False
 
     def Query(self):
-        t=getTimestamp()
-        body={"activeId":activeId,"sceneval":2,"buid":325,"appCode":appCode,"time":t,"signStr":""}
+        t=1679328416233#getTimestamp()
+        body={"activeId":activeId,"visitChannel":1,"sceneval":2,"buid":325,"buid":325,"appCode":appCode,"time":t,"signStr":"9151d15cddda6eb8256f7b06c112981d"}
         str="functionId=%s&body=%s&uuid=%s&client=%s&clientVersion=%s&st=%s" % ("makemoneyshop_exchangequery", body, base64Encode(self.uuid), "jxh5", "1.2.5", t)
-        body["signStr"]=md5(str.encode(encoding='UTF-8')).hexdigest()#12ce5fc966da1cd10a41bebbca10b38b
+        body["signStr"]=md5(str.encode(encoding='UTF-8')).hexdigest()
         url = f'https://api.m.jd.com/api?functionId=makemoneyshop_exchangequery&appid=jdlt_h5&t={t}&channel=jxh5&cv=1.2.5&clientVersion=1.2.5&client=jxh5&uuid={self.uuid}&cthr=1&loginType=2&body={quote(json.dumps(body))}'
         try:
             res = requests.get(url=url, headers=self.headers,proxies={},timeout=2).text
@@ -164,10 +168,12 @@ class Userinfo:
                     if self.canUseCoinAmount >= float(data['cashoutAmount']) or self.stockPersonDayLimit==-1:
                         if float(data['cashoutAmount']) not in not_tx:
                             logger.info(f"当前余额[{self.canUseCoinAmount}]元,开始尝试提现[{data['cashoutAmount']}]")
-                            #self.headers["Host"]="wq.jd.com"
-                            #url = f'https://wq.jd.com/prmt_exchange/client/exchange?g_ty=h5&g_tk=&appCode={appCode}&bizCode=makemoneyshop&ruleId={data["id"]}&sceneval=2'
-                            body={"bizCode":"makemoneyshop","ruleId":data["id"],"sceneval":2,"buid":325,"appCode":appCode,"time":getTimestamp(),"signStr":""}
-                            url = f'https://api.m.jd.com/api?functionId=jxPrmtExchange_exchange&appid=cs_h5&body={quote(json.dumps(body))}'
+                            #t=getTimestamp()
+                            t=1679328422807 
+                            body={"bizCode":"makemoneyshop","ruleId":data["id"],"sceneval":2,"buid":325,"appCode":appCode,"time":t,"signStr":"903c5e28adcc30560599ccceab907032"}
+                            uuid='7032320889511194760'
+                            h5st="20230321000702826%3B3797038254680199%3Baf89e%3Btk02wbc7a1cad18nzXQXZGGNXM14rgpDvRlpx2ddPVtN88zNSDqPdUxzOASV2WLNtY%2BwBxrFIHc%2BexpCelj7iXwwP93S%3B2d222391ad9191e63567b5feb78c33ba904aa6db57d2e8bfe71415d4c68d0fc6%3B3.1%3B1679328422826%3B62f4d401ae05799f14989d31956d3c5fe48e6438a35ea5b8b8d12ecf8c7f7c07712a08d6f8fe670c8b04cdb873be6623efd95a79a8f1d6b344a8e15f4961df8e5186840e5cddf6049f64b4d68b150fb9fc05a42a62f933d59c3e351607c9397b06cc1824c6ff68e816fe7dbc493d6c09fa21d89a82bb85bba4c0e603160863f36267521224f45dafb1ac6516203fbaaf";
+                            url = f'https://api.m.jd.com/api?functionId=jxPrmtExchange_exchange&appid=cs_h5&t={t}&channel=jxh5&cv=1.2.5&clientVersion=1.2.5&client=jxh5&uuid={uuid}&cthr=1&loginType=2&body={quote(json.dumps(body))}&h5st={h5st}'                            
                             proxies={}
                             try:
                                 if get:time.sleep(0.5)
