@@ -3,7 +3,7 @@
 #自定义邀请码环境变量
 export actId="" ##你要参加砍价的商品ID
 export packetId="" ##你要参加砍价的邀请码
-活动地址：https://mfn.jd.com/ 京东极速版
+活动地址：https://mfn.jd.com/ 京喜特价
 [task_local]
 #砍价免费拿
  1 1 1 1 * jd_mfn.js, tag=砍价免费拿, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
@@ -31,7 +31,7 @@ if (process.env.packetId) {
 if ($.isNode()) {
   console.log('export actId="" ##你要参加砍价的商品ID')
   console.log('export packetId="" ##你要参加砍价的邀请码')
-  console.log('活动地址：https://mfn.jd.com/ 京东极速版')
+  console.log('活动地址：https://mfn.jd.com/ 京喜特价')
   Object.keys(jdCookieNode).forEach((item) => {
     cookiesArr.push(jdCookieNode[item])
   })

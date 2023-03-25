@@ -445,7 +445,7 @@ async function sendNotify(text, desp, params = {}, author = '\n\n本通知 By ht
             var strPtPin = await GetPtPin(text);
             var strdecPtPin = decodeURIComponent(strPtPin);
             if (strPtPin) {
-                await sendNotifybyWxPucher("汪汪乐园领取通知", `【京东账号】${strdecPtPin}\n当前等级: 30\n已自动领取最高等级奖励\n请前往京东极速版APP查看使用优惠券\n活动入口：京东极速版APP->我的->优惠券->京券`, strdecPtPin);
+                await sendNotifybyWxPucher("汪汪乐园领取通知", `【京东账号】${strdecPtPin}\n当前等级: 30\n已自动领取最高等级奖励\n请前往京喜特价APP查看使用优惠券\n活动入口：京喜特价APP->我的->优惠券->京券`, strdecPtPin);
             }
         }
 

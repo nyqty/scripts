@@ -1,9 +1,9 @@
 /*
-  入口>京东极速版>首页>签到免单
-  京东极速版,先下单,第二天开始签到
+  入口>京喜特价>首页>签到免单
+  京喜特价,先下单,第二天开始签到
   18 8,20 * * * jd_speed_signfree.js 签到免单
 */
-const $ = new Env('京东极速版签到免单');
+const $ = new Env('京喜特价签到免单');
 const notify = $.isNode() ? require('./sendNotify') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
@@ -16,8 +16,8 @@ let cookiesArr = [],
 const activityId = 'PiuLvM8vamONsWzC0wqBGQ'
 
 if ($.isNode()) {
-	console.log('\n入口>京东极速版>首页>签到免单')
-	console.log('京东极速版,先下单,第二天开始签到')
+	console.log('\n入口>京喜特价>首页>签到免单')
+	console.log('京喜特价,先下单,第二天开始签到')
 	console.log('请自行测试是否有效！！！')
     Object.keys(jdCookieNode).forEach((item) => {
         cookiesArr.push(jdCookieNode[item])
@@ -95,8 +95,8 @@ function query() {
                     $.signFreeOrderInfoList = data?.data?.signFreeOrderInfoList
                     if (data?.success == true) {
                         if (!$.signFreeOrderInfoList) {
-                            console.log("没有需要签到的商品,请到京东极速版[签到免单]购买商品");
-                            //msg.push("没有需要签到的商品,请到京东极速版[签到免单]购买商品")
+                            console.log("没有需要签到的商品,请到京喜特价[签到免单]购买商品");
+                            //msg.push("没有需要签到的商品,请到京喜特价[签到免单]购买商品")
                         } else {
                             $.signFreeOrderInfoList = data.data.signFreeOrderInfoList
                             if (first_flag) {

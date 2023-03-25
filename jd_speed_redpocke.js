@@ -1,29 +1,29 @@
 /*
-京东极速版红包
+京喜特价红包
 自动提现微信现金
 更新时间：2023-1-1
 活动地址：https://prodev.m.jd.com/jdlite/active/31U4T6S4PbcK83HyLPioeCWrD63j/index.html
-活动入口：京东极速版-领红包
+活动入口：京喜特价-领红包
 已支持IOS双京东账号,Node.js支持N个京东账号
 脚本兼容: QuantumultX, Surge, Loon, JSBox, Node.js
 ============Quantumultx===============
 [task_local]
-#京东极速版红包
-20 0,22 * * * jd_speed_redpocke.js, tag=京东极速版红包, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
+#京喜特价红包
+20 0,22 * * * jd_speed_redpocke.js, tag=京喜特价红包, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
 
 ================Loon==============
 [Script]
-cron "20 0,22 * * *" script-path=jd_speed_redpocke.js,tag=京东极速版红包
+cron "20 0,22 * * *" script-path=jd_speed_redpocke.js,tag=京喜特价红包
 
 ===============Surge=================
-京东极速版红包 = type=cron,cronexp="20 0,22 * * *",wake-system=1,timeout=3600,script-path=jd_speed_redpocke.js
+京喜特价红包 = type=cron,cronexp="20 0,22 * * *",wake-system=1,timeout=3600,script-path=jd_speed_redpocke.js
 
 ============小火箭=========
-京东极速版红包 = type=cron,script-path=jd_speed_redpocke.js, cronexpr="20 0,22 * * *", timeout=3600, enable=true
+京喜特价红包 = type=cron,script-path=jd_speed_redpocke.js, cronexpr="20 0,22 * * *", timeout=3600, enable=true
 jd_tj_sign.js
 */
 const Env=require('./utils/Env.js');
-const $ = new Env('京东极速版红包');
+const $ = new Env('京喜特价红包');
 const notify = $.isNode() ? require('./sendNotify') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';

@@ -97,7 +97,7 @@ async function _0x5cd243(_0x148299 = false) {
         let _0x3b14a9 = await _0x53107b("joyBaseInfo", "{\"taskId\":\"\",\"inviteType\":\"\",\"inviterPin\":\"\",\"linkId\":\"99DZNpaCTAv8f4TuKXr0Ew\"}", "4abce");
         $.post(_0x3b14a9, async (_0x1523e1, _0x4a4c1e, _0x4961a4) => {
             try {
-                _0x1523e1 ? (console.log("" + JSON.stringify(_0x1523e1)), console.log("getJoyBaseInfo API请求失败，请检查网路重试")) : (_0x4961a4 = JSON.parse(_0x4961a4), _0x4961a4.success ? _0x148299 && ($.log("等级:" + _0x4961a4.data.level + "|金币:" + _0x1d0cce(_0x4961a4.data.joyCoin)), _0x4961a4.data.level >= 30 && $.isNode() && (await _0x2b5a63.sendNotify($.name + " - 账号" + $.index + " - " + $.nickName, "【京东账号" + $.index + "】" + ($.nickName || $.UserName) + "\n当前等级: " + _0x4961a4.data.level + "\n已达最高30级\n请到京东极速版APP提现6.66\n提现入口：我的->汪汪乐园->点左上角等级"), $.log("\n开始解锁新场景...\n"))) : $.log(_0x4961a4.errMsg), $.joyBaseInfo = _0x4961a4.data);
+                _0x1523e1 ? (console.log("" + JSON.stringify(_0x1523e1)), console.log("getJoyBaseInfo API请求失败，请检查网路重试")) : (_0x4961a4 = JSON.parse(_0x4961a4), _0x4961a4.success ? _0x148299 && ($.log("等级:" + _0x4961a4.data.level + "|金币:" + _0x1d0cce(_0x4961a4.data.joyCoin)), _0x4961a4.data.level >= 30 && $.isNode() && (await _0x2b5a63.sendNotify($.name + " - 账号" + $.index + " - " + $.nickName, "【京东账号" + $.index + "】" + ($.nickName || $.UserName) + "\n当前等级: " + _0x4961a4.data.level + "\n已达最高30级\n请到京喜特价APP提现6.66\n提现入口：我的->汪汪乐园->点左上角等级"), $.log("\n开始解锁新场景...\n"))) : $.log(_0x4961a4.errMsg), $.joyBaseInfo = _0x4961a4.data);
             } catch (_0x271d85) {
                 $.logErr(_0x271d85, _0x4a4c1e);
             } finally {
@@ -123,7 +123,7 @@ function _0x38be2a(_0x3733b2 = false) {
                             for (let _0x39cf40 = 0; _0x39cf40 < _0x491e09.data.activityJoyList.length; _0x39cf40++) {
                                 $.log("id:" + _0x491e09.data.activityJoyList[_0x39cf40].id + "|name: " + _0x491e09.data.activityJoyList[_0x39cf40].name + "|level: " + _0x491e09.data.activityJoyList[_0x39cf40].level);
                                 if (_0x491e09.data.activityJoyList[_0x39cf40].level >= 30 && $.isNode()) {
-                                    await _0x2b5a63.sendNotify($.name + " - 账号" + $.index + " - " + $.nickName, "【京东账号" + $.index + "】" + ($.nickName || $.UserName) + "\n当前等级: " + _0x491e09.data.level + "\n已达到单次最高等级奖励\n请尽快前往活动查看领取\n活动入口：京东极速版APP->汪汪乐园\n");
+                                    await _0x2b5a63.sendNotify($.name + " - 账号" + $.index + " - " + $.nickName, "【京东账号" + $.index + "】" + ($.nickName || $.UserName) + "\n当前等级: " + _0x491e09.data.level + "\n已达到单次最高等级奖励\n请尽快前往活动查看领取\n活动入口：京喜特价APP->汪汪乐园\n");
                                 }
                             }
                             $.log("\n在铲土的JOY ⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️");
