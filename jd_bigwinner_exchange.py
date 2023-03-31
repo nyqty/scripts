@@ -337,7 +337,7 @@ def main():
         if len(a)>1 and not a[1]:PinObj[pin]["cash"]=a[1].split(',')
         if len(a)>2 and not a[2]:PinObj[pin]["red"]=a[2].split(',')
 
-    print(PinObj)
+    #print(PinObj)
     global NotCash,NotRed
     NotCash = os.environ.get('DYJ_NotCash', "")
     if NotCash == "":
