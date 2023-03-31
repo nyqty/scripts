@@ -181,7 +181,10 @@ class Userinfo:
             while i>0:#for data in cashExchangeRuleList[::-1]:#倒序
                 i-=1
                 data=cashExchangeRuleList[i]
-                if data['exchangeStatus']==1:
+                if self.stockPersonDayUsed>=self.stockPersonDayLimit and self.stockPersonDayLimit!=-1:
+                    logger.info(f"当前兑换次数已经达到上限[{self.stockPersonDayLimit}]次")
+                    break
+                elif data['exchangeStatus']==1:
                     if self.canUseCoinAmount >= float(data['cashoutAmount']) or self.stockPersonDayLimit==-1:
                         if float(data['cashoutAmount']) not in NowNotCash:
                             logger.info(f"当前余额[{self.canUseCoinAmount}]元,开始尝试提现[{data['cashoutAmount']}]")
