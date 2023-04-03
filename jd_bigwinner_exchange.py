@@ -196,9 +196,13 @@ class Userinfo:
                             url = f'https://api.m.jd.com/api?functionId=jxPrmtExchange_exchange&appid=cs_h5&t={t}&channel=jxh5&cv=1.2.5&clientVersion=1.2.5&client=jxh5&uuid={uuid}&cthr=1&loginType=2&body={quote(json.dumps(body))}&h5st={h5st}'                            
                             proxies={}
                             try:
-                                if get:time.sleep(0.5)
+                                if get:time.sleep(0.2)
                                 else:get=True
                                 res = requests.get(url=url, headers=self.headers,proxies=proxies,timeout=2)
+                                if res.status_code==403:
+                                    logger.info(f"{self.name}提现{data['cashoutAmount']}失败触发403，等待0.2s后将重试。")
+                                    i+=1
+                                    continue
                                 try:
                                     exchange = json.loads(res.text)
                                     if exchange['ret'] == 0:
@@ -214,7 +218,7 @@ class Userinfo:
                                         logger.info(f"{self.name}提现{data['cashoutAmount']}失败:{exchange['msg']}")
                                         logger.info(f"等待1s，后将重试。")
                                         i+=1
-                                        time.sleep(0.5)
+                                        time.sleep(0.8)
                                     elif int(exchange['ret']) in [246,604]:#达到个人日兑换上限|已有提现进行中，等待完成
                                         logger.info(f"{self.name}提现{data['cashoutAmount']}失败:{exchange['msg']}")
                                         break
@@ -268,13 +272,18 @@ class Userinfo:
                             url = f'https://api.m.jd.com/api?functionId=jxPrmtExchange_exchange&appid=cs_h5&t={t}&channel=jxh5&cv=1.2.5&clientVersion=1.2.5&client=jxh5&uuid={uuid}&cthr=1&loginType=2&body={quote(json.dumps(body))}&h5st={h5st}'                            
                             proxies={}
                             try:
-                                if get:time.sleep(0.5)
+                                if get:time.sleep(0.2)
                                 else:get=True
                                 res = requests.get(url=url, headers=self.headers,proxies=proxies,timeout=2)
+                                if res.status_code==403:
+                                    logger.info(f"{self.name}提现{data['cashoutAmount']}失败触发403，等待0.2s后将重试。")
+                                    i+=1
+                                    continue
                                 try:
                                     exchange = json.loads(res.text)
                                     if exchange['ret'] == 0:
-                                        logger.info(f"{self.name}兑换{data['cashoutAmount']}红包成功")
+                                        logger.info(f"{self.name}兑换{data['cashoutAmount']}红包成功，将再次尝试兑换。")
+                                        i+=1
                                         self.stockPersonDayUsed+=1
                                         #break
                                     elif exchange['ret'] == 223:#积分不足
@@ -286,7 +295,7 @@ class Userinfo:
                                         logger.info(f"{self.name}兑换{data['cashoutAmount']}红包失败:{exchange['msg']}")
                                         logger.info(f"等待1s，后将重试。")
                                         i+=1
-                                        time.sleep(0.5)
+                                        time.sleep(0.8)
                                     elif int(exchange['ret']) in [246,604]:#达到个人日兑换上限|已有提现进行中，等待完成
                                         logger.info(f"{self.name}兑换{data['cashoutAmount']}红包失败:{exchange['msg']}")
                                         break
