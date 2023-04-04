@@ -37,6 +37,7 @@ logging.basicConfig(
 )
 logger = logging.getLogger(activity_name)
 index = 0
+retry=2
 h5st_appid = 'd06f1'
 appCode = 'ms2362fc9e'
 activeId = '63526d8f5fe613a6adb48f03'
@@ -244,7 +245,7 @@ class Userinfo:
                 else:logger.info(f"{self.name}未知状态：{data}")
 
     def RedOut(self):
-        global loop2,NotRed,hbExchangeRuleList
+        global loop2,NotRed,hbExchangeRuleList,retry
         print("")
         NowNotRed=list(set(NotRed+self.Not["red"]))
         logger.info(f"{self.name}兑换红包")
@@ -254,6 +255,7 @@ class Userinfo:
             get=False
             i=len(hbExchangeRuleList)
             #for data in cashExchangeRuleList[::-1]:#倒序
+            error=0
             while i>0:
                 i-=1
                 data=hbExchangeRuleList[i]
@@ -276,8 +278,12 @@ class Userinfo:
                                 else:get=True
                                 res = requests.get(url=url, headers=self.headers,proxies=proxies,timeout=2)
                                 if res.status_code==403:
-                                    logger.info(f"{self.name}提现{data['cashoutAmount']}失败触发403，等待0.2s后将重试。")
-                                    i+=1
+                                    logger.info(f"{self.name}提现{data['cashoutAmount']}失败触发403")
+                                    error+=1
+                                    if retry>error:
+                                        i+=1
+                                        logger.info(f"等待0.2s后将重试。")
+                                    else:error=0
                                     continue
                                 try:
                                     exchange = json.loads(res.text)
