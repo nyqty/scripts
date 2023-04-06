@@ -6,10 +6,10 @@ pip install pycryptodome
 调用方法：
 from utils.h5st31 import h5st31
 new_h5st31=h5st31({
-    'appId':'af89e',
-    "apid": "jxh5",
-    "ver": "1.2.5",
-    "cl": "android",
+    'appId':'af89e',#h5st里面的appId
+    "appid": "jxh5",
+    "clientVersion": "1.2.5",
+    "client": "android",
     "pin": "pin",
     "ua":"UA"
 })
@@ -86,26 +86,37 @@ def get_sign(algo, data, key):
 
 class h5st31:
     def __init__(self,opt):
-        #{body,ua,pin,ver,cl,fn,appId,apid,code,flag} = opt
+        #{body,ua,pin,clientVersion,client,fn,appId,appid,code,flag} = opt
         self.valid=True
-        list1="ua,pin,ver,cl,appId,apid".split(",")
+        list1="ua,pin,clientVersion,client,appId,appid".split(",")
         for k in list1:
             if k in opt:
-                self[k]=opt[opt]
+                1
+                #self[k]=opt[k]
             else:
                 print(k+"未定义！")
                 self.valid=False
                 return False
             
+        self.appid=opt["appid"]
+        self.appId=opt["appId"]#h5st里面的appId
+        self.client=opt["client"]
+        self.clientVersion=opt["clientVersion"]
+        self.pin=opt["pin"]
+        self.ua=opt["ua"]
         self.version="3.1"
+        self.tk=""
         if "fp" in opt:
             self.fp=opt["fp"]
         else:
             self.fp=self.generateFp()
 
-        self.sua=re.findall(r'\(([^)]+)\)', self.ua)[1]
+        digestmod = re.findall(r'\(([^)]+)\)', self.ua)
+        #print(digestmod)
+        if len(digestmod) > 0:
+            self.sua=digestmod[0]
             
-    def generateFp(self,version="3.1"):
+    def generateFp(self):
         remove = ""
         charset = "0123456789"
         rd = random.randint(0,9)
@@ -116,7 +127,7 @@ class h5st31:
         for ch in remove:
             charset = charset.replace(ch, "")
         s2 = randomString(rd,charset) + remove + randomString(12 - rd,charset) + str(rd)
-        if version == "3.1":
+        if self.version == "3.1":
             s2s = list(s2)
             s2=""
             while len(s2s):s2+=str(9 - int(s2s.pop()))
@@ -172,7 +183,7 @@ class h5st31:
     
     def geth5st(self,functionId,body,code=True):
         t1 = getTimestamp()
-        if "tk" in self and len(self.tk)>1:
+        if len(self.tk)>1:
             #print("获取Algo")
             hq=self.genAlgo()
             if hq==False:
@@ -180,11 +191,11 @@ class h5st31:
         
         if isinstance(body,dict):body=json.dumps(body)#判断body数据类型是否为dict 是就转化为json
         Data = {
-            "appid":self.apid,
+            "appid":self.appid,
             "functionId": functionId,
             "body": body,
-            "clientVersion": self.ver,
-            "client": self.cl,
+            "clientVersion": self.clientVersion,
+            "client": self.client,
             "t":""
         }
         if code:Data["t"] = t1
@@ -218,6 +229,6 @@ class h5st31:
     def getbody(self,functionId,body,code=True):
         ok,h5st,t1,body=self.geth5st(functionId,body,code)
         if ok:
-            return "functionId=" + functionId + "&body=" + quote(body) + "&t=" + str(t1) + "&appid=" + self.apid + "&client=" + self.cl + "&clientVersion=" + self.ver + "&h5st=" + quote(h5st)
+            return "functionId=" + functionId + "&body=" + quote(body) + "&t=" + str(t1) + "&appid=" + self.appid + "&client=" + self.client + "&clientVersion=" + self.clientVersion + "&h5st=" + quote(h5st)
         else:
             return False

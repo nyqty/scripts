@@ -28,7 +28,6 @@ from hashlib import sha1,md5
 import base64
 from urllib.parse import quote_plus, unquote_plus, quote
 import threading
-
 from utils.h5st31 import h5st31
 
 activity_name = "京喜特价-赚钱大赢家-定时兑换"
@@ -119,12 +118,11 @@ class Userinfo:
         self.stockPersonDayUsed=0
         self.canUseCoinAmount=0
         self.valid=True
-
         self.h5st31=h5st31({
             'appId':'af89e',
-            "apid": "jxh5",
-            "ver": "1.2.5",
-            "cl": "android",
+            "appid": "cs_h5",
+            "clientVersion": "1.2.5",
+            "client": "jxh5",
             "pin": self.name,
             "ua":self.UA
         })
@@ -181,11 +179,11 @@ class Userinfo:
         return []
     
     def jxPrmtExchange_exchange(self,ruleId):
-        global H5ST_OPT
         t=getTimestamp()#t=1679328422807 
         body={"bizCode":"makemoneyshop","ruleId":ruleId,"sceneval":2,"buid":325,"appCode":appCode,"time":t,"signStr":"903c5e28adcc30560599ccceab907032"}
-        #functionId=makemoneyshop_exchangequery&appid=jdlt_h5&t={t}&channel=jxh5&cv=1.2.5&clientVersion=1.2.5&client=jxh5&uuid={self.uuid}&cthr=1&loginType=2&body={quote(json.dumps(body))}
-        return 'https://api.m.jd.com/api?'+self.h5st31.geth5st("jxPrmtExchange_exchange",body,True)+f'&channel=jxh5&cv=1.2.5&uuid={self.uuid}&cthr=1&loginType=2'
+        #get=f'functionId=jxPrmtExchange_exchange&appid=jdlt_h5&t={t}&clientVersion=1.2.5&client=jxh5&body={quote(json.dumps(body))}'
+        get=self.h5st31.getbody("jxPrmtExchange_exchange",body,True)
+        return f'https://api.m.jd.com/api?{get}&channel=jxh5&cv=1.2.5&uuid={self.uuid}&cthr=1&loginType=2'
 
     def CashOut(self):
         global loop1,NotCash,cashExchangeRuleList
@@ -209,6 +207,7 @@ class Userinfo:
                         if float(data['cashoutAmount']) not in NowNotCash:
                             logger.info(f"当前余额[{self.canUseCoinAmount}]元,开始尝试提现[{data['cashoutAmount']}]")
                             url = self.jxPrmtExchange_exchange(data["id"])
+                            print(url)
                             proxies={}
                             try:
                                 if get:time.sleep(0.2)
@@ -241,7 +240,7 @@ class Userinfo:
                                         logger.info(f"{self.name}提现{data['cashoutAmount']}失败{exchange['ret']}:{exchange['msg']}")
                                 except Exception as e:
                                     logger.info(f"{self.name}提现{data['cashoutAmount']}失败解析异常：{str(e)}")
-                                    print(res)
+                                    print(res.text)
                             except Exception as e:
                                 logger.info(f"{self.name}提现{data['cashoutAmount']}失败:超过2s请求超时...")
                                 get=False
@@ -417,6 +416,7 @@ def main():
         ##if e.getHome()==True:#print('白号')
         time.sleep(1)
         e.Query()
+        #e.CashOut()
         #else:
             #print(f'e.name 出错，跳过提现')
         if i!=c:
@@ -465,6 +465,7 @@ def main():
                         logger.info(f"{e.name}设置不兑换红包")
                     else:tdList2.append(threading.Thread(target=e.RedOut, args=()))
 
+            
             for tdItem in tdList1:
                 if loop1:
                     try:
