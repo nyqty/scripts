@@ -29,6 +29,9 @@ import base64
 from urllib.parse import quote_plus, unquote_plus, quote
 import threading
 
+
+from utils.h5st31 import getbody
+
 activity_name = "京喜特价-赚钱大赢家-定时兑换"
 logging.basicConfig(
     level=logging.INFO,

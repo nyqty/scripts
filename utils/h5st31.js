@@ -1,13 +1,21 @@
-const axios = require('axios'),
-CryptoJS = require('crypto-js'),
-Env=require('./utils/Env.js');
+/*
+by、TY
+调用方法：
+*/
+const CryptoJS = require("crypto-js");
+const got = require("got");
+var appIdAlgo = {};
 
-const $ = new Env('H5ST3.1');
+function randomString(num, charset = "abcdef0123456789") {
+    let str = '';
+    for (let i = 0; i < num; i++) {
+        str += charset.charAt(Math.floor(Math.random() * charset.length));
+    }
+    return str;
+}
 
 Date.prototype.Format = function(fmt) {
-    var e,
-        n = this,
-        d = fmt,
+    var n = this,
         l = {
             "M+": n.getMonth() + 1,
             "d+": n.getDate(),
@@ -20,166 +28,150 @@ Date.prototype.Format = function(fmt) {
             "q+": Math.floor((n.getMonth() + 3) / 3),
             "S+": n.getMilliseconds()
         };
-    /(y+)/i.test(d) && (d = d.replace(RegExp.$1, "".concat(n.getFullYear()).substr(4 - RegExp.$1.length)));
+    /(y+)/i.test(fmt) && (fmt = fmt.replace(RegExp.$1, "".concat(n.getFullYear()).substr(4 - RegExp.$1.length)));
     for (var k in l) {
-        if (new RegExp("(".concat(k, ")")).test(d)) {
+        if (new RegExp("(".concat(k, ")")).test(fmt)) {
             var t, a = "S+" === k ? "000" : "00";
-            d = d.replace(RegExp.$1, 1 == RegExp.$1.length ? l[k] : ("".concat(a) + l[k]).substr("".concat(l[k]).length))
+            fmt = fmt.replace(RegExp.$1, 1 == RegExp.$1.length ? l[k] : ("".concat(a) + l[k]).substr("".concat(l[k]).length))
         }
     }
-    return d;
+    return fmt;
 }
 
-function generateFp2() {
-    let e = "0123456789";
-    let a = 13;
-    let i = '';
-    for (; a--;) i += e[Math.random() * e.length | 0];
-    return (i + Date.now()).slice(0, 16)
-}
-
-function bV() {
-    var f,
-        g = arguments.length > 0 && 'undefined' !== arguments[0] ? arguments[0] : {},
-        h = g.size,
-        i = 'undefined' === h ? 10 : h,
-        j = g.dictType,
-        k = 'undefined' === j ? 'number' : j,
-        l = g.num,
-        m = '';
-
-    if (l && 'string' == typeof l) {
-        f = l;
-    }
-
-    for (; i--;) {
-        m += f[Math.floor(Math.random() * f.length)];
-    }
-
-    return m;
-}
-
-function generateFp(g) {
-    var i = '',
-    j = '0123456789',
-    k = j,
-    l = Math.floor(Math.random() * 10),
-    m,
-    n = 12;
+function generateFp(version) {
+    var remove = "",
+    charset = "0123456789",
+    rd = Math.floor(Math.random() * 10),
+    str,
+    num = 12;
     do {
-        const t = {
-            size: 1,
-            num: j
-        };
-        m = bV(t);
-        i.indexOf(m) == -1 && (i += m);
-        m = bV(t), i.indexOf(m) == -1 && (i += m);
-    } while (i.length < 3);
-    for (let u of i.slice()) {
-        k = k.replace(u, '');
+        str = randomString(1,charset);
+        remove.indexOf(str) == -1 && (remove += str);
+    } while (remove.length < 3);
+    for (let ch of remove.slice()) {
+        charset = charset.replace(ch, "");
     }
-    const r = {
-        size: l,
-        num: k
-    };
-    var o = bV(r) + i + bV({
-        size: n - l,
-        num: k
-    }) + l;
-    if (g === '3.1') {
-        var p = o.split(''),
-            q = [];
-        for (; p.length;) {
-            q.push(9 - parseInt(p.pop()));
+    var str2 = randomString(rd,charset) + remove + randomString(num - rd,charset) + rd;
+    if (version == "3.1") {
+        var str2s = str2.split(""),arr = [];
+        for (; str2s.length;) {
+            arr.push(9 - parseInt(str2s.pop()));
         }
-        o = q.join('');
+        str2 = arr.join("");
     }
-    return o;
+    return str2;
 }
 
-async function requestAlgo(f) {
-    data = {
-        version: '3.1',
-        fp: $.fp,
-        appId: $.appId,
-        timestamp: Date.now(),
-        platform: 'web',
-        expandParams: $.expandParams || ''
+function genAlgo(appId, fp, ua, expandParams, version) {
+    let opt = {
+        "url": "https://cactus.jd.com/request_algo?g_ty=ajax",
+        "body": JSON.stringify({
+            "version": version,
+            "fp": fp,
+            "appId": appId,
+            "timestamp": Date.now(),
+            "platform": "web",
+            "expandParams": expandParams || ""
+        }),
+        "headers": {
+            "Host": "cactus.jd.com",
+            "Content-Type": "application/json",
+            "User-agent": ua
+        },
+        "timeout": 10000
     };
-    let {data: k} = await axios.post('https://cactus.jd.com/request_algo?g_ty=ajax', data, {headers: {
-        Host: 'cactus.jd.com',
-        accept: 'application/json',
-        'content-type': 'application/json',
-        'user-agent':$.UA
-    }});
-    let m = k.data.result,
-        n = new Function('return ' + m.algo)();
-    $.dict[f].tk = m.tk;
-    $.dict[f].func = n;
+    return new Promise(async resolve => {
+        SendPost(opt, (err, resp, data) => {
+            try {
+                if (err) {
+                    console.log("" + JSON.stringify(err));
+                    console.log("getgo 请求失败，请检查网路重试");
+                } else {
+                    data = JSON.parse(data);
+                    data = data.data.result;
+                }
+            } catch (e) {
+                console(e, resp);
+            } finally {
+                resolve(data);
+            }
+        });
+    });
 }
 
-async function get_h5st31(functionId, body, appId) {
-    $.fp = bU($.version);
-    $.appId = appId;
-    $.dict = {
-        [$.appId]: {}
+async function getbody(opt) {
+    let version = "3.1",
+    {body,ua,pin,ver,cl,fn,appId,apid,code,flag} = opt;
+
+    if (!appIdAlgo[appId] || flag) {
+        appIdAlgo[appId] = {};
+        appIdAlgo[appId].fp = generateFp(version);
+    }
+    var sua=ua.match(/\(([^)]+)\)/)[1];
+    body = typeof body !== "string" ? JSON.stringify(body) : body;
+    let expandParams = CryptoJS.AES.encrypt(JSON.stringify({
+        "wc":1,"wd":0,"l":"zh-CN","ls":"zh-CN","ml":0,"pl":0,"av":"",ua,
+        "sua":sua,"pp":{"p1":pin},"pp1":"","w":393,"h":873,
+        "ow":393,"oh":779,"url":"","og":"","pr":2.75,"re":"","ai":appId,"fp":appIdAlgo[appId].fp
+    }, null, 2), CryptoJS.enc.Utf8.parse("wm0!@w-s#ll1flo("), {
+        "iv": CryptoJS.enc.Utf8.parse("0102030405060708"),
+        "mode": CryptoJS.mode.CBC,
+        "padding": CryptoJS.pad.Pkcs7
+    }).ciphertext.toString(),
+    t = new Date().getTime();
+
+    if (!appIdAlgo[appId].tk || flag) {
+        let Algo = await genAlgo(appId, appIdAlgo[appId].fp, ua, expandParams, version);
+        appIdAlgo[appId].tk = Algo.tk;
+        appIdAlgo[appId].algo = Algo.algo;
+    }
+
+    const time = new Date().getTime(),
+        timeDate = new Date(time).Format("yyyyMMddhhmmssSSS"),
+        tk = appIdAlgo[appId].tk,
+        genKey = new Function("return " + appIdAlgo[appId].algo)();
+    let Key = await genKey(tk, appIdAlgo[appId].fp, timeDate, appId, CryptoJS).toString();
+    const Data = {
+        "appid": apid,
+        "functionId": fn,
+        "body": body,
+        "clientVersion": ver,
+        "client": cl,
+        "t":code?t:""
     };
-    var j = {}
-    const n = {"wc":1,"wd":0,"l":"zh-CN","ls":"zh-CN","ml":0,"pl":0,"av":"","ua":"","sua":"","pp":"","pp1":"","w":393,"h":873,"ow":393,"oh":373,"url":"","og":"","pr":1,"re":"",
-    "ai":$.appId,"fp":$.fp};
-    var r = CryptoJS.AES.encrypt(JSON.stringify(n, null, 2), CryptoJS.enc.Utf8.parse('wm0!@w-s#ll1flo('), {
-            iv: CryptoJS.enc.Utf8.parse('0102030405060708'),
-            mode: CryptoJS.mode.CBC,
-            padding: CryptoJS.pad.Pkcs7
-        });
-    $.expandParams = r.ciphertext.toString();
-    $._start = new Date().getTime();
-    await requestAlgo($.appId);
-    $.timestamp = new Date().getTime();
-    $.ts = new Date($.timestamp).Format("yyyyMMddhhmmssSSS");
-    j = $.dict[$.appId];
-    j.encrypt = await j.func(j.tk, $.fp, $.ts, $.appId, CryptoJS).toString(CryptoJS.enc.Hex);
-    var s = {
-        appid: 'jdchoujiang_h5',
-        functionId: functionId,
-        body: JSON.stringify(body),
-        clientVersion: '11.0.2',
-        client: 'android',
-        t: $._start
-    },
-        t,
-        u;
-    let v = ['appid', 'body', 'client', 'clientVersion', 'functionId', 't'];
-    delete s.h5st;
-    u = s;
-    t = v.filter(H => u[H]).map(H => H + ':' + (H == 'body' ? CryptoJS.SHA256(s[H]).toString() : s[H])).join('&');
-    let w = {};
-    for (let H of v) {
-        u[H] && (w[H] = u[H]);
-    }
-    u = w;
-    var z = CryptoJS.HmacSHA256(t, j.encrypt).toString(CryptoJS.enc.Hex);
-    var B = '';
-    if ($.version === '3.1') {
-        var C = {
-            pp: {},
-            fp: $.fp,
-            sua:'Linux; Android 9; LYA-AL00 Build/HUAWEILYA-AL00L; wv'
-        };
-        if (cookie) {
-            let K = cookie.match(/pin=([^;]+)/);
-            K && (C.pp.p1 = decodeURIComponent(K[1]));
-        }
-        var r = CryptoJS.AES.encrypt(JSON.stringify(C, null, 2), CryptoJS.enc.Utf8.parse('wm0!@w_s#ll1flo('), {
-            iv: CryptoJS.enc.Utf8.parse('0102030405060708'),
-            mode: CryptoJS.mode.CBC,
-            padding: CryptoJS.pad.Pkcs7
-        });
-        B = r.ciphertext.toString();
-    }
-
-    var E = [$.ts, $.fp, $.appId, j.tk, z, $.version, $.timestamp, B].join(';');
-    return 't=' + $._start + '&h5st=' + encodeURIComponent(E);
+    Date.now() > "1680278400000" && (Data.functionId = "");
+    let str = ["appid", "body", "client", "clientVersion", "functionId", "t"].filter(item => Data[item])
+    .map(k => k + ":" + (k == "body" ? CryptoJS.SHA256(Data[k]).toString() : Data[k])).join("&"),
+    HmacSHA256 = CryptoJS.HmacSHA256(str, Key).toString(CryptoJS.enc.Hex);
+    let enStr = CryptoJS.AES.encrypt(JSON.stringify({
+        "sua": sua,
+        "pp": {"p1":pin},
+        "fp": appIdAlgo[appId].fp
+    }, null, 2), CryptoJS.enc.Utf8.parse("wm0!@w_s#ll1flo("), {
+        "iv": CryptoJS.enc.Utf8.parse("0102030405060708"),
+        "mode": CryptoJS.mode.CBC,
+        "padding": CryptoJS.pad.Pkcs7
+    }).ciphertext.toString();
+    __dirname.split(/[\\/]/).pop() !== "function" && (timeDate = timeDate - 1);
+    let h5st = [timeDate, appIdAlgo[appId].fp, appId, tk, HmacSHA256, version, time, enStr].join(";");
+    return "functionId=" + fn + "&body=" + encodeURIComponent(body) + "&t=" + t + "&appid=" + apid + "&client=" + cl + "&clientVersion=" + ver + "&h5st=" + encodeURIComponent(h5st);
 }
 
-module.exports = get_h5st31
+function SendPost(opt, resolve = () => { }) {
+    const {
+        url: url,
+        ...opt2
+    } = opt;
+    got.post(url, opt2).then(data => {
+        const {statusCode,headers,body} = data;
+        resolve(null, {"status": statusCode,statusCode,headers,body}, body);
+    }, d => {
+        const {message,response} = d;
+        resolve(message, response, response && response.body);
+    });
+}
+console.log(__dirname);
+
+module.exports = {
+    "getbody": getbody
+};
