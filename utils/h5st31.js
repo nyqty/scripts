@@ -1,6 +1,19 @@
 /*
 by、TY
 调用方法：
+const {getbody} = require('./utils/h5st31.js');
+console.log(getbody({
+        appId,
+        fn,
+        "body": body,
+        "apid": "jx_h5",
+        "ver": "1.0",
+        "cl": "jx_h5",
+        "user": $.UserName,
+        "code": 1,
+        "flag": $.flag,
+        "ua": $.UA
+    }));
 */
 const CryptoJS = require("crypto-js");
 const got = require("got");
