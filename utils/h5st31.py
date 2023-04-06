@@ -4,19 +4,18 @@ by、TY
 要安装 
 pip install pycryptodome
 调用方法：
-from utils.h5st31 import getbody
-get = getbody({
-    'appId':'8c6ae',
-    'fn':'functionId',
-    "body": {},
-    "apid": "activities_platform",
-    "ver": "4.9.0",
+from utils.h5st31 import h5st31
+new_h5st31=h5st31({
+    'appId':'af89e',
+    "apid": "jxh5",
+    "ver": "1.2.5",
     "cl": "android",
-    "pin": "TY",
-    "code": True,
-    "flag": True,
-    "ua": 'jdltapp;android;4.6.0;;;appBuild/2374;ef/1;Mozilla/5.0 (Linux; Android 13; 22081212C Build/TKQ1.220829.002; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/104.0.5112.97 Mobile Safari/537.36'
+    "pin": "pin",
+    "ua":"UA"
 })
+new_h5st31.genAlgo()
+get=new_h5st31.getbody(functionId,body,code)
+code=True 就是需要拼接t的时间戳
 print(get)
 '''
 import requests
@@ -25,7 +24,7 @@ import random
 import re
 import base64
 import logging
-from urllib.parse import quote_plus, unquote_plus, quote
+from urllib.parse import quote
 import time, datetime
 from hashlib import sha256, sha512, md5
 import hmac
@@ -40,8 +39,6 @@ logging.basicConfig(
 )
 logger = logging.getLogger(activity_name)
 
-TYappIdAlgo = {}
-
 def getTimestamp():
     return int(round(time.time() * 1000))
 
@@ -51,62 +48,8 @@ def randomString(num,charset="abcdefghijklmnopqrstuvwxyz0123456789"):
         randomstr += random.choice(charset)
     return randomstr
 
-def generateFp(version):
-    remove = ""
-    charset = "0123456789"
-    rd = random.randint(0,9)
-    while len(remove)<3:
-        s = randomString(1,charset)
-        if remove.find(s) == -1:
-            remove += s
-    for ch in remove:
-        charset = charset.replace(ch, "")
-    s2 = randomString(rd,charset) + remove + randomString(12 - rd,charset) + str(rd)
-    if version == "3.1":
-        s2s = list(s2)
-        s2=""
-        while len(s2s):s2+=str(9 - int(s2s.pop()))
-    return s2
-#async     
-def genAlgo(appId, fp, ua, expandParams, version):
-    global TYappIdAlgo
-    headers = {
-        "Host": "cactus.jd.com",
-        "Content-Type": "application/json",
-        "User-agent": ua
-    }
-    data = json.dumps({
-        "version": version,
-        "fp": fp,
-        "appId": appId,
-        "timestamp": getTimestamp(),
-        "platform": "web",
-        "expandParams": expandParams
-    })
-    try:
-        res = res = requests.post("https://cactus.jd.com/request_algo?g_ty=ajax", headers=headers, data=data, timeout=5).text
-        try:
-            res = json.loads(res)
-            if res['status'] == 200:
-                #print(res)
-                result=res["data"]["result"]
-                TYappIdAlgo[appId]["tk"] = result["tk"]
-                algo = result['algo']
-                TYappIdAlgo[appId]["algo"] = algo
-                digestmod = re.findall(r'algo\.(\w+)\(', algo)
-                rds = re.findall(r'rd=\'(.*?)\';', algo)
-                if len(digestmod) > 0 and len(rds) > 0:
-                    #return algo.HmacMD5(str,tk)}"}}}
-                    TYappIdAlgo[appId]["rd"] = rds[0]
-                    TYappIdAlgo[appId]["ac"]=digestmod[0]
-                    return True
-            else:
-                print(res)
-        except Exception as e:
-            logger.info(f"genAlgo api解析异常：{str(e)}")
-    except Exception as e:
-        logger.info(f"genAlgo api超过2s请求超时...")
-    return False
+
+#async
 
 def aes_cipher(key, aes_str):
     aes = AES.new(key.encode('utf-8'), AES.MODE_CBC,b"0102030405060708")
@@ -140,70 +83,141 @@ def get_sign(algo, data, key):
     sign = hmac.new(key, message, digestmod=algo).hexdigest()
     return sign
 
-def getbody(opt):
-    global TYappIdAlgo
-    version = "3.1"
-    #{body,ua,pin,ver,cl,fn,appId,apid,code,flag} = opt
-    list1="body,ua,pin,ver,cl,fn,appId,apid,code,flag".split(",")
-    for k in list1:
-        if k not in opt:
-            print(k+"未定义！")
-            return False
 
-    if opt["appId"] not in TYappIdAlgo or opt["flag"]:
-        TYappIdAlgo[opt["appId"]] = {"fp":generateFp(version)}
-    if isinstance(opt["body"],dict):#判断body数据类型是否为dict 是就转化为json
-        opt["body"]=json.dumps(opt["body"])
-    
-    fp=TYappIdAlgo[opt["appId"]]["fp"]
-    sua=re.findall(r'\(([^)]+)\)', opt["ua"])[1]
-    aes_str=json.dumps({
-        "wc":1,"wd":0,"l":"zh-CN","ls":"zh-CN","ml":0,"pl":0,"av":"","ua":opt["ua"],
-        "sua":sua,"pp":{"p1":opt["pin"]},"pp1":"","w":393,"h":873,
-        "ow":393,"oh":779,"url":"","og":"","pr":2.75,"re":"","ai":opt["appId"],"fp":fp
-    },indent=2,ensure_ascii=False)
-    expandParams = aes_cipher("wm0!@w-s#ll1flo(", aes_str)
-    t1 = getTimestamp()
-
-    if "tk" not in TYappIdAlgo[opt["appId"]] or opt["flag"]:
-        #print("获取Algo")
-        hq=genAlgo(opt["appId"], fp, opt["ua"], expandParams, version)
-        if hq==False:
-            return False
-    tk=TYappIdAlgo[opt["appId"]]["tk"]
-    Data = {
-        "appid": opt["apid"],
-        "functionId": opt["fn"],
-        "body": opt["body"],
-        "clientVersion": opt["ver"],
-        "client": opt["cl"],
-        "t":""
-    }
-    if opt["code"]:Data["t"] = t1
-    if t1>1680278400000:Data["functionId"] = ""
-    tmp=[]
-    for k in ["appid", "body", "client", "clientVersion", "functionId", "t"]:
-        if k =="body":
-            tt=get_sign("SHA256", Data[k],"")
+class h5st31:
+    def __init__(self,opt):
+        #{body,ua,pin,ver,cl,fn,appId,apid,code,flag} = opt
+        self.valid=True
+        list1="ua,pin,ver,cl,appId,apid".split(",")
+        for k in list1:
+            if k in opt:
+                self[k]=opt[opt]
+            else:
+                print(k+"未定义！")
+                self.valid=False
+                return False
+            
+        self.version="3.1"
+        if "fp" in opt:
+            self.fp=opt["fp"]
         else:
-            tt=Data[k]
-        tmp.append('{}:{}'.format(k, tt))
-    st='&'.join(tmp)
-    t2 = getTimestamp()
-    dt_object = datetime.datetime.fromtimestamp(t2 / 1000, None)  # 时间戳转换成字符串日期时间
-    timeDate = dt_object.strftime("%Y%m%d%H%M%S%f")[0:17]
+            self.fp=self.generateFp()
+
+        self.sua=re.findall(r'\(([^)]+)\)', self.ua)[1]
+            
+    def generateFp(self,version="3.1"):
+        remove = ""
+        charset = "0123456789"
+        rd = random.randint(0,9)
+        while len(remove)<3:
+            s = randomString(1,charset)
+            if remove.find(s) == -1:
+                remove += s
+        for ch in remove:
+            charset = charset.replace(ch, "")
+        s2 = randomString(rd,charset) + remove + randomString(12 - rd,charset) + str(rd)
+        if version == "3.1":
+            s2s = list(s2)
+            s2=""
+            while len(s2s):s2+=str(9 - int(s2s.pop()))
+        return s2
+
+    def genAlgo(self):
+        headers = {
+            "Host": "cactus.jd.com",
+            "Content-Type": "application/json",
+            "User-agent": self.ua
+        }
+        if self.version=="3.1":
+            aes_str=json.dumps({
+                "wc":1,"wd":0,"l":"zh-CN","ls":"zh-CN","ml":0,"pl":0,"av":"","ua":self.ua,
+                "sua":self.sua,"pp":{"p1":self.pin},"pp1":"","w":393,"h":873,
+                "ow":393,"oh":779,"url":"","og":"","pr":2.75,"re":"","ai":self.appId,"fp":self.fp
+            },indent=2,ensure_ascii=False)
+            expandParams = aes_cipher("wm0!@w-s#ll1flo(", aes_str)
+        else:expandParams=""
+        data = json.dumps({
+            "version": self.version,
+            "fp": self.fp,
+            "appId": self.appId,
+            "timestamp": getTimestamp(),
+            "platform": "web",
+            "expandParams": expandParams
+        })
+        try:
+            res = res = requests.post("https://cactus.jd.com/request_algo?g_ty=ajax", headers=headers, data=data, timeout=5).text
+            try:
+                res = json.loads(res)
+                if res['status'] == 200:
+                    #print(res)
+                    result=res["data"]["result"]
+                    self.tk = result["tk"]
+                    algo = result['algo']
+                    self.algo = algo
+                    digestmod = re.findall(r'algo\.(\w+)\(', algo)
+                    rds = re.findall(r'rd=\'(.*?)\';', algo)
+                    if len(digestmod) > 0 and len(rds) > 0:
+                        #return algo.HmacMD5(str,tk)}"}}}
+                        self.rd = rds[0]
+                        self.ac=digestmod[0]
+                        return True
+                else:
+                    print(res)
+            except Exception as e:
+                logger.info(f"genAlgo api解析异常：{str(e)}")
+        except Exception as e:
+            logger.info(f"genAlgo api超过2s请求超时...")
+        self.valid=False
+        return False
     
-    tmp=TYappIdAlgo[opt["appId"]]
-    str1 = tmp["tk"] + tmp["fp"] + timeDate + str(opt["appId"]) + tmp["rd"]
-    #'algo': "function test(tk,fp,ts,ai,algo){var rd='e5vwEDVPOK0d';var str=`${tk}${fp}${ts}${ai}${rd}`;return algo.HmacMD5(str,tk)}"}}}
-    sign_1=get_sign(tmp["ac"], str1, tmp["tk"])
-    hash2 = get_sign("HmacSHA256",st,sign_1)
-    aes_str=json.dumps({
-        "sua": sua,
-        "pp": {"p1":opt["pin"]},
-        "fp": fp
-    },indent=2,ensure_ascii=False)
-    enStr = aes_cipher("wm0!@w_s#ll1flo(", aes_str)
-    #__dirname.split(/[\\/]/).pop() !== "function" && (timeDate = timeDate - 1);
-    h5st = ';'.join([timeDate, fp, opt["appId"], tk, hash2, version, str(t2), enStr])
-    return "functionId=" + opt["fn"] + "&body=" + quote(opt["body"]) + "&t=" + str(t1) + "&appid=" + opt["apid"] + "&client=" + opt["cl"] + "&clientVersion=" + opt["ver"] + "&h5st=" + quote(h5st)
+    def geth5st(self,functionId,body,code=True):
+        t1 = getTimestamp()
+        if "tk" in self and len(self.tk)>1:
+            #print("获取Algo")
+            hq=self.genAlgo()
+            if hq==False:
+                return [False,"获取Algo失败"]
+        
+        if isinstance(body,dict):body=json.dumps(body)#判断body数据类型是否为dict 是就转化为json
+        Data = {
+            "appid":self.apid,
+            "functionId": functionId,
+            "body": body,
+            "clientVersion": self.ver,
+            "client": self.cl,
+            "t":""
+        }
+        if code:Data["t"] = t1
+        Data["functionId"] = ""
+        tmp=[]
+        for k in ["appid", "body", "client", "clientVersion", "functionId", "t"]:
+            if k =="body":
+                tt=get_sign("SHA256", Data[k],"")
+            else:
+                tt=Data[k]
+            tmp.append('{}:{}'.format(k, tt))
+        st='&'.join(tmp)
+        t2 = getTimestamp()
+        dt_object = datetime.datetime.fromtimestamp(t2 / 1000, None)  # 时间戳转换成字符串日期时间
+        timeDate = dt_object.strftime("%Y%m%d%H%M%S%f")[0:17]
+
+        str1 = self.tk + self.fp + timeDate + str(self.appId) + self.rd
+        #'algo': "function test(tk,fp,ts,ai,algo){var rd='e5vwEDVPOK0d';var str=`${tk}${fp}${ts}${ai}${rd}`;return algo.HmacMD5(str,tk)}"}}}
+        sign_1=get_sign(self.ac, str1, self.tk)
+        hash2 = get_sign("HmacSHA256",st,sign_1)
+        aes_str=json.dumps({
+            "sua": self.sua,
+            "pp": {"p1":self.pin},
+            "fp": self.fp
+        },indent=2,ensure_ascii=False)
+        enStr = aes_cipher("wm0!@w_s#ll1flo(", aes_str)
+        #__dirname.split(/[\\/]/).pop() !== "function" && (timeDate = timeDate - 1);
+        h5st = ';'.join([timeDate, self.fp, self.appId, self.tk, hash2, self.version, str(t2), enStr])
+        return [True,h5st,t1,body]
+        
+    def getbody(self,functionId,body,code=True):
+        ok,h5st,t1,body=self.geth5st(functionId,body,code)
+        if ok:
+            return "functionId=" + functionId + "&body=" + quote(body) + "&t=" + str(t1) + "&appid=" + self.apid + "&client=" + self.cl + "&clientVersion=" + self.ver + "&h5st=" + quote(h5st)
+        else:
+            return False

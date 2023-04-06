@@ -6,7 +6,7 @@
 export DYJ_Pin="需要兑换的pin值多个用&"
 export DYJ_NotCash="不提现的金额多个参数用&或,"
 export DYJ_NotRed="不兑换红包的金额多个参数用&或,"
-cron: 50 16,23 * * *
+cron: 50 9,11,16,23 * * *
 new Env('赚钱大赢家-定时兑换');
 TY在原作者(doubi)基础上删减更改，优化提取
 
@@ -29,8 +29,7 @@ import base64
 from urllib.parse import quote_plus, unquote_plus, quote
 import threading
 
-
-from utils.h5st31 import getbody
+from utils.h5st31 import h5st31
 
 activity_name = "京喜特价-赚钱大赢家-定时兑换"
 logging.basicConfig(
@@ -41,7 +40,6 @@ logging.basicConfig(
 logger = logging.getLogger(activity_name)
 index = 0
 retry=2
-h5st_appid = 'd06f1'
 appCode = 'ms2362fc9e'
 activeId = '63526d8f5fe613a6adb48f03'
 NotCash=[]
@@ -121,6 +119,16 @@ class Userinfo:
         self.stockPersonDayUsed=0
         self.canUseCoinAmount=0
         self.valid=True
+
+        self.h5st31=h5st31({
+            'appId':'af89e',
+            "apid": "jxh5",
+            "ver": "1.2.5",
+            "cl": "android",
+            "pin": self.name,
+            "ua":self.UA
+        })
+        self.h5st31.genAlgo()
         #print(self.name)
 
     def getHome(self):
@@ -149,6 +157,7 @@ class Userinfo:
         body={"activeId":activeId,"visitChannel":1,"sceneval":2,"buid":325,"buid":325,"appCode":appCode,"time":t,"signStr":"9151d15cddda6eb8256f7b06c112981d"}
         str="functionId=%s&body=%s&uuid=%s&client=%s&clientVersion=%s&st=%s" % ("makemoneyshop_exchangequery", body, base64Encode(self.uuid), "jxh5", "1.2.5", t)
         body["signStr"]=md5(str.encode(encoding='UTF-8')).hexdigest()
+        
         url = f'https://api.m.jd.com/api?functionId=makemoneyshop_exchangequery&appid=jdlt_h5&t={t}&channel=jxh5&cv=1.2.5&clientVersion=1.2.5&client=jxh5&uuid={self.uuid}&cthr=1&loginType=2&body={quote(json.dumps(body))}'
         try:
             res = requests.get(url=url, headers=self.headers,proxies={},timeout=2).text
@@ -170,6 +179,13 @@ class Userinfo:
         except Exception as e:
             logger.info(f"{self.name}查询余额超过2s请求超时...")
         return []
+    
+    def jxPrmtExchange_exchange(self,ruleId):
+        global H5ST_OPT
+        t=getTimestamp()#t=1679328422807 
+        body={"bizCode":"makemoneyshop","ruleId":ruleId,"sceneval":2,"buid":325,"appCode":appCode,"time":t,"signStr":"903c5e28adcc30560599ccceab907032"}
+        #functionId=makemoneyshop_exchangequery&appid=jdlt_h5&t={t}&channel=jxh5&cv=1.2.5&clientVersion=1.2.5&client=jxh5&uuid={self.uuid}&cthr=1&loginType=2&body={quote(json.dumps(body))}
+        return 'https://api.m.jd.com/api?'+self.h5st31.geth5st("jxPrmtExchange_exchange",body,True)+f'&channel=jxh5&cv=1.2.5&uuid={self.uuid}&cthr=1&loginType=2'
 
     def CashOut(self):
         global loop1,NotCash,cashExchangeRuleList
@@ -192,12 +208,7 @@ class Userinfo:
                     if self.canUseCoinAmount >= float(data['cashoutAmount']) or self.stockPersonDayLimit==-1:
                         if float(data['cashoutAmount']) not in NowNotCash:
                             logger.info(f"当前余额[{self.canUseCoinAmount}]元,开始尝试提现[{data['cashoutAmount']}]")
-                            #t=getTimestamp()
-                            t=1679328422807 
-                            body={"bizCode":"makemoneyshop","ruleId":data["id"],"sceneval":2,"buid":325,"appCode":appCode,"time":t,"signStr":"903c5e28adcc30560599ccceab907032"}
-                            uuid='7032320889511194760'
-                            h5st="20230321000702826%3B3797038254680199%3Baf89e%3Btk02wbc7a1cad18nzXQXZGGNXM14rgpDvRlpx2ddPVtN88zNSDqPdUxzOASV2WLNtY%2BwBxrFIHc%2BexpCelj7iXwwP93S%3B2d222391ad9191e63567b5feb78c33ba904aa6db57d2e8bfe71415d4c68d0fc6%3B3.1%3B1679328422826%3B62f4d401ae05799f14989d31956d3c5fe48e6438a35ea5b8b8d12ecf8c7f7c07712a08d6f8fe670c8b04cdb873be6623efd95a79a8f1d6b344a8e15f4961df8e5186840e5cddf6049f64b4d68b150fb9fc05a42a62f933d59c3e351607c9397b06cc1824c6ff68e816fe7dbc493d6c09fa21d89a82bb85bba4c0e603160863f36267521224f45dafb1ac6516203fbaaf";
-                            url = f'https://api.m.jd.com/api?functionId=jxPrmtExchange_exchange&appid=cs_h5&t={t}&channel=jxh5&cv=1.2.5&clientVersion=1.2.5&client=jxh5&uuid={uuid}&cthr=1&loginType=2&body={quote(json.dumps(body))}&h5st={h5st}'                            
+                            url = self.jxPrmtExchange_exchange(data["id"])
                             proxies={}
                             try:
                                 if get:time.sleep(0.2)
@@ -269,12 +280,7 @@ class Userinfo:
                     if self.canUseCoinAmount >= float(data['cashoutAmount']) or self.stockPersonDayLimit==-1:
                         if float(data['cashoutAmount']) not in NowNotRed:
                             logger.info(f"当前余额[{self.canUseCoinAmount}]元,开始尝试兑换[{data['cashoutAmount']}]红包")
-                            #t=getTimestamp()
-                            t=1679328422807 
-                            body={"bizCode":"makemoneyshop","ruleId":data["id"],"sceneval":2,"buid":325,"appCode":appCode,"time":t,"signStr":"903c5e28adcc30560599ccceab907032"}
-                            uuid='7032320889511194760'
-                            h5st="20230321000702826%3B3797038254680199%3Baf89e%3Btk02wbc7a1cad18nzXQXZGGNXM14rgpDvRlpx2ddPVtN88zNSDqPdUxzOASV2WLNtY%2BwBxrFIHc%2BexpCelj7iXwwP93S%3B2d222391ad9191e63567b5feb78c33ba904aa6db57d2e8bfe71415d4c68d0fc6%3B3.1%3B1679328422826%3B62f4d401ae05799f14989d31956d3c5fe48e6438a35ea5b8b8d12ecf8c7f7c07712a08d6f8fe670c8b04cdb873be6623efd95a79a8f1d6b344a8e15f4961df8e5186840e5cddf6049f64b4d68b150fb9fc05a42a62f933d59c3e351607c9397b06cc1824c6ff68e816fe7dbc493d6c09fa21d89a82bb85bba4c0e603160863f36267521224f45dafb1ac6516203fbaaf";
-                            url = f'https://api.m.jd.com/api?functionId=jxPrmtExchange_exchange&appid=cs_h5&t={t}&channel=jxh5&cv=1.2.5&clientVersion=1.2.5&client=jxh5&uuid={uuid}&cthr=1&loginType=2&body={quote(json.dumps(body))}&h5st={h5st}'                            
+                            url = self.jxPrmtExchange_exchange(data["id"])
                             proxies={}
                             try:
                                 if get:time.sleep(0.2)
