@@ -22,6 +22,7 @@ import requests
 import json
 import random
 import re
+import codecs
 import base64
 import logging
 from urllib.parse import quote
@@ -55,7 +56,8 @@ def aes_cipher(key, aes_str):
     aes = AES.new(key.encode('utf-8'), AES.MODE_CBC,b"0102030405060708")
     pad_pkcs7 = pad(aes_str.encode('utf-8'), AES.block_size, style='pkcs7')  # 选择pkcs7补全
     encrypt_aes = aes.encrypt(pad_pkcs7)
-    return base64.b64encode(encrypt_aes).decode('utf-8')
+    encrypt_data=codecs.encode(encrypt_aes,'hex').decode('utf-8')
+    return encrypt_data
     #den_text = aes.decrypt(ciphertext) # 解密密文
 
 
@@ -199,7 +201,7 @@ class h5st31:
             "t":""
         }
         if code:Data["t"] = t1
-        Data["functionId"] = ""
+        #Data["functionId"] = ""
         tmp=[]
         for k in ["appid", "body", "client", "clientVersion", "functionId", "t"]:
             if k =="body":

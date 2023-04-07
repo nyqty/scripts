@@ -93,23 +93,36 @@ function genAlgo(appId, fp, ua, expandParams, version) {
         },
         "timeout": 10000
     };
-    return new Promise(async resolve => {
-        SendPost(opt, (err, resp, data) => {
+    return new Promise(resolve => {
+        got.post(opt).then(
+        (resp) => {
+            const {body:data } = resp
             try {
-                if (err) {
-                    console.log("" + JSON.stringify(err));
-                    console.log("getgo 请求失败，请检查网路重试");
-                } else {
-                    data = JSON.parse(data);
-                    data = data.data.result;
+                let res = jsonParse(data);
+                if(typeof res == 'object'){
+                    if(res.status == 200){
+                        resolve(res.data.result);
+                    }
                 }
             } catch (e) {
-                console(e, resp);
+                console.log(e)
             } finally {
-                resolve(data);
+                resolve('');
             }
-        });
-    });
+        },
+        (err) => {
+                try {
+                const { message: error, response: resp } = err
+                    console.log(`${jsonStringify(error)}`)
+                    console.log(`${functionId} API请求失败，请检查网路重试`)
+                } catch (e) {
+                    console.log(e)
+                } finally {
+                    resolve('')
+                }
+            }
+        )
+    })
 }
 
 async function getbody(opt) {
@@ -122,17 +135,18 @@ async function getbody(opt) {
     }
     var sua=ua.match(/\(([^)]+)\)/)[1];
     body = typeof body !== "string" ? JSON.stringify(body) : body;
-    let expandParams = CryptoJS.AES.encrypt(JSON.stringify({
+    let endata=JSON.stringify({
         "wc":1,"wd":0,"l":"zh-CN","ls":"zh-CN","ml":0,"pl":0,"av":"",ua,
         "sua":sua,"pp":{"p1":pin},"pp1":"","w":393,"h":873,
         "ow":393,"oh":779,"url":"","og":"","pr":2.75,"re":"","ai":appId,"fp":appIdAlgo[appId].fp
-    }, null, 2), CryptoJS.enc.Utf8.parse("wm0!@w-s#ll1flo("), {
+    }, null, 2);
+    let expandParams = CryptoJS.AES.encrypt(endata, CryptoJS.enc.Utf8.parse("wm0!@w-s#ll1flo("), {
         "iv": CryptoJS.enc.Utf8.parse("0102030405060708"),
         "mode": CryptoJS.mode.CBC,
         "padding": CryptoJS.pad.Pkcs7
     }).ciphertext.toString(),
     t = new Date().getTime();
-
+    
     if (!appIdAlgo[appId].tk || flag) {
         let Algo = await genAlgo(appId, appIdAlgo[appId].fp, ua, expandParams, version);
         appIdAlgo[appId].tk = Algo.tk;
@@ -152,7 +166,7 @@ async function getbody(opt) {
         "client": cl,
         "t":code?t:""
     };
-    Date.now() > "1680278400000" && (Data.functionId = "");
+    //Date.now() > "1680278400000" && (Data.functionId = "");
     let str = ["appid", "body", "client", "clientVersion", "functionId", "t"].filter(item => Data[item])
     .map(k => k + ":" + (k == "body" ? CryptoJS.SHA256(Data[k]).toString() : Data[k])).join("&"),
     HmacSHA256 = CryptoJS.HmacSHA256(str, Key).toString(CryptoJS.enc.Hex);
@@ -165,25 +179,18 @@ async function getbody(opt) {
         "mode": CryptoJS.mode.CBC,
         "padding": CryptoJS.pad.Pkcs7
     }).ciphertext.toString();
-    __dirname.split(/[\\/]/).pop() !== "function" && (timeDate = timeDate - 1);
+    //__dirname.split(/[\\/]/).pop() !== "function" && (timeDate = timeDate - 1);
     let h5st = [timeDate, appIdAlgo[appId].fp, appId, tk, HmacSHA256, version, time, enStr].join(";");
     return "functionId=" + fn + "&body=" + encodeURIComponent(body) + "&t=" + t + "&appid=" + apid + "&client=" + cl + "&clientVersion=" + ver + "&h5st=" + encodeURIComponent(h5st);
 }
 
-function SendPost(opt, resolve = () => { }) {
-    const {
-        url: url,
-        ...opt2
-    } = opt;
-    got.post(url, opt2).then(data => {
-        const {statusCode,headers,body} = data;
-        resolve(null, {"status": statusCode,statusCode,headers,body}, body);
-    }, d => {
-        const {message,response} = d;
-        resolve(message, response, response && response.body);
-    });
+function jsonParse(str) {
+    try {
+        return JSON.parse(str);
+    } catch (e) {
+        return str;
+    }
 }
-console.log(__dirname);
 
 module.exports = {
     "getbody": getbody
