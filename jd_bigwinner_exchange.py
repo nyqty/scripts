@@ -38,17 +38,18 @@ logging.basicConfig(
 )
 logger = logging.getLogger(activity_name)
 index = 0
-retry=2
+retry=3
 appCode = 'ms2362fc9e'
 activeId = '63526d8f5fe613a6adb48f03'
 NotCash=[]
 NotRed=[]
 
 hbExchangeRuleList=[
-    {"id":"d158ed723d411967d15471edf90a25ab","name":"0.5红包","exchangeStatus":1,"consumeScore":"0.50","cashoutAmount":"0.5"},
+    {"id":"f7a42f19c8d17c6ff1229808ecd57292","name":"0.5元红包","exchangeStatus":1,"consumeScore":"0.50","cashoutAmount":"0.5"},
     {"id":"d29967608439624bd4688e06254b6374","name":"1元红包","exchangeStatus":1,"consumeScore":"1.00","cashoutAmount":"1"},
-    {"id":"c14b645cabaa332a883cc5f43a9dd2b7","name":"3元红包","exchangeStatus":1,"consumeScore":"3.00","cashoutAmount":"3"},
+    #{"id":"c14b645cabaa332a883cc5f43a9dd2b7","name":"3元红包","exchangeStatus":1,"consumeScore":"3.00","cashoutAmount":"3"},
     {"id":"006d8d0f371e247333a302627af7da00","name":"5元红包","exchangeStatus":1,"consumeScore":"5.00","cashoutAmount":"5"},
+    {"id":"49995b2a611f5281c06d7b227ac54e09","name":"8元红包","exchangeStatus":1,"consumeScore":"8.00","cashoutAmount":"8"},
     {"id":"018300fea81b5bf3f1cad271f7bcfda7","name":"20元红包","exchangeStatus":1,"consumeScore":"20.00","cashoutAmount":"20"}
 ]
 cashExchangeRuleList=[
@@ -59,6 +60,8 @@ cashExchangeRuleList=[
     {"id":"7ea791839f7fe3168150396e51e30917","name":"20元现金","exchangeStatus":1,"consumeScore":"20.00","cashoutAmount":"20"},
     {"id":"02b48428177a44a4110034497668f808","name":"100元现金","exchangeStatus":1,"consumeScore":"100.00","cashoutAmount":"100"}
 ]
+LastQueryTime=1680932241451
+loop={1:True,2:True}
 
 def getTimestamp():
     return int(round(time.time() * 1000))
@@ -79,6 +82,17 @@ def base64Encode(string):
 def get_pin(cookie):
     return unquote_plus(re.findall(r'pt_pin=([^; ]+)(?=;?)', cookie)[0])
 
+def resetState(type=2,ac=1):
+    global cashExchangeRuleList,hbExchangeRuleList
+    i=len(cashExchangeRuleList if type==2 else hbExchangeRuleList)
+    while i>0:
+        i-=1
+        data=cashExchangeRuleList[i] if type==2 else hbExchangeRuleList[i]
+        if ac==1: ok=data['exchangeStatus']!=1
+        else:ok=data['exchangeStatus']==3 or data['exchangeStatus']==4
+        if ok:
+            if type==2:cashExchangeRuleList[i]['exchangeStatus']=1
+            else:hbExchangeRuleList[i]['exchangeStatus']=1
 
 class Userinfo:
     index = 0
@@ -118,15 +132,10 @@ class Userinfo:
         self.stockPersonDayUsed=0
         self.canUseCoinAmount=0
         self.valid=True
-        self.h5st31=h5st31({
-            'appId':'af89e',
-            "appid": "cs_h5",
-            "clientVersion": "1.2.5",
-            "client": "jxh5",
-            "pin": self.name,
-            "ua":self.UA
-        })
-        self.h5st31.genAlgo()
+
+        self.LastQueryTime=0
+        self.cashExchangeRuleList=[]
+        self.hbExchangeRuleList=[]
         #print(self.name)
 
     def getHome(self):
@@ -151,11 +160,10 @@ class Userinfo:
         return False
 
     def Query(self):
-        t=1679328416233#getTimestamp()
-        body={"activeId":activeId,"visitChannel":1,"sceneval":2,"buid":325,"buid":325,"appCode":appCode,"time":t,"signStr":"9151d15cddda6eb8256f7b06c112981d"}
-        str="functionId=%s&body=%s&uuid=%s&client=%s&clientVersion=%s&st=%s" % ("makemoneyshop_exchangequery", body, base64Encode(self.uuid), "jxh5", "1.2.5", t)
-        body["signStr"]=md5(str.encode(encoding='UTF-8')).hexdigest()
-        
+        t=1680927011146#getTimestamp()
+        body={"activeId":activeId,"visitChannel":1,"sceneval":2,"buid":325,"buid":325,"appCode":appCode,"time":t,"signStr":"afc721262c3400c3da0346aebc4ab858"}
+        #str="functionId=%s&body=%s&uuid=%s&client=%s&clientVersion=%s&st=%s" % ("makemoneyshop_exchangequery", body, base64Encode(self.uuid), "jxh5", "1.2.5", t)
+        #body["signStr"]=md5(str.encode(encoding='UTF-8')).hexdigest()
         url = f'https://api.m.jd.com/api?functionId=makemoneyshop_exchangequery&appid=jdlt_h5&t={t}&channel=jxh5&cv=1.2.5&clientVersion=1.2.5&client=jxh5&uuid={self.uuid}&cthr=1&loginType=2&body={quote(json.dumps(body))}'
         try:
             res = requests.get(url=url, headers=self.headers,proxies={},timeout=2).text
@@ -167,7 +175,10 @@ class Userinfo:
                     self.canUseCoinAmount = float(res['data']['canUseCoinAmount'])
                     logger.info(f"用户“{self.name}”余额[{self.canUseCoinAmount}]元")
                     if self.canUseCoinAmount<0.3:self.valid=False
-                    return res['data']
+                    self.LastQueryTime=getTimestamp()
+                    self.cashExchangeRuleList=res['data']["cashExchangeRuleList"]
+                    self.hbExchangeRuleList=res['data']["hbExchangeRuleList"]
+                    return True
                 else:
                     #{"code": 147, "msg": "活动太火爆，请稍后再试！"}
                     logger.info(f"用户“{self.name}”查询余额失败：{res['msg']}")#json.dumps(res)
@@ -176,117 +187,50 @@ class Userinfo:
                 logger.info(f"{self.name}查询余额解析异常：{str(e)}")
         except Exception as e:
             logger.info(f"{self.name}查询余额超过2s请求超时...")
-        return []
-    
-    def jxPrmtExchange_exchange(self,ruleId):
-        t=getTimestamp()#t=1679328422807 
-        body={"bizCode":"makemoneyshop","ruleId":ruleId,"sceneval":2,"buid":325,"appCode":appCode,"time":t,"signStr":"903c5e28adcc30560599ccceab907032"}
-        #get=f'functionId=jxPrmtExchange_exchange&appid=jdlt_h5&t={t}&clientVersion=1.2.5&client=jxh5&body={quote(json.dumps(body))}'
-        get=self.h5st31.getbody("jxPrmtExchange_exchange",body,True)
-        return f'https://api.m.jd.com/api?{get}&channel=jxh5&cv=1.2.5&uuid={self.uuid}&cthr=1&loginType=2'
+        return False
 
-    def CashOut(self):
-        global loop1,NotCash,cashExchangeRuleList
+    def ExchangeList(self,exchangeType=1):#1 红包 2现金
+        global loop,NotCash,NotRed,cashExchangeRuleList,hbExchangeRuleList,retry
+        if loop[exchangeType]==False:return False
         print("")
-        NowNotCash=list(set(NotCash+self.Not["cash"]))
-        logger.info(f"{self.name}提现")
+        if exchangeType==1:
+            Tname="红包"
+            NowNot=list(set(NotRed+self.Not["red"]))
+            i=len(hbExchangeRuleList)
+        else:
+            Tname="现金"
+            NowNot=list(set(NotCash+self.Not["cash"]))
+            i=len(cashExchangeRuleList)
+        logger.info(f"{self.name}兑换{Tname}")
+
         if self.stockPersonDayUsed>=self.stockPersonDayLimit and self.stockPersonDayLimit!=-1:
-            logger.info(f"当前提现次数已经达到上限[{self.stockPersonDayLimit}]次")
+            logger.info(f"当前兑换次数已经达到上限[{self.stockPersonDayLimit}]次")
         #elif 'exchangeRecordList' in res['data']:logger.info(f"已有提现进行中，请等待完成！")
         else:
             get=False
-            i=len(cashExchangeRuleList)
+            error=0
             while i>0:#for data in cashExchangeRuleList[::-1]:#倒序
                 i-=1
-                data=cashExchangeRuleList[i]
+                data=hbExchangeRuleList[i] if exchangeType==1 else cashExchangeRuleList[i]
                 if self.stockPersonDayUsed>=self.stockPersonDayLimit and self.stockPersonDayLimit!=-1:
                     logger.info(f"当前兑换次数已经达到上限[{self.stockPersonDayLimit}]次")
                     break
                 elif data['exchangeStatus']==1:
                     if self.canUseCoinAmount >= float(data['cashoutAmount']) or self.stockPersonDayLimit==-1:
-                        if float(data['cashoutAmount']) not in NowNotCash:
-                            logger.info(f"当前余额[{self.canUseCoinAmount}]元,开始尝试提现[{data['cashoutAmount']}]")
-                            url = self.jxPrmtExchange_exchange(data["id"])
-                            print(url)
+                        if float(data['cashoutAmount']) not in NowNot:
+                            logger.info(f"当前余额[{self.canUseCoinAmount}]元,开始尝试兑换{Tname}[{data['cashoutAmount']}]")
+                            t=getTimestamp()#t=1679328422807 
+                            body={"bizCode":"makemoneyshop","ruleId":data["id"],"sceneval":2,"buid":325,"appCode":appCode,"time":t,"signStr":"903c5e28adcc30560599ccceab907032"}
+                            #get=f'functionId=jxPrmtExchange_exchange&appid=jdlt_h5&t={t}&clientVersion=1.2.5&client=jxh5&body={quote(json.dumps(body))}'
+                            get=self.h5st31.getbody("jxPrmtExchange_exchange",body,True)
+                            url=f'https://api.m.jd.com/api?{get}&channel=jxh5&cv=1.2.5&uuid={self.uuid}&cthr=1&loginType=2'
                             proxies={}
                             try:
                                 if get:time.sleep(0.2)
                                 else:get=True
                                 res = requests.get(url=url, headers=self.headers,proxies=proxies,timeout=2)
                                 if res.status_code==403:
-                                    logger.info(f"{self.name}提现{data['cashoutAmount']}失败触发403，等待0.2s后将重试。")
-                                    i+=1
-                                    continue
-                                try:
-                                    exchange = json.loads(res.text)
-                                    if exchange['ret'] == 0:
-                                        logger.info(f"{self.name}提现{data['cashoutAmount']}成功")
-                                        self.stockPersonDayUsed+=1
-                                        break
-                                    elif exchange['ret'] == 223:#积分不足
-                                        logger.info(f"{self.name}兑换{data['cashoutAmount']}红包失败:{exchange['msg']}")
-                                    elif int(exchange['ret']) in [224,232]:#库存不足|日库存不足
-                                        cashExchangeRuleList[i]['exchangeStatus']=4
-                                        logger.info(f"{self.name}提现{data['cashoutAmount']}失败:{exchange['msg']}")
-                                    elif int(exchange['ret']) in [248,103]:#操作过快，请稍后重试|jimDB操作异常
-                                        logger.info(f"{self.name}提现{data['cashoutAmount']}失败:{exchange['msg']}")
-                                        logger.info(f"等待1s，后将重试。")
-                                        i+=1
-                                        time.sleep(0.8)
-                                    elif int(exchange['ret']) in [246,604]:#达到个人日兑换上限|已有提现进行中，等待完成
-                                        logger.info(f"{self.name}提现{data['cashoutAmount']}失败:{exchange['msg']}")
-                                        break
-                                    else:
-                                        logger.info(f"{self.name}提现{data['cashoutAmount']}失败{exchange['ret']}:{exchange['msg']}")
-                                except Exception as e:
-                                    logger.info(f"{self.name}提现{data['cashoutAmount']}失败解析异常：{str(e)}")
-                                    print(res.text)
-                            except Exception as e:
-                                logger.info(f"{self.name}提现{data['cashoutAmount']}失败:超过2s请求超时...")
-                                get=False
-                        else:
-                            logger.info(f"当前余额[{self.canUseCoinAmount}]元,不提现[{NowNotCash}]门槛")
-                            if i==0:loop1=False
-                    #else:logger.info(f"当前余额[{self.canUseCoinAmount}]元,不足提现[{data['cashoutAmount']}]门槛")
-                elif data['exchangeStatus']==2:
-                    logger.info(f"{self.name},来晚了咯{data['name']}都被抢光了")
-                    if i==0:loop1=False
-                elif data['exchangeStatus']==3:logger.info(f"{self.name},{data['name']}已兑换")
-                elif data['exchangeStatus']==4:
-                    logger.info(f"{self.name},{data['name']}已抢光")
-                    if i==0:loop1=False
-                else:logger.info(f"{self.name}未知状态：{data}")
-
-    def RedOut(self):
-        global loop2,NotRed,hbExchangeRuleList,retry
-        print("")
-        NowNotRed=list(set(NotRed+self.Not["red"]))
-        logger.info(f"{self.name}兑换红包")
-        if self.stockPersonDayUsed>=self.stockPersonDayLimit and self.stockPersonDayLimit!=-1:
-            logger.info(f"当前兑换次数已经达到上限[{self.stockPersonDayLimit}]次")
-        else:
-            get=False
-            i=len(hbExchangeRuleList)
-            #for data in cashExchangeRuleList[::-1]:#倒序
-            error=0
-            while i>0:
-                i-=1
-                data=hbExchangeRuleList[i]
-                if self.stockPersonDayUsed>=self.stockPersonDayLimit and self.stockPersonDayLimit!=-1:
-                    logger.info(f"当前兑换次数已经达到上限[{self.stockPersonDayLimit}]次")
-                    break
-                elif data['exchangeStatus']==1:
-                    if self.canUseCoinAmount >= float(data['cashoutAmount']) or self.stockPersonDayLimit==-1:
-                        if float(data['cashoutAmount']) not in NowNotRed:
-                            logger.info(f"当前余额[{self.canUseCoinAmount}]元,开始尝试兑换[{data['cashoutAmount']}]红包")
-                            url = self.jxPrmtExchange_exchange(data["id"])
-                            proxies={}
-                            try:
-                                if get:time.sleep(0.2)
-                                else:get=True
-                                res = requests.get(url=url, headers=self.headers,proxies=proxies,timeout=2)
-                                if res.status_code==403:
-                                    logger.info(f"{self.name}提现{data['cashoutAmount']}失败触发403")
+                                    logger.info(f"{self.name}兑换{Tname}{data['cashoutAmount']}失败触发403，等待0.2s后将重试。")
                                     error+=1
                                     if retry>error:
                                         i+=1
@@ -295,44 +239,59 @@ class Userinfo:
                                     continue
                                 try:
                                     exchange = json.loads(res.text)
+                                    error_text=f"{self.name}兑换{data['cashoutAmount']}元{Tname}失败:"
                                     if exchange['ret'] == 0:
-                                        logger.info(f"{self.name}兑换{data['cashoutAmount']}红包成功，将再次尝试兑换。")
-                                        i+=1
                                         self.stockPersonDayUsed+=1
-                                        #break
+                                        if exchangeType==1:
+                                            logger.info(f"{self.name}兑换{data['cashoutAmount']}元红包成功，将再次尝试兑换。")
+                                            i+=1
+                                        else:
+                                            logger.info(f"{self.name}提现{data['cashoutAmount']}元现金成功")
+                                            break
                                     elif exchange['ret'] == 223:#积分不足
-                                        logger.info(f"{self.name}兑换{data['cashoutAmount']}红包失败:{exchange['msg']}")
+                                        logger.info(f"{error_text}{exchange['msg']}")
                                     elif int(exchange['ret']) in [224,232]:#库存不足|日库存不足
-                                        hbExchangeRuleList[i]['exchangeStatus']=4
-                                        logger.info(f"{self.name}兑换{data['cashoutAmount']}红包失败:{exchange['msg']}")
+                                        if exchangeType==1:hbExchangeRuleList[i]['exchangeStatus']=2
+                                        else:cashExchangeRuleList[i]['exchangeStatus']=2
+                                        logger.info(f"{error_text}{exchange['msg']}")
                                     elif int(exchange['ret']) in [248,103]:#操作过快，请稍后重试|jimDB操作异常
-                                        logger.info(f"{self.name}兑换{data['cashoutAmount']}红包失败:{exchange['msg']}")
+                                        logger.info(f"{error_text}{exchange['msg']}")
                                         logger.info(f"等待1s，后将重试。")
                                         i+=1
                                         time.sleep(0.8)
                                     elif int(exchange['ret']) in [246,604]:#达到个人日兑换上限|已有提现进行中，等待完成
-                                        logger.info(f"{self.name}兑换{data['cashoutAmount']}红包失败:{exchange['msg']}")
+                                        logger.info(f"{error_text}{exchange['msg']}")
                                         break
+                                    elif exchange['ret'] == 238:#兑换规则已失效
+                                        if exchangeType==1:
+                                            del hbExchangeRuleList[i]
+                                        else:
+                                            del cashExchangeRuleList[i]
                                     else:
-                                        logger.info(f"{self.name}兑换{data['cashoutAmount']}红包失败{exchange['ret']}:{exchange['msg']}")
+                                        logger.info(f"{error_text}{exchange['ret']}:{exchange['msg']}")
                                 except Exception as e:
-                                    logger.info(f"{self.name}兑换{data['cashoutAmount']}红包失败解析异常：{str(e)}")
-                                    print(res)
+                                    logger.info(f"{error_text}解析异常：{str(e)}")
+                                    print(res.text)
                             except Exception as e:
-                                logger.info(f"{self.name}兑换{data['cashoutAmount']}红包失败:超过2s请求超时...")
+                                logger.info(f"{error_text}超过2s请求超时...")
                                 get=False
                         else:
-                            logger.info(f"当前余额[{self.canUseCoinAmount}]元,不兑换[{NowNotRed}]门槛")
-                            if i==0:loop2=False
-                    #else:logger.info(f"当前余额[{self.canUseCoinAmount}]元,不足兑换[{data['cashoutAmount']}]红包门槛")
+                            logger.info(f"当前余额[{self.canUseCoinAmount}]元,不兑换{Tname}[{NowNot}]门槛")
+                            if i==0:loop[exchangeType]=False
+                    #else:logger.info(f"当前余额[{self.canUseCoinAmount}]元,不足兑换{Tname}[{data['cashoutAmount']}]元门槛")
                 elif data['exchangeStatus']==2:
                     logger.info(f"{self.name},来晚了咯{data['name']}都被抢光了")
-                    if i==0:loop2=False
+                    if i==0:loop[exchangeType]=False
                 elif data['exchangeStatus']==3:logger.info(f"{self.name},{data['name']}已兑换")
                 elif data['exchangeStatus']==4:
                     logger.info(f"{self.name},{data['name']}已抢光")
-                    if i==0:loop2=False
+                    if i==0:loop[exchangeType]=False
                 else:logger.info(f"{self.name}未知状态：{data}")
+        return True
+
+    def ExchangeListAll(self):
+        self.ExchangeList(2)
+        self.ExchangeList(1)
 
 def main():
     try:
@@ -411,14 +370,30 @@ def main():
     
     c=len(UserList)
     i=0
+    global loop,cashExchangeRuleList,hbExchangeRuleList,LastQueryTime
+    current_time = getTimestamp()
     for e in UserList:
         i+=1
         ##if e.getHome()==True:#print('白号')
+        #else:print(f'e.name 出错，跳过提现')
         time.sleep(1)
-        e.Query()
-        #e.CashOut()
-        #else:
-            #print(f'e.name 出错，跳过提现')
+        if e.Query():
+            if current_time>LastQueryTime:
+                LastQueryTime=e.LastQueryTime
+                cashExchangeRuleList=e.cashExchangeRuleList
+                resetState(2)
+                hbExchangeRuleList=e.hbExchangeRuleList
+                resetState(1)
+
+        e.h5st31=h5st31({
+            'appId':'af89e',
+            "appid": "cs_h5",
+            "clientVersion": "1.2.5",
+            "client": "jxh5",
+            "pin": e.name,
+            "ua":e.UA
+        })
+        e.h5st31.genAlgo()
         if i!=c:
             if c>2:
                 logger.info(f"等待15秒查询下一个")
@@ -434,54 +409,38 @@ def main():
     #nextHourStamp = current_time+1000
     nextHour=time.strftime("%H:%M:%S", time.localtime(nextHourStamp/1000))
     logger.info(f"开始等待{nextHour}提现")
-    global loop1,loop2,cashExchangeRuleList,hbExchangeRuleList
-    loop1=loop2=True
     while 1:
         current_time = getTimestamp()
         if current_time >= nextHourStamp:
-            if nextHour!="00:00:00":
-                SERL=[]
+            '''if nextHour!="10:00:00":
                 logger.info(f"开始查询库存")
                 for e in UserList:
-                    SERL=e.Query()
-                    if len(SERL)>0:
-                        cashExchangeRuleList=SERL["cashExchangeRuleList"]
-                        hbExchangeRuleList=SERL["hbExchangeRuleList"]
-                        logger.info("查询成功")
-                    else:
-                        logger.info(f"查询失败,强制提现{len(cashExchangeRuleList)}个")
-                        logger.info(f"查询失败,强制兑换{len(hbExchangeRuleList)}个")
-                    break
+                    if e.Query():
+                        if current_time>LastQueryTime:
+                            LastQueryTime=e.LastQueryTime
+                            cashExchangeRuleList=e.cashExchangeRuleList
+                            resetState(2)
+                            hbExchangeRuleList=e.hbExchangeRuleList
+                            resetState(1)'''
 
             print("")
             logger.info(f"开始兑换")
-            tdList1 = tdList2=[]
+            tdList=[]
             for e in UserList:
                 if e.valid:
                     if len(e.Not["cash"])==1 and e.Not["cash"][0]=='all':
                         e.info(f"{e.name}设置不提现")
-                    else:tdList1.append(threading.Thread(target=e.CashOut, args=()))
+                    else:tdList.append(threading.Thread(target=e.ExchangeList, args=(2,)))
                     if len(e.Not["red"])==1 and e.Not["red"][0]=='all':
                         logger.info(f"{e.name}设置不兑换红包")
-                    else:tdList2.append(threading.Thread(target=e.RedOut, args=()))
+                    else:tdList.append(threading.Thread(target=e.ExchangeList, args=(1,)))
 
             
-            for tdItem in tdList1:
-                if loop1:
+            for tdItem in tdList:
+                if loop[1] or loop[2]:
                     try:
                         tdItem.start()
-                        time.sleep(0.2) #0.2 秒一个
-                    except Exception as e:
-                        logger.info(f'提现异常：{str(e)}')
-                else:
-                    logger.info(f"最后一个也没得咯，多线程提前结束！")
-                    break
-
-            for tdItem in tdList2:
-                if loop2:
-                    try:
-                        tdItem.start()
-                        time.sleep(0.2) #0.2 秒一个
+                        time.sleep(0.1) #0.1 秒一个
                     except Exception as e:
                         logger.info(f'提现异常：{str(e)}')
                 else:
