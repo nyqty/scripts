@@ -272,9 +272,20 @@ class Userinfo:
                                 except Exception as e:
                                     logger.info(f"{error_text}解析异常：{str(e)}")
                                     print(res.text)
+                                    get=False
+                                    error+=1
+                                    if retry>error:
+                                        i+=1
+                                        logger.info(f"将重试。")
+                                    else:error=0
                             except Exception as e:
                                 logger.info(f"{error_text}超过2s请求超时...")
                                 get=False
+                                error+=1
+                                if retry>error:
+                                    i+=1
+                                    logger.info(f"将重试。")
+                                else:error=0
                         else:
                             logger.info(f"当前余额[{self.canUseCoinAmount}]元,不兑换{Tname}[{NowNot}]门槛")
                             if i==0:loop[exchangeType]=False
