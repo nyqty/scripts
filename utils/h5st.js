@@ -97,7 +97,7 @@ class H5ST{
         Object.assign(this, opt)
         if( !isset(this.version) ) this.version="3.1"
         if(!this.fp) this.fp=this.generateFp()
-        this.sua=ua.match(/\(([^)]+)\)/)[1];
+        this.sua=this.ua.match(/\(([^)]+)\)/)[1];
 
     }
     isset(e) {
@@ -145,7 +145,7 @@ class H5ST{
         let opt = {
             "url": "https://cactus.jd.com/request_algo?g_ty=ajax",
             "body": JSON.stringify({
-                "version": version,
+                "version": this.version,
                 "fp": this.fp,
                 "appId": this.appId,
                 "timestamp": new Date().getTime(),
@@ -171,6 +171,8 @@ class H5ST{
                             this.tk = result.tk
                             this.genKey = new Function('return ' + result.algo)();
                             resolve(res.data.result);
+                        }else{
+                            console.log(`request_algo 失败 ${JSON.stringify(res)}`)
                         }
                     }
                 } catch (e) {
@@ -182,7 +184,7 @@ class H5ST{
             (err) => {
                     try {
                     const { message: error, response: resp } = err
-                        console.log(`${jsonStringify(error)}`)
+                        console.log(`${JSON.stringify(error)}`)
                         console.log(`${functionId} API请求失败，请检查网路重试`)
                     } catch (e) {
                         console.log(e)
@@ -194,7 +196,7 @@ class H5ST{
         })
     }
     async genH5st(functionId,body,code=true){
-        t = new Date().getTime()
+        const t = new Date().getTime()
         if(!this.tk){
             hq=await this.genAlgo()
             if(!hq) return [false,"获取Algo失败"]
@@ -213,13 +215,8 @@ class H5ST{
         let str = ["appid", "body", "client", "clientVersion", "functionId", "t"].filter(item => Data[item]).map(
             k => k + ":" + (k == "body" ? CryptoJS.SHA256(Data[k]).toString() : Data[k])
         ).join("&"),
-        Key = await this.genKey(this.tk, this.fp,timeDate+(this.version=="400"?"":66), this.appId, CryptoJS).toString();
-        if(this.version=="400"){
-            _0x1e25a9 = await this.genKey(this.tk, fp, timeDate + "66", appId, CryptoJS).toString(),
-            hex = CryptoJS.HmacSHA256(str, Key).toString(CryptoJS.enc.Hex);
-        }else{
-            hex = CryptoJS.HmacSHA1(str, Key).toString(CryptoJS.enc.Hex);
-        }
+        Key = await this.genKey(this.tk, this.fp,timeDate+(this.version=="400"?66:""), this.appId, CryptoJS).toString(),
+        hex = CryptoJS[this.version=="400"?"HmacSHA1":"HmacSHA256"](str, Key).toString(CryptoJS.enc.Hex);
         let h5sts = [timeDate, this.fp, this.appId, this.tk, hex, this.version, time];
         if(this.version=="3.1"){
             h5sts.push(aes_cipher("wm0!@w_s#ll1flo(",JSON.stringify({"sua": this.sua,"pp": {"p1":this.pin},"fp": this.fp}, null, 2)));
@@ -229,13 +226,19 @@ class H5ST{
                 ,"random": randomString(10,"0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
             }, null, 2)));
         }
-        return [false,h5sts.join(";"),time,body];
+        return [true,h5sts.join(";"),time,body];
     }
 
-    getbody(functionId,body,code=true){
-        let [ok,h5st,t,body]=this.geth5st(functionId,body,code)
-        if(ok) return "functionId=" + fn + "&body=" + encodeURIComponent(body) + (code?"&t=" + t:"") + "&appid=" + appid + "&client=" + client + "&clientVersion=" + clientVersion + "&h5st=" + encodeURIComponent(h5st);
-        else return false
+    async getbody(functionId,body,code=true){
+        var arr=await this.genH5st(functionId,body,code);
+        if(arr[0]){
+            let h5st=arr[1],t=arr[2];
+            body=arr[3];
+            return "functionId=" + functionId + "&body=" + encodeURIComponent(body) + (code?"&t=" + t:"") + "&appid=" + this.appid + "&client=" + this.client + "&clientVersion=" + this.clientVersion + "&h5st=" + encodeURIComponent(h5st);
+        }else{
+            console.log(arr[1]);
+            return false;
+        }
     }
 }
 

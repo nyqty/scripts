@@ -93,7 +93,6 @@ async function ck_expire(){
                     console.log(`当前已获取助力${num}次，大于设置的${max}的上限故跳过`)
                 }else{
                     inviters.push({pin:$.UserName,code:Home["inviter"],num,max});
-                    
                 }
                 console.log(`【助力码】${Home["inviter"]}`)
                 if(inviters.length>=TYUserName.length) break;
@@ -104,6 +103,7 @@ async function ck_expire(){
             }else{
                 console.log(Home);
             }
+            await $.wait(2000)
         }
     }
     
@@ -316,6 +316,7 @@ async function JDTaskApi(functionId, body = { },appId='') {
         };
         ac='post';
         opt["body"] = await $.H5ST31[$.UserName][appId].getbody(functionId,body);
+        //console.log(opt["body"]);process.exit(0); 
     }else{
         ac='get';
         opt["url"]+=`?functionId=${functionId}&body=${escape(JSON.stringify(body))}&t=${Date.now()}&appid=activities_platform`;
