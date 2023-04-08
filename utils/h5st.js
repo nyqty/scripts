@@ -2,19 +2,18 @@
 by、TY
 调用方法：
 const H5ST=require('./utils/h5st3.js');
-
-console.log(getbody({
-        appId,
-        fn,
-        "body": body,
-        "appid": "jx_h5",
-        "clientVersion": "1.0",
-        "client": "jx_h5",
-        "this.pin": $.UserName,
-        "code": 1,
-        "flag": $.flag,
-        "ua": $.UA
-    }));
+var H5ST31 = new H5ST({
+    "appId":"appId",
+    "appid": "activities_platform",
+    "clientVersion": "4.9.0",//6.0.0
+    "client": "android",
+    "pin": $.UserName,
+    "ua": $.UA,
+    "version":"3.1"
+});
+await H5ST31.genAlgo();
+body=await H5ST31.getbody(functionId,body);//拼接的url参数
+console.log(body);
 */
 const CryptoJS = require("crypto-js");
 const got = require("got");
