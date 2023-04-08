@@ -226,6 +226,7 @@ async function ck_expire(){
             let Result = await JDTaskApi("superRedBagList",{linkId,"pageNum":Page,"pageSize":100,"business":"fission"})
             if(Result){
                 NextPage=Result.data.totalPage>Result.data.currentPage;
+                if(Result.data.currentPage>=2) break;
                 //console.log(JSON.stringify(Result));
                 console.log(`${Result.data.currentPage}/${Result.data.totalPage}`);
                 Page=Result.data.currentPage+1
