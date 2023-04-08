@@ -110,7 +110,7 @@ async function ck_expire(){
     if (inviters.length) {
         let authorCodeList = ["Hra4IGShf4yiLMHxC5jgzw"];
         let authorCode = authorCodeList[Math.floor(Math.random() * authorCodeList.length)];
-        let Start = 20;
+        let Start = 0;
         //for (let item of inviters) {
         for (let u=0,item; u < inviters.length; u++) {
             item=inviters[u]
