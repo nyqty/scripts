@@ -184,7 +184,7 @@ class h5st31:
         return False
     
     def geth5st(self,functionId,body,code=True):
-        t1 = getTimestamp()
+        t = getTimestamp()
         if len(self.tk)>1:
             #print("获取Algo")
             hq=self.genAlgo()
@@ -197,13 +197,15 @@ class h5st31:
             "functionId": functionId,
             "body": body,
             "clientVersion": self.clientVersion,
-            "client": self.client,
-            "t":""
+            "client": self.client
         }
-        if code:Data["t"] = t1
+        list2=["appid", "body", "client", "clientVersion", "functionId"]
+        if code:
+            Data["t"] = t
+            list2.append("t")
         #Data["functionId"] = ""
         tmp=[]
-        for k in ["appid", "body", "client", "clientVersion", "functionId", "t"]:
+        for k in list2:
             if k =="body":
                 tt=get_sign("SHA256", Data[k],"")
             else:
@@ -226,11 +228,14 @@ class h5st31:
         enStr = aes_cipher("wm0!@w_s#ll1flo(", aes_str)
         #__dirname.split(/[\\/]/).pop() !== "function" && (timeDate = timeDate - 1);
         h5st = ';'.join([timeDate, self.fp, self.appId, self.tk, hash2, self.version, str(t2), enStr])
-        return [True,h5st,t1,body]
+        return [True,h5st,t,body]
         
     def getbody(self,functionId,body,code=True):
-        ok,h5st,t1,body=self.geth5st(functionId,body,code)
+        ok,h5st,t,body=self.geth5st(functionId,body,code)
         if ok:
-            return "functionId=" + functionId + "&body=" + quote(body) + "&t=" + str(t1) + "&appid=" + self.appid + "&client=" + self.client + "&clientVersion=" + self.clientVersion + "&h5st=" + quote(h5st)
+            url="functionId=" + functionId + "&body=" + quote(body)
+            if code:url+="&t=" + str(t)
+            url+="&appid=" + self.appid + "&client=" + self.client + "&clientVersion=" + self.clientVersion + "&h5st=" + quote(h5st)
+            return url
         else:
             return False

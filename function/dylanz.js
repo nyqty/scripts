@@ -81,6 +81,7 @@ function _0x39473a(_0x309b2a, _0x3db74d, _0xdf6d05, _0x4ea42a) {
         });
     });
 }
+
 function _0x2c1fb0() {
     var _0x194b46 = "i1uct6d0jh";
     let _0x5a3426 = [],
@@ -109,13 +110,11 @@ function _0x2c1fb0() {
         _0x227fee !== -1 && (_0x47477b = _0x47477b.replace(_0x4bc166[_0x3f36ee], ""));
     }
     let _0x26b578 = _0x47477b;
-    var _0x34804a = {};
-    _0x34804a.size = _0x573a87;
-    _0x34804a.num = _0x26b578;
-    var _0x2a39e6 = _0x1da01f(_0x34804a) + _0x4bc166 + _0x1da01f({
-        "size": 12 - _0x573a87 - 1,
-        "num": _0x26b578
-    }) + _0x573a87,
+    var num= _0x573a87;
+    charset = _0x26b578;
+
+    
+    var _0x2a39e6 = randomString(num,charset) + _0x4bc166 + randomString(12 - _0x573a87 - 1,_0x26b578) + _0x573a87,
         _0x2b230d = _0x2a39e6.split(""),
         _0x41f969 = _0x2b230d.slice(0, 9),
         _0x2c33fb = _0x2b230d.slice(9),
@@ -127,28 +126,29 @@ function _0x2c1fb0() {
     var _0x474c63 = _0x5a2e53.join("");
     return _0x474c63;
 }
-function _0x1da01f(_0x15cd55) {
-    let _0x3d2d31 = _0x15cd55.size,
-        _0x25e03a = _0x15cd55.num;
-    let _0x49ec4b = "";
-    for (; _0x3d2d31--;) {
-        _0x49ec4b += _0x25e03a[Math.random() * _0x25e03a.length | 0];
+
+
+function randomString(num, charset = "abcdef0123456789") {
+    let str = '';
+    for (let i = 0; i < num; i++) {
+        str += charset.charAt(Math.floor(Math.random() * charset.length));
     }
-    return _0x49ec4b;
+    return str;
 }
-async function _0x4acd65(_0x2b3932) {
-    let _0x1632cd = _0x2c1fb0(),
+
+async function getbody(_0x2b3932) {
+    let fp = _0x2c1fb0(),
         {
-            body: _0x246372,
-            ua: _0x1d2268,
-            user: _0xf4bd48,
-            ver: _0x3372de,
-            cl: _0x148fa8,
-            fn: _0x18f1a6,
-            appId: _0x13ba9e,
-            code: _0x3ec9c2,
-            apid: _0x2b630a,
-            xcr: _0x3080ae
+            body,
+            ua,
+            user,
+            ver: ver,
+            cl,
+            fn: fn,
+            appId,
+            code,
+            apid,
+            xcr
         } = _0x2b3932,
         _0x44b7fd = _0x4e50ab({
             "size": 10,
@@ -158,20 +158,20 @@ async function _0x4acd65(_0x2b3932) {
         "size": 10,
         "num": "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
     });
-    _0x246372 = typeof _0x246372 !== "string" ? JSON.stringify(_0x246372) : _0x246372;
+    body = typeof body !== "string" ? JSON.stringify(body) : body;
     let _0x43f09d = ["wc", "wd", "l", "ls", "ml", "pl", "av", "ua", "sua", "pp", "pp1", "w", "h", "ow", "oh", "url", "og", "pr", "re", "random"],
         _0x285e5c = {};
     const _0x267726 = {
-        "p1": _0xf4bd48,
-        "p2": _0xf4bd48
+        "p1": user,
+        "p2": user
     };
-    let _0x49e643 = [1, 0, "zh-CN", "zh-CN", 0, 0, "", _0x1d2268, _0x1d2268.match(/\(([^\)]+)\)/)[1], _0x267726, "", 393, 873, 393, 779, "", "", 2.75, "", _0x44b7fd];
+    let _0x49e643 = [1, 0, "zh-CN", "zh-CN", 0, 0, "", ua, ua.match(/\(([^\)]+)\)/)[1], _0x267726, "", 393, 873, 393, 779, "", "", 2.75, "", _0x44b7fd];
     for (let _0x154932 in _0x43f09d) {
         _0x285e5c[_0x43f09d[_0x154932]] = _0x49e643[_0x154932];
     }
     const _0x4105a0 = {
-        "ai": _0x13ba9e,
-        "fp": _0x1632cd
+        "ai": appId,
+        "fp": fp
     };
     const _0x530e88 = {
         ..._0x285e5c,
@@ -185,21 +185,21 @@ async function _0x4acd65(_0x2b3932) {
         }),
         _0xe52148 = _0x8d6899.ciphertext.toString(),
         _0x4123a3 = new Date().getTime(),
-        _0x1602b4 = await _0x39473a(_0x13ba9e, _0x1632cd, _0x1d2268, _0xe52148);
+        _0x1602b4 = await _0x39473a(appId, fp, ua, _0xe52148);
     let _0x5959a5 = new Date().getTime(),
         _0x4c3e2a = _0x57767f(_0x5959a5, "yyyyMMddhhmmssSSS"),
         _0x31b6c5 = _0x4c3e2a + "66",
         _0x1ca0ec = _0x1602b4.tk;
     let _0xb5ad15 = new Function("return " + _0x1602b4.algo)();
-    let _0x1e25a9 = await _0xb5ad15(_0x1ca0ec, _0x1632cd, _0x31b6c5, _0x13ba9e, _0x560bc2).toString();
+    let _0x1e25a9 = await _0xb5ad15(_0x1ca0ec, fp, _0x31b6c5, appId, _0x560bc2).toString();
     const _0x1356d7 = {
-        "appid": _0x2b630a,
-        "functionId": _0x18f1a6,
-        "body": _0x246372,
-        "clientVersion": _0x3372de,
-        "client": _0x148fa8
+        "appid": apid,
+        "functionId": fn,
+        "body": body,
+        "clientVersion": ver,
+        "client": cl
     };
-    if (_0x3ec9c2) {
+    if (code) {
         _0x1356d7.t = _0x4123a3;
     }
     Date.now() > "1680278400000" && (_0x1356d7.functionId = "");
@@ -208,21 +208,21 @@ async function _0x4acd65(_0x2b3932) {
         _0x5ec50f = _0x560bc2.HmacSHA1(_0x5c3ece, _0x1e25a9).toString(_0x560bc2.enc.Hex),
         _0x4c476d = "",
         _0x5ed497 = {
-            "sua": _0x1d2268.match(/\(([^\)]+)\)/)[1],
+            "sua": ua.match(/\(([^\)]+)\)/)[1],
             "pp": {},
-            "fp": _0x1632cd,
+            "fp": fp,
             "random": _0x3b2eda
         };
-    _0x5ed497.pp.p1 = _0xf4bd48;
-    _0x5ed497.pp.p2 = _0xf4bd48;
+    _0x5ed497.pp.p1 = user;
+    _0x5ed497.pp.p2 = user;
     let _0x25ef1a = _0x560bc2.AES.encrypt(JSON.stringify(_0x5ed497, null, 2), _0x560bc2.enc.Utf8.parse("n1nJA1s[uoyl982f"), {
         "iv": _0x560bc2.enc.Utf8.parse("0102030405060708"),
         "mode": _0x560bc2.mode.CBC,
         "padding": _0x560bc2.pad.Pkcs7
     });
     _0x4c476d = _0x25ef1a.ciphertext.toString();
-    let _0x30beab = [_0x4c3e2a, _0x1632cd, _0x13ba9e, _0x1ca0ec, _0x5ec50f, 400, _0x5959a5, _0x4c476d].join(";");
-    return "functionId=" + _0x18f1a6 + "&body=" + encodeURIComponent(_0x246372) + "&appid=" + _0x2b630a + "&client=" + _0x148fa8 + "&clientVersion=" + _0x3372de + "&" + (_0x3ec9c2 ? "t=" + _0x4123a3 + "&" : "") + "h5st=" + encodeURIComponent(_0x30beab);
+    let _0x30beab = [_0x4c3e2a, fp, appId, _0x1ca0ec, _0x5ec50f, 400, _0x5959a5, _0x4c476d].join(";");
+    return "functionId=" + fn + "&body=" + encodeURIComponent(body) + "&appid=" + apid + "&client=" + cl + "&clientVersion=" + ver + "&" + (code ? "t=" + _0x4123a3 + "&" : "") + "h5st=" + encodeURIComponent(_0x30beab);
 }
 function _0x2d3e6a(_0x3054ee, _0x2393e0 = () => { }) {
     const {
@@ -251,61 +251,8 @@ function _0x2d3e6a(_0x3054ee, _0x2393e0 = () => { }) {
         _0x2393e0(_0x19a6ce, _0x39bcb7, _0x39bcb7 && _0x39bcb7.body);
     });
 }
-class _0x3428e6 {
-    constructor(_0x3dda3a, _0x628144, _0x17e151) {
-        this.appId = _0x3dda3a;
-        this.ua = _0x628144;
-        this.fp = _0x17e151 || this.__genFp();
-    }
-    ["__genFp"]() {
-        let _0x4dc02d = "0123456789";
-        let _0xa95767 = 13;
-        let _0xf29b48 = "";
-        for (; _0xa95767--;) {
-            _0xf29b48 += _0x4dc02d[Math.random() * _0x4dc02d.length | 0];
-        }
-        return (_0xf29b48 + Date.now()).slice(0, 16);
-    }
-    async ["__genAlgo"]() {
-        this.time = Date.now();
-        this.timestamp = format(this.time, "yyyyMMddHHmmssSSS");
-        let {
-            data: _0xf60969
-        } = await axios.post("https://cactus.jd.com/request_algo?g_ty=ajax", {
-            "version": "3.0",
-            "fp": this.fp,
-            "appId": this.appId.toString(),
-            "timestamp": this.time,
-            "platform": "web",
-            "expandParams": ""
-        }, {
-            "headers": {
-                "Host": "cactus.jd.com",
-                "accept": "application/json",
-                "content-type": "application/json",
-                "user-agent": this.ua
-            }
-        });
-        this.tk = _0xf60969.data.result.tk;
-        this.rd = _0xf60969.data.result.algo.match(/rd='(.*)'/)[1];
-        this.enc = _0xf60969.data.result.algo.match(/algo\.(.*)\(/)[1];
-    }
-    ["__genKey"](_0x3eda6d, _0x2d5b09, _0x5d8fa7, _0x4e2a72, _0x525e40) {
-        let _0xff94da = "" + _0x3eda6d + _0x2d5b09 + _0x5d8fa7 + _0x4e2a72 + this.rd;
-        return _0x525e40[this.enc](_0xff94da, _0x3eda6d);
-    }
-    ["__genH5st"](_0x345425) {
-        let _0x5504f4 = this.__genKey(this.tk, this.fp, this.timestamp, this.appId, CryptoJS).toString(CryptoJS.enc.Hex);
-        let _0x4544a3 = "";
-        for (let _0x4f88b7 of Object.keys(_0x345425)) {
-            _0x4f88b7 === "body" ? _0x4544a3 += _0x4f88b7 + ":" + CryptoJS.SHA256(_0x345425[_0x4f88b7]).toString(CryptoJS.enc.Hex) + "&" : _0x4544a3 += _0x4f88b7 + ":" + _0x345425[_0x4f88b7] + "&";
-        }
-        _0x4544a3 = _0x4544a3.slice(0, -1);
-        _0x4544a3 = CryptoJS.HmacSHA256(_0x4544a3, _0x5504f4).toString(CryptoJS.enc.Hex);
-        return encodeURIComponent(this.timestamp + ";" + this.fp + ";" + this.appId.toString() + ";" + this.tk + ";" + _0x4544a3 + ";3.0;" + this.time.toString());
-    }
-}
+
 const _0x15a036 = {
-    "getbody": _0x4acd65
+    "getbody": getbody
 };
 module.exports = _0x15a036;

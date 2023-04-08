@@ -237,60 +237,6 @@ function _0x2d3e6a(_0x3054ee, _0x2393e0 = () => { }) {
         _0x2393e0(_0x19a6ce, _0x39bcb7, _0x39bcb7 && _0x39bcb7.body);
     });
 }
-class _0x3428e6 {
-    constructor(_0x3dda3a, _0x628144, _0x17e151) {
-        this.appId = _0x3dda3a;
-        this.ua = _0x628144;
-        this.fp = _0x17e151 || this.__genFp();
-    }
-    ["__genFp"]() {
-        let _0x4dc02d = "0123456789";
-        let _0xa95767 = 13;
-        let _0xf29b48 = "";
-        for (; _0xa95767--;) {
-            _0xf29b48 += _0x4dc02d[Math.random() * _0x4dc02d.length | 0];
-        }
-        return (_0xf29b48 + Date.now()).slice(0, 16);
-    }
-    async ["__genAlgo"]() {
-        this.time = Date.now();
-        this.timestamp = format(this.time, "yyyyMMddHHmmssSSS");
-        let {
-            data: _0xf60969
-        } = await axios.post("https://cactus.jd.com/request_algo?g_ty=ajax", {
-            "version": "3.0",
-            "fp": this.fp,
-            "appId": this.appId.toString(),
-            "timestamp": this.time,
-            "platform": "web",
-            "expandParams": ""
-        }, {
-            "headers": {
-                "Host": "cactus.jd.com",
-                "accept": "application/json",
-                "content-type": "application/json",
-                "user-agent": this.ua
-            }
-        });
-        this.tk = _0xf60969.data.result.tk;
-        this.rd = _0xf60969.data.result.algo.match(/rd='(.*)'/)[1];
-        this.enc = _0xf60969.data.result.algo.match(/algo\.(.*)\(/)[1];
-    }
-    ["__genKey"](_0x3eda6d, _0x2d5b09, _0x5d8fa7, _0x4e2a72, _0x525e40) {
-        let _0xff94da = "" + _0x3eda6d + _0x2d5b09 + _0x5d8fa7 + _0x4e2a72 + this.rd;
-        return _0x525e40[this.enc](_0xff94da, _0x3eda6d);
-    }
-    ["__genH5st"](_0x345425) {
-        let _0x5504f4 = this.__genKey(this.tk, this.fp, this.timestamp, this.appId, CryptoJS).toString(CryptoJS.enc.Hex);
-        let _0x4544a3 = "";
-        for (let _0x4f88b7 of Object.keys(_0x345425)) {
-            _0x4f88b7 === "body" ? _0x4544a3 += _0x4f88b7 + ":" + CryptoJS.SHA256(_0x345425[_0x4f88b7]).toString(CryptoJS.enc.Hex) + "&" : _0x4544a3 += _0x4f88b7 + ":" + _0x345425[_0x4f88b7] + "&";
-        }
-        _0x4544a3 = _0x4544a3.slice(0, -1);
-        _0x4544a3 = CryptoJS.HmacSHA256(_0x4544a3, _0x5504f4).toString(CryptoJS.enc.Hex);
-        return encodeURIComponent(this.timestamp + ";" + this.fp + ";" + this.appId.toString() + ";" + this.tk + ";" + _0x4544a3 + ";3.0;" + this.time.toString());
-    }
-}
 const _0x15a036 = {
     "getbody": _0x4acd65
 };
