@@ -160,7 +160,7 @@ async function ck_expire(){
                         console.log("助力达到设置上限，开始助力下一位。")
                         Start = i + 1;break;
                     }
-                    await $.wait(2000);
+                    await $.wait(4000);
                 }else if (BeforeHome && BeforeHome["code"]==1000 && BeforeHome["errMsg"]=='未登录') {
                     cookiesArr.splice(i, 1);i--;
                     await ck_expire();
