@@ -5,6 +5,7 @@
 变量 CXJ_PIN="pin1&pin2" 多个用&分隔
 指定最大助力 加“:”指定数量 例如指定pin1为60个最大助力，pin2没有指定就默认 CXJ_PIN="pin1:60&pin2"
 多少助力换下一个，默认50个 ，可调整变量 CXJ_MAX='100';
+只有出现助力自己的时候才会去助力作者。
 1 1 1 1 * https://raw.githubusercontent.com/atyvcn/jd_scripts/main/jd_inviteFission.js
 updatetime:2023/4/8
 */
@@ -108,7 +109,7 @@ async function ck_expire(){
     }
     
     if (inviters.length) {
-        let authorCodeList = ["Hra4IGShf4yiLMHxC5jgzw"];
+        let authorCodeList = ["aNCCrmkFj9FWdbNCbF--kw","Hra4IGShf4yiLMHxC5jgzw","fRm0DgXO-QL21ThMtQWUDg","q0_ZV7KDvsSxOLb3gzJUhQHuCf_5XIEZSnyDnj6QjHo","otUH9jNEHk1XUvPQ4M_kHA","vGl7gDpR-MboYSmEg0YTmVDggKKIARNO0pLz3xJLAa4"];
         let authorCode = authorCodeList[Math.floor(Math.random() * authorCodeList.length)];
         let Start = 0;
         //for (let item of inviters) {
@@ -126,7 +127,7 @@ async function ck_expire(){
                 console.log("\n开始【账号" + $.index + "】" + ($.nickName || $.UserName));
                 if( $.UserName==item.pin ){
                     if(authorCode){
-                        console.log("不能助力自己，去作者");
+                        console.log("不能助力自己，去助力作者");
                         inviter = authorCode;
                     }else{
                         console.log("不能助力自己，跳过。");
