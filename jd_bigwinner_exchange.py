@@ -25,6 +25,7 @@ import logging
 import requests
 import traceback
 from hashlib import sha1,md5
+import hmac
 import base64
 from urllib.parse import quote_plus, unquote_plus, quote
 import threading
@@ -62,6 +63,67 @@ cashExchangeRuleList=[
 ]
 LastQueryTime=1680932241451
 loop={1:True,2:True}
+
+import json
+from urllib.parse import quote
+
+def TDEncrypt(m):
+    m = json.dumps(m, separators=(',', ':'))
+    m = quote(m)
+    n = ""
+    g = 0
+    s64="23IL<N01c7KvwZO56RSTAfghiFyzWJqVabGH4PQdopUrsCuX*xeBjkltDEmn89.-"
+    m_l=len(m)
+    while g < m_l:
+        f = ord(m[g])
+        g += 1
+        d = ord(m[g]) if g<m_l else 0
+        g += 1
+        a = ord(m[g]) if g<m_l else 0
+        g += 1
+        b = f >> 2
+        f = (f & 3) << 4 | d >> 4
+        e = (d & 15) << 2 | a >> 6
+        c = a & 63
+        if d==0:
+            e = c = 64
+        elif a==0:
+            c = 64
+
+        if b<64:n+=s64[b]
+        if f<64:n+=s64[f]
+        if e<64:n+=s64[e]
+        if c<64:n+=s64[c]
+    #print(n)
+    return n + "/"
+
+
+def orderByAscII(J):
+    se = []
+    for ge in J:se.append(ge)
+    me = sorted(se)
+    ve = {}
+    for be in me:
+        ve[be] = J[be]
+    return ve
+
+def getParamsValue(J):
+    se = ""
+    for pe in J:
+        ge = J[pe]
+        if isinstance(ge, dict) or isinstance(ge, list):
+            ge = json.dumps(ge)
+        if ge is not None and ge != "" and (isinstance(ge, (int, float, bool)) or isinstance(ge, str)):
+            se += "&" + str(ge)
+    return se[1:]
+
+def getSignString(J):
+    J = orderByAscII(J)
+    J = getParamsValue(J)
+    key = b"xtl_sqg_mall-^&*-damai_(789)_@#$"
+    sign = hmac.new(key, J.encode(), md5).hexdigest()
+    return sign
+    
 
 def getTimestamp():
     return int(round(time.time() * 1000))
@@ -128,7 +190,7 @@ class Userinfo:
             "accept-language": "zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7",       
             "Cookie": self.cookie + f"; appCode={appCode}; sid={self.sha}; visitkey={self.uuid}",
         }
-        self.stockPersonDayLimit=-1
+        self.stockPersonDayLimit=10
         self.stockPersonDayUsed=0
         self.canUseCoinAmount=0
         self.valid=True
@@ -139,17 +201,87 @@ class Userinfo:
         #print(self.name)
 
     def getHome(self):
-        #t=getTimestamp()
-        t=1679328409259
-        body={"activeId":activeId,"isFirst":0,"visitChannel":1,"sceneval":2,"buid":325,"appCode":appCode,"time":t,"signStr":"5368dcae5888b1c3c10c294d5ecabca5"}
-        uuid='7032320889511194760'
-        h5st="20230321000649319%3B3511412639154514%3B638ee%3Btk02wbf501c7118nt4Hq7vwKnYIfe4Wrxq2Ydk4aaFh9sC2XfUT%2BovBV8dYmLXz9ki%2FM%2BfkTiiDlQXrCQyHZeP%2BcLKKX%3Bd3633724d9fa6787469f6a99745086a388f1d7cf9611604f308340355b48f6fb%3B3.1%3B1679328409319%3B62f4d401ae05799f14989d31956d3c5fe48e6438a35ea5b8b8d12ecf8c7f7c07712a08d6f8fe670c8b04cdb873be6623efd95a79a8f1d6b344a8e15f4961df8e5186840e5cddf6049f64b4d68b150fb9fc05a42a62f933d59c3e351607c9397b06cc1824c6ff68e816fe7dbc493d6c097c7c8a08666819ebf484a183c2d28eac5b142ffc3cc63e5860c804d2263874af";
-        url = f'https://api.m.jd.com/api?functionId=makemoneyshop_home&appid=jdlt_h5&t={t}&channel=jxh5&cv=1.2.5&clientVersion=1.2.5&client=jxh5&uuid={uuid}&cthr=1&loginType=2&body={quote(json.dumps(body))}&h5st={h5st}'
+        t=getTimestamp()
+        g={
+            'pin': '',
+            'oid': '',
+            'bizId': 'jx_h5_common',
+            'fc': '',
+            'mode': 'strict',
+            'p': 's',
+            'fp': '50f08d6e0c090550653030e7a8db8838',
+            'v': '3.1.0.0',
+            'f': '3',
+            'o': 'wqs.jd.com/sns/202210/20/make-money-shop/index.html',
+            'qs': f'activeId={activeId}&sid={self.sha}&un_area=',
+            'jsTk': '',
+            'qi': ''
+        }
+        a=TDEncrypt(g)
+        d='{"ts":{"deviceTime":1681011018608,"deviceEndTime":1681011018685},"ca":{"tdHash":"ae7bb88f7eac3baa052a6d2fd3c4eab8","contextName":"webgl,experimental-webgl","webglversion":"WebGL 1.0 (OpenGL ES 2.0 Chromium)","shadingLV":"WebGL GLSL ES 1.0 (OpenGL ES GLSL ES 1.0 Chromium)","vendor":"WebKit","renderer":"WebKit WebGL","extensions":["ANGLE_instanced_arrays","EXT_blend_minmax","EXT_color_buffer_half_float","EXT_float_blend","EXT_texture_filter_anisotropic","WEBKIT_EXT_texture_filter_anisotropic","EXT_sRGB","OES_element_index_uint","OES_fbo_render_mipmap","OES_standard_derivatives","OES_texture_float","OES_texture_float_linear","OES_texture_half_float","OES_texture_half_float_linear","OES_vertex_array_object","WEBGL_color_buffer_float","WEBGL_compressed_texture_astc","WEBGL_compressed_texture_etc","WEBGL_compressed_texture_etc1","WEBGL_debug_renderer_info","WEBGL_debug_shaders","WEBGL_depth_texture","WEBKIT_WEBGL_depth_texture","WEBGL_lose_context","WEBKIT_WEBGL_lose_context","WEBGL_multi_draw"],"wuv":"Qualcomm","wur":"Adreno (TM) 730"},"m":{"compatMode":"CSS1Compat"},"fo":["Bauhaus 93","Casual"],"n":{"vendorSub":"","productSub":"20030107","vendor":"Google Inc.","maxTouchPoints":5,"hardwareConcurrency":8,"cookieEnabled":true,"appCodeName":"Mozilla","appName":"Netscape","appVersion":"","platform":"Linux aarch64","product":"Gecko","userAgent":"","language":"zh-CN","onLine":true,"webdriver":false,"javaEnabled":false,"deviceMemory":8,"enumerationOrder":["vendorSub","productSub","vendor","maxTouchPoints","userActivation","doNotTrack","geolocation","connection","plugins","mimeTypes","webkitTemporaryStorage","webkitPersistentStorage","hardwareConcurrency","cookieEnabled","appCodeName","appName","appVersion","platform","product","userAgent","language","languages","onLine","webdriver","getBattery","getGamepads","javaEnabled","sendBeacon","vibrate","scheduling","mediaCapabilities","locks","wakeLock","usb","clipboard","credentials","keyboard","mediaDevices","storage","serviceWorker","deviceMemory","bluetooth","getUserMedia","requestMIDIAccess","requestMediaKeySystemAccess","webkitGetUserMedia","clearAppBadge","setAppBadge"]},"p":[],"w":{"devicePixelRatio":3,"screenTop":0,"screenLeft":0},"s":{"availHeight":904,"availWidth":407,"colorDepth":24,"height":904,"width":407,"pixelDepth":24},"sc":{"ActiveBorder":"rgb(255, 255, 255)","ActiveCaption":"rgb(204, 204, 204)","AppWorkspace":"rgb(255, 255, 255)","Background":"rgb(99, 99, 206)","ButtonFace":"rgb(221, 221, 221)","ButtonHighlight":"rgb(221, 221, 221)","ButtonShadow":"rgb(136, 136, 136)","ButtonText":"rgb(0, 0, 0)","CaptionText":"rgb(0, 0, 0)","GrayText":"rgb(128, 128, 128)","Highlight":"rgb(181, 213, 255)","HighlightText":"rgb(0, 0, 0)","InactiveBorder":"rgb(255, 255, 255)","InactiveCaption":"rgb(255, 255, 255)","InactiveCaptionText":"rgb(127, 127, 127)","InfoBackground":"rgb(251, 252, 197)","InfoText":"rgb(0, 0, 0)","Menu":"rgb(247, 247, 247)","MenuText":"rgb(0, 0, 0)","Scrollbar":"rgb(255, 255, 255)","ThreeDDarkShadow":"rgb(102, 102, 102)","ThreeDFace":"rgb(192, 192, 192)","ThreeDHighlight":"rgb(221, 221, 221)","ThreeDLightShadow":"rgb(192, 192, 192)","ThreeDShadow":"rgb(136, 136, 136)","Window":"rgb(255, 255, 255)","WindowFrame":"rgb(204, 204, 204)","WindowText":"rgb(0, 0, 0)"},"ss":{"cookie":true,"localStorage":true,"sessionStorage":true,"globalStorage":false,"indexedDB":true},"tz":-480,"lil":"","wil":""}'
+        d = json.loads(d)
+        d["ts"]["deviceTime"]=t
+        d["ts"]["deviceEndTime"]=t+77
+        d["n"]["appVersion"]=self.UA[self.UA.find("appBuild/")+9:]
+        d["n"]["userAgent"]=self.UA
+        d=TDEncrypt(d)
+        data={"d":d}
+        url = f'https://gia.jd.com/jsTk.do?a={a}'
+        headers = {
+            "Host": "gia.jd.com",
+            "User-Agent": self.UA,
+            "content-type": "application/x-www-form-urlencoded;charset=UTF-8",
+            "Accept":"*/*",
+            "origin": "https://wqs.jd.com",
+            "x-requested-with": "com.jd.jdlite",
+            "sec-fetch-site": "same-site",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-dest": "empty",
+            "referer": "https://wqs.jd.com/",
+            "accept-encoding": "gzip, deflate, br",
+            "accept-language": "zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7",       
+            "Cookie": self.cookie + f"; appCode={appCode}; sid={self.sha}; visitkey={self.uuid}",
+        }
+        x_api_eid_token=""
+        try:
+            res = requests.post(url=url,data=data,headers=headers,proxies={},timeout=2).text
+            try:
+                res = json.loads(res)
+                if res['code'] == 0:#res.data
+                    x_api_eid_token=res['data']['token']
+                else:
+                    print(res)
+            except Exception as e:
+                logger.info(f"{self.name}jsTk api解析异常：{str(e)}")
+        except Exception as e:
+            logger.info(f"{self.name}jsTk api超过2s请求超时...")
+
+        if not x_api_eid_token:
+            print("x_api_eid_token 获取失败")
+            return False
+        t=getTimestamp()
+        new_h5st31=h5st31({
+            'appId':'638ee',
+            "appid": "jdlt_h5",
+            "clientVersion": "1.2.5",
+            "client": "jxh5",
+            "pin": self.name,
+            "ua":self.UA
+        })
+        new_h5st31.genAlgo()
+        body={"activeId":activeId,"isFirst":1,"visitChannel":1,"sceneval":2,"buid":325,"appCode":appCode,"time":t}
+        body["signStr"]=getSignString(body)
+        g=new_h5st31.getbody("makemoneyshop_home",body)
+        url = f'https://api.m.jd.com/api?{g}&uuid={self.uuid}&cthr=1&loginType=2&x-api-eid-token={x_api_eid_token}'
         try:
             res = requests.get(url=url, headers=self.headers,proxies={},timeout=2).text
             try:
                 res = json.loads(res)
                 if res['code'] == 0:#res.data
+                    del res['data']['skuList']
+                    del res['data']['clientConf']
+                    self.canUseCoinAmount=res['data']['canUseCoinAmount']#canUseCoinMoney
+                    # 'exchangeRuleList': [{'id': '1848d61655f979f8eac0dd36235586ba', 'exchangeType': 2, 'name': '0.3元现金', 'images': ['//img10.360buyimg.com/mobilecms/jfs/t1/162133/4/32067/14947/635b9211E65a27b71/c0421d0e85d83caa.jpg!q70.dpg'], 'description': '', 'exchangeStatus': 4, 'consumeScore': '0.30', 'cashoutAmount': '0.3', 'orderSkuId': '', 'orderAmount': '0.00', 'attribute': ''}, {'id': 'f7a42f19c8d17c6ff1229808ecd57292', 'exchangeType': 1, 'name': '0.5元红包', 'images': ['//img10.360buyimg.com/mobilecms/jfs/t1/148557/9/31725/8098/642acbf2Fb69d750f/6b6d9fb66502e3c7.png'], 'description': '', 'exchangeStatus': 1, 'consumeScore': '0.50', 'cashoutAmount': '0.5', 'orderSkuId': '', 'orderAmount': '0.00', 'attribute': '', 'extMap': {'couponDiscount': '0.5', 'prizeLevel': 28, 'prizeType': 12, 'active': 'jxyqyl_hjc_hongbao', 'couponQuota': '0'}}, {'id': 'd29967608439624bd4688e06254b6374', 'exchangeType': 1, 'name': '1元红包', 'images': ['//img10.360buyimg.com/mobilecms/jfs/t1/99789/4/38033/8098/63fe245eFba0b7137/8cb6660a1e943cf4.png'], 'description': '', 'exchangeStatus': 3, 'consumeScore': '1.00', 'cashoutAmount': '1', 'orderSkuId': '', 'orderAmount': '0.00', 'attribute': '', 'extMap': {'couponDiscount': '1', 'prizeLevel': 24, 'prizeType': 12, 'active': 'jxyqyl_hjc_hongbao', 'couponQuota': '0'}}, {'id': '006d8d0f371e247333a302627af7da00', 'exchangeType': 1, 'name': '5元红包', 'images': ['//img10.360buyimg.com/mobilecms/jfs/t1/178803/39/33849/8098/63fe2394F2f92c78e/2859c16a38e79b74.png'], 'description': '', 'exchangeStatus': 2, 'consumeScore': '5.00', 'cashoutAmount': '5', 'orderSkuId': '', 'orderAmount': '0.00', 'attribute': '', 'extMap': {'couponDiscount': '5', 'prizeLevel': 23, 'prizeType': 12, 'active': 'jxyqyl_hjc_hongbao', 'couponQuota': '0'}}, {'id': '49995b2a611f5281c06d7b227ac54e09', 'exchangeType': 1, 'name': '8元红包', 'images': ['//img10.360buyimg.com/mobilecms/jfs/t1/150174/8/35289/8098/642ba80dF1493a495/62d8af9eba56cd43.png'], 'description': '', 'exchangeStatus': 2, 'consumeScore': '8.00', 'cashoutAmount': '8', 'orderSkuId': '', 'orderAmount': '0.00', 'attribute': '', 'extMap': {'couponDiscount': '8', 'prizeLevel': 29, 'prizeType': 12, 'active': 'jxyqyl_hjc_hongbao', 'couponQuota': '0'}}],
                     return True
                 else:
                     print(res)
@@ -160,10 +292,9 @@ class Userinfo:
         return False
 
     def Query(self):
-        t=1680927011146#getTimestamp()
-        body={"activeId":activeId,"visitChannel":1,"sceneval":2,"buid":325,"buid":325,"appCode":appCode,"time":t,"signStr":"afc721262c3400c3da0346aebc4ab858"}
-        #str="functionId=%s&body=%s&uuid=%s&client=%s&clientVersion=%s&st=%s" % ("makemoneyshop_exchangequery", body, base64Encode(self.uuid), "jxh5", "1.2.5", t)
-        #body["signStr"]=md5(str.encode(encoding='UTF-8')).hexdigest()
+        t=getTimestamp()
+        body={"activeId":activeId,"visitChannel":1,"sceneval":2,"buid":325,"buid":325,"appCode":appCode,"time":t}
+        body["signStr"]=getSignString(body)
         url = f'https://api.m.jd.com/api?functionId=makemoneyshop_exchangequery&appid=jdlt_h5&t={t}&channel=jxh5&cv=1.2.5&clientVersion=1.2.5&client=jxh5&uuid={self.uuid}&cthr=1&loginType=2&body={quote(json.dumps(body))}'
         try:
             res = requests.get(url=url, headers=self.headers,proxies={},timeout=2).text
@@ -219,8 +350,9 @@ class Userinfo:
                     if self.canUseCoinAmount >= float(data['cashoutAmount']) or self.stockPersonDayLimit==-1:
                         if float(data['cashoutAmount']) not in NowNot:
                             logger.info(f"当前余额[{self.canUseCoinAmount}]元,开始尝试兑换{Tname}[{data['cashoutAmount']}]")
-                            t=getTimestamp()#t=1679328422807 
-                            body={"bizCode":"makemoneyshop","ruleId":data["id"],"sceneval":2,"buid":325,"appCode":appCode,"time":t,"signStr":"903c5e28adcc30560599ccceab907032"}
+                            t=getTimestamp() 
+                            body={"bizCode":"makemoneyshop","ruleId":data["id"],"sceneval":2,"buid":325,"appCode":appCode,"time":t}
+                            body["signStr"]=getSignString(body)
                             #get=f'functionId=jxPrmtExchange_exchange&appid=jdlt_h5&t={t}&clientVersion=1.2.5&client=jxh5&body={quote(json.dumps(body))}'
                             get=self.h5st31.getbody("jxPrmtExchange_exchange",body,True)
                             url=f'https://api.m.jd.com/api?{get}&channel=jxh5&cv=1.2.5&uuid={self.uuid}&cthr=1&loginType=2'
@@ -385,8 +517,9 @@ def main():
     current_time = getTimestamp()
     for e in UserList:
         i+=1
-        ##if e.getHome()==True:#print('白号')
-        #else:print(f'e.name 出错，跳过提现')
+        if e.getHome()==True:
+            print('白号')
+        #else:print(f'{e.name} 出错，跳过提现')
         time.sleep(1)
         if e.Query():
             if current_time>LastQueryTime:
@@ -396,6 +529,7 @@ def main():
                 hbExchangeRuleList=e.hbExchangeRuleList
                 resetState(1)
 
+        
         e.h5st31=h5st31({
             'appId':'af89e',
             "appid": "cs_h5",
