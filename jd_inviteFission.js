@@ -34,7 +34,7 @@ let TYUserName=[],HelpMax={};
 if( process.env.CXJ_PIN ){
     process.env.CXJ_PIN.split("&").forEach((value) => {
         let a=value.split(":");
-        HelpMax[a[0]]=a.length>1?a[1]:CXJ_MAX;
+        HelpMax[a[0]]=a.length>1?parseInt(a[1]):CXJ_MAX;
         TYUserName.push(a[0]);
     })
 }else{
