@@ -109,6 +109,11 @@ async function ck_expire(){
     }
     
     if (inviters.length) {
+        //使用TYUserName对inviters进行排序的
+        inviters.sort((a, b) => {
+            return TYUserName.indexOf(a.pin) - TYUserName.indexOf(b.pin);
+        });
+        console.log('inviters:',inviters);
         let authorCodeList = ["aNCCrmkFj9FWdbNCbF--kw","Hra4IGShf4yiLMHxC5jgzw","fRm0DgXO-QL21ThMtQWUDg","q0_ZV7KDvsSxOLb3gzJUhQHuCf_5XIEZSnyDnj6QjHo","otUH9jNEHk1XUvPQ4M_kHA","vGl7gDpR-MboYSmEg0YTmVDggKKIARNO0pLz3xJLAa4"];
         let authorCode = authorCodeList[Math.floor(Math.random() * authorCodeList.length)];
         let Start = 0;
