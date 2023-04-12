@@ -374,12 +374,8 @@ class Userinfo:
                                     error_text=f"{self.name}兑换{data['cashoutAmount']}元{Tname}失败:"
                                     if exchange['ret'] == 0:
                                         self.stockPersonDayUsed+=1
-                                        if exchangeType==1:
-                                            logger.info(f"{self.name}兑换{data['cashoutAmount']}元红包成功，将再次尝试兑换。")
-                                            i+=1
-                                        else:
-                                            logger.info(f"{self.name}提现{data['cashoutAmount']}元现金成功")
-                                            break
+                                        logger.info(f"{self.name}兑换{data['cashoutAmount']}元{Tname}成功。")
+                                        if exchangeType==2:break
                                     elif exchange['ret'] == 223:#积分不足
                                         logger.info(f"{error_text}{exchange['msg']}")
                                     elif int(exchange['ret']) in [224,232]:#库存不足|日库存不足
