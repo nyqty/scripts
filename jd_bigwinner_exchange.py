@@ -192,7 +192,7 @@ class Userinfo:
         }
         self.stockPersonDayLimit=10
         self.stockPersonDayUsed=0
-        self.canUseCoinAmount=0
+        self.canUseCoinAmount=-1
         self.valid=True
 
         self.LastQueryTime=0
@@ -334,7 +334,7 @@ class Userinfo:
             i=len(cashExchangeRuleList)
         logger.info(f"{self.name}兑换{Tname}")
 
-        if self.stockPersonDayUsed>=self.stockPersonDayLimit and self.stockPersonDayLimit!=-1:
+        if self.stockPersonDayUsed>=self.stockPersonDayLimit:
             logger.info(f"当前兑换次数已经达到上限[{self.stockPersonDayLimit}]次")
         #elif 'exchangeRecordList' in res['data']:logger.info(f"已有提现进行中，请等待完成！")
         else:
@@ -343,11 +343,11 @@ class Userinfo:
             while i>0:#for data in cashExchangeRuleList[::-1]:#倒序
                 i-=1
                 data=hbExchangeRuleList[i] if exchangeType==1 else cashExchangeRuleList[i]
-                if self.stockPersonDayUsed>=self.stockPersonDayLimit and self.stockPersonDayLimit!=-1:
+                if self.stockPersonDayUsed>=self.stockPersonDayLimit:
                     logger.info(f"当前兑换次数已经达到上限[{self.stockPersonDayLimit}]次")
                     break
                 elif data['exchangeStatus']==1:
-                    if self.canUseCoinAmount >= float(data['cashoutAmount']) or self.stockPersonDayLimit==-1:
+                    if self.canUseCoinAmount >= float(data['cashoutAmount']) or self.canUseCoinAmount==-1:
                         if float(data['cashoutAmount']) not in NowNot:
                             logger.info(f"当前余额[{self.canUseCoinAmount}]元,开始尝试兑换{Tname}[{data['cashoutAmount']}]")
                             t=getTimestamp() 
