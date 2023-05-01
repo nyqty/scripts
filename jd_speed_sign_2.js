@@ -149,7 +149,7 @@ async function taskList() {
 								} else {
 									console.log(`${task.taskInfo.mainTitle}已完成`)
 								}
-								if (llAPIError) {
+								if (IPError) {
 									console.error('API请求失败，停止执行')
 									break
 								}
