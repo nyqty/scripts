@@ -27,6 +27,8 @@ cron "2 0-23/4 * * *" script-path=jd_cash.js,tag=签到领现金
  */
 const $ = new Env('签到领现金');
 let jdSignUrl = 'https://api.nolanstore.top/sign'
+if (process.env.SIGNURL)
+	jdSignUrl = process.env.SIGNURL;
 const notify = $.isNode() ? require('./sendNotify') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
@@ -63,7 +65,7 @@ let allMessage = '';
       $.isLogin = true;
       $.nickName = '';
       message = '';
-      //await TotalBean();
+      await TotalBean();
       console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
       if (!$.isLogin) {
         $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
