@@ -345,7 +345,7 @@ def ql_disable(id):
     logger.info(Data["msg"])
 
 
-def ql_AddUp(uid):
+def ql_AddUp(uid,ws):
     for count in range(tryCount):  # for循环 [tryCount]
         count += 1  # 自增
         return_ws = getToken(ws)  # 使用 WSKEY 请求获取 JD_COOKIE bool jd_ck
@@ -422,17 +422,17 @@ if __name__ == '__main__':  # Python主函数执行入口
     for i in range(len(wskeyData)):  # For循环 变量[wskeyData]的数量
         row=wskeyData[i]
         userName=row["userName"]
-        ws=row["value"]
+        ws=row["value"]#pin 如果是中文的要编码才行
         if userName:
             logger.info("\n账号{0} {1}".format(i+1,userName))  # 标准日志输出
             return_serch = serch_ck(userName)  # 变量 pt_pin 搜索获取 key eid
             if return_serch[0]:  # bool: True 搜索到账号
                 logger.info("检索成功")
                 if not check_ck(return_serch[1]):  # bool: False 判定 JD_COOKIE 有效性
-                    ql_AddUp(row["uid"])
+                    ql_AddUp(row["uid"],ws)
             else:  # 判断分支
                 logger.info("更新账号ck")  # 标准日志分支
-                ql_AddUp(row["uid"])
+                ql_AddUp(row["uid"],ws)
         else:  # 判断分支
             logger.info("WSKEY格式错误\n--------------------\n")  # 标准日志输出
     logger.info("\n执行完成\n--------------------")  # 标准日志输出
