@@ -61,10 +61,6 @@ function base64Decode(string) {
     return base64_decode(translate(string));
 }
 
-function uuid(length = 16) {
-    return getUUID(length);
-}
-
 function randomstr(e) {
     e = e || 32;
     let t = "abcdefghijklmnopqrstuvwxyz0123456789", a = t.length, n = "";
@@ -98,7 +94,7 @@ function randomeid() {
 }
 
 function get_ep($jduuid = "", $area = "") {//uiid和地区代码
-    if (!$jduuid) $jduuid = uuid(16);
+    if (!$jduuid) $jduuid = getUUID(16);
     let $ts = new Date().getTime(),
         $bsjduuid = base64Encode($jduuid);
     //$ts=1643792319938
@@ -127,7 +123,8 @@ function get_sign($functionId, $body, $client = "android", $clientVersion = '11.
     //console.log(all_arg)
     //console.log(sign)
     let $data = { "functionId": $functionId, "body": $body, "clientVersion": $clientVersion, "client": $client, "uuid": $suid, "eid": $eid, "ep": $ep, "st": $st, "sign": $sign, "sv": $sv };
-    $data["url"] = `https://api.m.jd.com?functionId=${$functionId}&body=${escape($body)}&clientVersion=${$clientVersion}&client=${$client}&sdkVersion=31&lang=zh_CN&harmonyOs=0&networkType=wifi&oaid=${$suid}&eid=${$eid}&ef=1&ep=${escape($ep)}&st=${$st}&sign=${$sign}&sv=${$sv}`
+    $data["convertUrl"]=`functionId=${$functionId}&body=${escape($body)}&clientVersion=${$clientVersion}&client=${$client}&sdkVersion=31&lang=zh_CN&harmonyOs=0&networkType=wifi&oaid=${$suid}&eid=${$eid}&ef=1&ep=${escape($ep)}&st=${$st}&sign=${$sign}&sv=${$sv}`
+    $data["url"] = `https://api.m.jd.com?`+$data["convertUrl"]
     return $data;
 }
 
