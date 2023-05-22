@@ -6,10 +6,11 @@ function _0x3f24c4(_0x16f52a) {
   }
   return _0x89b519;
 }
-function _0x236b64(_0x34cab0, _0x444f12) {
+
+function _0x236b64(arr, _0x444f12) {
   let _0x433350 = new Array();
-  for (let _0x52f677 in _0x34cab0) {
-    _0x433350.push(_0x34cab0[_0x52f677]);
+  for (let _0x52f677 in arr) {
+    _0x433350.push(arr[_0x52f677]);
   }
   let _0x1ecefb = new Array();
   for (let _0x3368d3 = 0; _0x3368d3 < _0x444f12; _0x3368d3++) {
@@ -24,17 +25,17 @@ function _0x236b64(_0x34cab0, _0x444f12) {
   return _0x1ecefb;
 }
 
-function UARAM(_0x5982ce) {
-  const _0x1d41e5={"A":"K","B":"L","C":"M","D":"N","E":"O","F":"P","G":"Q","H":"R","I":"S","J":"T","K":"A","L":"B","M":"C","N":"D","O":"E","P":"F","Q":"G","R":"H","S":"I","T":"J","e":"o","f":"p","g":"q","h":"r","i":"s","j":"t","k":"u","l":"v","m":"w","n":"x","o":"e","p":"f","q":"g","r":"h","s":"i","t":"j","u":"k","v":"l","w":"m","x":"n"};
+function UARAM(tjb=false) {
+  const dictionary={"A":"K","B":"L","C":"M","D":"N","E":"O","F":"P","G":"Q","H":"R","I":"S","J":"T","K":"A","L":"B","M":"C","N":"D","O":"E","P":"F","Q":"G","R":"H","S":"I","T":"J","e":"o","f":"p","g":"q","h":"r","i":"s","j":"t","k":"u","l":"v","m":"w","n":"x","o":"e","p":"f","q":"g","r":"h","s":"i","t":"j","u":"k","v":"l","w":"m","x":"n"};
   const _0x1cd700 = {
     "ud": "",
     "sv": "",
     "iad": ""
   };
-  let _0x1c100d = _0x236b64([12, 13, 14, 15, 16], 1) + "." + _0x236b64([0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 1) + "." + _0x236b64([0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 1),
+  let sv = _0x236b64([12, 13, 14, 15, 16], 1) + "." + _0x236b64([0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 1) + "." + _0x236b64([0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 1),
     _0x4d5e80 = _0x236b64([9, 10, 11], 1) + "." + _0x236b64([0, 1, 2, 3, 4, 5, 6, 7, 8], 1) + "." + _0x236b64([0, 1, 2, 3, 4, 5], 1),
     _0x16e12c = _0x236b64([4, 5, 6], 1) + "." + _0x236b64([0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 1) + "." + _0x236b64([0, 1, 2, 3, 4, 5], 1),
-    _0x2b6ed8 = {
+    ep = {
       "ciphertype": 5,
       "cipher": _0x1cd700,
       "ts": parseInt(new Date().getTime() / 1000),
@@ -43,16 +44,16 @@ function UARAM(_0x5982ce) {
       "appname": "",
       "ridx": -1
     };
-  _0x2b6ed8.cipher.sv = new Buffer.from(_0x1c100d).toString("base64").split("").map(_0x49219d => _0x1d41e5[_0x49219d] || _0x49219d).join("");
-  _0x2b6ed8.cipher.ud = new Buffer.from(_0x3f24c4(40)).toString("base64").split("").map(_0x2db617 => _0x1d41e5[_0x2db617] || _0x2db617).join("");
-  _0x2b6ed8.appname = "com.360buy.jdmobile";
-  _0x2b6ed8.hdid = "JM9F1ywUPwflvMIpYPok0tt5k9kW4ArJEU3lfLhxBqw=";
-  let _0x26d294 = "jdapp;iPhone;" + _0x4d5e80 + ";;;M/5.0;appBuild/168341;jdSupportDarkMode/0;ef/1;ep/" + encodeURIComponent(JSON.stringify(_0x2b6ed8)) + ";Mozilla/5.0 (iPhone; CPU iPhone OS " + _0x1c100d.replace(/\./g, "_") + " like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1;";
-  _0x2b6ed8.appname = "com.jd.jdmobilelite";
-  _0x2b6ed8.hdid = "ViZLFbOc+bY6wW3m9/8iSFjgglIbmHPOGSM9aXIoBes=";
-  _0x2b6ed8.ridx = 1;
-  let _0x579fcc = "jdltapp;iPhone;" + _0x16e12c + ";;;M/5.0;hasUPPay/0;pushNoticeIsOpen/0;lang/zh_CN;hasOCPay/0;appBuild/1338;supportBestPay/0;jdSupportDarkMode/0;ef/1;ep/" + encodeURIComponent(JSON.stringify(_0x2b6ed8)) + ";Mozilla/5.0 (iPhone; CPU iPhone OS " + _0x1c100d.replace(/\./g, "_") + " like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1;";
-  return _0x5982ce ? _0x579fcc : _0x26d294;
+  ep.cipher.sv = new Buffer.from(sv).toString("base64").split("").map(_0x49219d => dictionary[_0x49219d] || _0x49219d).join("");
+  ep.cipher.ud = new Buffer.from(_0x3f24c4(40)).toString("base64").split("").map(_0x2db617 => dictionary[_0x2db617] || _0x2db617).join("");
+  ep.appname = "com.360buy.jdmobile";
+  ep.hdid = "JM9F1ywUPwflvMIpYPok0tt5k9kW4ArJEU3lfLhxBqw=";
+  let _0x26d294 = "jdapp;iPhone;" + _0x4d5e80 + ";;;M/5.0;appBuild/168341;jdSupportDarkMode/0;ef/1;ep/" + encodeURIComponent(JSON.stringify(ep)) + ";Mozilla/5.0 (iPhone; CPU iPhone OS " + sv.replace(/\./g, "_") + " like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1;";
+  ep.appname = "com.jd.jdmobilelite";
+  ep.hdid = "ViZLFbOc+bY6wW3m9/8iSFjgglIbmHPOGSM9aXIoBes=";
+  ep.ridx = 1;
+  let _0x579fcc = "jdltapp;iPhone;" + _0x16e12c + ";;;M/5.0;hasUPPay/0;pushNoticeIsOpen/0;lang/zh_CN;hasOCPay/0;appBuild/1338;supportBestPay/0;jdSupportDarkMode/0;ef/1;ep/" + encodeURIComponent(JSON.stringify(ep)) + ";Mozilla/5.0 (iPhone; CPU iPhone OS " + sv.replace(/\./g, "_") + " like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1;";
+  return tjb ? _0x579fcc : _0x26d294;
 }
 
 module.exports = {

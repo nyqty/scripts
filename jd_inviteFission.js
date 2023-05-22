@@ -10,6 +10,9 @@
 updatetime:2023/4/8
 */
 const Env = require('./utils/Env.js');
+const USER_AGENTS = require("./USER_AGENTS");
+const H5ST=require('./utils/h5st.js');
+
 const $ = new Env('京喜特价邀请领现金');
 const notify = $.isNode() ? require('./sendNotify') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
@@ -48,7 +51,6 @@ if( process.env.CXJ_PIN ){
     return false
 }
 
-const H5ST=require('./utils/h5st.js');
 const JD_API_HOST = 'https://api.m.jd.com/api';
 const prize_conf = {'1': '优惠券','2': '红包','4': '现金',}
 async function ck_expire(){
@@ -65,6 +67,7 @@ async function ck_expire(){
     }
     $.UAS={};
     $.H5ST31={};
+    $.x_api_eid_tokens={};
     console.log(`运行流程：获取指定用户助力码--助力--抽奖提现`);
     if( TYUserName.length ){
         console.log(`去获取以下用户助力码：`,TYUserName);
@@ -83,6 +86,7 @@ async function ck_expire(){
                 await ck_expire();
                 continue
             }
+            
             let BeforeHome=await JDTaskApi("inviteFissionBeforeHome",{linkId,"isJdApp":true,"inviter":""},'02f8d');
             let Home=await JDTaskApi("inviteFissionHome",{linkId,"inviter":""},'eb67b')
             //let wheelsHome=await JDTaskApi("wheelsHome",{linkId,"inviteActId":"","inviterEncryptPin":""},'c06b7')
@@ -288,8 +292,108 @@ async function ck_expire(){
         $.done();
     })
 
+var TDEncrypt = function(m) {
+    m = JSON.stringify(m);
+    m = encodeURIComponent(m);
+    var n = "",
+    g = 0
+    s64="23IL<N01c7KvwZO56RSTAfghiFyzWJqVabGH4PQdopUrsCuX*xeBjkltDEmn89.-";
+    do {
+        var f = m.charCodeAt(g++);
+        var d = m.charCodeAt(g++);
+        var a = m.charCodeAt(g++);
+        var b = f >> 2;
+        f = (f & 3) << 4 | d >> 4;
+        var e = (d & 15) << 2 | a >> 6;
+        var c = a & 63;
+        isNaN(d) ? e = c = 64 : isNaN(a) && (c = 64);
+        n = n + s64.charAt(b) + 
+        s64.charAt(f) + 
+        s64.charAt(e) + 
+        s64.charAt(c)
+    } while ( g < m.length );
+    return n + "/"
+}
+/*
+def get_ep(jduuid : str=''):
+    if not jduuid:
+        jduuid = ''.join(str(uuid.uuid4()).split('-'))
+    ts = str(getTimestamp())
+    return '{"hdid":"JM9F1ywUPwflvMIpYPok0tt5k9kW4ArJEU3lfLhxBqw=","ts":%s,"ridx":-1,"cipher":{"sv":"CJC=","ad":"ZWOyD2YnDNU0ENC4C2YnEK==","od":"DNS5YwG5DQSnD2YyEQHuDG==","ov":"CzC=","ud":"ZWOyD2YnDNU0ENC4C2YnEK=="},"ciphertype":5,"version":"1.2.0","appname":"com.jd.jdlite"}' % (
+        int(ts) - random.randint(100, 1000)), jduuid, ts
+self.UA = f'jdltapp;android;4.6.0;;;appBuild/2374;ef/1;ep/{quote(json.dumps(ep))};Mozilla/5.0 (Linux; Android 13; 22081212C Build/TKQ1.220829.002; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/104.0.5112.97 Mobile Safari/537.36'
+self.sha = sha1(str(self.name).encode('utf-8')).hexdigest()
+*/
 
-async function JDTaskApi(functionId, body = { },appId='') {
+const x_api_eid_token = () => {
+    if( $.x_api_eid_tokens[$.UserName] ) return $.x_api_eid_tokens[$.UserName];
+    const t = new Date().getTime()
+    const g = {"pin":"","oid":"","bizId":"jd-babelh5",
+        //"fc":"FD36HSPQHCD7UUM6NOPYJ65WL6RTGJGH74BDQN6IA7ITWHK7P7P5KHA7TIJDH3PXDLN7MTITDSDC26ZXGF3LHR6JGA",
+        "fc":"",
+        "mode":"strict","p":"s","fp":"26402d879256c911a19f750ac9e6137b","ctype":1,"v":"3.1.1.1","f":"3",
+        "o":"pro.m.jd.com/jdlite/active/23CeE8ZXA4uFS9M9mTjtta9T4S5x/index.html",
+        //"qs":"babelChannel=ttt6&lng=104.624159&lat=28.765053&sid=aa6042f7bd594f9ef8c2bc549246161w&un_area=22_2005_36315_57211",
+        //"jsTk":"jdd03FD36HSPQHCD7UUM6NOPYJ65WL6RTGJGH74BDQN6IA7ITWHK7P7P5KHA7TIJDH3PXDLN7MTITDSDC26ZXGF3LHR6JGAAAAAMIH264JHIAAAAACYFROOZEXEHGGEX",
+        "qi":""
+    }
+    const a = TDEncrypt(g)
+    let d = d='{"ts":{"deviceTime":1684749932883,"deviceEndTime":1684749932968},"ca":{"tdHash":"ae7bb88f7eac3baa052a6d2fd3c4eab8","contextName":"webgl,experimental-webgl","webglversion":"WebGL 1.0 (OpenGL ES 2.0 Chromium)","shadingLV":"WebGL GLSL ES 1.0 (OpenGL ES GLSL ES 1.0 Chromium)","vendor":"WebKit","renderer":"WebKit WebGL","extensions":["ANGLE_instanced_arrays","EXT_blend_minmax","EXT_color_buffer_half_float","EXT_float_blend","EXT_texture_filter_anisotropic","WEBKIT_EXT_texture_filter_anisotropic","EXT_sRGB","OES_element_index_uint","OES_fbo_render_mipmap","OES_standard_derivatives","OES_texture_float","OES_texture_float_linear","OES_texture_half_float","OES_texture_half_float_linear","OES_vertex_array_object","WEBGL_color_buffer_float","WEBGL_compressed_texture_astc","WEBGL_compressed_texture_etc","WEBGL_compressed_texture_etc1","WEBGL_debug_renderer_info","WEBGL_debug_shaders","WEBGL_depth_texture","WEBKIT_WEBGL_depth_texture","WEBGL_lose_context","WEBKIT_WEBGL_lose_context","WEBGL_multi_draw"],"wuv":"Qualcomm","wur":"Adreno (TM) 730"},"m":{"compatMode":"CSS1Compat"},"fo":["Bauhaus 93","Casual"],"n":{"vendorSub":"","productSub":"20030107","vendor":"Google Inc.","maxTouchPoints":5,"hardwareConcurrency":8,"cookieEnabled":true,"appCodeName":"Mozilla","appName":"Netscape","appVersion":"","platform":"Linux aarch64","product":"Gecko","userAgent":"","language":"zh-CN","onLine":true,"webdriver":false,"javaEnabled":false,"deviceMemory":8,"enumerationOrder":["vendorSub","productSub","vendor","maxTouchPoints","userActivation","doNotTrack","geolocation","connection","plugins","mimeTypes","webkitTemporaryStorage","webkitPersistentStorage","hardwareConcurrency","cookieEnabled","appCodeName","appName","appVersion","platform","product","userAgent","language","languages","onLine","webdriver","getBattery","getGamepads","javaEnabled","sendBeacon","vibrate","scheduling","mediaCapabilities","locks","wakeLock","usb","clipboard","credentials","keyboard","mediaDevices","storage","serviceWorker","deviceMemory","bluetooth","getUserMedia","requestMIDIAccess","requestMediaKeySystemAccess","webkitGetUserMedia","clearAppBadge","setAppBadge"]},"p":[],"w":{"devicePixelRatio":3,"screenTop":0,"screenLeft":0},"s":{"availHeight":904,"availWidth":407,"colorDepth":24,"height":904,"width":407,"pixelDepth":24},"sc":{"ActiveBorder":"rgb(255, 255, 255)","ActiveCaption":"rgb(204, 204, 204)","AppWorkspace":"rgb(255, 255, 255)","Background":"rgb(99, 99, 206)","ButtonFace":"rgb(221, 221, 221)","ButtonHighlight":"rgb(221, 221, 221)","ButtonShadow":"rgb(136, 136, 136)","ButtonText":"rgb(0, 0, 0)","CaptionText":"rgb(0, 0, 0)","GrayText":"rgb(128, 128, 128)","Highlight":"rgb(181, 213, 255)","HighlightText":"rgb(0, 0, 0)","InactiveBorder":"rgb(255, 255, 255)","InactiveCaption":"rgb(255, 255, 255)","InactiveCaptionText":"rgb(127, 127, 127)","InfoBackground":"rgb(251, 252, 197)","InfoText":"rgb(0, 0, 0)","Menu":"rgb(247, 247, 247)","MenuText":"rgb(0, 0, 0)","Scrollbar":"rgb(255, 255, 255)","ThreeDDarkShadow":"rgb(102, 102, 102)","ThreeDFace":"rgb(192, 192, 192)","ThreeDHighlight":"rgb(221, 221, 221)","ThreeDLightShadow":"rgb(192, 192, 192)","ThreeDShadow":"rgb(136, 136, 136)","Window":"rgb(255, 255, 255)","WindowFrame":"rgb(204, 204, 204)","WindowText":"rgb(0, 0, 0)"},"ss":{"cookie":true,"localStorage":true,"sessionStorage":true,"globalStorage":false,"indexedDB":true},"tz":-480,"lil":"","wil":""}'
+    d = JSON.parse(d)
+    d["ts"]["deviceTime"] = t
+    d["ts"]["deviceEndTime"] = t + 77
+    d["n"]["appVersion"] = $.UA.substring($.UA.indexOf("appBuild/") + 9)
+    d["n"]["userAgent"] = $.UA
+    d = TDEncrypt(d)
+    const body = { "d": d }
+    var opt = {
+        url:`https://gia.jd.com/jsTk.do?a=${encodeURIComponent(a)}`,
+        headers: {
+            "Host": "gia.jd.com",
+            "Connection": "keep-alive",
+            "content-type": "application/x-www-form-urlencoded;charset=UTF-8",
+            "Accept":"*/*",
+            "Origin": "https://pro.m.jd.com",
+            "X-Requested-With": "com.jd.jdlite",
+            "Sec-Fetch-Site": "same-site",
+            "Sec-Fetch-Mode": "cors",
+            "Sec-Fetch-Dest": "empty",
+            "Referer": "https://pro.m.jd.com/jdlite/active/23CeE8ZXA4uFS9M9mTjtta9T4S5x/index.html?babelChannel=ttt6",
+            //&lng=104.624159&lat=28.765053&sid=aa6042f7bd594f9ef8c2bc549246161w&un_area=22_2005_36315_57211
+            "Accept-Encoding": "gzip, deflate, br",
+            "Accept-Language": "zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7",
+            "Cookie": cookie+";cid=8",//sid={self.sha};
+            "User-Agent": $.UA
+            //self.sha = sha1(str(self.name).encode('utf-8')).hexdigest()
+        },
+        body:escape(JSON.stringify(body))
+    }
+    return new Promise(resolve => {
+        $.post(opt, (err, resp, data) => {
+            try {
+                if (err) {
+                    console.log(`${functionId}: API查询请求失败!`)
+                    $.logErr(err);
+                } else if (safeGet(data)) {
+                    const resData = JSON.parse(data)
+                    if (resData['code'] == 0) {
+                        $.x_api_eid_tokens[$.UserName]=resData['data']['token']
+                        resolve(resData['data']['token']);
+                    } else {
+                        console.log(resData)
+                    }
+                }
+            } catch (e) {
+                $.logErr(e, resp);
+            } finally {
+                resolve(false);
+            }
+        });
+    });
+}
+
+
+async function JDTaskApi(functionId, body = { },appId='',post='') {
     var opt = {
         url:`${JD_API_HOST}`,
         headers: {
@@ -301,7 +405,7 @@ async function JDTaskApi(functionId, body = { },appId='') {
             "Host": "api.m.jd.com",
             "Referer": `https://prodev.m.jd.com/`,
             "Origin": `https://prodev.m.jd.com`,
-            "Cookie": cookie,
+            "Cookie": cookie+";cid=8",
             "User-Agent": $.UA
         }
     },ac='';
@@ -313,7 +417,7 @@ async function JDTaskApi(functionId, body = { },appId='') {
             $.H5ST31[$.UserName][appId]= new H5ST({
                 appId,
                 "appid": "activities_platform",
-                "clientVersion": "4.9.0",//6.0.0
+                "clientVersion": "4.9.0",//6.2.0
                 "client": "android",
                 "pin": $.UserName,
                 "ua": $.UA,
@@ -322,7 +426,8 @@ async function JDTaskApi(functionId, body = { },appId='') {
             await $.H5ST31[$.UserName][appId].genAlgo();
         };
         ac='post';
-        opt["body"] = await $.H5ST31[$.UserName][appId].getbody(functionId,body);
+        post="&x-api-eid-token="+x_api_eid_token()+"&uuid=5616237366134353-4383338333661383&build=22677";//&screen=407*904&networkType=wifi&d_brand=Redmi&d_model=22081212C&lang=zh_CN&osVersion=13&partner=xiaomi&cthr=1
+        opt["body"] = await $.H5ST31[$.UserName][appId].getbody(functionId,body)+post;
         //console.log(opt["body"]);process.exit(0); 
     }else{
         ac='get';
@@ -371,5 +476,8 @@ function jsonParse(str) {
 }
 
 function get_UA() {
-    $.UA='jdltapp;android;6.0.0;;;appBuild/22668;ef/1;ep/%7B%22hdid%22%3A%22JM9F1ywUPwflvMIpYPok0tt5k9kW4ArJEU3lfLhxBqw%3D%22%2C%22ts%22%3A1680835846111%2C%22ridx%22%3A-1%2C%22cipher%22%3A%7B%22sv%22%3A%22CJC%3D%22%2C%22ad%22%3A%22DzrsZNrvCzTtY2TwYtc1ZG%3D%3D%22%2C%22od%22%3A%22DNS5YwG5DQSnD2YyEQHuDG%3D%3D%22%2C%22ov%22%3A%22CzC%3D%22%2C%22ud%22%3A%22DzrsZNrvCzTtY2TwYtc1ZG%3D%3D%22%7D%2C%22ciphertype%22%3A5%2C%22version%22%3A%221.2.0%22%2C%22appname%22%3A%22com.jd.jdlite%22%7D;jxtj/tj;Mozilla/5.0 (Linux; Android 13; 22081212C Build/TKQ1.220829.002; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/89.0.4389.72 MQQBrowser/6.2 TBS/046141 Mobile Safari/537.36';
+    //jdltapp;android;6.2.0;;;appBuild/22677;ef/1;ep/%7B%22hdid%22%3A%22JM9F1ywUPwflvMIpYPok0tt5k9kW4ArJEU3lfLhxBqw%3D%22%2C%22ts%22%3A1684749931064%2C%22ridx%22%3A-1%2C%22cipher%22%3A%7B%22sv%22%3A%22CJC%3D%22%2C%22ad%22%3A%22ZWOyD2YnDNU0ENC4C2YnEK%3D%3D%22%2C%22od%22%3A%22DNS5YwG5DQSnD2YyEQHuDG%3D%3D%22%2C%22ov%22%3A%22CzC%3D%22%2C%22ud%22%3A%22ZWOyD2YnDNU0ENC4C2YnEK%3D%3D%22%7D%2C%22ciphertype%22%3A5%2C%22version%22%3A%221.2.0%22%2C%22appname%22%3A%22com.jd.jdlite%22%7D;jxtj/tj;
+    //Mozilla/5.0 (Linux; Android 13; 22081212C Build/TKQ1.220829.002; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/89.0.4389.72 MQQBrowser/6.2 TBS/046247 Mobile Safari/537.36
+    if( !$.UAS[$.UserName] ) $.UAS[$.UserName]=USER_AGENTS.UARAM(true)
+    $.UA=$.UAS[$.UserName]
 }
