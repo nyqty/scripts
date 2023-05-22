@@ -7,7 +7,9 @@
 多少助力换下一个，默认50个 ，可调整变量 CXJ_MAX='100';
 只有出现助力自己的时候才会去助力作者。
 1 1 1 1 * https://raw.githubusercontent.com/atyvcn/jd_scripts/main/jd_inviteFission.js
-updatetime:2023/4/8
+updatetime:2023/5/22
+
+貌似只能本地跑，自己加代理
 */
 const Env = require('./utils/Env.js');
 const USER_AGENTS = require("./USER_AGENTS");
