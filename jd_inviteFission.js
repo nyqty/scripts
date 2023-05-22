@@ -68,6 +68,7 @@ async function ck_expire(){
     $.UAS={};
     $.H5ST31={};
     $.x_api_eid_tokens={};
+
     console.log(`运行流程：获取指定用户助力码--助力--抽奖提现`);
     if( TYUserName.length ){
         console.log(`去获取以下用户助力码：`,TYUserName);
@@ -86,7 +87,6 @@ async function ck_expire(){
                 await ck_expire();
                 continue
             }
-            
             let BeforeHome=await JDTaskApi("inviteFissionBeforeHome",{linkId,"isJdApp":true,"inviter":""},'02f8d');
             let Home=await JDTaskApi("inviteFissionHome",{linkId,"inviter":""},'eb67b')
             //let wheelsHome=await JDTaskApi("wheelsHome",{linkId,"inviteActId":"","inviterEncryptPin":""},'c06b7')
@@ -111,7 +111,7 @@ async function ck_expire(){
             await $.wait(2000)
         }
     }
-    
+
     if (inviters.length) {
         //使用TYUserName对inviters进行排序的
         inviters.sort((a, b) => {
@@ -133,6 +133,8 @@ async function ck_expire(){
                 $.index = i + 1;
                 $.nickName = "";
                 get_UA();
+                $.shshshfpa=$.shshshfpx=getUUID("xxxxxxxx-xxxx-xxxx-xxxx-bde5e40b40b1-")+Math.floor(Date.now() / 1000);
+                cookie+=`;shshshfpa=${$.shshshfpa};shshshfpx=${$.shshshfpx};cid=8`;
                 console.log("\n开始【账号" + $.index + "】" + ($.nickName || $.UserName));
                 if( $.UserName==item.pin ){
                     if(authorCode){
@@ -384,25 +386,29 @@ async function JDTaskApi(functionId, body = { },appId='',post='') {
     var opt = {
         url:`${JD_API_HOST}`,
         headers: {
-            "Accept": "*/*",
-            "Accept-Encoding": "gzip, deflate, br",
-            "Accept-Language": "zh-cn",
-            "Connection": "keep-alive",
-            "Content-Type": "application/x-www-form-urlencoded",
             "Host": "api.m.jd.com",
-            "Referer": `https://prodev.m.jd.com/`,
-            "Origin": `https://prodev.m.jd.com`,
-            "Cookie": cookie+";cid=8",
-            "User-Agent": $.UA
+            "accept": "application/json, text/plain, */*",
+            "x-rp-client": "h5_1.0.0",
+            "content-type": "application/x-www-form-urlencoded",
+            "User-Agent": $.UA,
+            "x-referer-page": "https://pro.m.jd.com/jdlite/active/23CeE8ZXA4uFS9M9mTjtta9T4S5x/index.html",
+            "origin": "https://pro.m.jd.com",
+            "x-requested-with": "com.jd.jdlite",
+            "sec-fetch-site": "same-site",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-dest": "empty",
+            "referer": "https://pro.m.jd.com/jdlite/active/23CeE8ZXA4uFS9M9mTjtta9T4S5x/index.html",
+            "accept-encoding": "gzip, deflate, br",
+            "accept-language": "zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7",
+            "Cookie": cookie//+";cid=8",
         }
     },ac='';
     if(appId){
         let appBuild=168341,
         uuid="5616237366134353-4383338333661383";
-        uuid=""
+        uuid=getUUID(16);
         const match = $.UA.match(/appBuild\/(\d+)/);
         if(match) appBuild=match[1];
-
         if( !$.H5ST31[$.UserName] ) $.H5ST31[$.UserName]={}
         if( !$.H5ST31[$.UserName][appId] ){
             let us=$.UA.split(";")
@@ -410,7 +416,7 @@ async function JDTaskApi(functionId, body = { },appId='',post='') {
                 appId,
                 "appid": "activities_platform",
                 "clientVersion": us[2],
-                "client": us[1]=="iPhone"?"apple":us[1],//"android"
+                "client": us[1]=="iPhone"?"ios":us[1],//"android" us[1]=="iPhone"?"ios":us[1]
                 "pin": $.UserName,
                 "ua": $.UA,
                 "version":"3.1"
@@ -418,8 +424,10 @@ async function JDTaskApi(functionId, body = { },appId='',post='') {
             await $.H5ST31[$.UserName][appId].genAlgo();
         };
         ac='post';
-        post="&x-api-eid-token="+(await x_api_eid_token())+"&uuid="+uuid+"&build="+appBuild;//&screen=407*904&networkType=wifi&d_brand=Redmi&d_model=22081212C&lang=zh_CN&osVersion=13&partner=xiaomi&cthr=1
+        post="&x-api-eid-token="+(await x_api_eid_token())+"&uuid="+uuid+"&build="+appBuild+"&cthr=1&networkType=wifi&d_brand=iPhone&d_model=iPhone12&screen=414*736&lang=zh_CN";
+        //&screen=407*904&networkType=wifi&d_brand=Redmi&d_model=22081212C&lang=zh_CN&osVersion=13&partner=xiaomi&cthr=1
         opt["body"] = await $.H5ST31[$.UserName][appId].getbody(functionId,body)+post;
+        opt["url"]+="?"+opt["body"];
         //console.log(opt["body"]);process.exit(0); 
     }else{
         ac='get';
@@ -467,9 +475,16 @@ function jsonParse(str) {
     }
 }
 
+function getUUID(x = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", t = 0) {
+    if (typeof x == "number") x = new Array(x).join('x')
+    return x.replace(/[xy]/g, function (x) {
+        var r = (16 * Math.random()) | 0,
+            n = "x" == x ? r : (3 & r) | 8;
+        return (uuid = t ? n.toString(36).toUpperCase() : n.toString(36)), uuid;
+    });
+}
+
 function get_UA() {
-    //jdltapp;android;6.2.0;;;appBuild/22677;ef/1;ep/%7B%22hdid%22%3A%22JM9F1ywUPwflvMIpYPok0tt5k9kW4ArJEU3lfLhxBqw%3D%22%2C%22ts%22%3A1684749931064%2C%22ridx%22%3A-1%2C%22cipher%22%3A%7B%22sv%22%3A%22CJC%3D%22%2C%22ad%22%3A%22ZWOyD2YnDNU0ENC4C2YnEK%3D%3D%22%2C%22od%22%3A%22DNS5YwG5DQSnD2YyEQHuDG%3D%3D%22%2C%22ov%22%3A%22CzC%3D%22%2C%22ud%22%3A%22ZWOyD2YnDNU0ENC4C2YnEK%3D%3D%22%7D%2C%22ciphertype%22%3A5%2C%22version%22%3A%221.2.0%22%2C%22appname%22%3A%22com.jd.jdlite%22%7D;jxtj/tj;
-    //Mozilla/5.0 (Linux; Android 13; 22081212C Build/TKQ1.220829.002; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/89.0.4389.72 MQQBrowser/6.2 TBS/046247 Mobile Safari/537.36
     if( !$.UAS[$.UserName] ) $.UAS[$.UserName]=USER_AGENTS.UARAM(true)
     $.UA=$.UAS[$.UserName]
 }
