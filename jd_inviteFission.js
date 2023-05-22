@@ -397,15 +397,20 @@ async function JDTaskApi(functionId, body = { },appId='',post='') {
         }
     },ac='';
     if(appId){
-        if( !$.H5ST31[$.UserName] ){
-            $.H5ST31[$.UserName]={}
-        }
+        let appBuild=168341,
+        uuid="5616237366134353-4383338333661383";
+        uuid=""
+        const match = $.UA.match(/appBuild\/(\d+)/);
+        if(match) appBuild=match[1];
+
+        if( !$.H5ST31[$.UserName] ) $.H5ST31[$.UserName]={}
         if( !$.H5ST31[$.UserName][appId] ){
+            let us=$.UA.split(";")
             $.H5ST31[$.UserName][appId]= new H5ST({
                 appId,
                 "appid": "activities_platform",
-                "clientVersion": "4.9.0",//6.2.0
-                "client": "android",
+                "clientVersion": us[2],
+                "client": us[1]=="iPhone"?"apple":us[1],//"android"
                 "pin": $.UserName,
                 "ua": $.UA,
                 "version":"3.1"
@@ -413,7 +418,7 @@ async function JDTaskApi(functionId, body = { },appId='',post='') {
             await $.H5ST31[$.UserName][appId].genAlgo();
         };
         ac='post';
-        post="&x-api-eid-token="+(await x_api_eid_token())+"&uuid=5616237366134353-4383338333661383&build=22677";//&screen=407*904&networkType=wifi&d_brand=Redmi&d_model=22081212C&lang=zh_CN&osVersion=13&partner=xiaomi&cthr=1
+        post="&x-api-eid-token="+(await x_api_eid_token())+"&uuid="+uuid+"&build="+appBuild;//&screen=407*904&networkType=wifi&d_brand=Redmi&d_model=22081212C&lang=zh_CN&osVersion=13&partner=xiaomi&cthr=1
         opt["body"] = await $.H5ST31[$.UserName][appId].getbody(functionId,body)+post;
         //console.log(opt["body"]);process.exit(0); 
     }else{
