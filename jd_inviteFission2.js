@@ -214,9 +214,10 @@ async function ck_expire(){
             console.log("可抽奖次数:", Home["prizeNum"])
             //drawPrizeNum 已经抽奖的数量
             let error = 0
-            for (let i of Array(prizeNum)) {
+            while(prizeNum){
                 let Draw=await JDTaskApi("inviteFissionDrawPrize",{linkId,"lbs":"null"},'c02c6')
                 if(Draw && Draw["code"]==0){
+                    prizeNum--;
                     DrawData=Draw["data"]
                     let prizeType = DrawData["prizeType"]
                     if (!prizeType) {
@@ -229,7 +230,24 @@ async function ck_expire(){
                         break
                     }
                     console.log("抽中类型:", prize_conf[prizeType], '抽中面额:', DrawData["prizeValue"])
-                    await $.wait(1000)
+                    await $.wait(2000)
+                }else if(Draw && Draw["code"]==80202){
+                    error++
+                    if (error>2) {
+                        console.log("火爆3次，跳过本次抽奖...")
+                        break
+                    }else{
+                        console.log("活动太火爆，10s后重试~")
+                        await $.wait(10000)
+                    }
+                    //{ success: false, code: 80202, errMsg: '活动太火爆，请稍后重试~', data: null }
+                }else{
+                    error++
+                    if (error>2) {
+                        console.log("错误3次，跳过本次抽奖...")
+                        break
+                    }
+                    console.log(Draw);
                 }
             }
         }else if(Home){
