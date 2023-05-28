@@ -119,7 +119,7 @@ async function ck_expire(){
         console.log('inviters:',inviters);
         let authorCodeList = ["aNCCrmkFj9FWdbNCbF--kw","Hra4IGShf4yiLMHxC5jgzw","fRm0DgXO-QL21ThMtQWUDg","q0_ZV7KDvsSxOLb3gzJUhQHuCf_5XIEZSnyDnj6QjHo","otUH9jNEHk1XUvPQ4M_kHA","vGl7gDpR-MboYSmEg0YTmVDggKKIARNO0pLz3xJLAa4"];
         let authorCode = authorCodeList[Math.floor(Math.random() * authorCodeList.length)];
-        let Start = 98;
+        let Start = 0;
         //for (let item of inviters) {
         for (let u=0,item; u < inviters.length; u++) {
             item=inviters[u]
