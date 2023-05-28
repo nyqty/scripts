@@ -9,9 +9,7 @@ https://prodev.m.jd.com/mall/active/uFdv8vAHsiLz4MGsg4HEauwte8d/index.html?invit
 多少助力换下一个，默认50个 ，可调整变量 CXJ_MAX='100';
 只有出现助力自己的时候才会去助力作者。
 1 1 1 1 * https://raw.githubusercontent.com/atyvcn/jd_scripts/main/jd_inviteFission2.js
-updatetime:2023/5/23
-
-貌似只能本地跑，自己加代理
+updatetime:2023/5/28
 */
 const Env = require('./utils/Env.js');
 const USER_AGENTS = require("./USER_AGENTS");
@@ -23,7 +21,8 @@ const notify = $.isNode() ? require('./sendNotify') : '';
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '', message = '';
-let inviters = [],inviter='',linkId='c6Bkpjp7dYcvQwO9-PR7-g';
+let inviters = [],inviter='';
+const linkId='c6Bkpjp7dYcvQwO9-PR7-g';
 if ($.isNode()) {
     Object.keys(jdCookieNode).forEach((item) => {
         cookiesArr.push(jdCookieNode[item])
@@ -55,7 +54,6 @@ if( process.env.CXJ_PIN ){
     return false
 }
 
-const JD_API_HOST = 'https://api.m.jd.com/api';
 const prize_conf = {'1': '优惠券','2': '红包','4': '现金',}
 async function ck_expire(){
     $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/`, { "open-url": "https://bean.m.jd.com/" });
@@ -64,15 +62,14 @@ async function ck_expire(){
     }
 }
 
-!(async () => {
+!(async () => {    
     if (!cookiesArr[0]) {
         $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/', { "open-url": "https://bean.m.jd.com/" });
         return;
     }
     $.UAS={};
     $.H5ST31={};
-    $.x_api_eid_tokens={};
-
+    $.jsTks={};
     console.log(`运行流程：获取指定用户助力码--助力--抽奖提现`);
     if( TYUserName.length ){
         console.log(`去获取以下用户助力码：`,TYUserName);
@@ -91,7 +88,17 @@ async function ck_expire(){
                 await ck_expire();
                 continue
             }
-            let BeforeHome=await JDTaskApi("inviteFissionBeforeHome",{linkId,"isJdApp":true,"inviter":""},'02f8d');
+            $.jsTk=await get_jsTk();
+            $.shshshfpa=$.shshshfpx=getUUID("xxxxxxxx-xxxx-xxxx-xxxx-bde5e40b40b1-")+Math.floor(Date.now() / 1000);
+            cookie+=`shshshfpa=${$.shshshfpa};shshshfpx=${$.shshshfpx};cid=8;pwdt_id=${encodeURIComponent($.UserName)};3AB9D23F7A4B3CSS=${$.jsTk["token"]};3AB9D23F7A4B3C9B=${$.jsTk["eid"]};`;
+            //inviterId=Hra4IGShf4yiLMHxC5jgzw&originId=c6Bkpjp7dYcvQwO9-PR7-g&inviteCode=HcGMbAY3hXb6WRloHJjll5VcnNdm9MwIsj_n24CAYwY
+            //"inviteActId":"c6Bkpjp7dYcvQwO9-PR7-g","inviterEncryptPin":"Hra4IGShf4yiLMHxC5jgzw","inviteCode":"HcGMbAY3hXb6WRloHJjll5VcnNdm9MwIsj_n24CAYwY"
+           // body: {"linkId":"YDoaG5vi1XmTyX03soVDUQ",}
+           //encryptPin: 'Hra4IGShf4yiLMHxC5jgzw',
+            //let wheelsHome=await JDTaskApi("wheelsHome",{linkId,"inviteActId":"","inviterEncryptPin":"","inviteCode":""},'c06b7','3.1');
+            //console.log(wheelsHome);
+            //await $.wait(500)
+            //let BeforeHome=await JDTaskApi("inviteFissionBeforeHome",{linkId,"isJdApp":true,"inviter":""},'02f8d');
             let Home=await JDTaskApi("inviteFissionHome",{linkId,"inviter":""},'eb67b')
             if(Home && Home["code"]==0){
                 Home=Home["data"]
@@ -100,7 +107,7 @@ async function ck_expire(){
                 if(num>=max){
                     console.log(`当前已获取助力${num}次，大于设置的${max}的上限故跳过`)
                 }else{
-                    inviters.push({pin:$.UserName,code:Home["inviter"],num,max});
+                    inviters.push({pin:$.UserName,inviteCode:Home["inviteCode"],inviter:Home["inviter"],num,max});
                 }
                 console.log(`【助力码】${Home["inviter"]}`)
                 if(inviters.length>=TYUserName.length) break;
@@ -136,8 +143,9 @@ async function ck_expire(){
                 $.index = i + 1;
                 $.nickName = "";
                 get_UA();
+                $.jsTk=await get_jsTk();
                 $.shshshfpa=$.shshshfpx=getUUID("xxxxxxxx-xxxx-xxxx-xxxx-bde5e40b40b1-")+Math.floor(Date.now() / 1000);
-                cookie+=`;shshshfpa=${$.shshshfpa};shshshfpx=${$.shshshfpx};cid=8`;
+                cookie+=`shshshfpa=${$.shshshfpa};shshshfpx=${$.shshshfpx};cid=8;pwdt_id=${encodeURIComponent($.UserName)};3AB9D23F7A4B3CSS=${$.jsTk["token"]};3AB9D23F7A4B3C9B=${$.jsTk["eid"]};`;
                 console.log("\n开始【账号" + $.index + "】" + ($.nickName || $.UserName));
                 if( $.UserName==item.pin ){
                     if(authorCode){
@@ -146,11 +154,14 @@ async function ck_expire(){
                     }else{
                         console.log("不能助力自己，跳过。");
                         continue;
-                    } 
+                    }
                 }else{
-                    inviter=item.code
+                    inviter=item.inviter
                 }
+                //{"linkId":"c6Bkpjp7dYcvQwO9-PR7-g","isJdApp":true,"inviter":"Hra4IGShf4yiLMHxC5jgzw"}
+                //mt9zi6ng39m5mtq5;02f8d
                 let BeforeHome=await JDTaskApi("inviteFissionBeforeHome",{linkId,"isJdApp":true,inviter},'02f8d');
+                //let Home=await JDTaskApi("inviteFissionHome",{linkId,inviter},'eb67b')
                 if (BeforeHome && BeforeHome["code"]==0) {
                     console.log(`当前助力：${BeforeHome["data"]["nickName"]}`);
                     let helpResult = BeforeHome["data"]["helpResult"]
@@ -159,7 +170,7 @@ async function ck_expire(){
                     }
                     if (helpResult == 1) {
                         console.log("助力成功...")
-                        inviter==item.code && inviters[u].num++;
+                        inviter==item.inviter && inviters[u].num++;
                     }else if (helpResult == 6) {
                         console.log("已经助力过了...")
                     }else if (helpResult == 3) {
@@ -180,7 +191,11 @@ async function ck_expire(){
                     cookiesArr.splice(i, 1);i--;
                     await ck_expire();
                     continue
-                }else console.log(BeforeHome);
+                }else{
+                    console.log(BeforeHome);
+                    await $.wait(4000);
+                }
+                //console.log(Home);
             }
             if ($.index == cookiesArr.length) {
                 break;
@@ -199,6 +214,7 @@ async function ck_expire(){
         $.nickName = '';
         get_UA();
         //await TotalBean();
+        if( !$.UserName || TYUserName.indexOf($.UserName)===-1 ) continue;
         console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
         if (!$.isLogin) {
             $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/`, { "open-url": "https://bean.m.jd.com/" });
@@ -232,14 +248,17 @@ async function ck_expire(){
                     console.log("抽中类型:", prize_conf[prizeType], '抽中面额:', DrawData["prizeValue"])
                     await $.wait(2000)
                 }else if(Draw && Draw["code"]==80202){
-                    error++
+                    /*error++
                     if (error>2) {
                         console.log("火爆3次，跳过本次抽奖...")
                         break
                     }else{
                         console.log("活动太火爆，10s后重试~")
                         await $.wait(10000)
-                    }
+                    }*/
+                    let s=generateRandomInteger(10e3,50e3);
+                    console.log(`活动太火爆，${s/1000}s后重试~`)
+                    await $.wait(s)
                     //{ success: false, code: 80202, errMsg: '活动太火爆，请稍后重试~', data: null }
                 }else{
                     error++
@@ -337,15 +356,14 @@ var TDEncrypt = function(m) {
     return n + "/"
 }
 
-async function x_api_eid_token(){
-    if( $.x_api_eid_tokens[$.UserName] ) return $.x_api_eid_tokens[$.UserName];
+async function get_jsTk(){
+    if( $.jsTks[$.UserName] ) return $.jsTks[$.UserName];
     const t = new Date().getTime()
     const g = {"pin":"","oid":"","bizId":"jd-babelh5",
         //"fc":"FD36HSPQHCD7UUM6NOPYJ65WL6RTGJGH74BDQN6IA7ITWHK7P7P5KHA7TIJDH3PXDLN7MTITDSDC26ZXGF3LHR6JGA",
         "fc":"",
-        "mode":"strict","p":"s","fp":"26402d879256c911a19f750ac9e6137b","ctype":1,"v":"3.1.1.1","f":"3",
-        "o":"prodev.m.jd.com/jdlite/active/23CeE8ZXA4uFS9M9mTjtta9T4S5x/index.html",
-        //"qs":"babelChannel=ttt6&lng=104.624159&lat=28.765053&sid=aa6042f7bd594f9ef8c2bc549246161w&un_area=22_2005_36315_57211",
+        "mode":"strict","p":"s","fp":"05e7183d7b7a0a5428801f50d4e99059","ctype":1,"v":"3.1.1.1","f":"3",
+        "o":"prodev.m.jd.com/mall/active/uFdv8vAHsiLz4MGsg4HEauwte8d/index.html",
         //"jsTk":"jdd03FD36HSPQHCD7UUM6NOPYJ65WL6RTGJGH74BDQN6IA7ITWHK7P7P5KHA7TIJDH3PXDLN7MTITDSDC26ZXGF3LHR6JGAAAAAMIH264JHIAAAAACYFROOZEXEHGGEX",
         "qi":""
     }
@@ -386,8 +404,8 @@ async function x_api_eid_token(){
                 } else if (safeGet(data)) {
                     const resData = JSON.parse(data)
                     if (resData['code'] == 0) {
-                        $.x_api_eid_tokens[$.UserName]=resData['data']['token']
-                        resolve(resData['data']['token']);
+                        $.jsTks[$.UserName]=resData['data']
+                        resolve($.jsTks[$.UserName]);
                     } else {
                         console.log(resData)
                     }
@@ -402,9 +420,9 @@ async function x_api_eid_token(){
 }
 
 
-async function JDTaskApi(functionId, body = { },appId='',post='') {
+async function JDTaskApi(functionId, body = { },appId='',version='4.1') {
     var opt = {
-        url:`${JD_API_HOST}`,
+        url:`https://api.m.jd.com/${version=="4.1"?"api":""}`,
         headers: {
             "Host": "api.m.jd.com",
             "accept": "application/json, text/plain, */*",
@@ -413,7 +431,7 @@ async function JDTaskApi(functionId, body = { },appId='',post='') {
             "User-Agent": $.UA,
             "x-referer-page": "https://prodev.m.jd.com/mall/active/uFdv8vAHsiLz4MGsg4HEauwte8d/index.html",
             "origin": "https://prodev.m.jd.com",
-            "x-requested-with": "com.jd.jdlite",
+            "x-requested-with": "com.jingdong.app.mall",
             "sec-fetch-site": "same-site",
             "sec-fetch-mode": "cors",
             "sec-fetch-dest": "empty",
@@ -423,10 +441,12 @@ async function JDTaskApi(functionId, body = { },appId='',post='') {
             "Cookie": cookie//+";cid=8",
         }
     },ac='';
+
     if(appId){
         let appBuild=168341,
         uuid="5616237366134353-4383338333661383";
         uuid=getUUID(16);
+        uuid="";
         const match = $.UA.match(/appBuild\/(\d+)/);
         if(match) appBuild=match[1];
         if( !$.H5ST31[$.UserName] ) $.H5ST31[$.UserName]={}
@@ -439,16 +459,24 @@ async function JDTaskApi(functionId, body = { },appId='',post='') {
                 "client": us[1]=="iPhone"?"ios":us[1],//"android" us[1]=="iPhone"?"ios":us[1]
                 "pin": $.UserName,
                 "ua": $.UA,
-                "version":"3.1"
+                "version":version,
+                fp:version==4.1?"tm9izn5gg63g56t8":"",
+                "fv":version=="4.1"?"v0.1.6":"",
+                "expand":{
+                    "url": "https://prodev.m.jd.com/mall/active/uFdv8vAHsiLz4MGsg4HEauwte8d/index.html",
+                    "og": "https://prodev.m.jd.com",
+                }
             });
             await $.H5ST31[$.UserName][appId].genAlgo();
         };
         ac='post';
-        post="&x-api-eid-token="+(await x_api_eid_token())+"&uuid="+uuid+"&build="+appBuild+"&cthr=1&networkType=wifi&d_brand=iPhone&d_model=iPhone12&screen=414*736&lang=zh_CN";
+        
+        let post="&uuid="+uuid+"&build="+appBuild+"&cthr=1&networkType=wifi&d_brand=iPhone&d_model=iPhone12&screen=414*736&lang=zh_CN&osVersion=-1";
+        if( version=="4.1" ) post+="&x-api-eid-token="+($.jsTk["token"]);
         //&screen=407*904&networkType=wifi&d_brand=Redmi&d_model=22081212C&lang=zh_CN&osVersion=13&partner=xiaomi&cthr=1
         opt["body"] = await $.H5ST31[$.UserName][appId].getbody(functionId,body)+post;
-        opt["url"]+="?"+opt["body"];
-        //console.log(opt["body"]);process.exit(0); 
+        //opt["url"]+="?"+opt["body"];
+        //console.log(opt["body"]);
     }else{
         ac='get';
         opt["url"]+=`?functionId=${functionId}&body=${escape(JSON.stringify(body))}&t=${Date.now()}&appid=activities_platform`;
@@ -507,4 +535,8 @@ function getUUID(x = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", t = 0) {
 function get_UA() {
     if( !$.UAS[$.UserName] ) $.UAS[$.UserName]=USER_AGENTS.UARAM()
     $.UA=$.UAS[$.UserName]
+}
+
+function generateRandomInteger(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
 }

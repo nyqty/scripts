@@ -7,10 +7,9 @@
 多少助力换下一个，默认50个 ，可调整变量 CXJ_MAX='100';
 只有出现助力自己的时候才会去助力作者。
 1 1 1 1 * https://raw.githubusercontent.com/atyvcn/jd_scripts/main/jd_inviteFission.js
-updatetime:2023/5/22
-
-貌似只能本地跑，自己加代理
+updatetime:2023/5/28
 */
+
 const Env = require('./utils/Env.js');
 const USER_AGENTS = require("./USER_AGENTS");
 const H5ST=require('./utils/h5st.js');
@@ -33,7 +32,6 @@ if ($.isNode()) {
 }
 
 const CXJ_MAX=process.env.CXJ_MAX?parseInt(process.env.CXJ_MAX):50
-
 let TYUserName=[],HelpMax={};
 
 if( process.env.CXJ_PIN ){
@@ -68,7 +66,7 @@ async function ck_expire(){
         return;
     }
     $.UAS={};
-    $.H5ST31={};
+    $.H5ST={};
     $.x_api_eid_tokens={};
 
     console.log(`运行流程：获取指定用户助力码--助力--抽奖提现`);
@@ -89,7 +87,7 @@ async function ck_expire(){
                 await ck_expire();
                 continue
             }
-            let BeforeHome=await JDTaskApi("inviteFissionBeforeHome",{linkId,"isJdApp":true,"inviter":""},'02f8d');
+            //let BeforeHome=await JDTaskApi("inviteFissionBeforeHome",{linkId,"isJdApp":true,"inviter":""},'02f8d');
             let Home=await JDTaskApi("inviteFissionHome",{linkId,"inviter":""},'eb67b')
             //let wheelsHome=await JDTaskApi("wheelsHome",{linkId,"inviteActId":"","inviterEncryptPin":""},'c06b7')
             if(Home && Home["code"]==0){
@@ -113,7 +111,6 @@ async function ck_expire(){
             await $.wait(2000)
         }
     }
-
     if (inviters.length) {
         //使用TYUserName对inviters进行排序的
         inviters.sort((a, b) => {
@@ -122,7 +119,7 @@ async function ck_expire(){
         console.log('inviters:',inviters);
         let authorCodeList = ["aNCCrmkFj9FWdbNCbF--kw","Hra4IGShf4yiLMHxC5jgzw","fRm0DgXO-QL21ThMtQWUDg","q0_ZV7KDvsSxOLb3gzJUhQHuCf_5XIEZSnyDnj6QjHo","otUH9jNEHk1XUvPQ4M_kHA","vGl7gDpR-MboYSmEg0YTmVDggKKIARNO0pLz3xJLAa4"];
         let authorCode = authorCodeList[Math.floor(Math.random() * authorCodeList.length)];
-        let Start = 0;
+        let Start = 98;
         //for (let item of inviters) {
         for (let u=0,item; u < inviters.length; u++) {
             item=inviters[u]
@@ -135,7 +132,7 @@ async function ck_expire(){
                 $.index = i + 1;
                 $.nickName = "";
                 get_UA();
-                $.shshshfpa=$.shshshfpx=getUUID("xxxxxxxx-xxxx-xxxx-xxxx-bde5e40b40b1-")+Math.floor(Date.now() / 1000);
+                $.shshshfpa=$.shshshfpx=getUUID("xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx-")+Math.floor(Date.now() / 1000);
                 cookie+=`;shshshfpa=${$.shshshfpa};shshshfpx=${$.shshshfpx};cid=8`;
                 console.log("\n开始【账号" + $.index + "】" + ($.nickName || $.UserName));
                 if( $.UserName==item.pin ){
@@ -179,7 +176,10 @@ async function ck_expire(){
                     cookiesArr.splice(i, 1);i--;
                     await ck_expire();
                     continue
-                }else console.log(BeforeHome);
+                }else{
+                    console.log(BeforeHome);
+                    await $.wait(4000);
+                }
             }
             if ($.index == cookiesArr.length) {
                 break;
@@ -196,6 +196,7 @@ async function ck_expire(){
         $.index = i + 1;
         $.isLogin = true;
         $.nickName = '';
+        if( !$.UserName || TYUserName.indexOf($.UserName)===-1 ) continue;
         get_UA();
         //await TotalBean();
         console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
@@ -237,7 +238,7 @@ async function ck_expire(){
         let NextPage=true,Page=1,count=0,count2=0;
         while(NextPage){
             let Result = await JDTaskApi("superRedBagList",{linkId,"pageNum":Page,"pageSize":100,"business":"fission"})
-            if(Result){
+            if(Result && Result["code"]==0){
                 NextPage=Result.data.totalPage>Result.data.currentPage;
                 if(Result.data.currentPage>=2) break;
                 //console.log(JSON.stringify(Result));
@@ -277,7 +278,9 @@ async function ck_expire(){
                     }
                 }
             }else{
+                //{ success: false, code: 1000, errMsg: '未登录', data: null }
                 console.log(`获取getlist 错误！`);
+                console.log(Result);
                 break;
             }
         }
@@ -408,29 +411,37 @@ async function JDTaskApi(functionId, body = { },appId='',post='') {
     if(appId){
         let appBuild=168341,
         uuid="5616237366134353-4383338333661383";
-        uuid=getUUID(16);
+        uuid=getUUID("xxxxxxxxxxxxxxxx-xxxxxxxxxxxxxxxx");//getUUID(16);
         const match = $.UA.match(/appBuild\/(\d+)/);
         if(match) appBuild=match[1];
-        if( !$.H5ST31[$.UserName] ) $.H5ST31[$.UserName]={}
-        if( !$.H5ST31[$.UserName][appId] ){
+        if( !$.H5ST[$.UserName] ) $.H5ST[$.UserName]={}
+        if( !$.H5ST[$.UserName][appId] ){
             let us=$.UA.split(";")
-            $.H5ST31[$.UserName][appId]= new H5ST({
+            $.H5ST[$.UserName][appId]= new H5ST({
                 appId,
                 "appid": "activities_platform",
                 "clientVersion": us[2],
                 "client": us[1]=="iPhone"?"ios":us[1],//"android" us[1]=="iPhone"?"ios":us[1]
                 "pin": $.UserName,
                 "ua": $.UA,
-                "version":"3.1"
+                "version":"4.1",
+                //"fp":"3n96t5mzn3i3gic6",
+                "fv":"v3.2.0",
+                "expand":{
+                    "url": "https://pro.m.jd.com/jdlite/active/23CeE8ZXA4uFS9M9mTjtta9T4S5x/index.html",
+                    "og": "https://pro.m.jd.com",
+                }
             });
-            await $.H5ST31[$.UserName][appId].genAlgo();
+            await $.H5ST[$.UserName][appId].genAlgo();
         };
         ac='post';
-        post="&x-api-eid-token="+(await x_api_eid_token())+"&uuid="+uuid+"&build="+appBuild+"&cthr=1&networkType=wifi&d_brand=iPhone&d_model=iPhone12&screen=414*736&lang=zh_CN";
-        //&screen=407*904&networkType=wifi&d_brand=Redmi&d_model=22081212C&lang=zh_CN&osVersion=13&partner=xiaomi&cthr=1
-        opt["body"] = await $.H5ST31[$.UserName][appId].getbody(functionId,body)+post;
-        opt["url"]+="?"+opt["body"];
-        //console.log(opt["body"]);process.exit(0); 
+        post="&x-api-eid-token="+(await x_api_eid_token())+"&uuid="+uuid+"&build="+appBuild+"&cthr=1&networkType=wifi";
+        //&d_brand=iPhone&d_model=iPhone12&screen=414*736&lang=zh_CN";
+        post+="&screen=407*904&d_brand=Redmi&d_model=22081212C&lang=zh_CN&osVersion=13&partner=xiaomi"
+        opt["body"] = await $.H5ST[$.UserName][appId].getbody(functionId,body)+post;
+        //opt["url"]+="?"+opt["body"];
+        //console.log(opt["body"]);
+        //process.exit(0); 
     }else{
         ac='get';
         opt["url"]+=`?functionId=${functionId}&body=${escape(JSON.stringify(body))}&t=${Date.now()}&appid=activities_platform`;
