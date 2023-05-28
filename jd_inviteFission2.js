@@ -274,7 +274,7 @@ async function ck_expire(){
         }
         let NextPage=true,Page=1,count=0,count2=0;
         while(NextPage){
-            let Result = await JDTaskApi("superRedBagList",{linkId,"pageNum":Page,"pageSize":100,"business":"fission"})
+            let Result = await JDTaskApi("superRedBagList",{linkId,"pageNum":Page,"pageSize":100,"business":"fission"},'f2b1d')
             if(Result){
                 NextPage=Result.data.totalPage>Result.data.currentPage;
                 if(Result.data.currentPage>=2) break;
