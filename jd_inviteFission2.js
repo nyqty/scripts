@@ -460,7 +460,7 @@ async function JDTaskApi(functionId, body = { },appId='',version='4.1') {
                 "pin": $.UserName,
                 "ua": $.UA,
                 "version":version,
-                fp:version==4.1?"tm9izn5gg63g56t8":"",
+                //fp:version==4.1?"tm9izn5gg63g56t8":"",
                 "fv":version=="4.1"?"v0.1.6":"",
                 "expand":{
                     "url": "https://prodev.m.jd.com/mall/active/uFdv8vAHsiLz4MGsg4HEauwte8d/index.html",
