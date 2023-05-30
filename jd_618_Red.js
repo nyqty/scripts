@@ -20,7 +20,7 @@ js最简使用方式
 // global.GLOBAL_AGENT.HTTP_PROXY="http://	DL池docker地址:8080";
 
 
-0 0,10,20 * * * jd_618_Red.js 618红包助力
+30 0,10,20 * * * jd_618_Red.js 618红包助力
 
 */
 
