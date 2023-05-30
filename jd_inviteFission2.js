@@ -10,6 +10,8 @@ https://prodev.m.jd.com/mall/active/uFdv8vAHsiLz4MGsg4HEauwte8d/index.html?invit
 只有出现助力自己的时候才会去助力作者。
 1 1 1 1 * https://raw.githubusercontent.com/atyvcn/jd_scripts/main/jd_inviteFission2.js
 updatetime:2023/5/28
+
+自己弄代理懒得写了，或者本地跑
 */
 const Env = require('./utils/Env.js');
 const USER_AGENTS = require("./USER_AGENTS");
