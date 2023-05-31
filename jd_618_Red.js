@@ -73,9 +73,9 @@ l1lill1l();
     });
     return;
   }
-  I1l1I1Ii > new Date(l1lIIIi1).getTime() && ($.msg($.name, "活动已结束", "请删除此脚本"), $.setdata("", "JD_nhj_Reds"), $.setdata("", "JD_nhj_Red"), $.setdata("", "JD_nhj_Red_pin"));
+  I1l1I1Ii > new Date(l1lIIIi1).getTime() && ($.msg($.name, "活动已结束", "请删除此脚本"), $.setdata("", "JD_230618_Reds"), $.setdata("", "JD_230618_Red"), $.setdata("", "JD_230618_Red_pin"));
   $.shareCodeArr = {};
-  $.shareCodePinArr = $.getdata("JD_nhj_Red_pin") || {};
+  $.shareCodePinArr = $.getdata("JD_230618_Red_pin") || {};
   $.shareCode = "";
   $.again = false;
   authorCodeList = ["Oqk1iQg"]
@@ -94,9 +94,9 @@ l1lill1l();
       await ii1i1iII();
       if ($.endFlag || $.end) break;
     }
-    $.setdata($.shareCodePinArr, "JD_nhj_Red_pin");
+    $.setdata($.shareCodePinArr, "JD_230618_Red_pin");
   }
-  $.setdata($.shareCodePinArr, "JD_nhj_Red_pin");
+  $.setdata($.shareCodePinArr, "JD_230618_Red_pin");
   if (message) {
     $.msg($.name, "", message + "\nhttps://u.jd.com/" + rebateCode + "\n\n跳转到app 可查看助力情况");
     if ($.isNode()) {}
