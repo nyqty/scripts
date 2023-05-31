@@ -15,8 +15,7 @@ export JD_230618_RedCount="0"
 1000=1秒
 export JD_230618_RedTimes="15000"
 
-0 0,10,20 * * * https://raw.githubusercontent.com/smiek2121/scripts/master/gua_230618_Red.js 618red
-
+0 0,10,20 * * * jd_230618_Red.js 618红包助力
 */
 
 let rebateCodes = ''; // 返利变量
