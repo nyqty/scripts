@@ -4,12 +4,12 @@ cron: 0 0-23/3,0 * * *
 new Env('TY云任务-京东wskey转换');
 #禁用发送消息 默认不禁用
 WSKEY_SEND="disable";
-#检查更新间隔设置就以更新时间来检查，没设置就检查账号是否失效，设置为数字则设置多少就隔多久，不为数字就默认为6小时
-WSKEY_UPDATE_HOUR=3;
+#检查更新间隔设置就以更新时间来检查，没设置就检查账号是否失效，设置为数字则设置多少就隔多久，不为数字就默认为10小时
+WSKEY_UPDATE_HOUR=10;
 #是否检查账号有效性，设置了就不检查直接更新。上面更新时间优于本设置
 WSKEY_DISCHECK
-#休眠时间 10秒
-WSKEY_SLEEP=10;
+#休眠时间 20秒
+WSKEY_SLEEP=20;
 #WSKEY失效自动禁用
 WSKEY_AUTO_DISABLE
 #重试次数1次
@@ -97,7 +97,7 @@ def check_ck(row):  # 方法 检查 Cookie有效性 使用变量传递 单次调
     #if searchObj: userName = searchObj.group(1)  # 取值
     if "WSKEY_UPDATE_HOUR" in os.environ:  # 判断 WSKEY_UPDATE_HOUR是否存在于环境变量
         updatedAt = Date2time(row["up_date"])
-        updateHour = 3  # 更新间隔6小时
+        updateHour = 10  # 更新间隔10小时
         if os.environ["WSKEY_UPDATE_HOUR"].isdigit():  # 检查是否为 DEC值
             updateHour = int(os.environ["WSKEY_UPDATE_HOUR"])  # 使用 int化数字
         nowTime = time.time()  # 获取时间戳 赋值
@@ -140,46 +140,46 @@ def check_ck(row):  # 方法 检查 Cookie有效性 使用变量传递 单次调
                 return False  # 返回 Bool类型 False
 
 # 返回值 String tokenKey
-def getIsvToken(cookie):
+def getIsvToken(wskey):
+    # 'jdapp;android;11.0.2;;;appBuild/97565;ef/1;ep/{"hdid":"JM9F1ywUPwflvMIpYPok0tt5k9kW4ArJEU3lfLhxBqw=","ts":1685618307828,"ridx":-1,"cipher":{"sv":"CJS=","ad":"YWPtZNK2ZQHvDwU5CzOnDq==","od":"Ytc1DQY3EWDuY2S0DJU3ZK==","ov":"CzO=","ud":"YWPtZNK2ZQHvDwU5CzOnDq=="},"ciphertype":5,"version":"1.2.0","appname":"com.jingdong.app.mall"};Mozilla/5.0 (Linux; Android 12; M2102K2C Build/SKQ1.211006.001; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/97.0.4692.98 Mobile Safari/537.36'
+    params={
+        'functionId': 'genToken',
+        'clientVersion': '11.0.2',
+        'build': '97565',
+        'client': 'android',
+        'partner': 'google',
+        'oaid': 'jxpdv4gorqaix156',
+        'sdkVersion': '31', 'lang': 'zh_CN', 'harmonyOs': '0', 'networkType': 'UNKNOWN', 
+        'uemps': '0-2', 
+        'ext': '{"prstate": "0", "pvcStu": "1"}', 
+        'ef': '1', 
+        'ep': '{"hdid":"JM9F1ywUPwflvMIpYPok0tt5k9kW4ArJEU3lfLhxBqw=","ts":1685618308241,"ridx":-1,"cipher":{"area":"CV8yEJUzXzU0CNG0XzK=","d_model":"JWunCVVidRTr","wifiBssid":"dW5hbw93bq==","osVersion":"CJS=","d_brand":"WQvrb21f","screen":"CJuyCMenCNq=","uuid":"CJq0aWi3Z3v6CW90b3fyYG==","aid":"CJq0aWi3Z3v6CW90b3fyYG==","openudid":"CJq0aWi3Z3v6CW90b3fyYG=="},"ciphertype":5,"version":"1.2.0","appname":"com.jingdong.app.mall"}',
+        'st': 1685618308241, 'sign': '602a49153af429fe7536391d6a183458', 'sv': '111'
+    }
     headers = {
         'Host': 'api.m.jd.com',
         'accept': '*/*',
-        'user-agent': 'okhttp/3.12.1;jdmall;android;version/11.2.5;build/98275',
+        #'user-agent': 'okhttp/3.12.1;jdmall;android;version/11.2.5;build/98275',
+        'user-agent': ua,
         'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
         #'accept-encoding': 'gzip,deflate',
-        'Cookie': cookie
+        'Cookie': wskey        
     }  # 设置 HTTP头
-
-    url = 'https://api.m.jd.com/client.action?functionId=genToken&clientVersion=11.2.5&build=98275&client=android&partner=xiaomi001'
-    params = {
-        'oaid':'404acfa21b2eb062',
-        'eid':'eidAc123812140sbN6WunRswQc+TE/gidHQxuDelsBO1W/Mw/Vhb1OFO+Pi6g02FYg5oT2pC0kIQR5AW7inK68bZU1wCqJqpOBXQ/Vo+wXxtpqIg5DJ6',
-        'sdkVersion':31,
-        'lang':'zh_CN',
-        'harmonyOs':'0',
-        'networkType':'wifi',
-        'uts':'0f31TVRjBSsE2eDbmyTSaPe4ojWD1OhouZ%2FLv0nIxVF2uoFLwuyK5QDoK3OLxIlS%2FCPobAyYMXK6H0iS0oU3DQLkRZmF5tEhNf6CA18ha3bF1arV6F1MTeTIRi5R0U7SQYkEEUCAcPWBsw5DThaauwlIcAzzKDi6SAM5H4xYU0nQjCFH6LbcE9goOmuHw3YO3oNXf3jaCHmP8WknE7gxnA%3D%3D',
-        'uemps':'0-2',
-        'ext':'%7B%22prstate%22%3A%220%22%2C%22pvcStu%22%3A%221%22%7D',
-        'harmonyOs':'0',
-        'avifSupport':'1',
-        'st':1663048466833,
-        'sign':'95ff2beb98aaefb7a13f46e9c305af66',
-        'sv':'101'
-    }
-
+    url = 'https://api.m.jd.com/client.action'  # 设置 URL地址
     data = 'body=%7B%22to%22%3A%22https%253a%252f%252fplogin.m.jd.com%252fjd-mlogin%252fstatic%252fhtml%252fappjmp_blank.html%22%7D&'  # 设置 POST 载荷
+
     try:  # 异常捕捉
-        res = requests.post(url=url,params=params, headers=headers, data=data, verify=False,
+        res = requests.post(url=url, params=params, headers=headers, data=data, verify=False,
                             timeout=10)  # HTTP请求 [POST] 超时 10秒
         res_json = json.loads(res.text)  # Json模块 取值
         tokenKey = res_json['tokenKey']  # 取出TokenKey
     except Exception as err:  # 异常捕捉
         logger.info("JD_WSKEY接口抛出错误 尝试重试 更换IP")  # 标准日志输出
         logger.info(str(err))  # 标注日志输出
-        return False, ''  # 返回 -> False[Bool], ''
+        return False, wskey  # 返回 -> False[Bool], Wskey
     else:  # 判断分支
-        return True,tokenKey  # 传递 True, tokenKey
+        return appjmp(wskey, tokenKey)  # 传递 wskey, Tokenkey 执行方法 [appjmp]
+    
         
 
 # 返回值 False[Bool], Wskey
@@ -333,6 +333,7 @@ def check_cloud():  # 方法 云端地址检查
             return i  # 返回 ->i
     logger.info("\n云端地址全部失效, 请检查网络!")  # 标准日志输出
     ql_send('云端地址失效. 请联系作者或者检查网络.')  # 推送消息
+    return False
     sys.exit(1)  # 脚本退出
 
 
@@ -397,7 +398,7 @@ if __name__ == '__main__':  # Python主函数执行入口
     if "WSKEY_SLEEP" in os.environ and str(os.environ["WSKEY_SLEEP"]).isdigit():  # 判断变量[WSKEY_SLEEP]是否为数字类型
         sleepTime = int(os.environ["WSKEY_SLEEP"])  # 获取变量 [int]
     else:  # 判断分支
-        sleepTime = 10  # 默认休眠时间 10秒
+        sleepTime = 20  # 默认休眠时间 20秒
     url_t = check_cloud()  # 调用方法 [check_cloud] 并赋值 [url_t]
     cloud_arg = cloud_info()  # 调用方法 [cloud_info] 并赋值 [cloud_arg]
     update()  # 调用方法 [update]
