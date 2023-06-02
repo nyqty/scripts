@@ -43,7 +43,7 @@ const api = got.extend({
 let DeleteTask = "false",
 	DeleteFile = "false";
 
-let atyvcn = "atyvcn";//atyvcn_jd_scripts
+let nyqty = "nyqty";
 
 
 if ($.isNode() && process.env.CheckRpeat_DeleteTask) {
@@ -172,7 +172,7 @@ export QL_URL="http://127.0.0.1:5700"
 			continue
 		}
 		msg += "=相等"
-		n = filename[i].substr(0, atyvcn.length) == atyvcn ? i - 1 : i;
+		n = filename[i].substr(0, nyqty.length) == nyqty ? i - 1 : i;
 		if (crons[n].isDisabled) {
 			i++
 			msg += "\n已禁用，跳过"
