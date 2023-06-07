@@ -58,7 +58,7 @@ $.blacklist = process.env.DPLHTY_blacklist || iIIl11I1;
 Iil1I1Il();
 i1IlIII();
 !(async () => {
-  authorCodeList = [""];
+  authorCodeList = ["oWYzEz0N7KY058rLNke8o87TwJCmNe8NFvhpI0XmJDULVU108+UxlHw7qoUuHA4F"];
   $.authorCode = liIilili ? liIilili : authorCodeList[liiiiIl1(0, authorCodeList.length)];
   console.log("\n💬 当前ID：" + l1liIi1);
   console.log("\n💬 默认抽奖次数：" + l1l1IIIi + " 💬 重试次数：" + iiliIili);

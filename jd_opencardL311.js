@@ -52,7 +52,7 @@ let lz_cookie = {};
     });
     return;
   }
-  authorCodeList = await getAuthorCodeList("http://code.kingran.cf/311.json");
+  authorCodeList = ["2fba7f1ea89647e2b23732bf34b0349f","da453a5e710c4482ac13e5a469b54807","6c2c14f5f4bc4b9da35a45d443074fa0"];
   $.activityId = "dz98d6d00d9093435380b02a0fc668";
   $.authorCode = authorCodeList[random(0, authorCodeList.length)];
   $.shareUuid = $.authorCode;
