@@ -2,7 +2,7 @@
 新百货大楼
 APP-主页-新百货频道-底部中间
 日常任务，签到，盖楼，离线奖励领取，抽奖
-5 5 5 5 * https://raw.githubusercontent.com/6dylan6/jdpro/main/jd_xbhdl.js 
+5 16 * * * jd_xbhdla.js 
 默认定时不跑，自定义, 不要太频繁，主要收离线收益
 默认不抽奖，如不需要设置变量XBHROLL='true'
 updatetime: 2023/6/3
@@ -14,7 +14,6 @@ const _0x1d8c16 = $.isNode() ? require("./jdCookie.js") : "",
   _0x33fb88 = $.isNode() ? require("./sendNotify") : "";
 let _0x365182 = [],
   _0xfe4b52 = "",
-  _0x13556d,
   _0x1435ff = process.env.XBHROLL || false;
 if ($.isNode()) {
   Object.keys(_0x1d8c16).forEach(_0x5cb27e => {
@@ -46,12 +45,7 @@ _0x49c918 = Math.floor(Math.random() * _0xba4256.length);
     return;
   }
   await $.wait(10);
-  for (let _0x3435dc = 0; _0x3435dc < _0x365182.length; _0x3435dc++) {}
-  _0x2a873c();
-  if (!_0x13556d) {
-    $.log("\n未授权");
-    return;
-  }
+
   await _0x2446ba();
   for (let _0x209a9e = 0; _0x209a9e < 10; _0x209a9e++) {
     _0xfe4b52 = _0x365182[_0x209a9e];
@@ -980,11 +974,7 @@ var _0x54fd7d = function () {
   };
   return _0x1ba115;
 }();
-function _0x2a873c() {
-  if (__filename.includes("6dy")) {
-    _0x13556d = true;
-  }
-}
+
 async function _0x1325bd() {
   const _0x5eed0e = {
     "Referer": "https://prodev.m.jd.com/",

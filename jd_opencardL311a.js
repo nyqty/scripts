@@ -16,7 +16,7 @@ cron:11 11 11 11 *
 ============Quantumultx===============
 [task_local]
 #6.5-6.25狂欢618  惊喜从天降
-11 11 11 11 * jd_opencardL311.js, tag=6.5-6.25狂欢618  惊喜从天降, enabled=true
+11 15 9,11 * * jd_opencardL311a.js, tag=6.5-6.25狂欢618  惊喜从天降, enabled=true
 
 */
 const Env = require('./utils/Env.js');
