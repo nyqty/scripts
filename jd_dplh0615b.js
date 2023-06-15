@@ -18,7 +18,7 @@
 ============Quantumultx===============
 [task_local]
 #大牌联合061502期
-1 1 1 1 * jd_dplh061502.js, tag=大牌联合061502期, enabled=true
+11 21 15,17 * * jd_dplh0615b.js, tag=大牌联合061502期, enabled=true
 */
 let opencard_toShop = "false"
 const Env = require('./utils/Env.js');

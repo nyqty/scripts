@@ -60,7 +60,7 @@ $.errMsgPin = [];
     });
     return;
   }
-  authorCodeList = await getAuthorCodeList("http://code.kingran.cf/314.json");
+  authorCodeList = ["41d28dc5df0e458699e166bb178a6781"];
   $.activityId = "755aea1a02ec41c8a93165f0a3d18261";
   $.authorCode = authorCodeList[random(0, authorCodeList.length)];
   $.shareUuid = $.authorCode;
