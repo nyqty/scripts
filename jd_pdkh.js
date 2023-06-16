@@ -6,183 +6,199 @@
 updatetime:2023/6/11
 */
 const Env = require('./utils/Env.js');
+let wudoutimes = '15';//连续几次没有豆就不抽奖
 const $ = new Env('派对狂欢城');
-const lIllIi11 = $.isNode() ? require("./sendNotify") : "",
-  lIi1lIi1 = $.isNode() ? require("./jdCookie.js") : "",
-  I1Ilii1i = require("./USER_AGENTS"),
-  I1lilIl1 = require("crypto-js");
-let ilIlIli = true,
-  i1llllll = [],
-  iiIIIlIl = "",
-  iiiillI1 = "",
-  Ii1iIiII = false,
-  lil11lII = true;
+
+const ii1lIl1l = $.isNode() ? require("./sendNotify") : "",
+  li1I1i1l = $.isNode() ? require("./jdCookie.js") : "",
+  l1i1ii = require("./function/dylany.js"),
+  l1IiIIl = require("./USER_AGENTS"),
+  i1Ii1il1 = require("crypto-js");
+let iIi1l1li = true,
+  li1i1i = [],
+  l11ill = "",
+  iIIlIiIl = "",
+  Iiii1iI1 = false,
+  I1iiili = true;
 if ($.isNode()) {
-  Object.keys(lIi1lIi1).forEach(iIiIl1i => {
-    i1llllll.push(lIi1lIi1[iIiIl1i]);
+  Object.keys(li1I1i1l).forEach(i111l11I => {
+    li1i1i.push(li1I1i1l[i111l11I]);
   });
   if (process.env.JD_DEBUG && process.env.JD_DEBUG === "false") console.log = () => {};
-} else i1llllll = [$.getdata("CookieJD"), $.getdata("CookieJD2"), ...il1iI1Il($.getdata("CookiesJD") || "[]").map(IIll11l1 => IIll11l1.cookie)].filter(IlIil1ii => !!IlIil1ii);
+} else li1i1i = [$.getdata("CookieJD"), $.getdata("CookieJD2"), ...iI1iii($.getdata("CookiesJD") || "[]").map(i1l11Il => i1l11Il.cookie)].filter(i1ii1l1I => !!i1ii1l1I);
 !(async () => {
-  if (!i1llllll[0]) {
+  if (!li1i1i[0]) {
     $.msg($.name, "【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取", "https://bean.m.jd.com/bean/signIndex.action", {
       "open-url": "https://bean.m.jd.com/bean/signIndex.action"
     });
     return;
   }
-  $.log("\n当前版本：V1.2.0 连续15次空气后只做任务不抽奖");
+  $.log("\n当前版本：V2.0.0 修复403");
   $.log("\n问题建议TG：https://t.me/dylan_jdpro");
-  for (let i1lIIiI = 0; i1lIIiI < i1llllll.length; i1lIIiI++) {
-    if (i1llllll[i1lIIiI]) {
-      iiIIIlIl = i1llllll[i1lIIiI];
-      $.UserName = decodeURIComponent(iiIIIlIl.match(/pt_pin=([^; ]+)(?=;?)/) && iiIIIlIl.match(/pt_pin=([^; ]+)(?=;?)/)[1]);
-      $.index = i1lIIiI + 1;
+  for (let lllI11ii = 0; lllI11ii < li1i1i.length; lllI11ii++) {
+    if (li1i1i[lllI11ii]) {
+      l11ill = li1i1i[lllI11ii];
+      $.UserName = decodeURIComponent(l11ill.match(/pt_pin=([^; ]+)(?=;?)/) && l11ill.match(/pt_pin=([^; ]+)(?=;?)/)[1]);
+      $.index = lllI11ii + 1;
       $.isLogin = true;
       $.nickName = "";
       $.notimes = false;
       $.airnum = 0;
-      $.UA = I1Ilii1i.UARAM ? I1Ilii1i.UARAM() : I1Ilii1i.USER_AGENT;
-      await ilil1l();
+      $.UA = l1IiIIl.UARAM ? l1IiIIl.UARAM() : l1IiIIl.USER_AGENT;
+      await IlI11lI();
       console.log("\n******开始【京东账号" + $.index + "】" + ($.nickName || $.UserName) + "*********\n");
       if (!$.isLogin) {
         $.msg($.name, "【提示】cookie已失效", "京东账号" + $.index + " " + ($.nickName || $.UserName) + "\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action", {
           "open-url": "https://bean.m.jd.com/bean/signIndex.action"
         });
-        $.isNode() && (await lIllIi11.sendNotify($.name + "cookie已失效 - " + $.UserName, "京东账号" + $.index + " " + $.UserName + "\n请重新登录获取cookie"));
+        $.isNode() && (await ii1lIl1l.sendNotify($.name + "cookie已失效 - " + $.UserName, "京东账号" + $.index + " " + $.UserName + "\n请重新登录获取cookie"));
         continue;
       }
-      await i1iili1();
+      await I1lliIli();
       await $.wait(200);
-      await iIIill1i();
+      await iliIl1ll();
       await $.wait(200);
-      await lliliIli();
+      await Il1li1l1();
       await $.wait(200);
-      await iI1l1ilI();
+      await I1iiIl1();
       await $.wait(200);
       if ($.taskList) {
         $.log("去做任务...");
-        for (let llii1l1 of $.taskList) {
-          if (!!llii1l1.assignmentName && llii1l1.assignmentName !== "积分抽奖" && llii1l1.assignmentName.indexOf("抽奖奖池") == -1 && llii1l1.assignmentName.indexOf("加购") == -1 && llii1l1.assignmentName.indexOf("会员") == -1) {
-            $.log("\n----" + llii1l1.assignmentName);
-            if (llii1l1.completionFlag) {
+        for (let IllilIii of $.taskList) {
+          if (!!IllilIii.assignmentName && IllilIii.assignmentName !== "积分抽奖" && IllilIii.assignmentName.indexOf("抽奖奖池") == -1 && IllilIii.assignmentName.indexOf("加购") == -1 && IllilIii.assignmentName.indexOf("会员") == -1) {
+            $.log("\n----" + IllilIii.assignmentName);
+            if (IllilIii.completionFlag) {
               $.log("----已完成");
               continue;
             }
-            if (llii1l1.ext.shoppingActivity || llii1l1.ext.followShop) {
-              for (let l1liili1 = 0; l1liili1 < llii1l1.assignmentTimesLimit - llii1l1.completionCnt; l1liili1++) {
-                await l1llilI(llii1l1.encryptAssignmentId, llii1l1.ext.shoppingActivity ? llii1l1.ext.shoppingActivity[l1liili1].itemId : llii1l1.ext.followShop[l1liili1].itemId);
+            if (IllilIii.ext.shoppingActivity || IllilIii.ext.followShop) {
+              for (let li11i11i = 0; li11i11i < IllilIii.assignmentTimesLimit - IllilIii.completionCnt; li11i11i++) {
+                await IiIIiIll(IllilIii.encryptAssignmentId, IllilIii.ext.shoppingActivity ? IllilIii.ext.shoppingActivity[li11i11i].itemId : IllilIii.ext.followShop[li11i11i].itemId);
                 await $.wait(1000);
               }
               continue;
             }
-            await l1llilI(llii1l1.encryptAssignmentId);
+            await IiIIiIll(IllilIii.encryptAssignmentId);
             await $.wait(500);
           }
         }
       }
-      if (lil11lII) {
+      if (I1iiili) {
         $.log("\n\n元宝抽奖...");
-        for (let I1Iillii of Array(50)) {
+        for (let Ililii of Array(50)) {
           if ($.notimes) break;
-          if ($.airnum > 15) {
-            $.log("\n\n连续15次无豆, 不抽奖只做任务！！！");
-            lil11lII = false;
+          if ($.airnum > wudoutimes) {
+            $.log("\n\n连续无豆达到设定值, 不抽奖只做任务！！！");
+            I1iiili = false;
             break;
           }
-          await lIiIIIi1();
-          await $.wait(3000);
+          await I1lilI();
+          await $.wait(1000);
         }
       }
       await $.wait(5000);
     }
   }
-})().catch(Ii11II1I => {
-  $.log("", "❌ " + $.name + ", 失败! 原因: " + Ii11II1I + "!", "");
+})().catch(Il11iliI => {
+  $.log("", "❌ " + $.name + ", 失败! 原因: " + Il11iliI + "!", "");
 }).finally(() => {
   $.done();
 });
-async function i1iili1() {
-  return new Promise(async iI1il1lI => {
-    $.post(il1I1lIl("arvrMeta2RoomSortListByTemplateId", {
+async function I1lliIli() {
+  return new Promise(async ii111i => {
+    $.post(ilIIil1("arvrMeta2RoomSortListByTemplateId", {
       "templateId": "790088977"
-    }), async (lli1lIlI, lIIllliI, iII1il1) => {
+    }), async (lliII1l1, lIliIIl1, ilIi1lll) => {
       try {
-        if (lli1lIlI) {
-          console.log("" + JSON.stringify(lli1lIlI));
+        if (lliII1l1) {
+          console.log("" + JSON.stringify(lliII1l1));
           console.log(" API请求失败，请检查网路重试");
         } else {
-          Ii1iIiII && console.log(iII1il1);
-          iII1il1 = JSON.parse(iII1il1);
-          iII1il1.code == 0 ? $.roomId = iII1il1.data[0].roomId : console.log(iII1il1.msg);
+          Iiii1iI1 && console.log(ilIi1lll);
+          ilIi1lll = JSON.parse(ilIi1lll);
+          if (ilIi1lll.code == 0) {
+            $.roomId = ilIi1lll.data[0].roomId;
+          } else {
+            console.log(ilIi1lll.msg);
+          }
         }
-      } catch (IlIIIIi) {
-        $.logErr(IlIIIIi, lIIllliI);
+      } catch (l1l1liIi) {
+        $.logErr(l1l1liIi, lIliIIl1);
       } finally {
-        iI1il1lI(iII1il1);
+        ii111i(ilIi1lll);
       }
     });
   });
 }
-async function iIIill1i() {
-  return new Promise(async ll1I1l1I => {
-    $.post(il1I1lIl("meta2LoginGame", {
+async function iliIl1ll() {
+  return new Promise(async IiillI => {
+    $.post(ilIIil1("meta2LoginGame", {
       "channel": "1",
       "roomId": $.roomId
-    }), async (liilIl1, lIli1I1l, Il11l1I) => {
+    }), async (l1111Iil, ilIiiI1, iiiI1l1i) => {
       try {
-        if (liilIl1) {
-          console.log("" + JSON.stringify(liilIl1));
+        if (l1111Iil) {
+          console.log("" + JSON.stringify(l1111Iil));
           console.log(" API请求失败，请检查网路重试");
         } else {
-          Ii1iIiII && console.log(Il11l1I);
-          Il11l1I = JSON.parse(Il11l1I);
-          if (Il11l1I.code == 0) {} else console.log(Il11l1I.msg);
+          Iiii1iI1 && console.log(iiiI1l1i);
+          iiiI1l1i = JSON.parse(iiiI1l1i);
+          if (iiiI1l1i.code == 0) {} else console.log(iiiI1l1i.msg);
         }
-      } catch (ii1li11i) {
-        $.logErr(ii1li11i, lIli1I1l);
+      } catch (iillI11l) {
+        $.logErr(iillI11l, ilIiiI1);
       } finally {
-        ll1I1l1I(Il11l1I);
+        IiillI(iiiI1l1i);
       }
     });
   });
 }
-async function lliliIli() {
-  let I1lII1l1 = {
+async function Il1li1l1() {
+  let IIiIi1I1 = {
     "rewardType": 6,
     "activityId": "ba6e852dd2bc05a1de75b2d2dc9fda305096bcc0",
     "appId": "app_440"
   };
-  return I1lII1l1 = i1li(I1lII1l1), new Promise(async I1Ii1i1I => {
-    $.post(il1I1lIl("arvr_getRequestToken", I1lII1l1), async (III1I11l, IiIllIil, iliii1ll) => {
+  return IIiIi1I1 = iIiiiii1(IIiIi1I1), new Promise(async lI1l111 => {
+    $.post(ilIIil1("arvr_getRequestToken", IIiIi1I1), async (IIIlIlIl, I1ilii1l, lllil111) => {
       try {
-        III1I11l ? (console.log("" + JSON.stringify(III1I11l)), console.log(" API请求失败，请检查网路重试")) : (Ii1iIiII && console.log(iliii1ll), iliii1ll = JSON.parse(iliii1ll), iliii1ll.code == 200 ? $.token = iliii1ll.data : console.log(iliii1ll.msg));
-      } catch (IllI111) {
-        $.logErr(IllI111, IiIllIil);
+        IIIlIlIl ? (console.log("" + JSON.stringify(IIIlIlIl)), console.log(" API请求失败，请检查网路重试")) : (Iiii1iI1 && console.log(lllil111), lllil111 = JSON.parse(lllil111), lllil111.code == 200 ? $.token = lllil111.data : console.log(lllil111.msg));
+      } catch (IllIi1il) {
+        $.logErr(IllIi1il, I1ilii1l);
       } finally {
-        I1Ii1i1I(iliii1ll);
+        lI1l111(lllil111);
       }
     });
   });
 }
-async function iI1l1ilI() {
-  let Iill11Il = {
+async function I1iiIl1() {
+  let i1llli1 = {
     "projectId": "1452563",
     "sourceCode": 2
   };
-  return Iill11Il = i1li(Iill11Il), new Promise(async iIill11I => {
-    $.post(il1I1lIl("arvr_queryInteractiveInfo", Iill11Il), async (llI11I1, ii1IlIi1, liIliI1l) => {
+  return i1llli1 = iIiiiii1(i1llli1), new Promise(async iIl1iii1 => {
+    $.post(ilIIil1("arvr_queryInteractiveInfo", i1llli1), async (IiIl11l1, iIllIiI, iil1iIiI) => {
       try {
-        llI11I1 ? (console.log("" + JSON.stringify(llI11I1)), console.log(" API请求失败，请检查网路重试")) : (Ii1iIiII && console.log(liIliI1l), liIliI1l = JSON.parse(liIliI1l), liIliI1l.subCode == 0 ? $.taskList = liIliI1l.assignmentList : console.log(liIliI1l.msg));
-      } catch (ll1I11I) {
-        $.logErr(ll1I11I, ii1IlIi1);
+        if (IiIl11l1) {
+          console.log("" + JSON.stringify(IiIl11l1));
+          console.log(" API请求失败，请检查网路重试");
+        } else {
+          Iiii1iI1 && console.log(iil1iIiI);
+          iil1iIiI = JSON.parse(iil1iIiI);
+          if (iil1iIiI.subCode == 0) {
+            $.taskList = iil1iIiI.assignmentList;
+          } else console.log(iil1iIiI.msg);
+        }
+      } catch (iIIi1ii) {
+        $.logErr(iIIi1ii, iIllIiI);
       } finally {
-        iIill11I(liIliI1l);
+        iIl1iii1(iil1iIiI);
       }
     });
   });
 }
-async function lIiIIIi1() {
-  let liIIIiiI = {
+async function I1lilI() {
+  let ilIIIlll = {
     "projectId": "1452563",
     "sourceCode": 2,
     "accessToken": $.token,
@@ -190,154 +206,196 @@ async function lIiIIIi1() {
     "subTaskIdSecret": true,
     "exchangeNum": 1
   };
-  return liIIIiiI = i1li(liIIIiiI), new Promise(async iI1IiII1 => {
-    $.post(il1I1lIl("arvr_doInteractiveAssignment", liIIIiiI), async (Iii1iilI, IiiI11i1, i111ll1) => {
+  ilIIIlll = iIiiiii1(ilIIIlll);
+  let iIllil1l = {
+      "appId": "e5749",
+      "fn": "arvr_doInteractiveAssignment",
+      "body": ilIIIlll,
+      "apid": "commonActivity",
+      "user": $.UserName,
+      "code": 1,
+      "ua": $.UA
+    },
+    IIi1ilii = await l1i1ii.getbody(iIllil1l),
+    l1i1IIll = {
+      "url": "https://api.m.jd.com/api/arvr_doInteractiveAssignment",
+      "body": "" + IIi1ilii,
+      "headers": {
+        "Host": "api.m.jd.com",
+        "Origin": "https://prodev.m.jd.com",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "User-Agent": $.UA,
+        "Cookie": l11ill
+      }
+    };
+  return new Promise(async liiiiiI => {
+    $.post(l1i1IIll, async (i1I1IIil, ll1IiliI, l11iIi1I) => {
       try {
-        if (Iii1iilI) {
-          console.log("" + JSON.stringify(Iii1iilI));
+        if (i1I1IIil) {
+          console.log("" + JSON.stringify(i1I1IIil));
           console.log(" API请求失败，请检查网路重试");
         } else {
-          Ii1iIiII && console.log(i111ll1);
-          i111ll1 = JSON.parse(i111ll1);
-          if (i111ll1.subCode == 0) {
-            if (i111ll1.rewardsInfo.failRewards && i111ll1.rewardsInfo.failRewards.length != 0) {
-              if (i111ll1.rewardsInfo.failRewards[0].msg.indexOf("风控") > -1) {
+          Iiii1iI1 && console.log(l11iIi1I);
+          l11iIi1I = JSON.parse(l11iIi1I);
+          if (l11iIi1I.subCode == 0) {
+            if (l11iIi1I.rewardsInfo.failRewards && l11iIi1I.rewardsInfo.failRewards.length != 0) {
+              if (l11iIi1I.rewardsInfo.failRewards[0].msg.indexOf("风控") > -1) {
                 process.stdout.write("黑号，不继续抽了！");
                 $.notimes = true;
                 return;
               }
             }
-            i111ll1.rewardsInfo.successRewards && JSON.stringify(i111ll1.rewardsInfo.successRewards) != "{}" ? (process.stdout.write(Object.values(i111ll1.rewardsInfo.successRewards)[0][0].rewardName + " "), Object.values(i111ll1.rewardsInfo.successRewards)[0][0].rewardName.indexOf("京豆") == -1 ? $.airnum++ : $.airnum = 0) : (process.stdout.write("空气 "), $.airnum++);
+            l11iIi1I.rewardsInfo.successRewards && JSON.stringify(l11iIi1I.rewardsInfo.successRewards) != "{}" ? (process.stdout.write(Object.values(l11iIi1I.rewardsInfo.successRewards)[0][0].rewardName + " "), Object.values(l11iIi1I.rewardsInfo.successRewards)[0][0].rewardName.indexOf("京豆") == -1 ? $.airnum++ : $.airnum = 0) : (process.stdout.write("空气 "), $.airnum++);
           } else {
-            if (i111ll1.msg.includes("不足")) {
-              console.log(i111ll1.msg);
+            if (l11iIi1I.msg.includes("不足")) {
+              console.log(l11iIi1I.msg);
               $.notimes = true;
-            } else console.log(i111ll1.msg);
+            } else {
+              console.log(l11iIi1I.msg);
+            }
           }
         }
-      } catch (iII1l1i) {
-        $.logErr(iII1l1i, IiiI11i1);
+      } catch (iII1Il1i) {
+        $.logErr(iII1Il1i, ll1IiliI);
       } finally {
-        iI1IiII1(i111ll1);
+        liiiiiI(l11iIi1I);
       }
     });
   });
 }
-async function l1llilI(iI1iIl11, iil11li1) {
-  let iIIiI1i1 = {
+async function IiIIiIll(ill1iii1, II1lI) {
+  let I11I1i = {
     "projectId": "1452563",
     "sourceCode": 2,
     "accessToken": $.token,
-    "subTaskId": iI1iIl11,
+    "subTaskId": ill1iii1,
     "subTaskIdSecret": true,
-    "itemId": iil11li1
+    "itemId": II1lI
   };
-  if (!iil11li1) delete iIIiI1i1.itemId;
-  return iIIiI1i1 = i1li(iIIiI1i1), new Promise(async I1ii1llI => {
-    $.post(il1I1lIl("arvr_doInteractiveAssignment", iIIiI1i1), async (llIill1, illIiii, Ill11lii) => {
+  if (!II1lI) delete I11I1i.itemId;
+  I11I1i = iIiiiii1(I11I1i);
+  let ii1IiiII = {
+      "appId": "e5749",
+      "fn": "arvr_doInteractiveAssignment",
+      "body": I11I1i,
+      "apid": "commonActivity",
+      "user": $.UserName,
+      "code": 1,
+      "ua": $.UA
+    },
+    IIlil1Il = await l1i1ii.getbody(ii1IiiII),
+    i11illlI = {
+      "url": "https://api.m.jd.com/api/arvr_doInteractiveAssignment",
+      "body": "" + IIlil1Il,
+      "headers": {
+        "Host": "api.m.jd.com",
+        "Origin": "https://prodev.m.jd.com",
+        "Referer": "https://prodev.m.jd.com/",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "User-Agent": $.UA,
+        "Cookie": l11ill
+      }
+    };
+  return new Promise(async iilIl1iI => {
+    $.post(i11illlI, async (ii1l11I, lI1I1iI, I1ii1IiI) => {
       try {
-        if (llIill1) {
-          console.log("" + JSON.stringify(llIill1));
-          console.log(" API请求失败，请检查网路重试");
-        } else {
-          Ii1iIiII && console.log(Ill11lii);
-          Ill11lii = JSON.parse(Ill11lii);
-          Ill11lii.subCode == 0 ? Ill11lii.rewardsInfo.successRewards && process.stdout.write("" + Ill11lii.rewardsInfo.successRewards[1].quantityDetails[0].quantity + Ill11lii.rewardsInfo.successRewards[1].quantityDetails[0].rewardName + " ") : console.log(Ill11lii.msg);
-        }
-      } catch (lIli1il1) {
-        $.logErr(lIli1il1, illIiii);
+        ii1l11I ? (console.log("" + JSON.stringify(ii1l11I)), console.log("dotask 请求失败，请检查网路重试")) : (Iiii1iI1 && console.log(I1ii1IiI), I1ii1IiI = JSON.parse(I1ii1IiI), I1ii1IiI.subCode == 0 ? I1ii1IiI.rewardsInfo.successRewards && process.stdout.write("" + I1ii1IiI.rewardsInfo.successRewards[1].quantityDetails[0].quantity + I1ii1IiI.rewardsInfo.successRewards[1].quantityDetails[0].rewardName + " ") : console.log(I1ii1IiI.msg));
+      } catch (Iiii11l1) {
+        $.logErr(Iiii11l1, lI1I1iI);
       } finally {
-        I1ii1llI(Ill11lii);
+        iilIl1iI(I1ii1IiI);
       }
     });
   });
 }
-function il1I1lIl(l1l1iiI, il1IiiI1) {
+function ilIIil1(liiIi11l, IIIlIli1) {
   return {
-    "url": "https://api.m.jd.com/api/" + l1l1iiI,
-    "body": "appid=commonActivity&functionId=" + l1l1iiI + "&body=" + encodeURIComponent(JSON.stringify(il1IiiI1)) + "&t=" + Date.now(),
+    "url": "https://api.m.jd.com/api/" + liiIi11l,
+    "body": "appid=commonActivity&functionId=" + liiIi11l + "&body=" + encodeURIComponent(JSON.stringify(IIIlIli1)) + "&t=" + Date.now(),
     "headers": {
       "Host": "api.m.jd.com",
       "Origin": "https://pro.m.jd.com",
       "Content-Type": "application/x-www-form-urlencoded",
       "User-Agent": $.UA,
-      "Cookie": iiIIIlIl
+      "Cookie": l11ill
     }
   };
 }
-function i1li(il11IIll) {
-  let iIlIiIiI = "",
-    lIiill = Object.keys(il11IIll).sort(function (ilIlIl1l, iilliiII) {
-      return ilIlIl1l.localeCompare(iilliiII);
+function iIiiiii1(i1lIii1l) {
+  let lIilI1lI = "",
+    IliiilI = Object.keys(i1lIii1l).sort(function (liiI1I1i, iIllilii) {
+      return liiI1I1i.localeCompare(iIllilii);
     });
-  for (let lii1li1i of lIiill) {
-    iIlIiIiI = iIlIiIiI.concat(il11IIll[lii1li1i]);
+  for (let Ii11II1l of IliiilI) {
+    lIilI1lI = lIilI1lI.concat(i1lIii1l[Ii11II1l]);
   }
-  let IiIillIi = Date.now();
-  r = "".concat("c4491f13dce9c71f").concat(iIlIiIiI).concat(IiIillIi);
-  let ilIIIii = I1lilIl1.MD5(r).toString();
-  return il11IIll.timestamp = IiIillIi, il11IIll.sign = ilIIIii, il11IIll.signKey = "c4491f13dce9c71f", il11IIll;
+  let Iii111il = Date.now();
+  r = "".concat("c4491f13dce9c71f").concat(lIilI1lI).concat(Iii111il);
+  let l1iI1ll = i1Ii1il1.MD5(r).toString();
+  return i1lIii1l.timestamp = Iii111il, i1lIii1l.sign = l1iI1ll, i1lIii1l.signKey = "c4491f13dce9c71f", i1lIii1l;
 }
-function ilil1l() {
-  return new Promise(IiiI1Il1 => {
-    const lliliI11 = {
+function IlI11lI() {
+  return new Promise(I1iIIli => {
+    const l11iIiI = {
       "url": "https://plogin.m.jd.com/cgi-bin/ml/islogin",
       "headers": {
-        "Cookie": iiIIIlIl,
+        "Cookie": l11ill,
         "referer": "https://h5.m.jd.com/",
         "User-Agent": $.UA
       },
       "timeout": 10000
     };
-    $.get(lliliI11, (ll1lIll1, l1II1lli, IilIIl1l) => {
+    $.get(l11iIiI, (lIIilI1l, Il11111I, lIilil1l) => {
       try {
-        if (IilIIl1l) {
-          IilIIl1l = JSON.parse(IilIIl1l);
-          if (IilIIl1l.islogin === "1") {} else IilIIl1l.islogin === "0" && ($.isLogin = false);
+        if (lIilil1l) {
+          lIilil1l = JSON.parse(lIilil1l);
+          if (lIilil1l.islogin === "1") {} else lIilil1l.islogin === "0" && ($.isLogin = false);
         }
-      } catch (ll1li1lI) {
-        console.log(ll1li1lI);
+      } catch (l111ilii) {
+        console.log(l111ilii);
       } finally {
-        IiiI1Il1();
+        I1iIIli();
       }
     });
   });
 }
-function li1ii11() {
-  return new Promise(li111ii1 => {
-    !ilIlIli ? $.msg($.name, "", "" + iiiillI1) : $.log("京东账号" + $.index + $.nickName + "\n" + iiiillI1);
-    li111ii1();
+function ll111il() {
+  return new Promise(iIili1l => {
+    !iIi1l1li ? $.msg($.name, "", "" + iIIlIiIl) : $.log("京东账号" + $.index + $.nickName + "\n" + iIIlIiIl);
+    iIili1l();
   });
 }
-function i111iIil(ilI1IIIl) {
+function lilIIi1i(l1l11l) {
   try {
-    if (typeof JSON.parse(ilI1IIIl) == "object") return true;
-  } catch (l11ili1I) {
-    return console.log(l11ili1I), console.log("京东服务器访问数据为空，请检查自身设备网络情况"), false;
+    if (typeof JSON.parse(l1l11l) == "object") {
+      return true;
+    }
+  } catch (iIIiIlII) {
+    return console.log(iIIiIlII), console.log("京东服务器访问数据为空，请检查自身设备网络情况"), false;
   }
 }
-function il1iI1Il(iIIiiI11) {
-  const il1llI = function () {
-      let lilIIli1 = true;
-      return function (i1IIIlil, llI1il) {
-        const iIiiiii = lilIIli1 ? function () {
-          if (llI1il) {
-            const iII1iIi1 = llI1il.apply(i1IIIlil, arguments);
-            return llI1il = null, iII1iIi1;
+function iI1iii(II1Illli) {
+  const ii1I11ii = function () {
+      let lIIII11i = true;
+      return function (I1iIlill, ll1IIii) {
+        const iIIiIii = lIIII11i ? function () {
+          if (ll1IIii) {
+            const ilI11i11 = ll1IIii.apply(I1iIlill, arguments);
+            return ll1IIii = null, ilI11i11;
           }
         } : function () {};
-        return lilIIli1 = false, iIiiiii;
+        return lIIII11i = false, iIIiIii;
       };
     }(),
-    lI1ll11l = il1llI(this, function () {
-      return lI1ll11l.toString().search("(((.+)+)+)+$").toString().constructor(lI1ll11l).search("(((.+)+)+)+$");
+    iI1IiIii = ii1I11ii(this, function () {
+      return iI1IiIii.toString().search("(((.+)+)+)+$").toString().constructor(iI1IiIii).search("(((.+)+)+)+$");
     });
-  lI1ll11l();
-  if (typeof iIIiiI11 == "string") {
+  iI1IiIii();
+  if (typeof II1Illli == "string") {
     try {
-      return JSON.parse(iIIiiI11);
-    } catch (III11lii) {
-      return console.log(III11lii), $.msg($.name, "", "请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie"), [];
+      return JSON.parse(II1Illli);
+    } catch (IIiiIiI) {
+      return console.log(IIiiIiI), $.msg($.name, "", "请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie"), [];
     }
   }
 }
