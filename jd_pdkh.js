@@ -8,7 +8,6 @@ updatetime:2023/6/11
 const Env = require('./utils/Env.js');
 let wudoutimes = '15';//连续几次没有豆就不抽奖
 const $ = new Env('派对狂欢城');
-
 const ii1lIl1l = $.isNode() ? require("./sendNotify") : "",
   li1I1i1l = $.isNode() ? require("./jdCookie.js") : "",
   l1i1ii = require("./function/dylany.js"),
