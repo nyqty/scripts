@@ -16,10 +16,11 @@ const Env = require('./utils/Env.js');
 const $ = new Env("京喜领红包");
 const notify = $.isNode() ? require("./sendNotify") : "",
     jdCookieNode = $.isNode() ? require("./jdCookie.js") : "",
-    dylany = require("./function/dylany.js"),
     activeId = "63ef4e50c800b87f7a99e144",
     appCode = "msd1188198",
     appId = "99062";
+const H5ST=require('./utils/h5st.js');
+
 let cookiesArr = [], cookie = "", message = "";
 if ($.isNode()) {
     Object.keys(jdCookieNode).forEach(i => {
@@ -54,6 +55,7 @@ process.env.JX_LHB_CODE && (process.env.JX_LHB_CODE.indexOf("&") > -1 ? JX_LHB_C
     ];
     let authorCode = authorCodeList[Math.floor(Math.random() * authorCodeList.length)];
     $.UAS={};
+    $.H5ST={};
     if (JX_LHB_CODE) {
         JX_LHB_CODE = [...new Set([...JX_LHB_CODE, ...authorCodeList])];
         console.log("多余助力会助力TY");
@@ -211,18 +213,21 @@ async function querymyprizelist() {
 }
 
 async function jx_get(fn, body = { activeId }) {
-    let get = await dylany.getbody({
-        appId,
-        fn,
-        "body": body,
-        "apid": "jx_h5",
-        "ver": "1.0",
-        "cl": "jx_h5",
-        "user": $.UserName,
-        "code": 1,
-        "flag": $.flag,
-        "ua": $.UA
-    });
+    if( !$.H5ST[$.UserName] ) $.H5ST[$.UserName]={}
+    if( !$.H5ST[$.UserName][appId] ){
+        $.H5ST[$.UserName][appId]= new H5ST({
+            appId,
+            "appid": "jx_h5",
+            "clientVersion": "1.0",
+            "client":"jx_h5",
+            "pin": $.UserName,
+            "ua": $.UA,
+            "version":"3.1",
+            "expand":{}
+        });
+        await $.H5ST[$.UserName][appId].genAlgo();
+    };
+    let get =  await $.H5ST[$.UserName][appId].genUrlParams(fn,body)
     const opt = {
         "url": `https://api.jingxi.com/api?g_ty=h5&g_tk=&appCode=${appCode}&${get}&loginType=2&sceneval=2`,
         "headers": {

@@ -8,8 +8,8 @@
 const Env=require('./utils/Env.js');
 const $ = new Env("汪汪庄园");
 const _0x519374 = $.isNode() ? require("./jdCookie.js") : "",
-    _0x59a2a4 = require("./function/dylany.js"),
     _0x2b5a63 = $.isNode() ? require("./sendNotify") : "";
+    const H5ST=require('./utils/h5st.js');
 let _0x158d61 = [],
     _0x4afa09 = "",
     _0x1601ab = false;
@@ -38,6 +38,7 @@ message = "";
         console.log("\n******检测到您设置了不运行汪汪乐园，停止运行此脚本******\n");
         return;
     }
+    $.H5ST={};
     for (let _0x544fb7 = 0; _0x544fb7 < "6"; _0x544fb7++) {
         _0x4afa09 = _0x158d61[_0x544fb7];
         if (_0x4afa09) {
@@ -475,28 +476,31 @@ function _0x4595a4(_0x58e986, _0x466983, _0x2c96f9, _0x50ee9d) {
         });
     });
 }
-async function _0x53107b(_0x1e6a20, _0x2a782d, _0x1f1186) {
+async function _0x53107b(fn, body, appId) {
     const _0x539934 = {
         "EhIlp": "activities_platform",
         "LYdSv": "android"
     };
     let _0x38425a,
-        _0x54b84d = $.UA.split(";")[2];
-    if (_0x1f1186) {
-        const _0x25545f = {
-            "appId": _0x1f1186,
-            "fn": _0x1e6a20,
-            "body": _0x2a782d,
-            "apid": _0x539934.EhIlp,
-            "ver": _0x54b84d,
-            "cl": _0x539934.LYdSv,
-            "user": $.UserName,
-            "code": 1,
-            "ua": $.UA
+        clientVersion = $.UA.split(";")[2];
+    if (appId) {
+        if( !$.H5ST[$.UserName] ) $.H5ST[$.UserName]={}
+        if( !$.H5ST[$.UserName][appId] ){
+            $.H5ST[$.UserName][appId]= new H5ST({
+                appId,
+                "appid": "activities_platform",
+                "clientVersion": "1.0",
+                "client":"android",
+                "pin": $.UserName,
+                "ua": $.UA,
+                "version":"3.1",
+                "expand":{}
+            });
+            await $.H5ST[$.UserName][appId].genAlgo();
         };
-        _0x38425a = await _0x59a2a4.getbody(_0x25545f);
+        _0x38425a =  await $.H5ST[$.UserName][appId].genUrlParams(fn,body);
     } else {
-        _0x38425a = "functionId=" + _0x1e6a20 + "&body=" + _0x2a782d + "&appid=activities_platform&client=android&clientVersion=" + _0x54b84d + "&t=" + Date.now() + "&uuid=";
+        _0x38425a = "functionId=" + fn + "&body=" + body + "&appid=activities_platform&client=android&clientVersion=" + clientVersion + "&t=" + Date.now() + "&uuid=";
     }
     const _0x1e3845 = {
         "User-Agent": $.UA,
