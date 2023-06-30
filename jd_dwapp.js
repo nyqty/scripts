@@ -4,6 +4,7 @@
 update：2023/6/23
 40 8,18 * * * jd_dwapp.js
 */
+const Env=require('./utils/Env.js');
 const $ = new Env('积分换话费');
 const notify = $.isNode() ? require('./sendNotify') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
