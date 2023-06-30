@@ -51,6 +51,7 @@ async function main() {
     $.log("去签到")
     await usersign();
     await $.wait(2000);
+    $.tasklist=false;
     await tasklist();
     if ($.tasklist) {
         for (let i of $.tasklist) {
