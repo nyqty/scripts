@@ -4,6 +4,7 @@ cron "30 12,21 * * *" jd_bean_change.js, tag:资产变化强化版by-ccwav
 
 //详细说明参考 https://github.com/ccwav/QLScript2
 const Env = require('./utils/Env.js');
+const $ = new Env('京东资产变动');
 const { get_sign } = require('./utils/JDSign.js');
 const notify = $.isNode() ? require('./sendNotify') : '';
 const JXUserAgent = $.isNode() ? (process.env.JX_USER_AGENT ? process.env.JX_USER_AGENT : ``) : ``;
@@ -216,6 +217,14 @@ if ($.isNode()) {
 	strDisableList = process.env.BEANCHANGE_DISABLELIST ? process.env.BEANCHANGE_DISABLELIST.split('&') : [];
 }
 
+//充值中心积分
+let EnableDwSign=true;
+DisableIndex = strDisableList.findIndex((item) => item === "充值中心积分");
+if(DisableIndex!=-1){
+	console.log("检测到设定关闭充值中心积分查询");
+	EnableDwSign=false;	
+}
+
 //东东农场
 let EnableJdFruit=true;
 DisableIndex = strDisableList.findIndex((item) => item === "东东农场");
@@ -313,6 +322,7 @@ if(DisableIndex!=-1){
 			$.JdwaterTotalT = 0;
 			$.JdwaterD = 0;
 			$.JDwaterEveryDayT = 0;
+			$.JDbalanceNum=0;
 			$.JDtotalcash = 0;
 			$.jdCash = 0;
 			$.isPlusVip = false;
@@ -410,7 +420,8 @@ if(DisableIndex!=-1){
 			    };
 			    TodayCache.push(tempAddCache);
 			}
-						
+			
+			await dwSignInfo(); //话费积分
 			await getjdfruitinfo(); //东东农场
 			await $.wait(1000);
 			
@@ -744,9 +755,13 @@ async function showMsg() {
 		}			
 	}	
 	
+	if ($.JDbalanceNum) {
+		ReturnMessage += `【充值中心积分】${$.JDbalanceNum}(有效期仅为180天)\n`;
+	}
+
 	if ($.JDtotalcash) {
 		ReturnMessage += `【特价金币】${$.JDtotalcash}币(≈${($.JDtotalcash / 10000).toFixed(2)}元)\n`;
-	}	
+	}
 	if($.ECardinfo)
 		ReturnMessage += `【礼卡余额】${$.ECardinfo}\n`;
 	
@@ -1691,6 +1706,52 @@ function jdfruitRequest(function_id, body = {}, timeout = 1000) {
 			})
 		}, timeout)
 	})
+}
+
+
+//充值中心积分
+async function dwSignInfo() {
+    if (EnableDwSign) {
+		let time = new Date().getTime();
+		let body = { "t": time,"channelSource":"txzs","encStr": $.CryptoJS.MD5(`${time}e9c398ffcb2d4824b4d0a703e38yffdd`).toString() };
+		let opt={
+			url: `https://dwapp.jd.com/user/dwSignInfo`,
+			body: JSON.stringify(body),
+			headers: {
+				"Host": "dwapp.jd.com",
+				"Origin": "https://prodev.m.jd.com",
+				"Connection": "keep-alive",
+				"Accept": "*/*",
+				"User-Agent": `jdpingou;iPhone;4.13.0;14.4.2;${randomString(40)};network/wifi;model/iPhone10,2;appBuild/100609;ADID/00000000-0000-0000-0000-000000000000;supportApplePay/1;hasUPPay/0;pushNoticeIsOpen/1;hasOCPay/0;supportBestPay/0;session/${Math.random * 98 + 1};pap/JA2019_3111789;brand/apple;supportJDSHWK/1;Mozilla/5.0 (iPhone; CPU iPhone OS 14_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148`,
+				"Accept-Language": "zh-cn",
+				"Referer": "https://prodev.m.jd.com/mall/active/eEcYM32eezJB7YX4SBihziJCiGV/index.html",
+				"Accept-Encoding": "gzip, deflate, br",
+				"Content-Type": "application/json",
+				"Cookie": cookie,
+			}
+		}
+		return new Promise(resolve => {
+			$.post(opt, (err, resp, data) => {
+				try {
+					if (err) {
+						console.log(`${err}`)
+						console.log(`充值中心积分 API请求失败，请检查网路重试`)
+					} else {
+						data = JSON.parse(data)
+						if (data) {
+							if (data.code === 200) {
+								$.JDbalanceNum=data.data.balanceNum;
+							}
+						}
+					}
+				} catch (e) {
+					$.logErr(e, resp)
+				} finally {
+					resolve(data);
+				}
+			})
+		})
+    }
 }
 
 async function getjdfruitinfo() {
