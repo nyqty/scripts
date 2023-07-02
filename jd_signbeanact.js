@@ -3,9 +3,6 @@ APP首页-领京豆
 金融双签领取
 21 3 * * * jd_signbeanact.js
 */
-
-const { cookie } = require('request');
-
 const $ = new Env('领京豆签到');
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 let cookiesArr = [];
