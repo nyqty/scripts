@@ -4,8 +4,8 @@ cron: 0 0-23/3,0 * * *
 new Env('TY云任务-京东wskey转换');
 #禁用发送消息 默认不禁用
 WSKEY_SEND="disable";
-#检查更新间隔设置就以更新时间来检查，没设置就检查账号是否失效，设置为数字则设置多少就隔多久，不为数字就默认为10小时
-WSKEY_UPDATE_HOUR=10;
+#检查更新间隔设置就以更新时间来检查，没设置就检查账号是否失效，设置为数字则设置多少就隔多久，不为数字就默认为8小时
+WSKEY_UPDATE_HOUR=8;
 #是否检查账号有效性，设置了就不检查直接更新。上面更新时间优于本设置
 WSKEY_DISCHECK
 #休眠时间 20秒
@@ -97,7 +97,7 @@ def check_ck(row):  # 方法 检查 Cookie有效性 使用变量传递 单次调
     #if searchObj: userName = searchObj.group(1)  # 取值
     if "WSKEY_UPDATE_HOUR" in os.environ:  # 判断 WSKEY_UPDATE_HOUR是否存在于环境变量
         updatedAt = Date2time(row["up_date"])
-        updateHour = 10  # 更新间隔10小时
+        updateHour = 8
         if os.environ["WSKEY_UPDATE_HOUR"].isdigit():  # 检查是否为 DEC值
             updateHour = int(os.environ["WSKEY_UPDATE_HOUR"])  # 使用 int化数字
         nowTime = time.time()  # 获取时间戳 赋值
