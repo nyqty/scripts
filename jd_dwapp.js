@@ -94,7 +94,7 @@ if ($.isNode()) {
                     $.log("dwapp_task_dwList",JSON.stringify(res));
                 }
             }
-            await $.wait(3000);
+            await $.wait(5000);
         }
     }
 })().catch((e) => { $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '') }).finally(() => { $.done(); })
