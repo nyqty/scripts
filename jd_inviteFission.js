@@ -54,7 +54,7 @@ if( process.env.CXJ_PIN ){
 }
 
 const JD_API_HOST = 'https://api.m.jd.com/api';
-const prize_conf = {'1': '优惠券','2': '红包','4': '现金',}
+const prize_conf = {'1': '优惠券','2': '红包','4': '现金','6':'惊喜大礼包'}
 async function ck_expire(){
     $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/`, { "open-url": "https://bean.m.jd.com/" });
     if ($.isNode()) {
