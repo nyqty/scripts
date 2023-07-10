@@ -49,7 +49,7 @@ let lz_jdpin_token_cookie = "",
     return;
   }
   $.activityId = "dz5b8b0d274c9fb046c9e35604e6c9";
-  authorCodeList = await getAuthorCodeList("http://code.kingran.cf/bl.json");
+  authorCodeList = ["28803d2098b54d959f46482a11aafc75"];
   $.shareUuid = authorCodeList[Math.floor(Math.random() * authorCodeList.length)];
   console.log("请在有水的时候运行");
   console.log("入口:\nhttps://lzdz1-isv.isvjcloud.com/m/1000002836/5927485/dz5b8b0d274c9fb046c9e35604e6c9/");
