@@ -149,11 +149,13 @@ async function doCultureBean() {
   if ($.plantBeanIndexResult && $.plantBeanIndexResult.code === "0" && $.plantBeanIndexResult.data) {
     const li1lil = $.plantBeanIndexResult.data.roundList[num];
     if (li1lil.roundState === "2") {
-      if (li1lil.bubbleInfos && li1lil.bubbleInfos.length) console.log("开始收取营养液");
-      for (let li1lii of li1lil.bubbleInfos) {
-        console.log("收取-" + li1lii.name + "-的营养液");
-        await cultureBean(li1lil.roundId, li1lii.nutrientsType);
-        console.log("收取营养液结果:" + JSON.stringify($.cultureBeanRes));
+      if (li1lil.bubbleInfos && li1lil.bubbleInfos.length){
+        console.log("开始收取营养液");
+        for (let li1lii of li1lil.bubbleInfos) {
+          console.log("收取-" + li1lii.name + "-的营养液");
+          await cultureBean(li1lil.roundId, li1lii.nutrientsType);
+          console.log("收取营养液结果:" + JSON.stringify($.cultureBeanRes));
+        }
       }
     }
   } else {
