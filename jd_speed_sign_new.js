@@ -2,8 +2,6 @@
 cron "30 7,15,23 * * *" jd_speed_sign_Mod.js, tag:京喜特价任务
 */
 //详细说明参考 https://github.com/ccwav/QLScript2.
-
-process.env.JD_COOKIE='pt_key=app_openAAJkrvgzADD1J8NolGkpE5Kz4y09vpvwOdvKr92or5YRzR1wdZ4vUCXvUQCLcP9HtS-_EfQLOno; pt_pin=%E8%83%A1%E6%BB%95%E5%AE%87;';
 const $ = new Env('京东特价版任务');
 const notify = $.isNode() ? require('./sendNotify') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
