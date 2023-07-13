@@ -3,12 +3,13 @@ cron "30 7,15,23 * * *" jd_speed_sign_Mod.js, tag:京喜特价任务
 */
 //详细说明参考 https://github.com/ccwav/QLScript2.
 
+process.env.JD_COOKIE='pt_key=app_openAAJkrvgzADD1J8NolGkpE5Kz4y09vpvwOdvKr92or5YRzR1wdZ4vUCXvUQCLcP9HtS-_EfQLOno; pt_pin=%E8%83%A1%E6%BB%95%E5%AE%87;';
 const $ = new Env('京东特价版任务');
 const notify = $.isNode() ? require('./sendNotify') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 
-let maxThread = 5; //并发数
+let maxThread = 1; //并发数
 if ($.isNode() && process.env.JDSPEED_MAXTHREAD){
 	maxThread=process.env.JDSPEED_MAXTHREAD*1;
 }
@@ -43,27 +44,27 @@ if (new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate() == date.getDa
   for (let i = 0; i < cookiesArr.length; i++) {
     if (cookiesArr[i]) {
       var cookie = cookiesArr[i];
-	  var url_uuid = randomString(16);
+      var url_uuid = randomString(16);
 
       message = '';
-      TaskList.push(jdGlobal(cookie,url_uuid));
+      TaskList.push(jdGlobal(cookie, url_uuid));
       if (i == (cookiesArr.length - 1) || TaskList.length == maxThread) {
         await Promise.all(TaskList);
-		if (!llAPIError){
-			if (i != (cookiesArr.length - 1)){
-				console.log(`当前批量完成，等待30秒`);
-				await $.wait(30 * 1000);
-			}			
-		}else{
-			console.log(`检测到403，暂停2分钟后重试`);
-			await $.wait(2*60 * 1000);
-			llAPIError=false;
-			await Promise.all(TaskList);
-		}
-		
+        if (!llAPIError) {
+          if (i != (cookiesArr.length - 1)) {
+            console.log(`当前批量完成，等待30秒`);
+            await $.wait(30 * 1000);
+          }
+        } else {
+          console.log(`检测到403，暂停2分钟后重试`);
+          await $.wait(2 * 60 * 1000);
+          llAPIError = false;
+          await Promise.all(TaskList);
+        }
+
         TaskList = [];
       }
-      
+
       if (llAPIError) {
         console.log(`黑IP了，赶紧重新拨号换个IP吧`);
         break;
