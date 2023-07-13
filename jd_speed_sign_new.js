@@ -1,8 +1,8 @@
 /*
-cron "30 7,15,23 * * *" jd_speed_sign_Mod.js, tag:京喜特价任务
+cron "30 7,15,23 * * *" jd_speed_sign_new.js, tag:京喜特价任务
 */
 //详细说明参考 https://github.com/ccwav/QLScript2.
-const $ = new Env('京东特价版任务');
+const $ = new Env('京喜特价任务');
 const notify = $.isNode() ? require('./sendNotify') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
