@@ -1,48 +1,32 @@
-/**
-收藏大师-关注有礼
+/*
+活动名称：关注商品有礼 · 收藏大师
+活动链接：https://txzj-isv.isvjcloud.com/collect_item/home?a=<活动id>
+环境变量：jd_collect_item_activityUrl // 活动链接
 
-必须条件：配置文件或者环境变量中添加变量：
-//export jd_collect_item_activityUrl="活动链接"
-
-
-cron:1 1 1 1 *
-============Quantumultx===============
-[task_local]
-#收藏大师-关注有礼
-1 1 1 1 * jd_txzj_collect_item.js, tag=收藏大师-关注有礼, enabled=true
 */
 
 const Env=require('./utils/Env.js');
-const $ = new Env("收藏大师-关注有礼");
-const notify = $.isNode() ? require("./sendNotify") : "";
-const jdCookieNode = $.isNode() ? require("./jdCookie.js") : "";
-const getToken = require("./function/krgetToken");
-let lz_cookie = {};
-let activityCookie = "";
+const $ = new Env('关注商品有礼（收藏大师）')
+const notify = $.isNode() ? require('./sendNotify') : ''
+const jdCookieNode = $.isNode() ? require('./jdCookie') : ''
+const getToken = require('./function/getToken')
+
+let lz_cookie = {},
+  activityCookie = "";
 $.activityEnd = false;
 let cookiesArr = [],
   cookie = "";
 if ($.isNode()) {
   if (process.env.jd_collect_item_activityUrl) activityUrl = process.env.jd_collect_item_activityUrl;
   if (JSON.stringify(process.env).indexOf("GITHUB") > -1) process.exit(0);
-  Object.keys(jdCookieNode).forEach(QQ000Q => {
-    cookiesArr.push(jdCookieNode[QQ000Q]);
+  Object.keys(jdCookieNode).forEach(lll1II1I => {
+    cookiesArr.push(jdCookieNode[lll1II1I]);
   });
   if (process.env.JD_DEBUG && process.env.JD_DEBUG === "false") console.log = () => {};
-} else {
-  cookiesArr = [$.getdata("CookieJD"), $.getdata("CookieJD2"), ...$.toObj($.getdata("CookiesJD") || "[]").map(O00QOO => O00QOO.cookie)].filter(QQQQQO => !!QQQQQO);
-}
+} else cookiesArr = [$.getdata("CookieJD"), $.getdata("CookieJD2"), ...$.toObj($.getdata("CookiesJD") || "[]").map(iiiII1I1 => iiiII1I1.cookie)].filter(lill1I => !!lill1I);
 let isGetCookie = typeof $request !== "undefined";
-if (isGetCookie) {
-  GetCookie();
-  $.done();
-}
-if (activityUrl) {
-  activityId = getQueryString("" + activityUrl, "a");
-  $.domain = activityUrl.match(/https?:\/\/([^\/]+)/)[1];
-} else {
-  console.log("请填写活动链接");
-}
+isGetCookie && (GetCookie(), $.done());
+activityUrl ? (activityId = getQueryString("" + activityUrl, "a"), $.domain = activityUrl.match(/https?:\/\/([^/]+)/)[1]) : console.log("请填写活动链接");
 let domains = "https://" + $.domain;
 !(async () => {
   if (!activityId) {
@@ -50,22 +34,22 @@ let domains = "https://" + $.domain;
     $.done();
     return;
   }
-  console.log("♚♚活动入口♚♚\n" + activityUrl);
+  console.log("活动入口：" + activityUrl);
   if (!cookiesArr[0]) {
     $.msg($.name, "【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取", "https://bean.m.jd.com/", {
       "open-url": "https://bean.m.jd.com/"
     });
     return;
   }
-  for (let Q0OQOO = 0; Q0OQOO < cookiesArr.length; Q0OQOO++) {
-    if (cookiesArr[Q0OQOO]) {
-      cookie = cookiesArr[Q0OQOO];
-      originCookie = cookiesArr[Q0OQOO];
+  for (let lIlIlii = 0; lIlIlii < cookiesArr.length; lIlIlii++) {
+    if (cookiesArr[lIlIlii]) {
+      cookie = cookiesArr[lIlIlii];
+      originCookie = cookiesArr[lIlIlii];
       $.UserName = decodeURIComponent(cookie.match(/pt_pin=(.+?);/) && cookie.match(/pt_pin=(.+?);/)[1]);
-      $.index = Q0OQOO + 1;
+      $.index = lIlIlii + 1;
       $.isLogin = true;
       $.nickName = "";
-      console.log("\n开始【京东账号" + $.index + "】" + ($.nickName || $.UserName) + "\n");
+      console.log("\n******开始【京东账号" + $.index + "】" + ($.nickName || $.UserName) + "******\n");
       if (!$.isLogin) {
         $.msg($.name, "【提示】cookie已失效", "京东账号" + $.index + " " + ($.nickName || $.UserName) + "\n请重新登录获取\nhttps://bean.m.jd.com/", {
           "open-url": "https://bean.m.jd.com/"
@@ -78,19 +62,17 @@ let domains = "https://" + $.domain;
       await getUA();
       await collect_item();
       await $.wait(2000);
-      if ($.hasEnd || $.activityEnd) {
-        break;
-      }
+      if ($.hasEnd || $.activityEnd) break;
     }
   }
-})().catch(QQ0QQ0 => {
-  $.log("", " " + $.name + ", 失败! 原因: " + QQ0QQ0 + "!", "");
+})().catch(Iiii11Il => {
+  $.log("", " " + $.name + ", 失败! 原因: " + Iiii11Il + "!", "");
 }).finally(() => {
   $.done();
 });
 async function collect_item() {
   $.errs = false;
-  $.token = await getToken(cookie, domains);
+  $.token = await getToken(originCookie, domains);
   $.grabStop = false;
   $.getPrize = false;
   if ($.token == "") {
@@ -99,108 +81,99 @@ async function collect_item() {
   }
   if (activityId) {
     await jd_store_user_info();
-    if ($.hasEnd === true) {
-      return;
-    }
+    if ($.hasEnd === true) return;
     await collect_itemx();
     if ($.activityEnd) return;
-    for (let O0Q0O0 = 0; O0Q0O0 < 20; O0Q0O0++) {
+    for (let l1IIllil = 0; l1IIllil < 20; l1IIllil++) {
       await receive_prize();
       if ($.getPrize || $.activityEnd || $.grabStop) break;
     }
-  } else {
-    console.log("【京东账号" + $.index + "】 未能获取活动信息");
-  }
+  } else console.log("【京东账号" + $.index + "】 未能获取活动信息");
 }
 function jd_store_user_info() {
-  return new Promise(QQOOQQ => {
-    let O0O0O0 = "token=" + $.token;
-    $.post(taskPostUrl("/front/jd_store_user_info", O0O0O0), async (O0OQOO, O0OQOQ, OO0OOQ) => {
+  return new Promise(liiiiIii => {
+    let Il111il1 = "token=" + $.token;
+    $.post(taskPostUrl("/front/jd_store_user_info", Il111il1), async (Ii1IilII, iiiillil, II11illl) => {
       try {
-        if (O0OQOO) {
-          console.log("" + JSON.stringify(O0OQOO));
+        if (Ii1IilII) {
+          console.log("" + JSON.stringify(Ii1IilII));
           console.log($.name + " jd_store_user_info API请求失败，请检查网路重试");
         } else {
-          OO0OOQ = JSON.parse(OO0OOQ);
-          if (OO0OOQ && OO0OOQ.code === "success") {} else {
+          II11illl = JSON.parse(II11illl);
+          if (II11illl && II11illl.code === "success") {} else {
+            console.log("授权失败：" + II11illl.msg);
             $.hasEnd = true;
           }
-          if (O0OQOQ.status == 200) {
-            refreshToken(O0OQOQ);
-          }
+          iiiillil.status == 200 && refreshToken(iiiillil);
         }
-      } catch (QO0OQO) {
-        $.logErr(QO0OQO, O0OQOQ);
+      } catch (IllI1lil) {
+        $.logErr(IllI1lil, iiiillil);
       } finally {
-        QQOOQQ();
+        liiiiIii();
       }
     });
   });
 }
 function receive_prize() {
-  return new Promise(O0OQQQ => {
-    let O00QO0 = "pid=" + activityId;
-    $.post(taskPostUrl("/collect_item/receive_prize", O00QO0), async (QOQO0Q, QOQOQQ, QOQO0O) => {
+  return new Promise(iI1II1II => {
+    let i1II1lIi = "pid=" + activityId;
+    $.post(taskPostUrl("/collect_item/receive_prize", i1II1lIi), async (iIil1Il1, Il1IiliI, IliIIlIi) => {
       try {
-        if (QOQO0Q) {
-          console.log("" + JSON.stringify(QOQO0Q));
+        if (iIil1Il1) {
+          console.log("" + JSON.stringify(iIil1Il1));
           console.log($.name + " receive_prize API请求失败，请检查网路重试");
         } else {
-          QOQO0O = JSON.parse(QOQO0O);
-          if (QOQO0O && QOQO0O.code === "success") {
+          IliIIlIi = JSON.parse(IliIIlIi);
+          if (IliIIlIi && IliIIlIi.code === "success") {
             $.getPrize = true;
-            if (QOQO0O.data.prize_title) {
-              switch (QOQO0O.data.prize_title.type) {
+            if (IliIIlIi.data.prize_title) {
+              switch (IliIIlIi.data.prize_title.type) {
                 case "coupon":
-                  console.log("🗑️ 优惠卷");
-                  $.activityEnd = true;
+                  console.log("🗑️ 优惠券");
                   break;
                 case "bean":
-                  console.log("🎉 " + QOQO0O.data.prize_title.prize_title + " 🐶");
+                  console.log("🎉 " + IliIIlIi.data.prize_title.prize_title + " 🐶");
                   break;
                 case "integral":
-                  console.log("🎉 积分" + (QOQO0O.data.prize_title.prize_title || QOQO0O.data.prize_title.once_num));
+                  console.log("🗑️ " + (IliIIlIi.data.prize_title.prize_title || IliIIlIi.data.prize_title.once_num) + " 🎟️");
                   break;
                 case "goods":
-                  console.log("🎉 实物" + QOQO0O.data.prize_title.prize_name);
+                  console.log("🎉 实物" + IliIIlIi.data.prize_title.prize_name);
                   break;
                 default:
+                  console.log(IliIIlIi.msg);
                   break;
               }
-            } else {
-              console.log(QOQO0O.msg);
-            }
+            } else console.log(IliIIlIi.msg);
           } else {
-            console.log("领取失败：" + QOQO0O.msg);
-            QOQO0Q = QOQO0O.msg;
-            for (let QOQ0OQ of ["不足", "部分会员", "已参加", "上限", "已领取", "未开始"]) {
-              if (QOQO0Q.includes(QOQ0OQ)) {
+            console.log("领取失败：" + IliIIlIi.msg);
+            iIil1Il1 = IliIIlIi.msg;
+            for (let IiiilIli of ["不足", "部分会员", "已参加", "上限", "已领取", "未开始"]) {
+              if (iIil1Il1.includes(IiiilIli)) {
                 $.grabStop = true;
                 break;
               }
             }
-            for (let QOQQ00 of ["num_end"]) {
-              if (QOQO0Q.includes(QOQQ00)) {
+            for (let i1ii1liI of ["num_end"]) {
+              if (iIil1Il1.includes(i1ii1liI)) {
                 $.activityEnd = true;
                 break;
               }
             }
           }
-          if (QOQOQQ.status == 200) {
-            refreshToken(QOQOQQ);
-          }
+          Il1IiliI.status == 200 && refreshToken(Il1IiliI);
         }
-      } catch (QO00QO) {
-        $.logErr(QO00QO, QOQOQQ);
+      } catch (liiIiI1) {
+        $.logErr(liiIiI1, Il1IiliI);
       } finally {
-        O0OQQQ();
+        iI1II1II();
       }
     });
   });
 }
 function collect_itemx() {
-  return new Promise(QOQOO0 => {
-    const QOQ0QQ = {
+  return new Promise(iil11ll => {
+    const lIlIiiiI = {
       "url": domains + "/collect_item/home?a=" + activityId + "&token=" + $.token,
       "headers": {
         "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
@@ -213,33 +186,30 @@ function collect_itemx() {
         "User-Agent": $.UA
       }
     };
-    $.get(QOQ0QQ, async (QOQ00O, QOQ0QO, OOQOQQ) => {
+    $.get(lIlIiiiI, async (lIill111, Illi1i1, lllIilI1) => {
       try {
-        if (QOQ00O) {
-          console.log("" + JSON.stringify(QOQ00O));
+        if (lIill111) {
+          console.log("" + JSON.stringify(lIill111));
           console.log($.name + " collect_itemz API请求失败，请检查网路重试");
         } else {
-          OOQOQQ = OOQOQQ;
-          if (OOQOQQ) {
-            let QOQ0Q0 = OOQOQQ.match(/(活动已结束)/) && OOQOQQ.match(/(活动已结束)/)[1] || OOQOQQ.match(/(哎哟，当前活动尚未开始噢！)/) && OOQOQQ.match(/(哎哟，当前活动尚未开始噢！)/)[1] || "";
-            if (QOQ0Q0) {
-              $.activityEnd = true;
-              console.log("活动已结束或者未开始");
-            }
+          lllIilI1 = lllIilI1;
+          if (lllIilI1) {
+            let llIi11iI = lllIilI1.match(/(活动已结束)/) && lllIilI1.match(/(活动已结束)/)[1] || lllIilI1.match(/(哎哟，当前活动尚未开始噢！)/) && lllIilI1.match(/(哎哟，当前活动尚未开始噢！)/)[1] || "";
+            llIi11iI && ($.activityEnd = true, console.log("活动已结束或者未开始"));
           }
         }
-      } catch (QO0OOQ) {
-        $.logErr(QO0OOQ, QOQ0QO);
+      } catch (IiIIlli) {
+        $.logErr(IiIIlli, Illi1i1);
       } finally {
-        QOQOO0();
+        iil11ll();
       }
     });
   });
 }
-function taskPostUrl(OQQOOQ, OQQOOO) {
+function taskPostUrl(Iili1ll, I1llili) {
   return {
-    "url": "" + domains + OQQOOQ,
-    "body": OQQOOO,
+    "url": "" + domains + Iili1ll,
+    "body": I1llili,
     "headers": {
       "Accept": "application/json, text/javascript, */*; q=0.01",
       "Accept-Encoding": "gzip, deflate, br",
@@ -254,15 +224,15 @@ function taskPostUrl(OQQOOQ, OQQOOO) {
     }
   };
 }
-function refreshToken(OOOQ00) {
-  if (OOOQ00) {
-    if (OOOQ00.headers["set-cookie"]) {
-      cookie = originCookie + ";";
-      for (let OOOQ0O of OOOQ00.headers["set-cookie"]) {
-        lz_cookie[OOOQ0O.split(";")[0].substr(0, OOOQ0O.split(";")[0].indexOf("="))] = OOOQ0O.split(";")[0].substr(OOOQ0O.split(";")[0].indexOf("=") + 1);
+function refreshToken(iIi1IIi) {
+  if (iIi1IIi) {
+    if (iIi1IIi.headers["set-cookie"]) {
+      cookie = "";
+      for (let iliiII1 of iIi1IIi.headers["set-cookie"]) {
+        lz_cookie[iliiII1.split(";")[0].substr(0, iliiII1.split(";")[0].indexOf("="))] = iliiII1.split(";")[0].substr(iliiII1.split(";")[0].indexOf("=") + 1);
       }
-      for (const Q00O00 of Object.keys(lz_cookie)) {
-        cookie += Q00O00 + "=" + lz_cookie[Q00O00] + ";";
+      for (const IIiilIIi of Object.keys(lz_cookie)) {
+        cookie += IIiilIIi + "=" + lz_cookie[IIiilIIi] + ";";
       }
       activityCookie = cookie;
     }
@@ -271,47 +241,39 @@ function refreshToken(OOOQ00) {
 function getUA() {
   $.UA = "jdapp;iPhone;10.2.2;14.3;" + randomString(40) + ";M/5.0;network/wifi;ADID/;model/iPhone12,1;addressid/4199175193;appBuild/167863;jdSupportDarkMode/0;Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1;";
 }
-function randomString(Q0QOQO) {
-  Q0QOQO = Q0QOQO || 32;
-  let OQQQQQ = "abcdef0123456789",
-    OQQ0Q0 = OQQQQQ.length,
-    OQQQ0Q = "";
-  for (i = 0; i < Q0QOQO; i++) OQQQ0Q += OQQQQQ.charAt(Math.floor(Math.random() * OQQ0Q0));
-  return OQQQ0Q;
+function randomString(iiII1lI1) {
+  iiII1lI1 = iiII1lI1 || 32;
+  let ii11iIil = "abcdef0123456789",
+    li1ilIll = ii11iIil.length,
+    liii1iii = "";
+  for (i = 0; i < iiII1lI1; i++) liii1iii += ii11iIil.charAt(Math.floor(Math.random() * li1ilIll));
+  return liii1iii;
 }
-function safeGet(OQQQQO) {
-  if (!OQQQQO) {
-    console.log("京东服务器返回数据为空");
-    return false;
+function safeGet(lIlI1IiI) {
+  if (!lIlI1IiI) {
+    return console.log("京东服务器返回数据为空"), false;
   }
   try {
-    if (typeof JSON.parse(OQQQQO) == "object") {
-      return true;
-    }
-  } catch (OQQ0QO) {
-    console.log(OQQ0QO);
-    return false;
+    if (typeof JSON.parse(lIlI1IiI) == "object") return true;
+  } catch (Il1lIII1) {
+    return console.log(Il1lIII1), false;
   }
 }
-function jsonParse(OQ00QQ) {
-  if (typeof OQ00QQ == "string") {
+function jsonParse(il1I11) {
+  if (typeof il1I11 == "string") {
     try {
-      return JSON.parse(OQ00QQ);
-    } catch (OQ000Q) {
-      console.log(OQ000Q);
-      $.msg($.name, "", "请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie");
-      return [];
+      return JSON.parse(il1I11);
+    } catch (ii11IIII) {
+      return console.log(ii11IIII), $.msg($.name, "", "请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie"), [];
     }
   }
 }
-function random(OQ00QO, OQ000O) {
-  return Math.floor(Math.random() * (OQ000O - OQ00QO)) + OQ00QO;
+function random(lii1liIi, IlliIlil) {
+  return Math.floor(Math.random() * (IlliIlil - lii1liIi)) + lii1liIi;
 }
-function getQueryString(Q0000O, OOO0O0) {
-  let Q00Q0O = new RegExp("(^|[&?])" + OOO0O0 + "=([^&]*)(&|$)");
-  let OOOO00 = Q0000O.match(Q00Q0O);
-  if (OOOO00 != null) {
-    return unescape(OOOO00[2]);
-  }
+function getQueryString(IlIilI1, i1IiIil) {
+  let IIili1ii = new RegExp("(^|[&?])" + i1IiIil + "=([^&]*)(&|$)"),
+    l1Ii1l1i = IlIilI1.match(IIili1ii);
+  if (l1Ii1l1i != null) return decodeURIComponent(l1Ii1l1i[2]);
   return "";
 }

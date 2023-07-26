@@ -1,58 +1,29 @@
 /*
-入会开卡领取礼包(通用)
+强制入会
 
-VENDER_ID // venderId或vendorId的值，多个用&、@或逗号连接，但是不要混用
-OPENCARD_BEAN=""  最小入会值 （默认10）
-OPENCARD_QZ="true"  填写此变量强制开卡，不填写不开启
-
-cron:11 11 11 11 *
-============Quantumultx===============
-[task_local]
-#入会开卡领取礼包(通用)
-11 11 11 11 * jd_OpenCard_Force.js, tag=入会开卡领取礼包(通用), enabled=true
-
+环境变量：VENDER_ID // venderId或vendorId的值，多个用&、@或逗号连接，但是不要混用
 
 */
 
 const Env=require('./utils/Env.js');
-const $ = new Env('入会开卡领取礼包');
+const $ = new Env('强制入会')
+const jdCookieNode = $.isNode() ? require('./jdCookie') : ''
+const getH5st = require('./function/getH5st3_0')
 
-const jdCookieNode = $.isNode() ? require("./jdCookie") : "";
-const getH5st = require("./function/krh5st");
-const OPENCARD_BEAN = process.env.OPENCARD_BEAN || "10";
-const OPENCARD_QZ = process.env.OPENCARD_QZ === "true" ? true : false;
 let VENDER_IDs = [];
 if (process.env.VENDER_ID) {
-  if (process.env.VENDER_ID.indexOf("&") > -1) {
-    VENDER_IDs = process.env.VENDER_ID.split("&");
-  } else {
-    if (process.env.VENDER_ID.indexOf("@") > -1) {
-      VENDER_IDs = process.env.VENDER_ID.split("@");
-    } else {
-      if (process.env.VENDER_ID.indexOf(",") > -1) {
-        VENDER_IDs = process.env.VENDER_ID.split(",");
-      } else {
-        VENDER_IDs = [process.env.VENDER_ID];
-      }
-    }
+  if (process.env.VENDER_ID.indexOf("&") > -1) VENDER_IDs = process.env.VENDER_ID.split("&");else {
+    if (process.env.VENDER_ID.indexOf("@") > -1) VENDER_IDs = process.env.VENDER_ID.split("@");else process.env.VENDER_ID.indexOf(",") > -1 ? VENDER_IDs = process.env.VENDER_ID.split(",") : VENDER_IDs = [process.env.VENDER_ID];
   }
 }
 let cookiesArr = [],
   cookie = "";
 if ($.isNode()) {
-  Object.keys(jdCookieNode).forEach(_0xfea8x31 => {
-    cookiesArr.push(jdCookieNode[_0xfea8x31]);
+  Object.keys(jdCookieNode).forEach(I1i11lil => {
+    cookiesArr.push(jdCookieNode[I1i11lil]);
   });
-  if (process.env.JD_DEBUG && process.env.JD_DEBUG === "false") {
-    console.log = () => {};
-  }
-} else {
-  cookiesArr = [$.getdata("CookieJD"), $.getdata("CookieJD2"), ...jsonParse($.getdata("CookiesJD") || "[]").map(_0xfea8x33 => {
-    return _0xfea8x33.cookie;
-  })].filter(_0xfea8x32 => {
-    return !!_0xfea8x32;
-  });
-}
+  if (process.env.JD_DEBUG && process.env.JD_DEBUG === "false") console.log = () => {};
+} else cookiesArr = [$.getdata("CookieJD"), $.getdata("CookieJD2"), ...jsonParse($.getdata("CookiesJD") || "[]").map(liIlIl11 => liIlIl11.cookie)].filter(Ilii1IIi => !!Ilii1IIi);
 allMessage = "";
 message = "";
 !(async () => {
@@ -62,168 +33,103 @@ message = "";
     });
     return;
   }
-  console.log("\n当前最低入会标准：" + OPENCARD_BEAN + "豆");
-  console.log("\n当前强制入会是否开启：" + OPENCARD_QZ);
-  for (let _0xfea8x44 = 0; _0xfea8x44 < cookiesArr.length; _0xfea8x44++) {
-    cookie = cookiesArr[_0xfea8x44];
+  for (let l1IlIlI1 = 0; l1IlIlI1 < cookiesArr.length; l1IlIlI1++) {
+    cookie = cookiesArr[l1IlIlI1];
     if (cookie) {
       $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1]);
-      $.index = _0xfea8x44 + 1;
+      $.index = l1IlIlI1 + 1;
       message = "";
       $.nickName = "";
       $.UserName = $.nickName || $.UserName;
-      console.log("\n【京东账号" + $.index + "】" + ($.nickName || $.UserName) + "\n");
+      console.log("\n******开始【京东账号" + $.index + "】" + $.UserName + "******\n");
       await getUA();
       await run();
-      await $.wait(parseInt(Math.random() * 1000 + 3000, 10));
     }
   }
-  if (allMessage) {
-    $.msg($.name, "", "" + allMessage);
-  }
-})().catch(_0xfea8x34 => {
-  return $.logErr(_0xfea8x34);
-}).finally(() => {
-  return $.done();
-});
+  allMessage && $.msg($.name, "", "" + allMessage);
+})().catch(I11liIII => $.logErr(I11liIII)).finally(() => $.done());
 async function run() {
   try {
-    const _0xfea8x59 = VENDER_IDs;
-    for (let _0xfea8x5a = 0; _0xfea8x5a < _0xfea8x59.length; _0xfea8x5a++) {
-      $.joinVenderId = _0xfea8x59[_0xfea8x5a];
+    let lli1liii = new Array();
+    const lIliIlI1 = VENDER_IDs;
+    for (let IIIl1ll1 = 0; IIIl1ll1 < lIliIlI1.length; IIIl1ll1++) {
+      $.joinVenderId = lIliIlI1[IIIl1ll1];
+      ($.index = 1) ? ($.shopactivityId = "", await getshopactivityId(), lli1liii[IIIl1ll1] = $.shopactivityId) : $.shopactivityId = lli1liii[IIIl1ll1];
       $.errorJoinShop = "";
       await joinShop();
-      if ($.errorJoinShop.indexOf("您的手机号已被其他账号绑定本店会员，请先登陆原账号解绑") > -1) {
-        return;
-      }
-      if ($.errorJoinShop.indexOf("活动太火爆，请稍后再试") > -1) {
-        console.log("😤 呜呜呜，重试开卡");
-        await $.wait(1000);
-        await joinShop();
-        await $.wait(parseInt(Math.random() * 1000 + 1000, 10));
-      }
-      if ($.errorJoinShop.indexOf("活动太火爆，请稍后再试") > -1) {
-        console.log("💔 无法开卡,跳过运行");
-        return;
-      }
+      $.errorJoinShop.indexOf("活动太火爆，请稍后再试") > -1 && (console.log("第1次 重新开卡"), await $.wait(500), await joinShop());
+      $.errorJoinShop.indexOf("活动太火爆，请稍后再试") > -1 && (console.log("第2次 重新开卡"), await $.wait(500), await joinShop());
+      $.errorJoinShop.indexOf("活动太火爆，请稍后再试") > -1 && (console.log("第3次 重新开卡"), await $.wait(500), await joinShop());
+      $.errorJoinShop.indexOf("活动太火爆，请稍后再试") > -1 && (console.log("开卡失败❌ ，重新执行脚本"), allMessage += "【账号" + $.index + "】" + $.UserName + "开卡失败❌ ，请重新执行脚本\n");
     }
-  } catch (_0x2b683a) {
-    console.log(_0x2b683a);
+  } catch (lllliilI) {
+    console.log(lllliilI);
   }
+}
+function TotalBean() {
+  return new Promise(async iIllliii => {
+    const lilillli = {
+      "url": "https://wq.jd.com/user/info/QueryJDUserInfo?sceneval=2",
+      "headers": {
+        "Accept": "application/json,text/plain, */*",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Accept-Language": "zh-cn",
+        "Connection": "keep-alive",
+        "Cookie": cookie,
+        "Referer": "https://wqs.jd.com/my/jingdou/my.shtml?sceneval=2",
+        "User-Agent": "jdapp;iPhone;9.4.4;14.3;network/4g;Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1"
+      }
+    };
+    $.post(lilillli, (IIIIilii, II11liIi, I1liiI1i) => {
+      try {
+        if (IIIIilii) {
+          console.log(String(IIIIilii));
+          console.log($.name + " API请求失败，请检查网路重试");
+        } else {
+          I1liiI1i ? (I1liiI1i = JSON.parse(I1liiI1i), I1liiI1i.retcode === 0 && I1liiI1i.base && I1liiI1i.base.nickname && ($.nickName = I1liiI1i.base.nickname)) : console.log("京东服务器返回空数据");
+        }
+      } catch (i1l1i111) {
+        $.logErr(i1l1i111);
+      } finally {
+        iIllliii();
+      }
+    });
+  });
 }
 function getUA() {
   $.UA = "jdapp;iPhone;10.1.4;13.1.2;" + randomString(40) + ";network/wifi;model/iPhone8,1;addressid/2308460611;appBuild/167814;jdSupportDarkMode/0;Mozilla/5.0 (iPhone; CPU iPhone OS 13_1_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1";
 }
-function randomString(_0xfea8x62) {
-  _0xfea8x62 = _0xfea8x62 || 32;
-  let _0xfea8x68 = "abcdef0123456789",
-    _0xfea8x69 = _0xfea8x68.length,
-    _0xfea8x6a = "";
-  for (i = 0; i < _0xfea8x62; i++) {
-    _0xfea8x6a += _0xfea8x68.charAt(Math.floor(Math.random() * _0xfea8x69));
-  }
-  return _0xfea8x6a;
+function randomString(i11ll1il) {
+  i11ll1il = i11ll1il || 32;
+  let li11i1ll = "abcdef0123456789",
+    Ii1I11Il = li11i1ll.length,
+    IIIllIi = "";
+  for (i = 0; i < i11ll1il; i++) IIIllIi += li11i1ll.charAt(Math.floor(Math.random() * Ii1I11Il));
+  return IIIllIi;
 }
 function joinShop() {
-  if (!$.joinVenderId) {
-    return;
-  }
-  return new Promise(async _0xfea8x87 => {
-    $.shopactivityId = "";
+  if (!$.joinVenderId) return;
+  return new Promise(async IililiIl => {
     $.errorJoinShop = "";
     $.openCardStatus = false;
-    $.openCardBean = 0;
-    await getshopactivityId();
-    let _0xfea8x97 = "";
-    if ($.shopactivityId) {
-      _0xfea8x97 = ",\"activityId\":" + $.shopactivityId;
-    }
+    let Ili1li1 = "";
+    if ($.shopactivityId) Ili1li1 = ",\"activityId\":" + $.shopactivityId;
     if ($.openCardStatus) {
       console.log("已经是会员了~");
-      _0xfea8x87();
+      IililiIl();
     } else {
-      if (!OPENCARD_QZ) {
-        if ($.openCardBean === 0) {
-          console.log("查询该店入会没有送豆，不入会");
-          _0xfea8x87();
-        } else {
-          if ($.openCardBean < OPENCARD_BEAN) {
-            console.log("入会送【" + $.openCardBean + "】豆少于【" + OPENCARD_BEAN + "豆】，不入...");
-            _0xfea8x87();
-          } else {
-            const _0xfea8x98 = "{\"venderId\":\"" + $.joinVenderId + "\",\"shopId\":\"" + $.joinVenderId + "\",\"bindByVerifyCodeFlag\":1,\"registerExtend\":{},\"writeChildFlag\":0" + _0xfea8x97 + ",\"channel\":406}";
-            const _0xfea8x99 = {
-              "appid": "jd_shop_member",
-              "functionId": "bindWithVender",
-              "clientVersion": "9.2.0",
-              "client": "H5",
-              "body": JSON.parse(_0xfea8x98)
-            };
-            const _0xfea8x9a = await getH5st("8adfb", _0xfea8x99);
-            const _0xfea8x9b = {
-              "url": "https://api.m.jd.com/client.action?appid=jd_shop_member&functionId=bindWithVender&body=" + encodeURIComponent(_0xfea8x98) + "&clientVersion=9.2.0&client=H5&uuid=88888&h5st=" + encodeURIComponent(_0xfea8x9a),
-              "headers": {
-                "Content-Type": "text/plain; Charset=UTF-8",
-                "Origin": "https://api.m.jd.com",
-                "Host": "api.m.jd.com",
-                "accept": "*/*",
-                "User-Agent": $.UA,
-                "content-type": "application/x-www-form-urlencoded",
-                "Cookie": cookie
-              }
-            };
-            $.get(_0xfea8x9b, async (_0xfea8x9c, _0xfea8x9d, _0xfea8x9e) => {
-              try {
-                if (_0xfea8x9c) {
-                  if (_0xfea8x9d && typeof _0xfea8x9d.statusCode != "undefined") {
-                    if (_0xfea8x9d.statusCode == 403) {
-                      console.log("此ip已无法开卡，请更换IP后再执行脚本\n");
-                      $.outFlag = true;
-                    }
-                  }
-                } else {
-                  let _0xfea8xa4 = $.toObj(_0xfea8x9e, _0xfea8x9e);
-                  if (typeof _0xfea8xa4 == "object") {
-                    if (_0xfea8xa4.success === true) {
-                      console.log(_0xfea8xa4.message);
-                      $.errorJoinShop = _0xfea8xa4.message;
-                      if (_0xfea8xa4.result && _0xfea8xa4.result.giftInfo) {
-                        for (let _0xfea8xa6 of _0xfea8xa4.result.giftInfo.giftList) {
-                          console.log("入会获得：" + _0xfea8xa6.discountString + _0xfea8xa6.prizeName + _0xfea8xa6.secondLineDesc);
-                        }
-                      }
-                    } else {
-                      if (typeof _0xfea8xa4 == "object" && _0xfea8xa4.message) {
-                        $.errorJoinShop = _0xfea8xa4.message;
-                        console.log("" + (_0xfea8xa4.message || ""));
-                      } else {
-                        console.log(_0xfea8x9e);
-                      }
-                    }
-                  } else {
-                    console.log(_0xfea8x9e);
-                  }
-                }
-              } catch (_0x1357dd) {
-                $.logErr(_0x1357dd, _0xfea8x9d);
-              } finally {
-                _0xfea8x87();
-              }
-            });
-          }
-        }
-      } else {
-        const _0xfea8xa7 = "{\"venderId\":\"" + $.joinVenderId + "\",\"shopId\":\"" + $.joinVenderId + "\",\"bindByVerifyCodeFlag\":1,\"registerExtend\":{},\"writeChildFlag\":0" + _0xfea8x97 + ",\"channel\":406}";
-        const _0xfea8x99 = {
+      const iIiI1ill = "{\"venderId\":\"" + $.joinVenderId + "\",\"shopId\":\"" + $.joinVenderId + "\",\"bindByVerifyCodeFlag\":1,\"registerExtend\":{},\"writeChildFlag\":0" + Ili1li1 + ",\"channel\":406}",
+        i1l1lI = {
           "appid": "jd_shop_member",
           "functionId": "bindWithVender",
           "clientVersion": "9.2.0",
           "client": "H5",
-          "body": JSON.parse(_0xfea8xa7)
-        };
-        const _0xfea8x9a = await getH5st("8adfb", _0xfea8x99);
-        const _0xfea8x9b = {
-          "url": "https://api.m.jd.com/client.action?appid=jd_shop_member&functionId=bindWithVender&body=" + encodeURIComponent(_0xfea8xa7) + "&clientVersion=9.2.0&client=H5&uuid=88888&h5st=" + encodeURIComponent(_0xfea8x9a),
+          "body": JSON.parse(iIiI1ill)
+        },
+        lII1lII = await getH5st("8adfb", i1l1lI),
+        iilIIlIl = {
+          "url": "https://api.m.jd.com/client.action?appid=jd_shop_member&functionId=bindWithVender&body=" + encodeURIComponent(iIiI1ill) + "&clientVersion=9.2.0&client=H5&uuid=88888&h5st=" + encodeURIComponent(lII1lII),
           "headers": {
             "Content-Type": "text/plain; Charset=UTF-8",
             "Origin": "https://api.m.jd.com",
@@ -234,51 +140,35 @@ function joinShop() {
             "Cookie": cookie
           }
         };
-        $.get(_0xfea8x9b, async (_0xfea8xa8, _0xfea8xa9, _0xfea8xaa) => {
-          try {
-            if (_0xfea8xa8) {
-              if (_0xfea8xa9 && typeof _0xfea8xa9.statusCode != "undefined") {
-                if (_0xfea8xa9.statusCode == 403) {
-                  console.log("此ip已无法开卡，请更换IP后再执行脚本\n");
-                  $.outFlag = true;
-                }
+      $.get(iilIIlIl, async (I1lII111, lillI11l, IIi1I) => {
+        try {
+          let Iii1liil = $.toObj(IIi1I, IIi1I);
+          if (typeof Iii1liil == "object") {
+            if (Iii1liil.success === true) {
+              console.log(Iii1liil.message);
+              $.errorJoinShop = Iii1liil.message;
+              if (Iii1liil.result && Iii1liil.result.giftInfo) for (let Ii11Illi of Iii1liil.result.giftInfo.giftList) {
+                console.log("入会获得：" + Ii11Illi.discountString + Ii11Illi.prizeName + Ii11Illi.secondLineDesc);
               }
             } else {
-              let _0xfea8xac = $.toObj(_0xfea8xaa, _0xfea8xaa);
-              if (typeof _0xfea8xac == "object") {
-                if (_0xfea8xac.success === true) {
-                  console.log(_0xfea8xac.message);
-                  $.errorJoinShop = _0xfea8xac.message;
-                  if (_0xfea8xac.result && _0xfea8xac.result.giftInfo) {
-                    for (let _0xfea8xad of _0xfea8xac.result.giftInfo.giftList) {
-                      console.log("入会获得：" + _0xfea8xad.discountString + _0xfea8xad.prizeName + _0xfea8xad.secondLineDesc);
-                    }
-                  }
-                } else {
-                  if (typeof _0xfea8xac == "object" && _0xfea8xac.message) {
-                    $.errorJoinShop = _0xfea8xac.message;
-                    console.log("" + (_0xfea8xac.message || ""));
-                  } else {
-                    console.log(_0xfea8xaa);
-                  }
-                }
-              } else {
-                console.log(_0xfea8xaa);
-              }
+              if (typeof Iii1liil == "object" && Iii1liil.message) {
+                $.errorJoinShop = Iii1liil.message;
+                console.log("" + (Iii1liil.message || ""));
+              } else console.log(IIi1I);
             }
-          } catch (_0x22cd57) {
-            $.logErr(_0x22cd57, _0xfea8xa9);
-          } finally {
-            _0xfea8x87();
-          }
-        });
-      }
+          } else console.log(IIi1I);
+        } catch (i1l1) {
+          $.logErr(i1l1, lillI11l);
+        } finally {
+          IililiIl();
+        }
+      });
     }
   });
 }
 function getshopactivityId() {
-  return new Promise(_0xfea8xb9 => {
-    const _0xfea8xca = {
+  return new Promise(iili1II => {
+    const lIlIllii = {
       "url": "https://api.m.jd.com/client.action?appid=jd_shop_member&functionId=getShopOpenCardInfo&body=%7B%22venderId%22%3A%22" + $.joinVenderId + "%22%2C%22channel%22%3A401%7D&client=H5&clientVersion=9.2.0&uuid=88888",
       "headers": {
         "Content-Type": "text/plain; Charset=UTF-8",
@@ -290,55 +180,22 @@ function getshopactivityId() {
         "Cookie": cookie
       }
     };
-    $.get(_0xfea8xca, async (_0xfea8xcb, _0xfea8xcc, _0xfea8xcd) => {
+    $.get(lIlIllii, async (ilIili, i1llI1l, IiilliIl) => {
       try {
-        if (_0xfea8xcb) {
-          if (_0xfea8xcc && typeof _0xfea8xcc.statusCode != "undefined") {
-            if (_0xfea8xcc.statusCode == 403) {
-              console.log("此ip已无法开卡，请更换IP后再执行脚本\n");
-              $.outFlag = true;
-            }
-          }
-        } else {
-          let _0xfea8xd1 = $.toObj(_0xfea8xcd, _0xfea8xcd);
-          if (typeof _0xfea8xd1 == "object") {
-            if (_0xfea8xd1.success == true) {
-              console.log("会员卡名称：" + (_0xfea8xd1.result.shopMemberCardInfo.venderCardName || ""));
-              $.shopactivityId = _0xfea8xd1.result.interestsRuleList && _0xfea8xd1.result.interestsRuleList[0] && _0xfea8xd1.result.interestsRuleList[0].interestsInfo && _0xfea8xd1.result.interestsRuleList[0].interestsInfo.activityId || "";
-              $.openCardStatus = _0xfea8xd1.result.userInfo.openCardStatus;
-              if (_0xfea8xd1.result.interestsRuleList && _0xfea8xd1.result.interestsRuleList.length) {
-                for (let _0xfea8xd2 = 0; _0xfea8xd2 < _0xfea8xd1.result.interestsRuleList.length; _0xfea8xd2++) {
-                  const _0xfea8xd3 = _0xfea8xd1.result.interestsRuleList[_0xfea8xd2];
-                  if (_0xfea8xd3.prizeName) {
-                    if (_0xfea8xd3.prizeName.includes("京豆") || _0xfea8xd3.prizeName.includes("红包")) {
-                      $.openCardBean = parseInt(_0xfea8xd3.discountString);
-                    }
-                    break;
-                  }
-                }
-              }
-            }
-          } else {
-            console.log(_0xfea8xcd);
-          }
-        }
-      } catch (_0x543d96) {
-        $.logErr(_0x543d96, _0xfea8xcc);
+        let IIIIIliI = $.toObj(IiilliIl, IiilliIl);
+        typeof IIIIIliI == "object" ? IIIIIliI.success == true && (console.log("会员卡名称：" + (IIIIIliI.result.shopMemberCardInfo.venderCardName || "")), $.shopactivityId = IIIIIliI.result.interestsRuleList && IIIIIliI.result.interestsRuleList[0] && IIIIIliI.result.interestsRuleList[0].interestsInfo && IIIIIliI.result.interestsRuleList[0].interestsInfo.activityId || "", $.openCardStatus = IIIIIliI.result.userInfo.openCardStatus) : console.log(IiilliIl);
+      } catch (liilIili) {
+        $.logErr(liilIili, i1llI1l);
       } finally {
-        _0xfea8xb9();
+        iili1II();
       }
     });
   });
 }
-function jsonParse(_0xfea8xd5) {
-  if (typeof _0xfea8xd5 == "string") {
-    try {
-      return JSON.parse(_0xfea8xd5);
-    } catch (_0x5049cb) {
-      console.log(_0x5049cb);
-      $.msg($.name, "", "请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie");
-      return [];
-    }
+function jsonParse(lI1IIili) {
+  if (typeof lI1IIili == "string") try {
+    return JSON.parse(lI1IIili);
+  } catch (i1l1i1l1) {
+    return console.log(i1l1i1l1), $.msg($.name, "", "请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie"), [];
   }
 }
-	

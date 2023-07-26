@@ -1,284 +1,192 @@
 /*
-店铺左侧刮刮乐
+活动名称：店铺刮刮乐
+活动链接：https://wq.jd.com/mshop/shopdraw?venderId=<店铺id>
+环境变量：jd_shopdraw_activityUrl // 活动链接
 
-店铺抽奖 左侧
-
-也可点击顶部【精选】后面的【活动】选项，找到抽奖活动
-
-变量：//https://shop.m.jd.com/shop/lottery?shopId=10210112&venderId=10356746
-必须有venderId= 参数
-//export jd_shopDraw_activityUrl="" //活动链接
-
-cron:11 11 11 11 **
-============Quantumultx===============
-[task_local]
-#店铺左侧刮刮乐
-11 11 11 11 ** jd_shopDraw.js, tag=店铺刮刮乐, enabled=true
- */
+*/
 
 const Env=require('./utils/Env.js');
-const $ = new Env('店铺左侧刮刮乐');
-const notify = $.isNode() ? require("./sendNotify") : "";
-const jdCookieNode = $.isNode() ? require("./jdCookie.js") : "";
+const $ = new Env('店铺刮刮乐')
+const notify = $.isNode() ? require('./sendNotify') : ''
+const jdCookieNode = $.isNode() ? require('./jdCookie') : ''
+const getSign = require('./function/getSign')
+
 let cookiesArr = [],
   cookie = "";
 if ($.isNode()) {
-  Object.keys(jdCookieNode).forEach(_0xda14x2d => {
-    cookiesArr.push(jdCookieNode[_0xda14x2d]);
+  Object.keys(jdCookieNode).forEach(IiIIiiIi => {
+    cookiesArr.push(jdCookieNode[IiIIiiIi]);
   });
-  if (process.env.JD_DEBUG && process.env.JD_DEBUG === "false") {
-    console.log = () => {};
-  }
-} else {
-  cookiesArr = [$.getdata("CookieJD"), $.getdata("CookieJD2"), ...jsonParse($.getdata("CookiesJD") || "[]").map(_0xda14x2f => {
-    return _0xda14x2f.cookie;
-  })].filter(_0xda14x2e => {
-    return !!_0xda14x2e;
-  });
-}
-venderId = "";
-let activityUrl = process.env.jd_shopDraw_activityUrl ? process.env.jd_shopDraw_activityUrl : "";
-let allMessage = "";
+  if (process.env.JD_DEBUG && process.env.JD_DEBUG === "false") console.log = () => {};
+} else cookiesArr = [$.getdata("CookieJD"), $.getdata("CookieJD2"), ...jsonParse($.getdata("CookiesJD") || "[]").map(iIlll11 => iIlll11.cookie)].filter(iIlIiiil => !!iIlIiiil);
+let activityUrl = process.env.jd_shopdraw_activityUrl ? process.env.jd_shopdraw_activityUrl : "",
+  allMessage = "";
 const JD_API_HOST = "https://api.m.jd.com/client.action";
-if (activityUrl) {
-  if (activityUrl.includes("venderId")) {
-    venderId = getQueryString("" + activityUrl, "venderId");
-  } else {
-    $.log("链接无效~");
-  }
-  $.domain = activityUrl.match(/https?:\/\/([^\/]+)/)[1];
-}
+activityUrl && (venderId = getQueryString("" + activityUrl, "venderId"), $.domain = activityUrl.match(/https?:\/\/([^/]+)/)[1]);
 !(async () => {
-  if (!venderId) {
-    $.log("活动id不存在");
-    return;
-  }
+  console.log("活动入口：" + activityUrl);
   if (!cookiesArr[0]) {
     $.msg($.name, "【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取", "https://bean.m.jd.com/bean/signIndex.action", {
       "open-url": "https://bean.m.jd.com/bean/signIndex.action"
     });
     return;
   }
-  console.log("活动入口：" + activityUrl);
-  for (let _0xda14x40 = 0; _0xda14x40 < cookiesArr.length; _0xda14x40++) {
-    if (cookiesArr[_0xda14x40]) {
-      cookie = cookiesArr[_0xda14x40];
+  for (let l1lIIiil = 0; l1lIIiil < cookiesArr.length; l1lIIiil++) {
+    if (cookiesArr[l1lIIiil]) {
+      cookie = cookiesArr[l1lIIiil];
       $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1]);
-      $.index = _0xda14x40 + 1;
+      $.index = l1lIIiil + 1;
       $.isLogin = true;
       $.nickName = "";
       message = "";
-      console.log("\n【京东账号" + $.index + "】" + ($.nickName || $.UserName) + "\n");
+      console.log("\n******开始【京东账号" + $.index + "】" + ($.nickName || $.UserName) + "******\n");
       if (!$.isLogin) {
         $.msg($.name, "【提示】cookie已失效", "京东账号" + $.index + " " + ($.nickName || $.UserName) + "\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action", {
           "open-url": "https://bean.m.jd.com/bean/signIndex.action"
         });
-        if ($.isNode()) {
-          await notify.sendNotify($.name + "cookie已失效 - " + $.UserName, "京东账号" + $.index + " " + $.UserName + "\n请重新登录获取cookie");
-        }
+        $.isNode() && (await notify.sendNotify($.name + "cookie已失效 - " + $.UserName, "京东账号" + $.index + " " + $.UserName + "\n请重新登录获取cookie"));
         continue;
       }
       await main();
+      await $.wait(2000);
     }
   }
   if (allMessage) {
-    if ($.isNode()) {
-      await notify.sendNotify("" + $.name, "" + allMessage);
-    }
+    if ($.isNode()) await notify.sendNotify("" + $.name, "" + allMessage);
     $.msg($.name, "", allMessage);
   }
-})().catch(_0xda14x33 => {
-  $.log("", "❌ " + $.name + ", 失败! 原因: " + _0xda14x33 + "!", "");
+})().catch(lli1lIII => {
+  $.log("", "❌ " + $.name + ", 失败! 原因: " + lli1lIII + "!", "");
 }).finally(() => {
   $.done();
 });
 async function main() {
   await getSignInfo();
   await $.wait(500);
-  if ($.index == 1) {
-    await signActivityRule();
-  }
+  $.index == 1 && (await signActivityRule());
   await $.wait(500);
-  if ($.isSign != 2) {
-    await drawsign();
-  } else {
+  if ($.isSign != 2) await drawsign();else {
     $.log("已经参与过活动~");
   }
 }
 async function getSignInfo() {
-  let _0xda14x53 = {
-    "url": JD_API_HOST + "?functionId=getSignInfo",
-    "headers": {
-      "Host": "api.m.jd.com",
-      "Content-Type": "application/x-www-form-urlencoded",
-      "Accept": "*/*",
-      "Connection": "keep-alive",
-      "Cookie": cookie,
-      "User-Agent": "JD4iPhone/167650 (iPhone; iOS 13.7; Scale/3.00)",
-      "Accept-Language": "zh-Hans-CN;q=1",
-      "Accept-Encoding": "gzip, deflate, br"
-    },
-    "body": "" + Signz
-  };
-  return new Promise(_0xda14x54 => {
-    $.post(_0xda14x53, (_0xda14x5f, _0xda14x60, _0xda14x61) => {
+  let l1iI1lI1 = await getSign("getSignInfo", {
+      "vendorId": venderId
+    }),
+    i111iIl1 = {
+      "url": JD_API_HOST + "?functionId=getSignInfo",
+      "headers": {
+        "Host": "api.m.jd.com",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Accept": "*/*",
+        "Connection": "keep-alive",
+        "Cookie": cookie,
+        "User-Agent": "JD4iPhone/167650 (iPhone; iOS 13.7; Scale/3.00)",
+        "Accept-Language": "zh-Hans-CN;q=1",
+        "Accept-Encoding": "gzip, deflate, br"
+      },
+      "body": "" + l1iI1lI1
+    };
+  return new Promise(I1lI1Il => {
+    $.post(i111iIl1, (i1i1I11I, iliiIiiI, lll) => {
       try {
-        if (_0xda14x5f) {
-          $.log(_0xda14x5f);
+        if (i1i1I11I) {
+          $.log(i1i1I11I);
         } else {
-          _0xda14x61 = JSON.parse(_0xda14x61);
-          if (typeof _0xda14x61 == "object") {
-            if (_0xda14x61.code == 0) {
-              $.isSign = _0xda14x61.result.signInfo.isSign;
-            }
-          } else {
-            $.log("京东返回了空数据");
-          }
+          lll = JSON.parse(lll);
+          typeof lll == "object" ? lll.code == 0 && ($.isSign = lll.result.signInfo.isSign) : $.log("京东返回了空数据");
         }
-      } catch (_0x23ac0a) {
-        $.log(_0x23ac0a);
+      } catch (liI1iiiI) {
+        $.log(liI1iiiI);
       } finally {
-        _0xda14x54();
+        I1lI1Il();
       }
     });
   });
 }
 async function signActivityRule() {
-  let _0xda14x71 = {
-    "url": JD_API_HOST + "?functionId=signActivityRule",
-    "headers": {
-      "Host": "api.m.jd.com",
-      "Content-Type": "application/x-www-form-urlencoded",
-      "Accept": "*/*",
-      "Connection": "keep-alive",
-      "Cookie": cookie,
-      "User-Agent": "JD4iPhone/167650 (iPhone; iOS 13.7; Scale/3.00)",
-      "Accept-Language": "zh-Hans-CN;q=1",
-      "Accept-Encoding": "gzip, deflate, br"
-    },
-    "body": "" + Signz
-  };
-  return new Promise(_0xda14x72 => {
-    $.post(_0xda14x71, (_0xda14x73, _0xda14x74, _0xda14x75) => {
+  let l1I1li1l = await getSign("signActivityRule", {
+      "vendorId": venderId
+    }),
+    lII11Ill = {
+      "url": JD_API_HOST + "?functionId=signActivityRule",
+      "headers": {
+        "Host": "api.m.jd.com",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Accept": "*/*",
+        "Connection": "keep-alive",
+        "Cookie": cookie,
+        "User-Agent": "JD4iPhone/167650 (iPhone; iOS 13.7; Scale/3.00)",
+        "Accept-Language": "zh-Hans-CN;q=1",
+        "Accept-Encoding": "gzip, deflate, br"
+      },
+      "body": "" + l1I1li1l
+    };
+  return new Promise(iiiIIlIl => {
+    $.post(lII11Ill, (liIlll11, li1IIl1I, lllIllil) => {
       try {
-        if (_0xda14x73) {
-          $.log(_0xda14x73);
-        } else {
-          _0xda14x75 = JSON.parse(_0xda14x75);
-          if (typeof _0xda14x75 == "object") {
-            if (_0xda14x75.code == 0) {
-              $.log("活动规则：" + JSON.stringify(_0xda14x75.result.activityDescription));
-              $.log("活动奖品：" + JSON.stringify(_0xda14x75.result.awardDescription) + "\n");
+        if (liIlll11) $.log(liIlll11);else {
+          lllIllil = JSON.parse(lllIllil);
+          if (typeof lllIllil == "object") {
+            if (lllIllil.code == 0) {
+              for (let iIIl1lII of lllIllil.result.awardDescription) {
+                $.log(iIIl1lII);
+              }
+              console.log("");
             }
-          } else {
-            $.log("京东返回了空数据");
-          }
+          } else $.log("京东返回了空数据");
         }
-      } catch (_0x614074) {
-        $.log(_0x614074);
+      } catch (liI1lIii) {
+        $.log(liI1lIii);
       } finally {
-        _0xda14x72();
+        iiiIIlIl();
       }
     });
   });
 }
 async function drawsign() {
-  let _0xda14x8b = {
-    "url": JD_API_HOST + "?functionId=sign",
-    "headers": {
-      "Host": "api.m.jd.com",
-      "Content-Type": "application/x-www-form-urlencoded",
-      "Accept": "*/*",
-      "Connection": "keep-alive",
-      "Cookie": cookie,
-      "User-Agent": "JD4iPhone/167650 (iPhone; iOS 13.7; Scale/3.00)",
-      "Accept-Language": "zh-Hans-CN;q=1",
-      "Accept-Encoding": "gzip, deflate, br"
-    },
-    "body": "" + Signz
-  };
-  return new Promise(_0xda14x8c => {
-    $.post(_0xda14x8b, (_0xda14x90, _0xda14x91, _0xda14x92) => {
+  let l1iIllII = await getSign("sign", {
+      "vendorId": venderId,
+      "sourceRpc": "shop_app_sign_home"
+    }),
+    iliiiIil = {
+      "url": JD_API_HOST + "?functionId=sign",
+      "headers": {
+        "Host": "api.m.jd.com",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Accept": "*/*",
+        "Connection": "keep-alive",
+        "Cookie": cookie,
+        "User-Agent": "JD4iPhone/167650 (iPhone; iOS 13.7; Scale/3.00)",
+        "Accept-Language": "zh-Hans-CN;q=1",
+        "Accept-Encoding": "gzip, deflate, br"
+      },
+      "body": "" + l1iIllII
+    };
+  return new Promise(l11I1lli => {
+    $.post(iliiiIil, (Ill1i11i, i1liii1I, Ililllil) => {
       try {
-        if (_0xda14x90) {
-          $.log(_0xda14x90);
-        } else {
-          _0xda14x92 = JSON.parse(_0xda14x92);
-          if (typeof _0xda14x92 == "object") {
-            if (_0xda14x92.code == 0) {
-              if (_0xda14x92.result.isWin) {
-                $.Prize = _0xda14x92.result.signReward.name || "";
-                $.log("抽奖结果：" + JSON.stringify($.Prize));
-              } else {
-                $.log("💨  空气");
-              }
-            }
-          } else {
-            $.log("京东返回了空数据");
-          }
-        }
-      } catch (_0x448554) {
-        $.log(_0x448554);
+        Ill1i11i ? $.log(Ill1i11i) : (Ililllil = JSON.parse(Ililllil), typeof Ililllil == "object" ? Ililllil.code == 0 && (Ililllil.result.isWin ? ($.Prize = Ililllil.result.signReward.name || "", $.log("🎉 " + $.Prize.split("：")[1])) : $.log("💨 空气")) : $.log("京东返回了空数据"));
+      } catch (iiiI1ii) {
+        $.log(iiiI1ii);
       } finally {
-        _0xda14x8c();
+        l11I1lli();
       }
     });
   });
 }
-function getSign(_0xda14x9b, _0xda14x9c) {
-  let _0xda14xa8 = {
-    "fn": _0xda14x9b,
-    "body": JSON.stringify(_0xda14x9c)
-  };
-  let _0xda14xa9 = {
-    "url": "http://api.nolanstore.top/sign",
-    "body": JSON.stringify(_0xda14xa8),
-    "headers": {
-      "Content-Type": "application/json"
-    },
-    "timeout": 30000
-  };
-  return new Promise(async _0xda14xaa => {
-    $.post(_0xda14xa9, (_0xda14xba, _0xda14xbb, _0xda14xa8) => {
-      try {
-        if (_0xda14xba) {
-          console.log("" + JSON.stringify(_0xda14xba));
-          console.log($.name + " getSign API请求失败，请检查网路重试");
-        } else {
-          _0xda14xa8 = JSON.parse(_0xda14xa8);
-          if (typeof _0xda14xa8 === "object" && _0xda14xa8 && _0xda14xa8.body) {
-            if (_0xda14xa8.body) {
-              Signz = _0xda14xa8.body || "";
-            }
-          } else {
-            console.log("");
-          }
-        }
-      } catch (_0x550f87) {
-        $.logErr(_0x550f87, _0xda14xbb);
-      } finally {
-        _0xda14xaa(_0xda14xa8);
-      }
-    });
-  });
-}
-function jsonParse(_0xda14xc0) {
-  if (typeof _0xda14xc0 == "string") {
+function jsonParse(illiil11) {
+  if (typeof illiil11 == "string") {
     try {
-      return JSON.parse(_0xda14xc0);
-    } catch (_0x4dcac5) {
-      console.log(_0x4dcac5);
-      $.msg($.name, "", "请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie");
-      return [];
+      return JSON.parse(illiil11);
+    } catch (liiIIi1i) {
+      return console.log(liiIIi1i), $.msg($.name, "", "请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie"), [];
     }
   }
 }
-function getQueryString(_0xda14xc9, _0xda14xca) {
-  let _0xda14xd5 = new RegExp("(^|[&?])" + _0xda14xca + "=([^&]*)(&|$)");
-  let _0xda14xd6 = _0xda14xc9.match(_0xda14xd5);
-  if (_0xda14xd6 != null) {
-    return unescape(_0xda14xd6[2]);
-  }
+function getQueryString(IIi11lll, liIiIIli) {
+  let i11iiIll = new RegExp("(^|[&?])" + liIiIIli + "=([^&]*)(&|$)"),
+    I1ili1II = IIi11lll.match(i11iiIll);
+  if (I1ili1II != null) return decodeURIComponent(I1ili1II[2]);
   return "";
 }
-	

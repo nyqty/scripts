@@ -21,11 +21,14 @@ import os  # 用于导入系统变量
 import sys  # 实现 sys.exit
 import logging  # 用于日志输出
 import time  # 时间
-import re  # 正则过滤
+import re
+from urllib.parse import quote  # 正则过滤
+from utils.jdsign import get_sign,base64Encode
 
 WSKEY_MODE = 0
-# 0 = Default / 1 = Debug!
+CLOUD_SIGN=False
 
+# 0 = Default / 1 = Debug!
 if "WSKEY_DEBUG" in os.environ or WSKEY_MODE:  # 判断调试模式变量
     logging.basicConfig(level=logging.DEBUG, format='%(message)s')  # 设置日志为 Debug等级输出
     logger = logging.getLogger(__name__)  # 主模块
@@ -49,6 +52,8 @@ except Exception as err:  # 异常捕捉
 
 ver = 21212  # 版本号
 
+def getTimestamp():
+    return int(round(time.time() * 1000))
 
 def notify_send(name,text):
     if "WSKEY_SEND" in os.environ and os.environ["WSKEY_SEND"] == 'disable':
@@ -98,16 +103,17 @@ def check_ck(row):  # 方法 检查 Cookie有效性 使用变量传递 单次调
     if "WSKEY_UPDATE_HOUR" in os.environ:  # 判断 WSKEY_UPDATE_HOUR是否存在于环境变量
         updatedAt = Date2time(row["up_date"])
         updateHour = 8
+        second = (updateHour * 60 * 60)
         if os.environ["WSKEY_UPDATE_HOUR"].isdigit():  # 检查是否为 DEC值
             updateHour = int(os.environ["WSKEY_UPDATE_HOUR"])  # 使用 int化数字
         nowTime = time.time()  # 获取时间戳 赋值
-        if nowTime - updatedAt >= (updateHour * 60 * 60) - (10 * 60):  # 判断时间操作
+        if nowTime - updatedAt >= second:  # 判断时间操作
             logger.info("根据时间判断即将到期")  # 标准日志输出
             return False  # 返回 Bool类型 False
         else:  # 判断分支
-            remainingTime = (updateHour * 60 * 60) - (nowTime - updatedAt)  # 时间运算操作
+            remainingTime = second - (nowTime - updatedAt)  # 时间运算操作
             hour = int(remainingTime / 60 / 60)  # 时间运算操作 [int]
-            minute = int((remainingTime % 323) / 60)  # 时间运算操作 [int]
+            minute = int((remainingTime-(hour*60*60))/60)  # 时间运算操作 [int]
             logger.info("未到期，{0}时{1}分后更新".format(hour, minute))  # 标准日志输出
             return True  # 返回 Bool类型 True
     elif "WSKEY_DISCHECK" in os.environ:  # 判断分支 WSKEY_DISCHECK 是否存在于系统变量
@@ -139,70 +145,79 @@ def check_ck(row):  # 方法 检查 Cookie有效性 使用变量传递 单次调
                 logger.info("JD接口错误码: " + str(res.status_code))  # 标注日志输出
                 return False  # 返回 Bool类型 False
 
+
 # 返回值 String tokenKey
-def getIsvToken(wskey):
-    # 'jdapp;android;11.0.2;;;appBuild/97565;ef/1;ep/{"hdid":"JM9F1ywUPwflvMIpYPok0tt5k9kW4ArJEU3lfLhxBqw=","ts":1685618307828,"ridx":-1,"cipher":{"sv":"CJS=","ad":"YWPtZNK2ZQHvDwU5CzOnDq==","od":"Ytc1DQY3EWDuY2S0DJU3ZK==","ov":"CzO=","ud":"YWPtZNK2ZQHvDwU5CzOnDq=="},"ciphertype":5,"version":"1.2.0","appname":"com.jingdong.app.mall"};Mozilla/5.0 (Linux; Android 12; M2102K2C Build/SKQ1.211006.001; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/97.0.4692.98 Mobile Safari/537.36'
-    params={
-        'functionId': 'genToken',
-        'clientVersion': '11.0.2',
-        'build': '97565',
-        'client': 'android',
-        'partner': 'google',
-        'oaid': 'jxpdv4gorqaix156',
-        'sdkVersion': '31', 'lang': 'zh_CN', 'harmonyOs': '0', 'networkType': 'UNKNOWN', 
-        'uemps': '0-2', 
-        'ext': '{"prstate": "0", "pvcStu": "1"}', 
-        'ef': '1', 
-        'ep': '{"hdid":"JM9F1ywUPwflvMIpYPok0tt5k9kW4ArJEU3lfLhxBqw=","ts":1685618308241,"ridx":-1,"cipher":{"area":"CV8yEJUzXzU0CNG0XzK=","d_model":"JWunCVVidRTr","wifiBssid":"dW5hbw93bq==","osVersion":"CJS=","d_brand":"WQvrb21f","screen":"CJuyCMenCNq=","uuid":"CJq0aWi3Z3v6CW90b3fyYG==","aid":"CJq0aWi3Z3v6CW90b3fyYG==","openudid":"CJq0aWi3Z3v6CW90b3fyYG=="},"ciphertype":5,"version":"1.2.0","appname":"com.jingdong.app.mall"}',
-        'st': 1685618308241, 'sign': '602a49153af429fe7536391d6a183458', 'sv': '111'
+def getinfo(ws):
+    headers = {
+        'Charset': 'UTF-8',
+        'Cookie': ws,
+        #whwswswws=xncJIecKoPnlO-YpOikDFUZiZqhzkB4faNJC-JHnwMr-6QPne_8dF4J3XyjwP8kjJI5w1qP_fyJzqcqd7hAsCQUojf2TCPxhRYvpZQr7uPKd5Om-u-YRnWr3gP_c-K6kc6MGzqH3m6izlG0X73Xc4AQ;
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'User-Agent': 'Dalvik/2.1.0 (Linux; U; Android 13; 22081212C Build/TKQ1.220829.002)',
+        'Host': 'blackhole.m.jd.com',
+        'Connection': 'Keep-Alive',
+        'Accept-Encoding': 'gzip',
+    }  # 设置 HTTP头
+    url = 'https://blackhole.m.jd.com/getinfo'  # 设置 URL地址
+    data = {
+        'content':'{"appname":"com.jingdong.app.mall_com.jma.track","whwswswws":"xncJIecKoPnlO-YpOikDFUZiZqhzkB4faNJC-JHnwMr-6QPne_8dF4J3XyjwP8kjJI5w1qP_fyJzqcqd7hAsCQUojf2TCPxhRYvpZQr7uPKd5Om-u-YRnWr3gP_c-K6kc6MGzqH3m6izlG0X73Xc4AQ","jdkey":"jidwhzqalpkLS0xOTExOWVlODFkYTFkNDJiLWE2N2I5NThjOTY2NDE4NTQ3MTFmNGMzZmQ5ODI5Y2U5MDhjMDI=","installtionid":"1115df9317d0467ba176b43f116901bd","appid":"100","dataset":["alterationinfo","fixedinfo"],"sdkversion":"2.5.9","clientversion":"12.0.8","client":"android","body":{"appsign":"android_12.0.8_4fbb30eb7b7166119bd25e41eddeee2f","head":"rJwv3A4TkfE4ZobmMKA11Gen6pHF6V7iFH+P\/Xzapw+n0TDAxcdetP0FfaQwyUUDqeYF3MXHXrHnPX3If9hPM6DY3pLF8V78","info":"x3sizMCFKTtFXYdsyBI6nEd6SCDL81+dvS5Hw5Z2KBtEH3tMW1\/4l3Lk2zDklV06s4cgs78\/maF28MPsKOoqkaYBApWpncWu1FbVrpb5tLqm6JGRcv2K3lLOseTHVNa23TKQJVYYxFbrbqNvGyWp4MJu6hteO42SM1\/lCM1+vVB6+NzlnkQwfoKzp\/fQSN15Emlz6mj6tbagcXNcgxAtqRyKgrGfypOD3OTdSUHEIK8ZJ7DL6ZSHiN\/x9IEIKtdcTiDpGSlnnzP2CouKZatibHWEgl2BdgF6\/nEHGoydIJEhKrkiypaHDF+7dCQVDHOsMNweF5IHcBI3+e6KER01RGc9PfR\/Hpfd6ilOy\/MhcLR+xjIQNv7ssEzsg3+CfzpzXDfCJ900DvXAF0aiT6xV\/0nSgB6dY47+7xZvmBcEsMUKhakev3gzeM707QuL28mIov3lPeHgDxtb7Ulu7Jhq9saMLBW4OORp\/XOeEOgzEOxyvir+1QQd80L76CFFkfCcuJCgpLkxfKcb9440Uqs1JkDdinKhc7s64uhrLNa4xOCDbEN5e5cg0Wstnork6TYCO43zmho="}}'
     }
+    try:  # 异常捕捉
+        res = requests.post(url=url, headers=headers, data=data, verify=False,timeout=10)  # HTTP请求 [POST] 超时 10秒
+        res_json = json.loads(res.text)  # Json模块 取值
+        if res_json["code"]==0:
+            return res_json["whwswswws"]
+    except Exception as err:  # 异常捕捉
+        logger.info("getinfo 接口抛出错误")  # 标准日志输出
+        logger.info(str(err))  # 标注日志输出
+        return False
+    else:  # 判断分支
+        return False
+    
+# 返回值 False[Bool], Wskey
+def genToken(wskey,userName):  # 方法 获取 Wskey转换使用的 Token 由 JD_API 返回 这里传递 wskey
     headers = {
         'Host': 'api.m.jd.com',
-        'accept': '*/*',
-        #'user-agent': 'okhttp/3.12.1;jdmall;android;version/11.2.5;build/98275',
-        'user-agent': ua,
-        'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
-        #'accept-encoding': 'gzip,deflate',
-        'Cookie': wskey        
-    }  # 设置 HTTP头
-    url = 'https://api.m.jd.com/client.action'  # 设置 URL地址
-    data = 'body=%7B%22to%22%3A%22https%253a%252f%252fplogin.m.jd.com%252fjd-mlogin%252fstatic%252fhtml%252fappjmp_blank.html%22%7D&'  # 设置 POST 载荷
-
-    try:  # 异常捕捉
-        res = requests.post(url=url, params=params, headers=headers, data=data, verify=False,
-                            timeout=10)  # HTTP请求 [POST] 超时 10秒
-        res_json = json.loads(res.text)  # Json模块 取值
-        tokenKey = res_json['tokenKey']  # 取出TokenKey
-    except Exception as err:  # 异常捕捉
-        logger.info("JD_WSKEY接口抛出错误 尝试重试 更换IP")  # 标准日志输出
-        logger.info(str(err))  # 标注日志输出
-        return False, wskey  # 返回 -> False[Bool], Wskey
-    else:  # 判断分支
-        return appjmp(wskey, tokenKey)  # 传递 wskey, Tokenkey 执行方法 [appjmp]
-    
-        
-
-# 返回值 False[Bool], Wskey
-def getToken(wskey):  # 方法 获取 Wskey转换使用的 Token 由 JD_API 返回 这里传递 wskey
-    try:  # 异常捕捉
-        url = str(base64.b64decode(url_t).decode()) + 'api/genToken'  # 设置云端服务器地址 路由为 genToken
-        header = {"User-Agent": ua}  # 设置 HTTP头
-        params = requests.get(url=url, headers=header, verify=False, timeout=20).json()  # 设置 HTTP请求参数 超时 20秒 Json解析
-    except Exception as err:  # 异常捕捉
-        logger.info("Params参数获取失败")  # 标准日志输出
-        logger.debug(str(err))  # 调试日志输出
-        return False, wskey  # 返回 -> False[Bool], Wskey
-    headers = {
-        'cookie': wskey,
-        'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
+        'cookie': wskey,#f'whwswswws=~{whwswswws};'
+        'j-e-c': quote('{"hdid":"JM9F1ywUPwflvMIpYPok0tt5k9kW4ArJEU3lfLhxBqw=","ts":'+str(getTimestamp())+',"ridx":-1,"cipher":{"pin":"'+base64Encode(quote(userName))+'"},"ciphertype":5,"version":"1.2.0","appname":"com.jingdong.app.mall"}'),
+        'x-rp-client': 'android_2.0.0',
+        'user-agent': 'okhttp/3.12.16;jdmall;android;version/12.0.8;build/98854;',#98275
+        'x-referer-package': 'com.jingdong.app.mall',
         'charset': 'UTF-8',
+        'x-referer-page': 'com.jingdong.app.mall.main.MainActivity',
         'accept-encoding': 'br,gzip,deflate',
-        'user-agent': ua
-    }  # 设置 HTTP头
+        'cache-control': 'no-cache',
+        'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
+    }# 设置 HTTP头
+    body={"to":"https%3a%2f%2fplogin.m.jd.com%2fjd-mlogin%2fstatic%2fhtml%2fappjmp_blank.html"}
+    if CLOUD_SIGN:
+        try:  # 异常捕捉
+            url = str(base64.b64decode(url_t).decode()) + 'api/genToken'  # 设置云端服务器地址 路由为 genToken
+            header = {"User-Agent": ua}  # 设置 HTTP头
+            params = requests.get(url=url, headers=header, verify=False, timeout=20).json()  # 设置 HTTP请求参数 超时 20秒 Json解析
+        except Exception as err:  # 异常捕捉
+            logger.info("Params参数获取失败")  # 标准日志输出
+            logger.debug(str(err))  # 调试日志输出
+            return False, wskey  # 返回 -> False[Bool], Wskey
+    else:
+        SDate=get_sign("genToken",body,"android","12.0.8")
+        params=SDate["data"]
+        ua=f"jdapp;android;12.0.8;;;M/5.0;appBuild/98854;ef/1;ep/{SDate['data']['ep']};Mozilla/5.0 (Linux; Android 13; 22081212C Build/TKQ1.220829.002; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/89.0.4389.72 MQQBrowser/6.2 TBS/046247 Mobile Safari/537.36"
+        up={
+            'build': '98854',#97565
+            'partner': 'google',#xiaomi001
+            'oaid': params["uuid"],
+            'sdkVersion': '33',
+            'lang': 'zh_CN', 'harmonyOs': '0', 'networkType': 'wifi', 
+            'uemps': '0-2', 
+            'avifSupport':1,
+            'ext': '{"prstate":"0","pvcStu":"1","cfgExt":"{\"privacyOffline\":\"0\"}"}', 
+        }
+        params={**params,**up}
+
     url = 'https://api.m.jd.com/client.action'  # 设置 URL地址
-    data = 'body=%7B%22to%22%3A%22https%253a%252f%252fplogin.m.jd.com%252fjd-mlogin%252fstatic%252fhtml%252fappjmp_blank.html%22%7D&'  # 设置 POST 载荷
     try:  # 异常捕捉
-        res = requests.post(url=url, params=params, headers=headers, data=data, verify=False,
+        res = requests.post(url=url, params=params, headers=headers, data=f'body={body}&', verify=False,
                             timeout=10)  # HTTP请求 [POST] 超时 10秒
         res_json = json.loads(res.text)  # Json模块 取值
         tokenKey = res_json['tokenKey']  # 取出TokenKey
@@ -221,9 +236,16 @@ def appjmp(wskey, tokenKey):  # 方法 传递 wskey & tokenKey
         logger.info(str(wskey) + ";疑似IP风控等问题 默认为失效\n--------------------\n")  # 标准日志输出
         return False, wskey  # 返回 -> False[Bool], Wskey
     headers = {
-        'User-Agent': ua,
-        'accept': 'accept:text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
-        'x-requested-with': 'com.jingdong.app.mall'
+        'upgrade-insecure-requests': '1',
+        'user-agent': ua,
+        'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,image/tpg,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+        'x-requested-with': 'com.jingdong.app.mall',
+        'sec-fetch-site': 'none',
+        'sec-fetch-mode': 'navigate',
+        'sec-fetch-user': '?1',
+        'sec-fetch-dest': 'document',
+        'accept-encoding': 'gzip, deflate, br',
+        'accept-language': 'zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7'
     }  # 设置 HTTP头
     params = {
         'tokenKey': tokenKey,
@@ -346,10 +368,10 @@ def ql_disable(id):
     logger.info(Data["msg"])
 
 
-def ql_AddUp(uid,ws):
+def ql_AddUp(uid,ws,userName):
     for count in range(tryCount):  # for循环 [tryCount]
         count += 1  # 自增
-        return_ws = getToken(ws)  # 使用 WSKEY 请求获取 JD_COOKIE bool jd_ck
+        return_ws = genToken(ws,userName)  # 使用 WSKEY 请求获取 JD_COOKIE bool jd_ck
         if return_ws[0]:  # 判断 [return_ws]返回值 Bool类型
             break  # 中断循环
         if count < tryCount:  # 判断循环次
@@ -388,7 +410,7 @@ if __name__ == '__main__':  # Python主函数执行入口
             sys.exit(1)  # 脚本退出
     else:  # 判断分支
         logger.info("未添加变量TYQLDG_URL或TYQLDG_TOKEN")  # 标准日志输出
-        sys.exit(0)  # 脚本退出
+        #sys.exit(0)  # 脚本退出
 
     notify_api='{0}/api/notify.php?access_token={1}'.format(TYQLDG_URL,TYQLDG_TOKEN)
     ck_api='{0}/api/cookie.php?access_token={1}'.format(TYQLDG_URL,TYQLDG_TOKEN)
@@ -399,12 +421,13 @@ if __name__ == '__main__':  # Python主函数执行入口
         sleepTime = int(os.environ["WSKEY_SLEEP"])  # 获取变量 [int]
     else:  # 判断分支
         sleepTime = 20  # 默认休眠时间 20秒
-    url_t = check_cloud()  # 调用方法 [check_cloud] 并赋值 [url_t]
-    cloud_arg = cloud_info()  # 调用方法 [cloud_info] 并赋值 [cloud_arg]
-    update()  # 调用方法 [update]
-    ua = cloud_arg['User-Agent']  # 设置全局变量 UA
-    #print(cloud_arg);    
-    #print(str(base64.b64decode(url_t).decode()) + 'api/genToken');sys.exit(1)  # 脚本退出
+    if CLOUD_SIGN:
+        url_t = check_cloud()  # 调用方法 [check_cloud] 并赋值 [url_t]
+        cloud_arg = cloud_info()  # 调用方法 [cloud_info] 并赋值 [cloud_arg]
+        update()  # 调用方法 [update]
+        ua = cloud_arg['User-Agent']  # 设置全局变量 UA
+    else:
+        ua='jdapp;android;12.0.8;;;M/5.0;appBuild/98854;Mozilla/5.0 (Linux; Android 13; 22081212C Build/TKQ1.220829.002; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/89.0.4389.72 MQQBrowser/6.2 TBS/046247 Mobile Safari/537.36'
     Data = post_cookie({"ac":"list","env_name":"JD_WSCK","field":"id,uid,userName,value,up_date","state":1})
     if Data["code"]==200 :
         wskeyData=Data["data"]
@@ -430,10 +453,10 @@ if __name__ == '__main__':  # Python主函数执行入口
             if return_serch[0]:  # bool: True 搜索到账号
                 logger.info("检索成功")
                 if not check_ck(return_serch[1]):  # bool: False 判定 JD_COOKIE 有效性
-                    ql_AddUp(row["uid"],ws)
+                    ql_AddUp(row["uid"],ws,userName)
             else:  # 判断分支
                 logger.info("更新账号ck")  # 标准日志分支
-                ql_AddUp(row["uid"],ws)
+                ql_AddUp(row["uid"],ws,userName)
         else:  # 判断分支
             logger.info("WSKEY格式错误\n--------------------\n")  # 标准日志输出
     logger.info("\n执行完成\n--------------------")  # 标准日志输出

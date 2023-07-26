@@ -88,7 +88,8 @@ def get_sign(functionId, body, client : str="android", clientVersion : str='11.2
     back_bytes = sign_core(str.encode(all_arg))
     sign = hashlib.md5(base64.b64encode(back_bytes)).hexdigest()
     # print(sign)
-    data={"functionId":functionId,"body":body,"clientVersion":clientVersion,"client":client,"uuid":suid,"eid":eid,"ep":ep,"st":st,"sign":sign,"sv":sv}
+    data={}
+    data["data"]={"functionId":functionId,"body":body,"clientVersion":clientVersion,"client":client,"uuid":suid,"eid":eid,"ep":ep,"st":st,"sign":sign,"sv":sv}
     data["convertUrl"]='functionId=%s&body=%s&clientVersion=%s&client=%s&sdkVersion=31&lang=zh_CN&harmonyOs=0&networkType=wifi&oaid=%s&eid=%s&ef=1&ep=%s&st=%s&sign=%s&sv=%s' % (
         functionId,body, clientVersion, client, suid, eid, urllib.parse.quote(ep), st, sign, sv)
     data["url"]='https://api.m.jd.com?%s' % (data["convertUrl"])
