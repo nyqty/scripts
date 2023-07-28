@@ -67,8 +67,8 @@ def notify_send(name,text):
             return False
         else:  # 判断分支
             data=json.loads(res.text)
-            if data["code"]==200:
-                logger.info(data["msg"])
+            #if data["code"]==200:
+            logger.info(data)
             return True
 
 def ql_send(text):
