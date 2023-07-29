@@ -25,21 +25,22 @@ cron "30 7,14,21 * * *" script-path=https://raw.githubusercontent.com/KingRan/JD
 */
 const Env=require('./utils/Env.js');
 const $ = new Env('种豆得豆');
-const I1lIiI1 = function () {
-    let il1I1i1I = true;
-    return function (II1II1ll, iilliIii) {
-      const I1II1iI = il1I1i1I ? function () {
-        if (iilliIii) {
-          const I1IlIi1 = iilliIii.apply(II1II1ll, arguments);
-          return iilliIii = null, I1IlIi1;
-        }
-      } : function () {};
-      return il1I1i1I = false, I1II1iI;
-    };
-  }(),
-  Ilili1Ii = I1lIiI1(this, function () {
-    return Ilili1Ii.toString().search("(((.+)+)+)+$").toString().constructor(Ilili1Ii).search("(((.+)+)+)+$");
-  });
+IllIlIii = $.isNode() ? require("./sendNotify") : "";
+    const l1lIl1Ii = $.isNode() ? require("./jdCookie.js") : "",
+      III1l1li = "";
+    if ($.isNode()) {
+      Object.keys(l1lIl1Ii).forEach(IiI1iI1i => {
+        l1lIl1Ii[IiI1iI1i] && l1llIiIl.push(l1lIl1Ii[IiI1iI1i]);
+      });
+      if (process.env.JD_DEBUG && process.env.JD_DEBUG === "false") console.log = () => {};
+    } else l1llIiIl = [$.getdata("CookieJD"), $.getdata("CookieJD2"), ...iiII1l11($.getdata("CookiesJD") || "[]").map(Illi1Iii => Illi1Iii.cookie)].filter(i1l1Illl => !!i1l1Illl);
+    console.log("共" + l1llIiIl.length + "个京东账号\n");
+    $.shareCodesArr = [];
+    if ($.isNode()) Object.keys(III1l1li).forEach(lil1Ilii => {
+      III1l1li[lil1Ilii] && $.shareCodesArr.push(III1l1li[lil1Ilii]);
+    });else {
+      if ($.getdata("jd_plantbean_inviter")) $.shareCodesArr = $.getdata("jd_plantbean_inviter").split("\n").filter(IIIli1I1 => !!IIIli1I1);
+    }
 Ilili1Ii();
 let IIIllIIi = true,
   l1llIiIl = [],
@@ -73,7 +74,6 @@ let Ii1li111 = "",
 $.newShareCode = [];
 let iIil11Ii = 0;
 !(async () => {
-  await Iiiii1II();
   if (!l1llIiIl[0]) {
     $.msg($.name, "【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取", "https://bean.m.jd.com/bean/signIndex.action", {
       "open-url": "https://bean.m.jd.com/bean/signIndex.action"
@@ -576,27 +576,6 @@ async function IlIIIll1(l1i1iII) {
 }
 async function ll1111l1() {
   $.plantBeanIndexResult = await l11llllI("plantBeanIndex");
-}
-function Iiiii1II() {
-  return new Promise(i111lIii => {
-    IllIlIii = $.isNode() ? require("./sendNotify") : "";
-    const l1lIl1Ii = $.isNode() ? require("./jdCookie.js") : "",
-      III1l1li = "";
-    if ($.isNode()) {
-      Object.keys(l1lIl1Ii).forEach(IiI1iI1i => {
-        l1lIl1Ii[IiI1iI1i] && l1llIiIl.push(l1lIl1Ii[IiI1iI1i]);
-      });
-      if (process.env.JD_DEBUG && process.env.JD_DEBUG === "false") console.log = () => {};
-    } else l1llIiIl = [$.getdata("CookieJD"), $.getdata("CookieJD2"), ...iiII1l11($.getdata("CookiesJD") || "[]").map(Illi1Iii => Illi1Iii.cookie)].filter(i1l1Illl => !!i1l1Illl);
-    console.log("共" + l1llIiIl.length + "个京东账号\n");
-    $.shareCodesArr = [];
-    if ($.isNode()) Object.keys(III1l1li).forEach(lil1Ilii => {
-      III1l1li[lil1Ilii] && $.shareCodesArr.push(III1l1li[lil1Ilii]);
-    });else {
-      if ($.getdata("jd_plantbean_inviter")) $.shareCodesArr = $.getdata("jd_plantbean_inviter").split("\n").filter(IIIli1I1 => !!IIIli1I1);
-    }
-    i111lIii();
-  });
 }
 function i1lIlli1(l11i11Il, i11i1i11 = {}) {
   return new Promise(async IlI1iiII => {
