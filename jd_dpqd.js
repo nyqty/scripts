@@ -13,7 +13,7 @@ const Env = require('./utils/Env.js');
 const $ = new Env('常规店铺签到');
 const _0xf90bf0 = $.isNode() ? require("./sendNotify") : "",
   _0x1660c3 = $.isNode() ? require("./jdCookie") : "",
-  _0x236cb1 = require("./function/h5st41.js"),
+  h5st = require("./utils/h5st.js"),
   _0x3b4457 = require("crypto-js"),
   _0x4f7e32 = "KLMNOPQRSTABCDEFGHIJUVWXYZabcdopqrstuvwxefghijklmnyz0123456789+/";
 let _0x245be6 = [];
@@ -345,7 +345,7 @@ function _0x4ad446(_0x3e318b) {
 }
 async function _0x3c75a0(_0x4d4853, _0x366ce9) {
   try {
-    let _0xf585b5 = new _0x236cb1({
+    let _0xf585b5 = new h5st({
       "appId": _0x4d4853,
       "appid": "interCenter_shopSign",
       "pin": $.UserName,
