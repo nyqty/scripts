@@ -1,8 +1,9 @@
 /*
 APP首页-领京豆
 金融双签领取
-21 5 * * * jd_signbeanact.js
+21 3 * * * jd_signbeanact.js
 */
+
 
 const Env=require('./utils/Env.js');
 const $ = new Env('领京豆签到');
@@ -19,6 +20,7 @@ if ($.isNode()) {
 const ua = require('./USER_AGENTS');
 const jdVersion = '10.1.2'
 
+
 !(async () => {
     if (!cookiesArr[0]) {
         $.msg('【京东账号一】宠汪汪积分兑换奖品失败', '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
@@ -33,10 +35,11 @@ const jdVersion = '10.1.2'
             $.bean = 0
             iphoneVersion = [Math.ceil(Math.random() * 2 + 12), Math.ceil(Math.random() * 4)]
             UA = `jdapp;iPhone;${jdVersion};${Math.ceil(Math.random() * 2 + 12)}.${Math.ceil(Math.random() * 4)};${randomString(40)};network/wifi;model/iPhone12,1;addressid/0;appBuild/167802;jdSupportDarkMode/0;Mozilla/5.0 (iPhone; CPU iPhone OS ${iphoneVersion[0]}_${iphoneVersion[1]} like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1`
-            UUID = UA.split(';') && UA.split(';')[4] || '';
+            UUID = randomString(40);
+            UA =ua.UARAM();
             console.log(`\n*****开始【京东账号${$.index}】${$.UserName}****\n`);
             await run();
-            await $.wait(3000);
+            await $.wait(5000);
         }
     }
 
@@ -70,7 +73,7 @@ async function takePostRequest(type) {
             break;
         case 'signBeanAct':
             body = `{"fp":"-1","shshshfp":"-1","shshshfpa":"-1","referUrl":"-1","userAgent":"-1","jda":"-1","rnVersion":"3.9"}`;
-            myRequest = await getGetRequest(`signBeanAct`, escape(body));
+            myRequest = await getGetRequest(`signBeanAct`, encodeURIComponent(body));
             break;
         default:
             console.log(`错误${type}`);
@@ -133,7 +136,7 @@ async function dealReturn(type, res) {
     }
 }
 async function getGetRequest(type, body) {
-    let url = `https://api.m.jd.com/client.action?functionId=${type}&body=${body}&appid=ld&client=apple&clientVersion=${jdVersion}&networkType=wifi&osVersion=${iphoneVersion[0]}.${iphoneVersion[1]}&uuid=${UUID}&openudid=${UUID}`;
+    let url = `https://api.m.jd.com/client.action?functionId=${type}&body=${body}&appid=ld&client=apple&clientVersion=${UA.split(';')[2]}&networkType=wifi&uuid=${UUID}&openudid=${UUID}`;
     const method = `GET`;
     const headers = {
         "Accept": "*/*",
