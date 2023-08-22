@@ -38,6 +38,9 @@ if ($.isNode()) {
   }
   $.log("\n当前版本：V2.0.0");
   $.log("\n问题建议TG：https://t.me/dylan_jdpro");
+
+  
+
   for (let _0x292c13 = 0; _0x292c13 < _0x2570fb.length; _0x292c13++) {
     if (_0x2570fb[_0x292c13]) {
       _0x411d55 = _0x2570fb[_0x292c13];
@@ -156,7 +159,7 @@ async function _0x516f01() {
   });
 }
 async function _0x271f2b() {
-  const _0x12aaa5 = {
+  var _0x12aaa5 = {
     "rewardType": 6,
     "activityId": "ba6e852dd2bc05a1de75b2d2dc9fda305096bcc0",
     "appId": "app_440"
@@ -175,7 +178,7 @@ async function _0x271f2b() {
   });
 }
 async function _0x36c9b0() {
-  const _0x32ed74 = {
+  var _0x32ed74 = {
     "projectId": "1563959",
     "sourceCode": 2
   };
@@ -200,7 +203,7 @@ async function _0x36c9b0() {
   });
 }
 async function _0x522c54() {
-  const _0x5d4393 = {
+  let _0x5d4393 = {
     "projectId": "1563959",
     "sourceCode": 2,
     "accessToken": $.token,
@@ -209,7 +212,7 @@ async function _0x522c54() {
     "exchangeNum": 1
   };
   _0x5d4393 = _0x1c82bd(_0x5d4393);
-  const _0x192266 = {
+  let _0x192266 = {
     "appId": "e5749",
     "fn": "arvr_doInteractiveAssignment",
     "body": _0x5d4393,
@@ -219,14 +222,14 @@ async function _0x522c54() {
     "ua": $.UA
   };
   let _0x2f5a17 = await _0x34e1d3.getbody(_0x192266);
-  const _0x42b9b4 = {
+  let _0x42b9b4 = {
     "Host": "api.m.jd.com",
     "Origin": "https://prodev.m.jd.com",
     "Content-Type": "application/x-www-form-urlencoded",
     "User-Agent": $.UA,
     "Cookie": _0x411d55
   };
-  const _0x355e94 = {
+  let _0x355e94 = {
     "url": "https://api.m.jd.com/api/arvr_doInteractiveAssignment",
     "body": "" + _0x2f5a17,
     "headers": _0x42b9b4
@@ -261,7 +264,7 @@ async function _0x522c54() {
   });
 }
 async function _0x5af7e5(_0x359efd, _0x5ec9c6) {
-  const _0x45e77d = {
+  let _0x45e77d = {
     "projectId": "1563959",
     "sourceCode": 2,
     "accessToken": $.token,
@@ -273,7 +276,7 @@ async function _0x5af7e5(_0x359efd, _0x5ec9c6) {
     delete _0x45e77d.itemId;
   }
   _0x45e77d = _0x1c82bd(_0x45e77d);
-  const _0x5ed523 = {
+  let _0x5ed523 = {
     "appId": "e5749",
     "fn": "arvr_doInteractiveAssignment",
     "body": _0x45e77d,
@@ -283,7 +286,7 @@ async function _0x5af7e5(_0x359efd, _0x5ec9c6) {
     "ua": $.UA
   };
   let _0x4b224e = await _0x34e1d3.getbody(_0x5ed523);
-  const _0x37c1d1 = {
+  let _0x37c1d1 = {
     "Host": "api.m.jd.com",
     "Origin": "https://prodev.m.jd.com",
     "Referer": "https://prodev.m.jd.com/",
@@ -291,7 +294,7 @@ async function _0x5af7e5(_0x359efd, _0x5ec9c6) {
     "User-Agent": $.UA,
     "Cookie": _0x411d55
   };
-  const _0x29ac88 = {
+  let _0x29ac88 = {
     "url": "https://api.m.jd.com/api/arvr_doInteractiveAssignment",
     "body": "" + _0x4b224e,
     "headers": _0x37c1d1
@@ -320,7 +323,7 @@ async function _0x5af7e5(_0x359efd, _0x5ec9c6) {
   });
 }
 function _0x3b66aa(_0x4cc64c, _0x458580) {
-  const _0xed8d08 = {
+  let _0xed8d08 = {
     "Host": "api.m.jd.com",
     "Origin": "https://pro.m.jd.com",
     "Content-Type": "application/x-www-form-urlencoded",
@@ -351,12 +354,12 @@ function _0x1c82bd(_0x202847) {
 }
 function _0xcf7d6a() {
   return new Promise(_0x2e77f7 => {
-    const _0x4afcd1 = {
+    let _0x4afcd1 = {
       "Cookie": _0x411d55,
       "referer": "https://h5.m.jd.com/",
       "User-Agent": $.UA
     };
-    const _0x3b8597 = {
+    let _0x3b8597 = {
       "url": "https://plogin.m.jd.com/cgi-bin/ml/islogin",
       "headers": _0x4afcd1,
       "timeout": 10000
