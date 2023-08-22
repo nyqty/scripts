@@ -21,22 +21,8 @@ updatetime:2023/05/21
 */
 const Env=require('./utils/Env.js');
 const $ = new Env('超级无线店铺签到');
-const i1iiilii = function () {
-    let ilIiIlll = true;
-    return function (ii1IIi1I, lIi11iII) {
-      const lI1ll1li = ilIiIlll ? function () {
-        if (lIi11iII) {
-          const lIIlI11I = lIi11iII.apply(ii1IIi1I, arguments);
-          return lIi11iII = null, lIIlI11I;
-        }
-      } : function () {};
-      return ilIiIlll = false, lI1ll1li;
-    };
-  }(),
-  li1lIii = i1iiilii(this, function () {
-    return li1lIii.toString().search("(((.+)+)+)+$").toString().constructor(li1lIii).search("(((.+)+)+)+$");
-  });
-li1lIii();
+
+
 const liliiilI = $.isNode() ? require("./jdCookie.js") : "",
   lI1Iill = $.isNode() ? require("./sendNotify") : "",
   IiiIi1il = require("./USER_AGENTS"),
