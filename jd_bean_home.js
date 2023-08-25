@@ -10,7 +10,7 @@ const Env=require('./utils/Env.js');
 const $ = new Env('领京豆升级任务')
 const i1lIii = $.isNode() ? require("./sendNotify") : "",
   III11i = $.isNode() ? require("./jdCookie.js") : "",
-  llIl1i = require("./function/h5st41.js");
+  llIl1i = require("./utils/h5st.js");
 let Iiil = [],
   IIIli = "",
   ii1i1;
