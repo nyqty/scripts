@@ -23,44 +23,42 @@ cron "40 4,17 * * *" script-path=https://raw.githubusercontent.com/KingRan/JDJB/
 京东种豆得豆 = type=cron,script-path=https://raw.githubusercontent.com/KingRan/JDJB/main/jd_plantBean_help.js, cronexpr="40 4,17 * * *", timeout=3600, enable=true
 
 */
-const H5ST=require('./utils/h5st.js');
-const Env=require('./utils/Env');
+const Env=require('./utils/Env.js');
 const $ = new Env('种豆得豆内部互助');
-let jdNotify = true,
-  cookiesArr = [],
-  cookie = "",
-  jdPlantBeanShareArr = [],
-  notify,
-  option,
-  message,
-  subTitle;
-const cryptoJS = require("crypto-js"),
-  base64_mod_charset = "KLMNOPQRSTABCDEFGHIJUVWXYZabcdopqrstuvwxefghijklmnyz0123456789+/",
-  JD_API_HOST = "https://api.m.jd.com/client.action";
-let allMessage = "",
-  currentRoundId = null,
-  lastRoundId = null,
-  roundList = [],
-  awardState = "",
-  num;
+let ii1ill1I = true,
+  liIIll1I = [],
+  ll1IIliI = "",
+  ilII11II = [],
+  iiliI1lI,
+  IIl1iIl,
+  llI1IiI,
+  li1IIIlI;
+const IiII1ill = require("./function/jdCommon"),
+  l11IIi1l = require("./utils/h5st.js"),
+  Ii1Ii1ll = "https://api.m.jd.com/client.action";
+let iIiiI1i = "",
+  lIll1iI = null,
+  ilil1Il = null,
+  liIIIII = [],
+  lliiilii = "",
+  iiIl1li;
 $.newShareCode = [];
-$.H5ST31={};
-let llerror = false,
-  lnrun = 0,
-  lnruns = 0;
+let iIl1liIl = false,
+  i111I1ii = 0,
+  i11liII = 0;
 !(async () => {
-  await requireConfig();
-  if (!cookiesArr[0]) {
+  await Ii111iIi();
+  if (!liIIll1I[0]) {
     $.msg($.name, "【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取", "https://bean.m.jd.com/bean/signIndex.action", {
       "open-url": "https://bean.m.jd.com/bean/signIndex.action"
     });
     return;
   }
-  for (let Ii1Ill = 0; Ii1Ill < cookiesArr.length; Ii1Ill++) {
-    if (cookiesArr[Ii1Ill]) {
-      cookie = cookiesArr[Ii1Ill];
-      $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1]);
-      $.index = Ii1Ill + 1;
+  for (let IiIliil = 0; IiIliil < liIIll1I.length; IiIliil++) {
+    if (liIIll1I[IiIliil]) {
+      ll1IIliI = liIIll1I[IiIliil];
+      $.UserName = decodeURIComponent(ll1IIliI.match(/pt_pin=([^; ]+)(?=;?)/) && ll1IIliI.match(/pt_pin=([^; ]+)(?=;?)/)[1]);
+      $.index = IiIliil + 1;
       $.isLogin = true;
       $.nickName = "";
       $.hotFlag = false;
@@ -69,85 +67,78 @@ let llerror = false,
         $.msg($.name, "【提示】cookie已失效", "京东账号" + $.index + " " + ($.nickName || $.UserName) + "\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action", {
           "open-url": "https://bean.m.jd.com/bean/signIndex.action"
         });
-        $.isNode() && (await notify.sendNotify($.name + "cookie已失效 - " + $.UserName, "京东账号" + $.index + " " + $.UserName + "\n请重新登录获取cookie"));
+        $.isNode() && (await iiliI1lI.sendNotify($.name + "cookie已失效 - " + $.UserName, "京东账号" + $.index + " " + $.UserName + "\n请重新登录获取cookie"));
         continue;
       }
-      message = "";
-      subTitle = "";
-      option = {};
-      get_ua();
-      await jdPlantBean();
+      llI1IiI = "";
+      li1IIIlI = "";
+      IIl1iIl = {};
+      $.UA = IiII1ill.genUA($.UserName);
+      await li1il11i();
       await $.wait(2 * 1000);
     }
   }
-  if ($.isNode() && allMessage) {
-    await notify.sendNotify("" + $.name, "" + allMessage);
-  }
-})().catch(iliiiI => {
-  $.log("", "❌ " + $.name + ", 失败! 原因: " + iliiiI + "!", "");
+  $.isNode() && iIiiI1i && (await iiliI1lI.sendNotify("" + $.name, "" + iIiiI1i));
+})().catch(liIIi1i => {
+  $.log("", "❌ " + $.name + ", 失败! 原因: " + liIIi1i + "!", "");
 }).finally(() => {
   $.done();
 });
-async function jdPlantBean() {
+async function li1il11i() {
   try {
     console.log("获取任务及基本信息");
-    await plantBeanIndex();
-    if (llerror) return;
-    for (let I1IIli = 0; I1IIli < $.plantBeanIndexResult.data.roundList.length; I1IIli++) {
-      if ($.plantBeanIndexResult.data.roundList[I1IIli].roundState === "2") {
-        num = I1IIli;
+    await li1Il11l();
+    if (iIl1liIl) return;
+    for (let ii1Iilll = 0; ii1Iilll < $.plantBeanIndexResult.data.roundList.length; ii1Iilll++) {
+      if ($.plantBeanIndexResult.data.roundList[ii1Iilll].roundState === "2") {
+        iiIl1li = ii1Iilll;
         break;
       }
     }
     if ($.plantBeanIndexResult && $.plantBeanIndexResult.code === "0" && $.plantBeanIndexResult.data) {
-      const lIilI1 = $.plantBeanIndexResult.data.jwordShareInfo.shareUrl;
-      $.myPlantUuid = getParam(lIilI1, "plantUuid");
+      const i1i1iIi = $.plantBeanIndexResult.data.jwordShareInfo.shareUrl;
+      $.myPlantUuid = iilil1ii(i1i1iIi, "plantUuid");
       console.log("\n【京东账号" + $.index + "（" + $.UserName + "）的" + $.name + "好友互助码】" + $.myPlantUuid + "\n");
-      jdPlantBeanShareArr.push($.myPlantUuid);
-      roundList = $.plantBeanIndexResult.data.roundList;
-      currentRoundId = roundList[num].roundId;
-      lastRoundId = roundList[num - 1].roundId;
-      awardState = roundList[num - 1].awardState;
+      ilII11II.push($.myPlantUuid);
+      liIIIII = $.plantBeanIndexResult.data.roundList;
+      lIll1iI = liIIIII[iiIl1li].roundId;
+      ilil1Il = liIIIII[iiIl1li - 1].roundId;
+      lliiilii = liIIIII[iiIl1li - 1].awardState;
       $.taskList = $.plantBeanIndexResult.data.taskList;
-      subTitle = "【京东昵称】" + $.plantBeanIndexResult.data.plantUserInfo.plantNickName;
-      lnrun++;
-      await doHelp();
-      lnrun == 3 && (console.log("\n【访问接口次数达到3次，休息半分钟.....】\n"), await $.wait(30 * 1000), lnrun = 0);
+      li1IIIlI = "【京东昵称】" + $.plantBeanIndexResult.data.plantUserInfo.plantNickName;
+      i111I1ii++;
+      await iiIlIIil();
+      i111I1ii == 3 && (console.log("\n【访问接口次数达到3次，休息半分钟.....】\n"), await $.wait(30 * 1000), i111I1ii = 0);
       await $.wait(3 * 1000);
     } else console.log("种豆得豆-初始失败:  " + JSON.stringify($.plantBeanIndexResult));
-  } catch (Ii1Il1) {
-    $.logErr(Ii1Il1);
+  } catch (Ilii1) {
+    $.logErr(Ilii1);
   }
 }
-async function doHelp() {
+async function iiIlIIil() {
   console.log("\n【开始账号内互助】\n");
-  $.newShareCode = [...(jdPlantBeanShareArr || [])];
-  for (let I1I11l of $.newShareCode) {
-    console.log("【" + $.UserName + "】开始助力: " + I1I11l);
-    if (!I1I11l) continue;
-    if (I1I11l === $.myPlantUuid || $.plantBeanIndexResult.errorCode === "PB101") {
+  $.newShareCode = [...(ilII11II || [])];
+  for (let IIilIlii of $.newShareCode) {
+    console.log("【" + $.UserName + "】开始助力: " + IIilIlii);
+    if (!IIilIlii) continue;
+    if (IIilIlii === $.myPlantUuid || $.plantBeanIndexResult.errorCode === "PB101") {
       console.log("\n跳过自己的plantUuid\n");
       continue;
     }
-    lnruns++;
-    await helpShare(I1I11l);
-    lnruns == 5 && (console.log("\n【访问接口次数达到5次，休息半分钟.....】\n"), await $.wait(30 * 1000), lnruns = 0);
+    i11liII++;
+    await i1iI11li(IIilIlii);
+    i11liII == 5 && (console.log("\n【访问接口次数达到5次，休息半分钟.....】\n"), await $.wait(30 * 1000), i11liII = 0);
     if ($.helpResult && $.helpResult.code === "0" && $.helpResult.data) {
       console.log("助力好友结果: " + JSON.stringify($.helpResult.data.helpShareRes));
       if ($.helpResult.data && $.helpResult.data.helpShareRes) {
-        if ($.helpResult.data.helpShareRes.state === "1") {
-          console.log("助力好友" + I1I11l + "成功");
-          console.log($.helpResult.data.helpShareRes.promptText + "\n");
-        } else {
+        if ($.helpResult.data.helpShareRes.state === "1") console.log("助力好友" + IIilIlii + "成功"), console.log($.helpResult.data.helpShareRes.promptText + "\n");else {
           if ($.helpResult.data.helpShareRes.state === "2") {
             console.log("您今日助力的机会已耗尽，已不能再帮助好友助力了\n");
             break;
           } else {
-            if ($.helpResult.data.helpShareRes.state === "3") console.log("该好友今日已满9人助力/20瓶营养液,明天再来为Ta助力吧\n");else {
-              if ($.helpResult.data.helpShareRes.state === "4") console.log($.helpResult.data.helpShareRes.promptText + "\n");else {
-                console.log("助力其他情况：" + JSON.stringify($.helpResult.data.helpShareRes));
-              }
-            }
+            if ($.helpResult.data.helpShareRes.state === "3") {
+              console.log("该好友今日已满9人助力/20瓶营养液,明天再来为Ta助力吧\n");
+            } else $.helpResult.data.helpShareRes.state === "4" ? console.log($.helpResult.data.helpShareRes.promptText + "\n") : console.log("助力其他情况：" + JSON.stringify($.helpResult.data.helpShareRes));
           }
         }
       }
@@ -157,165 +148,157 @@ async function doHelp() {
     }
   }
 }
-function showMsg() {
-  $.log("\n" + message + "\n");
-  jdNotify = $.getdata("jdPlantBeanNotify") ? $.getdata("jdPlantBeanNotify") : jdNotify;
-  (!jdNotify || jdNotify === "false") && $.msg($.name, subTitle, message);
+function Iil11Iii() {
+  $.log("\n" + llI1IiI + "\n");
+  ii1ill1I = $.getdata("jdPlantBeanNotify") ? $.getdata("jdPlantBeanNotify") : ii1ill1I;
+  (!ii1ill1I || ii1ill1I === "false") && $.msg($.name, li1IIIlI, llI1IiI);
 }
-async function getReward() {
-  const Ili1iI = {
-    "roundId": lastRoundId
+async function iillI11l() {
+  const lII1Ii1l = {
+    "roundId": ilil1Il
   };
-  $.getReward = await request("receivedBean", Ili1iI);
+  $.getReward = await lI1lI1Ii("receivedBean", lII1Ii1l);
 }
-async function cultureBean(iII11l, i1IiI1) {
-  let iII11i = arguments.callee.name.toString(),
-    l1iI1i = {
-      "roundId": iII11l,
-      "nutrientsType": i1IiI1
-    };
-  $.cultureBeanRes = await request(iII11i, l1iI1i);
+async function iiII1Ii(il1ilI11, Ili1liII) {
+  let l111IlII = {
+    "roundId": il1ilI11,
+    "nutrientsType": Ili1liII
+  };
+  $.cultureBeanRes = await lI1lI1Ii("cultureBean", l111IlII);
 }
-async function stealFriendList() {
-  const I11l = {
+async function IlIlili() {
+  const IllII1 = {
     "pageNum": "1"
   };
-  $.stealFriendList = await request("plantFriendList", I11l);
+  $.stealFriendList = await iI11Ill1("plantFriendList", IllII1);
 }
-async function collectUserNutr(i1IiII) {
+async function ll1i11l1(I11Il1li) {
   console.log("开始偷好友");
-  let l1ll1I = arguments.callee.name.toString();
-  const i1lI1 = {
-    "paradiseUuid": i1IiII,
-    "roundId": currentRoundId
+  const lii1iIll = {
+    "paradiseUuid": I11Il1li,
+    "roundId": lIll1iI
   };
-  $.stealFriendRes = await request(l1ll1I, i1lI1);
+  $.stealFriendRes = await lI1lI1Ii("collectUserNutr", lii1iIll);
 }
-async function receiveNutrients() {
-  $.receiveNutrientsRes = await request("receiveNutrients", {
-    "roundId": currentRoundId,
+async function iI1ilIli() {
+  $.receiveNutrientsRes = await lI1lI1Ii("receiveNutrients", {
+    "roundId": lIll1iI,
     "monitor_refer": "plant_receiveNutrients"
   });
 }
-async function plantEggDoLottery() {
-  $.plantEggDoLotteryResult = await requestGet("plantEggDoLottery");
+async function llIIIIil() {
+  $.plantEggDoLotteryResult = await iiillI1("plantEggDoLottery");
 }
-async function egg() {
-  $.plantEggLotteryRes = await requestGet("plantEggLotteryIndex");
+async function l1iI1l1() {
+  $.plantEggLotteryRes = await iiillI1("plantEggLotteryIndex");
 }
-async function productTaskList() {
-  let i1lII = arguments.callee.name.toString();
-  $.productTaskList = await requestGet(i1lII, {
+async function IiIliliI() {
+  $.productTaskList = await iiillI1("productTaskList", {
     "monitor_refer": "plant_productTaskList"
   });
 }
-async function plantChannelTaskList() {
-  let llIiii = arguments.callee.name.toString();
-  $.plantChannelTaskList = await requestGet(llIiii);
+async function lI1liIIi() {
+  $.plantChannelTaskList = await iI11Ill1("plantChannelTaskList");
 }
-async function shopTaskList() {
-  let IlIi11 = arguments.callee.name.toString();
-  $.shopTaskListRes = await requestGet(IlIi11, {
+async function iI1111li() {
+  $.shopTaskListRes = await iI11Ill1("shopTaskList", {
     "monitor_refer": "plant_receiveNutrients"
   });
 }
-async function receiveNutrientsTask(iIIlIi) {
-  const iilIli = arguments.callee.name.toString(),
-    IlIi1I = {
-      "monitor_refer": "receiveNutrientsTask",
-      "awardType": "" + iIIlIi
-    };
-  $.receiveNutrientsTaskRes = await requestGet(iilIli, IlIi1I);
+async function Ilil1IlI(IllIl1il) {
+  const i1I1lIi = {
+    "monitor_refer": "plant_receiveNutrientsTask",
+    "awardType": "" + IllIl1il
+  };
+  $.receiveNutrientsTaskRes = await iiillI1("receiveNutrientsTask", i1I1lIi);
 }
-async function plantShareSupportList() {
-  $.shareSupportList = await requestGet("plantShareSupportList", {
+async function liIil1il() {
+  $.shareSupportList = await iiillI1("plantShareSupportList", {
     "roundId": ""
   });
   if ($.shareSupportList && $.shareSupportList.code === "0") {
     const {
-        data: l1III
+        data: iiIiIil1
       } = $.shareSupportList,
-      l1I1iI = parseInt((Date.now() + 28800000) / 86400000) * 86400000 - 28800000,
-      III1l1 = parseInt((Date.now() + 28800000) / 86400000) * 86400000 - 28800000 + 24 * 60 * 60 * 1000;
-    let Il111 = [];
-    l1III.map(lIiIli => {
-      l1I1iI <= lIiIli.createTime && lIiIli.createTime < III1l1 && Il111.push(lIiIli);
+      iiIliIii = parseInt((Date.now() + 28800000) / 86400000) * 86400000 - 28800000,
+      ili11lll = parseInt((Date.now() + 28800000) / 86400000) * 86400000 - 28800000 + 24 * 60 * 60 * 1000;
+    let I1ilIIiI = [];
+    iiIiIil1.map(ii1l1l1i => {
+      iiIliIii <= ii1l1l1i.createTime && ii1l1l1i.createTime < ili11lll && I1ilIIiI.push(ii1l1l1i);
     });
-    message += "【助力您的好友】共" + Il111.length + "人";
+    llI1IiI += "【助力您的好友】共" + I1ilIIiI.length + "人";
   } else console.log("异常情况：" + JSON.stringify($.shareSupportList));
 }
-async function helpShare(IiIiii) {
-  console.log("\n开始助力好友: " + IiIiii);
-  const lIiIll = {
-    "plantUuid": IiIiii,
+async function i1iI11li(IIIIilII) {
+  console.log("\n开始助力好友: " + IIIIilII);
+  const ll1III1 = {
+    "plantUuid": IIIIilII,
     "wxHeadImgUrl": "",
     "shareUuid": "",
     "followType": "1"
   };
-  $.helpResult = await request("plantBeanIndex", lIiIll);
+  $.helpResult = await lI1lI1Ii("plantBeanIndex", ll1III1);
 }
-async function plantBeanIndex() {
-  llerror = false;
-  $.plantBeanIndexResult = await request("plantBeanIndex");
+async function li1Il11l() {
+  iIl1liIl = false;
+  $.plantBeanIndexResult = await lI1lI1Ii("plantBeanIndex");
   if ($.plantBeanIndexResult.errorCode === "PB101") {
     console.log("\n活动太火爆了，还是去买买买吧！\n");
-    llerror = true;
+    iIl1liIl = true;
     return;
   }
   if ($.plantBeanIndexResult.errorCode) {
     console.log("获取任务及基本信息出错，10秒后重试\n");
     await $.wait(4000);
-    $.plantBeanIndexResult = await request("plantBeanIndex");
+    $.plantBeanIndexResult = await lI1lI1Ii("plantBeanIndex");
     if ($.plantBeanIndexResult.errorCode === "PB101") {
       console.log("\n活动太火爆了，还是去买买买吧！\n");
-      llerror = true;
+      iIl1liIl = true;
       return;
     }
   }
   if ($.plantBeanIndexResult.errorCode) {
     console.log("获取任务及基本信息出错，30秒后重试\n");
     await $.wait(8000);
-    $.plantBeanIndexResult = await request("plantBeanIndex");
+    $.plantBeanIndexResult = await lI1lI1Ii("plantBeanIndex");
     if ($.plantBeanIndexResult.errorCode === "PB101") {
       console.log("\n活动太火爆了，还是去买买买吧！\n");
-      llerror = true;
+      iIl1liIl = true;
       return;
     }
   }
   if ($.plantBeanIndexResult.errorCode) {
     console.log("获取任务及基本信息失败，活动异常，换个时间再试试吧....");
     console.log("错误代码;" + $.plantBeanIndexResult.errorCode);
-    llerror = true;
+    iIl1liIl = true;
     return;
   }
 }
-function requireConfig() {
-  return new Promise(lill1 => {
-    notify = $.isNode() ? require("./sendNotify") : "";
-    const illIIl = $.isNode() ? require("./jdCookie.js") : "",
-      iiiIlI = "";
+function Ii111iIi() {
+  return new Promise(liIliii1 => {
+    iiliI1lI = $.isNode() ? require("./sendNotify") : "";
+    const i11Illil = $.isNode() ? require("./jdCookie.js") : "",
+      il111l1l = "";
     if ($.isNode()) {
-      Object.keys(illIIl).forEach(I1i11 => {
-        illIIl[I1i11] && cookiesArr.push(illIIl[I1i11]);
+      Object.keys(i11Illil).forEach(iiill1li => {
+        i11Illil[iiill1li] && liIIll1I.push(i11Illil[iiill1li]);
       });
       if (process.env.JD_DEBUG && process.env.JD_DEBUG === "false") console.log = () => {};
-    } else cookiesArr = [$.getdata("CookieJD"), $.getdata("CookieJD2"), ...jsonParse($.getdata("CookiesJD") || "[]").map(Ill1ii => Ill1ii.cookie)].filter(IllII => !!IllII);
-    console.log("共" + cookiesArr.length + "个京东账号\n");
+    } else liIIll1I = [$.getdata("CookieJD"), $.getdata("CookieJD2"), ...IlIl11ii($.getdata("CookiesJD") || "[]").map(i11l1II1 => i11l1II1.cookie)].filter(lllIl1iI => !!lllIl1iI);
+    console.log("共" + liIIll1I.length + "个京东账号\n");
     $.shareCodesArr = [];
-    if ($.isNode()) Object.keys(iiiIlI).forEach(Ill1il => {
-      if (iiiIlI[Ill1il]) {
-        $.shareCodesArr.push(iiiIlI[Ill1il]);
-      }
+    if ($.isNode()) Object.keys(il111l1l).forEach(lIIIiiiI => {
+      il111l1l[lIIIiiiI] && $.shareCodesArr.push(il111l1l[lIIIiiiI]);
     });else {
-      if ($.getdata("jd_plantBean_help_inviter")) $.shareCodesArr = $.getdata("jd_plantBean_help_inviter").split("\n").filter(IllI1 => !!IllI1);
+      if ($.getdata("jd_plantBean_help_inviter")) $.shareCodesArr = $.getdata("jd_plantBean_help_inviter").split("\n").filter(lIi11iII => !!lIi11iII);
     }
-    lill1();
+    liIliii1();
   });
 }
-function krrequestGet(iiiIil, lilll = {}) {
-  return new Promise(async i1i1i1 => {
-    const l1I1i = {
-      "url": JD_API_HOST + "?functionId=" + iiiIil + "&body=" + encodeURIComponent(JSON.stringify(lilll)) + "&appid=signed_wh5&client=apple&area=19_1601_50258_51885&build=167490&clientVersion=9.3.2",
+function iI11Ill1(liiil1lI, IiIIill = {}) {
+  return new Promise(async lI1ll11l => {
+    const il1l1ll1 = {
+      "url": Ii1Ii1ll + "?functionId=" + liiil1lI + "&body=" + encodeURIComponent(JSON.stringify(IiIIill)) + "&appid=signed_wh5&client=apple&area=19_1601_50258_51885&build=167490&clientVersion=9.3.2",
       "headers": {
         "Accept": "*/*",
         "Origin": "https://h5.m.jd.com",
@@ -324,156 +307,115 @@ function krrequestGet(iiiIil, lilll = {}) {
         "Accept-Language": "zh-CN,zh-Hans;q=0.9",
         "Referer": "https://h5.m.jd.com",
         "x-requested-with": "com.jingdong.app.mall",
-        "Cookie": cookie
+        "Cookie": ll1IIliI
       },
       "timeout": 10000
     };
-    $.get(l1I1i, (l1I1l, i11II, IlIi1) => {
+    $.get(il1l1ll1, (illIil1, iI1lIlii, lIi1Iil1) => {
       try {
-        if (l1I1l) {
-          console.log("\n种豆得豆: API查询请求失败 ‼️‼️");
-          $.logErr(l1I1l);
-        } else IlIi1 = JSON.parse(IlIi1);
-      } catch (i1i1ii) {
-        $.logErr(i1i1ii, i11II);
+        illIil1 ? (console.log("\n种豆得豆: API查询请求失败 ‼️‼️"), $.logErr(illIil1)) : lIi1Iil1 = JSON.parse(lIi1Iil1);
+      } catch (li1iI1l1) {
+        $.logErr(li1iI1l1, iI1lIlii);
       } finally {
-        i1i1i1(IlIi1);
+        lI1ll11l(lIi1Iil1);
       }
     });
   });
 }
-function requestGet(IIllII, iil1I1 = {}) {
-  return new Promise(async Ililli => {
-    let i11l1l = "";
-    if (!appidMap[IIllII]) i11l1l = JD_API_HOST + "?functionId=" + IIllII + "&body=" + encodeURIComponent(JSON.stringify(iil1I1)) + "&appid=ld&client=apple&area=19_1601_50258_51885&build=167490&clientVersion=9.3.2";else {
-      !iil1I1.version && (iil1I1.version = "9.2.4.3");
-      iil1I1.monitor_source = "plant_m_plant_index";
-      appidMap[IIllII] == "shopNutrientsTask" && (headers.referer = "https://plantearth.m.jd.com/", headers["x-requested-with"] = "https://plantearth.m.jd.com/");
+function iiillI1(Il11lilI, l1liI1l1 = {}) {
+  return new Promise(async iIiIlli => {
+    let I11liiii = "";
+    if (!i1I1i11i[Il11lilI]) I11liiii = Ii1Ii1ll + "?functionId=" + Il11lilI + "&body=" + encodeURIComponent(JSON.stringify(l1liI1l1)) + "&appid=ld&client=apple&area=19_1601_50258_51885&build=167490&clientVersion=9.3.2";else {
+      if (!l1liI1l1.version) {
+        l1liI1l1.version = "9.2.4.3";
+      }
+      l1liI1l1.monitor_source = "plant_m_plant_index";
+      i1I1i11i[Il11lilI] == "shopNutrientsTask" && (headers.referer = "https://plantearth.m.jd.com/", headers["x-requested-with"] = "https://plantearth.m.jd.com/");
       await $.wait(5000);
-      const i11l1i = {
+      const I1l11lll = {
         "appid": "signed_wh5",
         "client": "android",
         "clientVersion": "10.1.0",
-        "functionId": IIllII,
-        "body": iil1I1
+        "functionId": Il11lilI,
+        "body": l1liI1l1
       };
-      let iI11l1 = await getH5st(appidMap[IIllII], i11l1i);
-      i11l1l = JD_API_HOST + "?" + iI11l1;
+      let IIliII1l = await l1I11llI(i1I1i11i[Il11lilI], I1l11lll);
+      I11liiii = Ii1Ii1ll + "?" + IIliII1l;
     }
-    const IIllIl = {
-      "url": i11l1l,
+    const IiIiiiIl = {
+      "url": I11liiii,
       "headers": {
         "Accept": "*/*",
         "Accept-Encoding": "gzip,deflate,br",
         "User-Agent": $.UA,
         "Accept-Language": "zh-CN,zh-Hans;q=0.9",
         "Referer": "https://plantearth.m.jd.com/plantBean/index?source=lingjingdouqiandaorili&sid=4638f2f389065566747fbdb06702d79w&un_area=4_133_58530_0",
-        "Cookie": cookie
+        "Cookie": ll1IIliI
       },
       "timeout": 20000
     };
-    $.get(IIllIl, (IlIii, iI11lI, II1i11) => {
+    $.get(IiIiiiIl, (iIlIllIi, l1lIIIii, IlIl1l11) => {
       try {
-        IlIii ? (console.log("\n种豆得豆: API查询请求失败 ‼️‼️"), console.log(IlIii), $.logErr(IlIii)) : II1i11 = JSON.parse(II1i11);
-      } catch (I1liI1) {
-        $.logErr(I1liI1, iI11lI);
+        iIlIllIi ? (console.log("\n种豆得豆: API查询请求失败 ‼️‼️"), console.log(iIlIllIi), $.logErr(iIlIllIi)) : IlIl1l11 = JSON.parse(IlIl1l11);
+      } catch (liII1i) {
+        $.logErr(liII1i, l1lIIIii);
       } finally {
-        Ililli(II1i11);
+        iIiIlli(IlIl1l11);
       }
     });
   });
 }
-function TotalBean() {
-  return new Promise(async l1Ilii => {
-    const I111i1 = {
-      "url": "https://wq.jd.com/user/info/QueryJDUserInfo?sceneval=2",
-      "headers": {
-        "Accept": "application/json,text/plain, */*",
-        "Content-Type": "application/x-www-form-urlencoded",
-        "Accept-Encoding": "gzip, deflate, br",
-        "Accept-Language": "zh-cn",
-        "Connection": "keep-alive",
-        "Cookie": cookie,
-        "Referer": "https://wqs.jd.com/my/jingdou/my.shtml?sceneval=2",
-        "User-Agent": $.isNode() ? process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : require("./USER_AGENTS").USER_AGENT : $.getdata("JDUA") ? $.getdata("JDUA") : "jdapp;iPhone;9.4.4;14.3;network/4g;Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1"
-      },
-      "timeout": 20000
-    };
-    $.post(I111i1, (IlIli, liIIIl, iliil1) => {
-      try {
-        if (IlIli) {
-          console.log("" + JSON.stringify(IlIli));
-          console.log($.name + " API请求失败，请检查网路重试");
-        } else {
-          if (iliil1) {
-            iliil1 = JSON.parse(iliil1);
-            if (iliil1.retcode === 13) {
-              $.isLogin = false;
-              return;
-            }
-            iliil1.retcode === 0 ? $.nickName = iliil1.base && iliil1.base.nickname || $.UserName : $.nickName = $.UserName;
-          } else {
-            console.log("京东服务器返回空数据");
-          }
-        }
-      } catch (l1IliI) {
-        $.logErr(l1IliI, liIIIl);
-      } finally {
-        l1Ilii();
-      }
-    });
-  });
-}
-function request(iIilI, liii = {}) {
-  return new Promise(async lili => {
-    let IIl11I = "";
-    if (!appidMap[iIilI]) {
-      IIl11I = JD_API_HOST + "?functionId=" + iIilI + "&body=" + encodeURIComponent(JSON.stringify(liii)) + "&appid=ld&client=apple&area=19_1601_50258_51885&build=167490&clientVersion=9.3.2";
-    } else {
-      liii.version = "9.2.4.3";
-      liii.monitor_source = "plant_m_plant_index";
-      if (!liii.monitor_refer) {
-        liii.monitor_refer = "";
-      }
-      const illII1 = {
+function lI1lI1Ii(I1i111i1, iiIlii1I = {}) {
+  return new Promise(async ilI1iIli => {
+    let I1l1IIiI = "";
+    if (!i1I1i11i[I1i111i1]) I1l1IIiI = Ii1Ii1ll + "?functionId=" + I1i111i1 + "&body=" + encodeURIComponent(JSON.stringify(iiIlii1I)) + "&appid=ld&client=apple&area=19_1601_50258_51885&build=167490&clientVersion=9.3.2";else {
+      iiIlii1I.version = "9.2.4.3";
+      iiIlii1I.monitor_source = "plant_m_plant_index";
+      !iiIlii1I.monitor_refer && (iiIlii1I.monitor_refer = "");
+      const i11li1li = {
         "appid": "signed_wh5",
         "client": "android",
         "clientVersion": "10.1.0",
-        "functionId": iIilI,
-        "body": liii
+        "functionId": I1i111i1,
+        "body": iiIlii1I
       };
-      let Il1iii = await getH5st(appidMap[iIilI], illII1);
-      IIl11I = JD_API_HOST + "?" + Il1iii;
+      let IlII1IiI = await l1I11llI(i1I1i11i[I1i111i1], i11li1li);
+      I1l1IIiI = Ii1Ii1ll + "?" + IlII1IiI;
     }
     await $.wait(5000);
-    let i11IIi = {
-      "url": IIl11I,
+    let iIilillI = {
+      "url": I1l1IIiI,
       "headers": {
         "Accept": "*/*",
         "Accept-Encoding": "gzip,deflate,br",
         "User-Agent": $.UA,
         "Accept-Language": "zh-CN,zh-Hans;q=0.9",
         "Referer": "https://plantearth.m.jd.com/plantBean/index?source=lingjingdouqiandaorili&sid=4638f2f389065566747fbdb06702d79w&un_area=4_133_58530_0",
-        "Cookie": cookie
+        "Cookie": ll1IIliI
       },
       "timeout": 10000
     };
-    $.get(i11IIi, async (iIiil, IIiIIi, lilI) => {
+    $.get(iIilillI, async (Ii11iii1, i1liI1Il, iiIIlliI) => {
       try {
-        if (iIiil) {
+        if (Ii11iii1) {
           console.log("\n种豆得豆: API查询请求失败 ‼️‼️");
-          console.log("function_id:" + iIilI);
-          $.logErr(iIiil);
-        } else lilI.indexOf("data") > -1 ? lilI = JSON.parse(lilI) : (lilI = JSON.parse(lilI), console.log(lilI.errorMessage));
-      } catch (ii1iIi) {
-        $.logErr(ii1iIi, IIiIIi);
+          console.log("function_id:" + I1i111i1);
+          $.logErr(Ii11iii1);
+        } else {
+          if (iiIIlliI.indexOf("data") > -1) iiIIlliI = JSON.parse(iiIIlliI);else {
+            iiIIlliI = JSON.parse(iiIIlliI);
+            console.log(iiIIlliI.errorMessage);
+          }
+        }
+      } catch (IlIIiIII) {
+        $.logErr(IlIIiIII, i1liI1Il);
       } finally {
-        lili(lilI);
+        ilI1iIli(iiIIlliI);
       }
     });
   });
 }
-const appidMap = {
+const i1I1i11i = {
   "plantBeanIndex": "d246a",
   "receiveNutrients": "b56b8",
   "cultureBean": "6a216",
@@ -484,173 +426,108 @@ const appidMap = {
   "productNutrientsTask": "a4e2d",
   "collectUserNutr": "14357"
 };
-async function taskUrl(i11III, ii1iIl) {
-  ii1iIl.version = "9.2.4.3";
-  ii1iIl.monitor_source = "plant_app_plant_index";
-  !ii1iIl.monitor_refer && (ii1iIl.monitor_refer = "");
-  if (!appidMap[i11III]) {} else {
-    const l1iiiI = {
+async function ll1il11l(lIlIIIIl, lIIliII1) {
+  lIIliII1.version = "9.2.4.3";
+  lIIliII1.monitor_source = "plant_app_plant_index";
+  !lIIliII1.monitor_refer && (lIIliII1.monitor_refer = "");
+  if (!i1I1i11i[lIlIIIIl]) {} else {
+    const ilI11iIi = {
       "appid": "signed_wh5",
       "client": "android",
       "clientVersion": "10.1.0",
-      "functionId": i11III,
-      "body": ii1iIl
+      "functionId": lIlIIIIl,
+      "body": lIIliII1
     };
   }
   return {
-    "url": JD_API_HOST + "?" + h5st,
+    "url": Ii1Ii1ll + "?" + h5st,
     "headers": {
       "Accept": "*/*",
       "Accept-Encoding": "gzip,deflate,br",
       "User-Agent": $.UA,
       "Accept-Language": "zh-CN,zh-Hans;q=0.9",
       "Referer": "https://plantearth.m.jd.com/plantBean/index?source=lingjingdouqiandaorili&sid=4638f2f389065566747fbdb06702d79w&un_area=4_133_58530_0",
-      "Cookie": cookie
+      "Cookie": ll1IIliI
     },
     "timeout": 10000
   };
 }
-async function getH5st(appId, add) {
-  if( !$.H5ST31[$.UserName] ) $.H5ST31[$.UserName]={}
-  if( !$.H5ST31[$.UserName][appId] ){
-    $.H5ST31[$.UserName][appId]= new H5ST({
-      "appId": appId,
-        ...add,
-        "version":"3.1",
-        "ua": $.UA,
-        "pin": $.UserName
+async function l1I11llI(IillI11l, II1Ili1l) {
+  try {
+    let i1I1IIII = new l11IIi1l({
+      "appId": IillI11l,
+      "appid": "signed_wh5",
+      "clientVersion": II1Ili1l?.["clientVersion"],
+      "client": II1Ili1l?.["client"],
+      "pin": $.UserName,
+      "ua": $.UA,
+      "version": "4.1"
     });
-    await $.H5ST31[$.UserName][appId].genAlgo();
-  };
-  return $.H5ST31[$.UserName][appId].genUrlParams(add.functionId,add.body|{});
+    return await i1I1IIII.genAlgo(), body = await i1I1IIII.genUrlParams(II1Ili1l.functionId, II1Ili1l.body), body;
+  } catch (iI1lI1ii) {}
 }
-
-function randomString(il1IlI, I1IIIi = "qwertyuiopasdfghjklzxcvbnm") {
-  let li11I1 = "";
-  for (let il1Il1 = 0; il1Il1 < il1IlI; il1Il1++) {
-    li11I1 += I1IIIi[Math.floor(Math.random() * I1IIIi.length)];
-  }
-  return li11I1;
-}
-function json2str(li11II, Ii1li = {}) {
-  let iIllI = [],
-    iIiIl1 = Ii1li.connector || "&",
-    i1I11I = Object.keys(li11II);
-  if (Ii1li.sort) i1I11I = i1I11I.sort();
-  for (let liII1i of i1I11I) {
-    let iIiIil = li11II[liII1i];
-    if (iIiIil && typeof iIiIil === "object") iIiIil = JSON.stringify(iIiIil);
-    if (iIiIil && Ii1li.encode) iIiIil = encodeURIComponent(iIiIil);
-    iIllI.push(liII1i + "=" + iIiIil);
-  }
-  return iIllI.join(iIiIl1);
-}
-function randomList(iIiIii) {
-  return iIiIii[Math.floor(Math.random() * iIiIii.length)];
-}
-function randomUuid(i1I11i = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx", lI1l = "0123456789abcdef") {
-  let i1I11l = "";
-  for (let l11li1 of i1I11i) {
-    if (l11li1 == "x") i1I11l += lI1l.charAt(Math.floor(Math.random() * lI1l.length));else l11li1 == "X" ? i1I11l += lI1l.charAt(Math.floor(Math.random() * lI1l.length)).toUpperCase() : i1I11l += l11li1;
-  }
-  return i1I11l;
-}
-function _utf8_encode(liII1I) {
-  liII1I = liII1I.replace(/rn/g, "n");
-  var iIlil = "";
-  for (var lIiII1 = 0; lIiII1 < liII1I.length; lIiII1++) {
-    var iIlii = liII1I.charCodeAt(lIiII1);
-    if (iIlii < 128) iIlil += String.fromCharCode(iIlii);else {
-      if (iIlii > 127 && iIlii < 2048) {
-        iIlil += String.fromCharCode(iIlii >> 6 | 192);
-        iIlil += String.fromCharCode(iIlii & 63 | 128);
-      } else {
-        iIlil += String.fromCharCode(iIlii >> 12 | 224);
-        iIlil += String.fromCharCode(iIlii >> 6 & 63 | 128);
-        iIlil += String.fromCharCode(iIlii & 63 | 128);
-      }
-    }
-  }
-  return iIlil;
-}
-function base64_mod_encode(l11lil, iIllli) {
-  iIllli = iIllli || base64_mod_charset;
-  var IIlIil = "";
-  var l11llI, i1IlIi, i1IlIl, ll1IIi, IlIiI1, ll1IIl, l11ll1;
-  var iIlllI = 0;
-  l11lil = _utf8_encode(l11lil);
-  while (iIlllI < l11lil.length) {
-    l11llI = l11lil.charCodeAt(iIlllI++);
-    i1IlIi = l11lil.charCodeAt(iIlllI++);
-    i1IlIl = l11lil.charCodeAt(iIlllI++);
-    ll1IIi = l11llI >> 2;
-    IlIiI1 = (l11llI & 3) << 4 | i1IlIi >> 4;
-    ll1IIl = (i1IlIi & 15) << 2 | i1IlIl >> 6;
-    l11ll1 = i1IlIl & 63;
-    if (isNaN(i1IlIi)) ll1IIl = l11ll1 = 64;else isNaN(i1IlIl) && (l11ll1 = 64);
-    IIlIil = IIlIil + iIllli.charAt(ll1IIi) + iIllli.charAt(IlIiI1) + iIllli.charAt(ll1IIl) + iIllli.charAt(l11ll1);
-  }
-  while (IIlIil.length % 4 > 1) IIlIil += "=";
-  return IIlIil;
-}
-function get_ep(l1II11 = {}) {
-  let ll1l1i = {
-    "ciphertype": 5,
-    "cipher": {
-      "ud": base64_mod_encode(cryptoJS.SHA1($.UserName).toString()),
-      "sv": base64_mod_encode($.os_ver),
-      "iad": ""
-    },
-    "ts": Date.now(),
-    "hdid": "JM9F1ywUPwflvMIpYPok0tt5k9kW4ArJEU3lfLhxBqw=",
-    "version": "1.0.3",
-    "appname": "com.360buy.jdmobile",
-    "ridx": -1
-  };
-  $.ep = JSON.stringify(ll1l1i);
-}
-function get_ua(iIl1Il, il111i = {}) {
-  const l111Ii = {
-      "jd": {
-        "app": "jdapp",
-        "appBuild": "168392",
-        "client": "android",
-        "clientVersion": "10.1.0"
+async function iI1lI1l(lIIiliIl, IIll1l) {
+  let llIli11 = {
+      "searchParams": {
+        ...IIll1l,
+        "appId": lIIiliIl
       },
-      "lite": {
-        "app": "jdltapp",
-        "appBuild": "1247",
-        "client": "ios",
-        "clientVersion": "6.0.0"
-      }
+      "pt_pin": $.UserName,
+      "client": IIll1l?.["client"],
+      "clientVersion": IIll1l?.["clientVersion"]
     },
-    lI1i11 = ["15.1.1", "14.5.1", "14.4", "14.3", "14.2", "14.1", "14.0.1", "13.2"];
-  $.os_ver = randomList(lI1i11);
-  let lili1I = iIl1Il || "jd",
-    i1iiII = il111i?.["ep"] ? il111i?.["ep"] : true;
-  if (!l111Ii[lili1I]) {
-    console.log("获取[" + lili1I + "]UA失败");
-    return;
-  }
-  $.client = il111i?.["client"] ? il111i?.["client"] : l111Ii[lili1I].client;
-  $.clientVersion = il111i?.["clientVersion"] ? il111i?.["clientVersion"] : l111Ii[lili1I].clientVersion;
-  $.sua = "iPhone; CPU iPhone OS " + $.os_ver.replace(".", "_") + " like Mac OS X";
-  let l111Il = "android";
-  $.client == "apple" && (l111Il = "iPhone");
-  get_ep();
-  let I1III = [l111Ii[lili1I].app, l111Il, $.clientVersion, "", "rn/" + randomUuid(), "M/5.0", "hasUPPay/0", "pushNoticeIsOpen/0", "lang/zh_CN", "hasOCPay/0", "appBuild/" + l111Ii[lili1I].appBuild, "supportBestPay/0", "jdSupportDarkMode/0", "ef/1", i1iiII ? "ep/" + encodeURIComponent($.ep) : "", "Mozilla/5.0 (" + $.sua + ") AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148", "supportJDSHWK/1", ""];
-  $.UA = I1III.join(";");
+    lIliiiIl = {
+      "Content-Type": "application/json",
+      "User-Agent": $.UA
+    },
+    iiiI1Iii = {
+      "url": "http://h5st.kingran.cf/api/h5st",
+      "body": JSON.stringify(llIli11),
+      "headers": lIliiiIl,
+      "timeout": 30000
+    };
+  return new Promise(async iIl1I11 => {
+    $.post(iiiI1Iii, (llilli1l, il1llIi, lIiillIi) => {
+      let liIiI1I1 = "";
+      try {
+        if (llilli1l) console.log($.name + " getH5st API请求失败，请检查网路重试");else {
+          lIiillIi = JSON.parse(lIiillIi);
+          console.log(JSON.stringify(lIiillIi));
+          if (typeof lIiillIi === "object" && lIiillIi && lIiillIi.body) {
+            if (lIiillIi.body) liIiI1I1 = lIiillIi || "";
+          } else lIiillIi.code == 400 ? console.log("\n" + lIiillIi.msg) : console.log("\n可能连接不上接口，请检查网络");
+        }
+      } catch (I1l1lIll) {
+        $.logErr(I1l1lIll, il1llIi);
+      } finally {
+        iIl1I11(lIlilli(liIiI1I1));
+      }
+    });
+  });
 }
-function getParam(l1II1l, i1IIlI) {
-  const il1lII = new RegExp("(^|&)" + i1IIlI + "=([^&]*)(&|$)", "i"),
-    iIi111 = l1II1l.match(il1lII);
-  if (iIi111 != null) return unescape(iIi111[2]);
+function lIlilli(lililiil, iIIi11l = {}) {
+  let ll1llil1 = [],
+    liiIIlii = iIIi11l.connector || "&",
+    l11illI1 = Object.keys(lililiil);
+  if (iIIi11l.sort) l11illI1 = l11illI1.sort();
+  for (let iilII1Il of l11illI1) {
+    let iiiiii1l = lililiil[iilII1Il];
+    if (iiiiii1l && typeof iiiiii1l === "object") iiiiii1l = JSON.stringify(iiiiii1l);
+    if (iiiiii1l && iIIi11l.encode) iiiiii1l = encodeURIComponent(iiiiii1l);
+    ll1llil1.push(iilII1Il + "=" + iiiiii1l);
+  }
+  return ll1llil1.join(liiIIlii);
+}
+function iilil1ii(I1i1IilI, llIl1i1i) {
+  const I1il1il = new RegExp("(^|&)" + llIl1i1i + "=([^&]*)(&|$)", "i"),
+    lil1IIi1 = I1i1IilI.match(I1il1il);
+  if (lil1IIi1 != null) return unescape(lil1IIi1[2]);
   return null;
 }
-function jsonParse(i111li) {
-  if (typeof i111li == "string") try {
-    return JSON.parse(i111li);
-  } catch (IliI) {
-    return console.log(IliI), $.msg($.name, "", "请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie"), [];
+function IlIl11ii(iIIi) {
+  if (typeof iIIi == "string") try {
+    return JSON.parse(iIIi);
+  } catch (iiiii1l1) {
+    return console.log(iiiii1l1), $.msg($.name, "", "请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie"), [];
   }
 }

@@ -15,156 +15,162 @@ export HELP_JOYPARK=""
 */
 const Env=require('./utils/Env.js');
 const $ = new Env('京东极简版-汪汪乐园助力');
-const Iliii = $.isNode() ? require("./jdCookie.js") : "",
-  illlii = $.isNode() ? require("./sendNotify") : "",
-  l1i1i = require("./function/krgetua");
-let I1iI1i = [],
-  l1i1l = "";
+const I1ll1I = $.isNode() ? require("./jdCookie.js") : "",
+  Iii1I1 = $.isNode() ? require("./sendNotify") : "",
+  Iii1II = require("./function/jdCommon"),
+  llIlI = require("./utils/h5st.js");
+let l1iIil = [],
+  l1iIii = "";
 if ($.isNode()) {
-  Object.keys(Iliii).forEach(l11iI1 => {
-    I1iI1i.push(Iliii[l11iI1]);
+  Object.keys(I1ll1I).forEach(illlli => {
+    l1iIil.push(I1ll1I[illlli]);
   });
   if (process.env.JD_DEBUG && process.env.JD_DEBUG === "false") console.log = () => {};
-} else I1iI1i = [$.getdata("CookieJD"), $.getdata("CookieJD2"), ...l1i11i($.getdata("CookiesJD") || "[]").map(IliiI => IliiI.cookie)].filter(lI111i => !!lI111i);
+} else l1iIil = [$.getdata("CookieJD"), $.getdata("CookieJD2"), ...l1iIiI($.getdata("CookiesJD") || "[]").map(illlll => illlll.cookie)].filter(IIIIiI => !!IIIIiI);
 $.invitePinTaskList = [];
 $.invitePin = ["VxQJC6Sr0QZkcOHwxoTjrw", "oRY9YryofcNg71MZeKSZseKD6P6BJzKv2NBGxfiuJ20", "EDPUVDhR7nUPh3jUGDJ_GyiLt77-wROqWVP2aesRUt8", "QLCSd3I8GUplWsqAeZgqj5cmfo7gRSGyIsykew6KYP0", "BAOqoW7t-bamG2ZDWN_J26cFJ_A0SVf5Vy3lH5czbXI", "1S5w5yU9UZYDq76-t7SPlQ", "7m1cAPHveE9Di9IDPS3EfA", "Zi6CMKqNUANQa1m3j3NulA", "DYnxFupX6XXdfmBd02SWdg", "44woUzTfOdg9yFCt7D69MZf_Z_eaGdDs73z1eAfGDZo", "s1HgT4EXmMeUQzWIrsk4Ag"];
-let illlil = Date.now();
+let II1II = Date.now();
 message = "";
 !(async () => {
-  if (!I1iI1i[0]) {
+  if (!l1iIil[0]) {
     $.msg($.name, "【提示】请先获取cookie\n直接使用NobyDa的京东签到获取", "https://bean.m.jd.com/", {
       "open-url": "https://bean.m.jd.com/"
     });
     return;
   }
-  for (let iiI1iI = 0; iiI1iI < I1iI1i.length; iiI1iI++) {
-    l1i1l = I1iI1i[iiI1iI];
-    if (l1i1l) {
-      $.UserName = decodeURIComponent(l1i1l.match(/pt_pin=([^; ]+)(?=;?)/) && l1i1l.match(/pt_pin=([^; ]+)(?=;?)/)[1]);
-      $.index = iiI1iI + 1;
+  for (let Illlil = 0; Illlil < l1iIil.length; Illlil++) {
+    l1iIii = l1iIil[Illlil];
+    if (l1iIii) {
+      $.UserName = decodeURIComponent(l1iIii.match(/pt_pin=([^; ]+)(?=;?)/) && l1iIii.match(/pt_pin=([^; ]+)(?=;?)/)[1]);
+      $.index = Illlil + 1;
       $.isLogin = true;
       $.nickName = "";
       $.openIndex = 0;
-      UA = await l1i1i($.UserName);
+      $.UA = Iii1II.genUA($.UserName);
       console.log("\n******开始【京东账号" + $.index + "】" + ($.nickName || $.UserName) + "******\n");
       if (!$.isLogin) {
         $.msg($.name, "【提示】cookie已失效", "京东账号" + $.index + " " + ($.nickName || $.UserName) + "\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action", {
           "open-url": "https://bean.m.jd.com/bean/signIndex.action"
         });
-        $.isNode() && (await illlii.sendNotify($.name + "cookie已失效 - " + $.UserName, "京东账号" + $.index + " " + $.UserName + "\n请重新登录获取cookie"));
+        if ($.isNode()) {
+          await Iii1I1.sendNotify($.name + "cookie已失效 - " + $.UserName, "京东账号" + $.index + " " + $.UserName + "\n请重新登录获取cookie");
+        }
         continue;
       }
       if ($.isNode()) {
         if (process.env.HELP_JOYPARK && process.env.HELP_JOYPARK == "false") {} else {
           $.kgw_invitePin = ["EDPUVDhR7nUPh3jUGDJ_GyiLt77-wROqWVP2aesRUt8", "QLCSd3I8GUplWsqAeZgqj5cmfo7gRSGyIsykew6KYP0", "BAOqoW7t-bamG2ZDWN_J26cFJ_A0SVf5Vy3lH5czbXI", "1S5w5yU9UZYDq76-t7SPlQ", "7m1cAPHveE9Di9IDPS3EfA", "Zi6CMKqNUANQa1m3j3NulA", "DYnxFupX6XXdfmBd02SWdg", "44woUzTfOdg9yFCt7D69MZf_Z_eaGdDs73z1eAfGDZo", "s1HgT4EXmMeUQzWIrsk4Ag"][Math.floor(Math.random() * 11)];
           await $.wait(parseInt(Math.random() * 2000 + 3000, 10));
-          let Illll1 = await l1ilI1("", 2, $.kgw_invitePin);
+          let Illlii = await liiill("", 2, $.kgw_invitePin);
           await $.wait(parseInt(Math.random() * 2000 + 3000, 10));
-          if (Illll1.data && Illll1.data.helpState && Illll1.data.helpState === 1) {} else {
-            if (Illll1.data && Illll1.data.helpState && Illll1.data.helpState === 3) {} else {
-              if (Illll1.data && Illll1.data.helpState && Illll1.data.helpState === 2) $.openIndex++;else {}
+          if (Illlii.data && Illlii.data.helpState && Illlii.data.helpState === 1) {} else {
+            if (Illlii.data && Illlii.data.helpState && Illlii.data.helpState === 3) {} else {
+              if (Illlii.data && Illlii.data.helpState && Illlii.data.helpState === 2) $.openIndex++;else {}
             }
           }
         }
       }
       await $.wait(parseInt(Math.random() * 2000 + 3000, 10));
-      await l1ilI1();
+      await liiill();
       await $.wait(parseInt(Math.random() * 2000 + 3000, 10));
-      if ($.joyBaseInfo && $.joyBaseInfo.invitePin) {
-        $.log($.name + " - " + $.UserName + "  助力码: " + $.joyBaseInfo.invitePin);
-        $.invitePinTaskList.push($.joyBaseInfo.invitePin);
-      } else {
+      if ($.joyBaseInfo && $.joyBaseInfo.invitePin) $.log($.name + " - " + $.UserName + "  助力码: " + $.joyBaseInfo.invitePin), $.invitePinTaskList.push($.joyBaseInfo.invitePin);else {
         $.log($.name + " - " + $.UserName + "  助力码: null");
         $.invitePinTaskList.push("");
         $.isLogin = false;
         $.log("服务端异常，尝试手动进入活动，入口：京东极简版-汪汪乐园");
         continue;
       }
-      await I1lIIl();
+      await IIIIii();
       await $.wait(parseInt(Math.random() * 1000 + 1000, 10));
-      for (const lI1iil of $.taskList) {
-        lI1iil.taskType === "SIGN" && ($.log("" + lI1iil.taskTitle), await l1l1Il(lI1iil.id, lI1iil.taskType, undefined), await $.wait(parseInt(Math.random() * 1000 + 1000, 10)), $.log(lI1iil.taskTitle + " 领取奖励"), await IIIIlI(lI1iil.id, lI1iil.taskType), await $.wait(parseInt(Math.random() * 1000 + 1000, 10)));
-        if (lI1iil.taskType === "BROWSE_PRODUCT" || lI1iil.taskType === "BROWSE_CHANNEL" && lI1iil.taskLimitTimes !== 1) {
-          let iIiiiI = await l1l1Ii(lI1iil.id, lI1iil.taskType);
+      for (const I1iill of $.taskList) {
+        if (I1iill.taskType === "SIGN") {
+          $.log("" + I1iill.taskTitle);
+          await IIIIil(I1iill.id, I1iill.taskType, undefined);
           await $.wait(parseInt(Math.random() * 1000 + 1000, 10));
-          let ilI11i = 0;
-          if (iIiiiI.length === 0) {
-            let li1I = await IIIIlI(lI1iil.id, lI1iil.taskType);
+          $.log(I1iill.taskTitle + " 领取奖励");
+          await I1ll11(I1iill.id, I1iill.taskType);
+          await $.wait(parseInt(Math.random() * 1000 + 1000, 10));
+        }
+        if (I1iill.taskType === "BROWSE_PRODUCT" || I1iill.taskType === "BROWSE_CHANNEL" && I1iill.taskLimitTimes !== 1) {
+          let lIl1li = await liiili(I1iill.id, I1iill.taskType);
+          await $.wait(parseInt(Math.random() * 1000 + 1000, 10));
+          let Il1I1 = 0;
+          if (lIl1li.length === 0) {
+            let lIilii = await I1ll11(I1iill.id, I1iill.taskType);
             await $.wait(parseInt(Math.random() * 1000 + 1000, 10));
-            !li1I.success && ($.log(lI1iil.taskTitle + "|" + lI1iil.taskShowTitle + " 领取完成!"), iIiiiI = await l1l1Ii(lI1iil.id, lI1iil.taskType), await $.wait(parseInt(Math.random() * 1000 + 1000, 10)));
+            !lIilii.success && ($.log(I1iill.taskTitle + "|" + I1iill.taskShowTitle + " 领取完成!"), lIl1li = await liiili(I1iill.id, I1iill.taskType), await $.wait(parseInt(Math.random() * 1000 + 1000, 10)));
           }
-          while (lI1iil.taskLimitTimes - lI1iil.taskDoTimes >= 0) {
-            if (iIiiiI.length === 0) {
-              $.log(lI1iil.taskTitle + " 活动火爆，素材库没有素材，我也不知道啥回事 = = ");
+          while (I1iill.taskLimitTimes - I1iill.taskDoTimes >= 0) {
+            if (lIl1li.length === 0) {
+              $.log(I1iill.taskTitle + " 活动火爆，素材库没有素材，我也不知道啥回事 = = ");
               break;
             }
-            $.log(lI1iil.taskTitle + " " + lI1iil.taskDoTimes + "/" + lI1iil.taskLimitTimes);
-            let ll1liI = await l1l1Il(lI1iil.id, lI1iil.taskType, iIiiiI[ilI11i].itemId, "activities_platform");
+            $.log(I1iill.taskTitle + " " + I1iill.taskDoTimes + "/" + I1iill.taskLimitTimes);
+            let lIilil = await IIIIil(I1iill.id, I1iill.taskType, lIl1li[Il1I1].itemId, "activities_platform");
             await $.wait(parseInt(Math.random() * 1000 + 1000, 10));
-            ll1liI.code === 2005 || ll1liI.code === 0 ? $.log(lI1iil.taskTitle + "|" + lI1iil.taskShowTitle + " 任务完成！") : $.log("任务失败！");
-            ilI11i++;
-            lI1iil.taskDoTimes++;
-            if (!iIiiiI[ilI11i]) {
+            lIilil.code === 2005 || lIilil.code === 0 ? $.log(I1iill.taskTitle + "|" + I1iill.taskShowTitle + " 任务完成！") : $.log("任务失败！");
+            Il1I1++;
+            I1iill.taskDoTimes++;
+            if (!lIl1li[Il1I1]) {
               break;
             }
           }
-          for (let iIIlll = 0; iIIlll < lI1iil.taskLimitTimes; iIIlll++) {
-            let iiI1il = await IIIIlI(lI1iil.id, lI1iil.taskType);
+          for (let Ii111 = 0; Ii111 < I1iill.taskLimitTimes; Ii111++) {
+            let Ii1III = await I1ll11(I1iill.id, I1iill.taskType);
             await $.wait(parseInt(Math.random() * 1000 + 1000, 10));
-            if (!iiI1il.success) {
-              $.log(lI1iil.taskTitle + "|" + lI1iil.taskShowTitle + " 领取完成!");
+            if (!Ii1III.success) {
+              $.log(I1iill.taskTitle + "|" + I1iill.taskShowTitle + " 领取完成!");
               break;
             }
           }
         } else {
-          if (lI1iil.taskType === "SHARE_INVITE") {
-            $.yq_taskid = lI1iil.id;
-            for (let iiI1ii = 0; iiI1ii < 5; iiI1ii++) {
-              let lilii1 = await IIIIlI($.yq_taskid, "SHARE_INVITE");
+          if (I1iill.taskType === "SHARE_INVITE") {
+            $.yq_taskid = I1iill.id;
+            for (let ilIIi1 = 0; ilIIi1 < 5; ilIIi1++) {
+              let l111i = await I1ll11($.yq_taskid, "SHARE_INVITE");
               await $.wait(parseInt(Math.random() * 1000 + 1000, 10));
-              if (!lilii1.success) break;
+              if (!l111i.success) break;
               $.log("领取助力奖励成功！");
             }
           }
         }
-        lI1iil.taskType === "BROWSE_CHANNEL" && lI1iil.taskLimitTimes === 1 && ($.log(lI1iil.taskTitle + "|" + lI1iil.taskShowTitle), await lil1I(lI1iil.id, lI1iil.taskType, lI1iil.taskSourceUrl), $.log(lI1iil.taskTitle + "|" + lI1iil.taskShowTitle + " 领取奖励"), await IIIIlI(lI1iil.id, lI1iil.taskType));
+        I1iill.taskType === "BROWSE_CHANNEL" && I1iill.taskLimitTimes === 1 && ($.log(I1iill.taskTitle + "|" + I1iill.taskShowTitle), await lI1lIl(I1iill.id, I1iill.taskType, I1iill.taskSourceUrl), $.log(I1iill.taskTitle + "|" + I1iill.taskShowTitle + " 领取奖励"), await I1ll11(I1iill.id, I1iill.taskType));
       }
     }
   }
   $.log("\n======汪汪乐园开始内部互助======\n");
-  for (let ll1lil = 0; ll1lil < I1iI1i.length; ll1lil++) {
-    l1i1l = I1iI1i[ll1lil];
-    if (l1i1l) {
-      $.UserName = decodeURIComponent(l1i1l.match(/pt_pin=([^; ]+)(?=;?)/) && l1i1l.match(/pt_pin=([^; ]+)(?=;?)/)[1]);
-      $.index = ll1lil + 1;
+  for (let lilili = 0; lilili < l1iIil.length; lilili++) {
+    l1iIii = l1iIil[lilili];
+    if (l1iIii) {
+      $.UserName = decodeURIComponent(l1iIii.match(/pt_pin=([^; ]+)(?=;?)/) && l1iIii.match(/pt_pin=([^; ]+)(?=;?)/)[1]);
+      $.index = lilili + 1;
       $.isLogin = true;
       $.nickName = "";
+      $.UA = Iii1II.genUA($.UserName);
       console.log("\n******开始【京东账号" + $.index + "】" + ($.nickName || $.UserName) + "*********\n");
       if (!$.isLogin) {
         $.msg($.name, "【提示】cookie已失效", "京东账号" + $.index + " " + ($.nickName || $.UserName) + "\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action", {
           "open-url": "https://bean.m.jd.com/bean/signIndex.action"
         });
-        $.isNode() && (await illlii.sendNotify($.name + "cookie已失效 - " + $.UserName, "京东账号" + $.index + " " + $.UserName + "\n请重新登录获取cookie"));
+        if ($.isNode()) {
+          await Iii1I1.sendNotify($.name + "cookie已失效 - " + $.UserName, "京东账号" + $.index + " " + $.UserName + "\n请重新登录获取cookie");
+        }
         continue;
       }
       $.newinvitePinTaskList = [...($.invitePinTaskList || []), ...($.invitePin || [])];
-      for (const I1Illi of $.newinvitePinTaskList) {
-        $.log("【京东账号" + $.index + "】" + ($.nickName || $.UserName) + " 助力 " + I1Illi);
+      for (const iIiili of $.newinvitePinTaskList) {
+        $.log("【京东账号" + $.index + "】" + ($.nickName || $.UserName) + " 助力 " + iIiili);
         await $.wait(parseInt(Math.random() * 2000 + 3000, 10));
-        let IIlilI = await l1ilI1($.yq_taskid, 1, I1Illi);
+        let lilill = await liiill($.yq_taskid, 1, iIiili);
         await $.wait(parseInt(Math.random() * 2000 + 3000, 10));
-        if (IIlilI.success) {
-          if (IIlilI.data.helpState === 1) $.log("助力成功！");else {
-            if (IIlilI.data.helpState === 0) $.log("自己不能助力自己！");else {
-              if (IIlilI.data.helpState === 2) $.log("助力过了！");else {
-                if (IIlilI.data.helpState === 3) {
+        if (lilill.success) {
+          if (lilill.data.helpState === 1) $.log("助力成功！");else {
+            if (lilill.data.helpState === 0) $.log("自己不能助力自己！");else {
+              if (lilill.data.helpState === 2) $.log("助力过了！");else {
+                if (lilill.data.helpState === 3) {
                   $.log("没有助力次数了！");
                   break;
-                } else {
-                  if (IIlilI.data.helpState === 4) {
-                    $.log("这个B助力满了！");
-                  }
-                }
+                } else lilill.data.helpState === 4 && $.log("这个B助力满了！");
               }
             }
           }
@@ -175,216 +181,248 @@ message = "";
       }
     }
   }
-})().catch(iiI1l1 => $.logErr(iiI1l1)).finally(() => $.done());
-function I1lIIl() {
-  return new Promise(iliiI1 => {
-    $.post(l1i11l("body={\"linkId\":\"jBNXcoiASxGof0f2RFI2Sw\"}&appid=activities_platform", "apTaskList"), async (ilIIii, l1111, lIl1l1) => {
+})().catch(liI1II => $.logErr(liI1II)).finally(() => $.done());
+function IIIIii() {
+  return new Promise(lilI1l => {
+    $.post(lI1lIi("body={\"linkId\":\"jBNXcoiASxGof0f2RFI2Sw\"}&appid=activities_platform", "apTaskList"), async (liI1I1, Ii11i, i1llI) => {
       $.log("=== 任务列表 start ===");
       try {
-        if (ilIIii) {
-          console.log("" + JSON.stringify(ilIIii));
-          console.log($.name + " API请求失败，请检查网路重试");
-        } else {
-          lIl1l1 = JSON.parse(lIl1l1);
-          $.taskList = lIl1l1.data;
-          for (const ilIIil of $.taskList) {
-            $.log(ilIIil.taskTitle + " " + ilIIil.taskDoTimes + "/" + ilIIil.taskLimitTimes);
+        if (liI1I1) console.log("" + JSON.stringify(liI1I1)), console.log($.name + " API请求失败，请检查网路重试");else {
+          i1llI = JSON.parse(i1llI);
+          $.taskList = i1llI.data;
+          for (const Ii1l1l of $.taskList) {
+            $.log(Ii1l1l.taskTitle + " " + Ii1l1l.taskDoTimes + "/" + Ii1l1l.taskLimitTimes);
           }
           $.log("=== 任务列表 end  ===");
         }
-      } catch (iliiII) {
-        $.logErr(iliiII, l1111);
+      } catch (i1Iiii) {
+        $.logErr(i1Iiii, Ii11i);
       } finally {
-        iliiI1(lIl1l1);
+        lilI1l(i1llI);
       }
     });
   });
 }
-async function l1ilI1(i1111I = "", IliIl1 = "", lIl1lI = "") {
-  const lIiliI = {
+async function liiill(lI1I11 = "", IilIl = "", IilIi = "") {
+  const i1liI = {
       "functionId": "joyBaseInfo",
       "clientVersion": "10.1.0",
       "client": "ios",
-      "t": illlil,
+      "t": II1II,
       "appid": "activities_platform",
-      "body": "{\"taskId\":\"" + i1111I + "\",\"inviteType\":\"" + IliIl1 + "\",\"inviterPin\":\"" + lIl1lI + "\",\"linkId\":\"jBNXcoiASxGof0f2RFI2Sw\"}"
+      "body": "{\"taskId\":\"" + lI1I11 + "\",\"inviteType\":\"" + IilIl + "\",\"inviterPin\":\"" + IilIi + "\",\"linkId\":\"jBNXcoiASxGof0f2RFI2Sw\"}"
     },
-    iIiill = await lllII("4abce", lIiliI);
-  return new Promise(lI1ill => {
-    $.post(liiil1(iIiill), async (lI1ili, Il1II, i1lll) => {
+    iilIIi = await Iii1Il("4abce", i1liI);
+  return new Promise(i1Iil1 => {
+    $.post(Iii1Ii(iilIIi), async (liI1Ii, l1lil1, i1lil) => {
       try {
-        lI1ili ? (console.log("" + JSON.stringify(lI1ili)), console.log($.name + " getJoyBaseInfo API请求失败，请检查网路重试")) : (i1lll = JSON.parse(i1lll), $.joyBaseInfo = i1lll.data);
-      } catch (I1iill) {
-        $.logErr(I1iill, Il1II);
+        liI1Ii ? (console.log("" + JSON.stringify(liI1Ii)), console.log($.name + " getJoyBaseInfo API请求失败，请检查网路重试")) : (i1lil = JSON.parse(i1lil), $.joyBaseInfo = i1lil.data);
+      } catch (IilII) {
+        $.logErr(IilII, l1lil1);
       } finally {
-        lI1ill(i1lll);
+        i1Iil1(i1lil);
       }
     });
   });
 }
-async function l1l1Il(lIilii, lIilil, lIl1ll = "", Ii111 = "activities_platform") {
-  const ilIIi1 = {
+async function IIIIil(i1lii, iilIII, liI1Il = "", I1iIi = "activities_platform") {
+  const lilI11 = {
       "functionId": "apDoTask",
       "clientVersion": "10.1.0",
       "client": "ios",
-      "t": illlil,
+      "t": II1II,
       "appid": "activities_platform",
-      "body": "{\"taskType\":\"" + lIilil + "\",\"taskId\":" + lIilii + ",\"channel\":4,\"linkId\":\"jBNXcoiASxGof0f2RFI2Sw\",\"taskInsert\":true,\"itemId\":\"" + lIl1ll + "\"}"
+      "body": "{\"taskType\":\"" + iilIII + "\",\"taskId\":" + i1lii + ",\"channel\":4,\"linkId\":\"jBNXcoiASxGof0f2RFI2Sw\",\"taskInsert\":true,\"itemId\":\"" + liI1Il + "\"}"
     },
-    l111i = await lllII("4abce", ilIIi1);
-  return new Promise(l111l => {
-    $.post(liiil1(l111i), async (iIiili, lilill, IilI1) => {
+    Ili1II = await Iii1Il("4abce", lilI11);
+  return new Promise(l1IiI => {
+    $.post(Iii1Ii(Ili1II), async (I1Ilil, l1I1I1, I1Ilii) => {
       try {
-        iIiili ? (console.log("" + JSON.stringify(iIiili)), console.log($.name + " API请求失败，请检查网路重试")) : IilI1 = JSON.parse(IilI1);
-      } catch (liI1II) {
-        $.logErr(liI1II, lilill);
+        if (I1Ilil) {
+          console.log("" + JSON.stringify(I1Ilil));
+          console.log($.name + " API请求失败，请检查网路重试");
+        } else I1Ilii = JSON.parse(I1Ilii);
+      } catch (III1Il) {
+        $.logErr(III1Il, l1I1I1);
       } finally {
-        l111l(IilI1);
+        l1IiI(I1Ilii);
       }
     });
   });
 }
-async function lil1I(i1Iii1, l1liii, I1Ili1, l1liil = "activities_platform") {
-  const lilI1I = {
+async function lI1lIl(IiIii, iill1l, IiIiII, iill1i = "activities_platform") {
+  const iill11 = {
       "functionId": "apDoTask",
       "clientVersion": "10.1.0",
       "client": "ios",
-      "t": illlil,
+      "t": II1II,
       "appid": "activities_platform",
-      "body": "{\"taskType\":\"" + l1liii + "\",\"taskId\":" + i1Iii1 + ",\"linkId\":\"jBNXcoiASxGof0f2RFI2Sw\",\"itemId\":\"" + I1Ili1 + "\"}"
+      "body": "{\"taskType\":\"" + iill1l + "\",\"taskId\":" + IiIii + ",\"linkId\":\"jBNXcoiASxGof0f2RFI2Sw\",\"itemId\":\"" + IiIiII + "\"}"
     },
-    lI1I1l = await lllII("4abce", lilI1I);
-  return new Promise(Ii11i => {
-    $.post(liiil1(lI1I1l), async (i1llI, iIIli1, Ii1l1i) => {
+    I1IliI = await Iii1Il("4abce", iill11);
+  return new Promise(lIIi1l => {
+    $.post(Iii1Ii(I1IliI), async (IIIli1, I1lI11, I1I1Il) => {
       try {
-        i1llI ? (console.log("" + JSON.stringify(i1llI)), console.log($.name + " API请求失败，请检查网路重试")) : Ii1l1i = JSON.parse(Ii1l1i);
-      } catch (Ii1l1l) {
-        $.logErr(Ii1l1l, iIIli1);
+        IIIli1 ? (console.log("" + JSON.stringify(IIIli1)), console.log($.name + " API请求失败，请检查网路重试")) : I1I1Il = JSON.parse(I1I1Il);
+      } catch (l1l1I) {
+        $.logErr(l1l1I, I1lI11);
       } finally {
-        Ii11i(Ii1l1i);
+        lIIi1l(I1I1Il);
       }
     });
   });
 }
-async function l1l1Ii(l1lIi, l1lili) {
-  const lI1I11 = {
+async function liiili(I1I1Ii, IiIl1) {
+  const IIIi = {
       "functionId": "apTaskDetail",
       "clientVersion": "10.1.0",
       "client": "ios",
-      "t": illlil,
+      "t": II1II,
       "appid": "activities_platform",
-      "body": "{\"taskType\":\"" + l1lili + "\",\"taskId\":" + l1lIi + ",\"channel\":4,\"linkId\":\"jBNXcoiASxGof0f2RFI2Sw\"}"
+      "body": "{\"taskType\":\"" + IiIl1 + "\",\"taskId\":" + I1I1Ii + ",\"channel\":4,\"linkId\":\"jBNXcoiASxGof0f2RFI2Sw\"}"
     },
-    IilIl = await lllII("4abce", lI1I11);
-  return new Promise(I1iII => {
-    $.post(liiil1(IilIl), async (Ili1Ii, Ii1l1I, iilII1) => {
+    l1IIli = await Iii1Il("4abce", IIIi);
+  return new Promise(lIIi11 => {
+    $.post(Iii1Ii(l1IIli), async (liI11l, l1l1i, I1I1II) => {
       try {
-        Ili1Ii ? (console.log("" + JSON.stringify(Ili1Ii)), console.log($.name + " API请求失败，请检查网路重试")) : (iilII1 = JSON.parse(iilII1), !iilII1.success ? $.taskDetailList = [] : $.taskDetailList = iilII1?.["data"]?.["taskItemList"]);
-      } catch (iiiI11) {
-        $.logErr(iiiI11, Ii1l1I);
+        liI11l ? (console.log("" + JSON.stringify(liI11l)), console.log($.name + " API请求失败，请检查网路重试")) : (I1I1II = JSON.parse(I1I1II), !I1I1II.success ? $.taskDetailList = [] : $.taskDetailList = I1I1II?.["data"]?.["taskItemList"]);
+      } catch (i11ll) {
+        $.logErr(i11ll, l1l1i);
       } finally {
-        !iilII1.success ? I1iII([]) : I1iII(iilII1.data.taskItemList);
+        !I1I1II.success ? lIIi11([]) : lIIi11(I1I1II.data.taskItemList);
       }
     });
   });
 }
-async function IIIIlI(liI1Ii, l1lil1) {
-  const I1iIl = {
+async function I1ll11(Ili11I, i11li) {
+  const iil11i = {
       "functionId": "apTaskDrawAward",
       "clientVersion": "10.1.0",
       "client": "ios",
-      "t": illlil,
+      "t": II1II,
       "appid": "activities_platform",
-      "body": "{\"taskType\":\"" + l1lil1 + "\",\"taskId\":" + liI1Ii + ",\"linkId\":\"jBNXcoiASxGof0f2RFI2Sw\"}"
+      "body": "{\"taskType\":\"" + i11li + "\",\"taskId\":" + Ili11I + ",\"linkId\":\"jBNXcoiASxGof0f2RFI2Sw\"}"
     },
-    IilII = await lllII("55276", I1iIl);
-  return new Promise(Ili1II => {
-    $.post(liiil1(IilII), async (ilI111, I1IllI, IIlI11) => {
+    Ill1II = await Iii1Il("55276", iil11i);
+  return new Promise(l1IIlI => {
+    $.post(Iii1Ii(Ill1II), async (l1l1l, illilI, IiIli) => {
       try {
-        ilI111 ? (console.log("" + JSON.stringify(ilI111)), console.log($.name + " API请求失败，请检查网路重试")) : (IIlI11 = JSON.parse(IIlI11), $.log("领取奖励"));
-      } catch (iIIll1) {
-        $.logErr(iIIll1, I1IllI);
+        l1l1l ? (console.log("" + JSON.stringify(l1l1l)), console.log($.name + " API请求失败，请检查网路重试")) : (IiIli = JSON.parse(IiIli), $.log("领取奖励"));
+      } catch (IiIll) {
+        $.logErr(IiIll, illilI);
       } finally {
-        Ili1II(IIlI11);
+        l1IIlI(IiIli);
       }
     });
   });
 }
-function l1i11l(ilI11I, ili1I) {
+function lI1lIi(IIIlil, Ili111) {
   return {
-    "url": "https://api.m.jd.com/client.action" + (ili1I ? "?functionId=" + ili1I : ""),
-    "body": ilI11I,
+    "url": "https://api.m.jd.com/client.action" + (Ili111 ? "?functionId=" + Ili111 : ""),
+    "body": IIIlil,
     "headers": {
-      "User-Agent": UA,
+      "User-Agent": $.UA,
       "Content-Type": "application/x-www-form-urlencoded",
       "Host": "api.m.jd.com",
       "Origin": "https://joypark.jd.com",
       "Referer": "https://joypark.jd.com/?activityId=jBNXcoiASxGof0f2RFI2Sw&lng=113.387899&lat=22.512678&sid=4d76080a9da10fbb31f5cd43396ed6cw&un_area=19_1657_52093_0",
-      "Cookie": l1i1l
+      "Cookie": l1iIii
     }
   };
 }
-function liiil1(i1Iili) {
+function Iii1Ii(iiil11) {
   return {
-    "url": "https://api.m.jd.com/?" + i1Iili,
+    "url": "https://api.m.jd.com/?" + iiil11,
     "headers": {
-      "User-Agent": UA,
+      "User-Agent": $.UA,
       "Content-Type": "application/x-www-form-urlencoded",
       "Host": "api.m.jd.com",
       "Origin": "https://joypark.jd.com",
       "Referer": "https://joypark.jd.com/?activityId=jBNXcoiASxGof0f2RFI2Sw&lng=113.387899&lat=22.512678&sid=4d76080a9da10fbb31f5cd43396ed6cw&un_area=19_1657_52093_0",
-      "Cookie": l1i1l
+      "Cookie": l1iIii
     }
   };
 }
-async function lllII(l1IiI, l1lill) {
-  let iIIllI = {
-      "appId": l1IiI,
-      ...l1lill,
-      "ua": UA,
-      "pin": $.UserName
-    },
-    I1Ill1 = {
-      "url": "http://kr.kingran.cf/h5st",
-      "body": JSON.stringify(iIIllI),
-      "headers": {
-        "Content-Type": "application/json"
+async function Iii1Il(ilI1II, iillI1) {
+  try {
+    let IlllI = new llIlI({
+      "appId": ilI1II,
+      "appid": "activities_platform",
+      "clientVersion": iillI1?.["clientVersion"],
+      "client": iillI1?.["client"],
+      "pin": $.UserName,
+      "ua": $.UA,
+      "version": "4.1"
+    });
+    return await IlllI.genAlgo(), body = await IlllI.genUrlParams(iillI1.functionId, iillI1.body), body;
+  } catch (iliIl) {}
+}
+async function i1l1I1(ii1i11, ll11II) {
+  let Il1I = {
+      "searchParams": {
+        ...ll11II,
+        "appId": ii1i11
       },
+      "pt_pin": $.UserName,
+      "client": ll11II?.["client"],
+      "clientVersion": ll11II?.["clientVersion"]
+    },
+    iii1i = {
+      "Content-Type": "application/json",
+      "User-Agent": $.UA
+    },
+    iii1l = {
+      "url": "http://h5st.kingran.cf/api/h5st",
+      "body": JSON.stringify(Il1I),
+      "headers": iii1i,
       "timeout": 30000
     };
-  return new Promise(async I1Ilii => {
-    $.post(I1Ill1, (iIIlil, IiIiI1, iIIlii) => {
-      let llIII1 = "";
+  return new Promise(async illI11 => {
+    $.post(iii1l, (ll11Ii, ll11Il, i11lI) => {
+      let iii1I = "";
       try {
-        if (iIIlil) {
-          console.log("" + JSON.stringify(iIIlil));
-          console.log($.name + " geth5st API请求失败，请检查网路重试");
-        } else {
-          iIIlii = JSON.parse(iIIlii);
-          if (typeof iIIlii === "object" && iIIlii && iIIlii.body) {
-            if (iIIlii.body) llIII1 = iIIlii.body || "";
-          } else iIIlii.code == 400 ? console.log("\n" + iIIlii.msg) : console.log("\n可能连接不上接口，请检查网络");
+        if (ll11Ii) console.log($.name + " getH5st API请求失败，请检查网路重试");else {
+          i11lI = JSON.parse(i11lI);
+          console.log(JSON.stringify(i11lI));
+          if (typeof i11lI === "object" && i11lI && i11lI.body) {
+            if (i11lI.body) iii1I = i11lI || "";
+          } else i11lI.code == 400 ? console.log("\n" + i11lI.msg) : console.log("\n可能连接不上接口，请检查网络");
         }
-      } catch (III1) {
-        $.logErr(III1, IiIiI1);
+      } catch (iillIl) {
+        $.logErr(iillIl, ll11Il);
       } finally {
-        I1Ilii(llIII1);
+        illI11(lI1lI1(iii1I));
       }
     });
   });
 }
-function l11iII(l1iiIi) {
-  l1iiIi = l1iiIi || 32;
-  let I1lI1i = "abcdef0123456789",
-    illili = I1lI1i.length,
-    iiiII1 = "";
-  for (i = 0; i < l1iiIi; i++) iiiII1 += I1lI1i.charAt(Math.floor(Math.random() * illili));
-  return iiiII1;
+function lI1lI1(iliI1, i11iI = {}) {
+  let l1lii1 = [],
+    ii1i1i = i11iI.connector || "&",
+    IiIi11 = Object.keys(iliI1);
+  if (i11iI.sort) IiIi11 = IiIi11.sort();
+  for (let liIlIl of IiIi11) {
+    let I1lI1l = iliI1[liIlIl];
+    if (I1lI1l && typeof I1lI1l === "object") I1lI1l = JSON.stringify(I1lI1l);
+    if (I1lI1l && i11iI.encode) I1lI1l = encodeURIComponent(I1lI1l);
+    l1lii1.push(liIlIl + "=" + I1lI1l);
+  }
+  return l1lii1.join(ii1i1i);
 }
-function l1i11i(IIIliI) {
-  if (typeof IIIliI == "string") try {
-    return JSON.parse(IIIliI);
-  } catch (l1IIil) {
-    return console.log(l1IIil), $.msg($.name, "", "请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie"), [];
+function llIl1(i11ii) {
+  i11ii = i11ii || 32;
+  let Il1i = "abcdef0123456789",
+    lIiIl = Il1i.length,
+    iiil1l = "";
+  for (i = 0; i < i11ii; i++) iiil1l += Il1i.charAt(Math.floor(Math.random() * lIiIl));
+  return iiil1l;
+}
+function l1iIiI(iIliil) {
+  if (typeof iIliil == "string") {
+    try {
+      return JSON.parse(iIliil);
+    } catch (liiiIi) {
+      return console.log(liiiIi), $.msg($.name, "", "请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie"), [];
+    }
   }
 }

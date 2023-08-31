@@ -32,29 +32,29 @@ let shareCodes = [ // 这个列表填入你要助力的好友的shareCode
     //     '5853550f71014282912b76d95beb84c0@b58ddba3317b44ceb0ac86ea8952998c@8d724eb95e3847b6a1526587d1836f27@a80b7d1db41a4381b742232da9d22443@ce107b8f64d24f62a92292180f764018@c73ea563a77d4464b273503d3838fec1@0dd9a7fd1feb449fb1bf854a3ec0e801',
 ]
 let newShareCodes=[];
-let i11iI = "",
-  lIiII = "",
-  l1lii1 = {};
-let ii1i1l = true;
-const ilI1I1 = "openjd://virtual?params=%7B%20%22category%22:%20%22jump%22,%20%22des%22:%20%22m%22,%20%22url%22:%20%22https://h5.m.jd.com/babelDiy/Zeus/3KSjXqQabiTuD1cJ28QskrpWoBKT/index.html%22%20%7D",
-  liIlIl = require("./function/jdCommon"),
-  I1lI1l = require("./utils/h5st.js");
-let Il1i = i11IlI(32, "1234567890qwertyuiopasdfghjklzxcvbnm"),
-  lIiIl = i11IlI(2, "1234567890") + "-" + i11IlI(4, "1234567890") + "-" + i11IlI(4, "1234567890") + "-" + i11IlI(5, "1234567890"),
-  iiil1l = "106.475" + Math.floor(Math.random() * 899 + 100),
-  Il1l = "29.503" + Math.floor(Math.random() * 899 + 100),
-  iiil1i = true;
-const ilIIli = require("fs");
-let ilIIll = false,
-  iIliil = "./Fruit_ShareCache.json",
-  IIiill = ilIIli.existsSync(iIliil),
-  liIIii = [];
-IIiill && (console.log("检测到东东农场缓存文件Fruit_ShareCache.json，载入..."), liIIii = ilIIli.readFileSync(iIliil, "utf-8"), liIIii && (liIIii = liIIii.toString(), liIIii = JSON.parse(liIIii)));
-let Iii1lI = 0,
-  I1liii = false,
-  liiiIi = [];
+let iIIlIiii = "",
+  iiI1l1II = "",
+  lIi1il1 = {};
+let iii1Iii1 = true;
+const IilIl1li = "openjd://virtual?params=%7B%20%22category%22:%20%22jump%22,%20%22des%22:%20%22m%22,%20%22url%22:%20%22https://h5.m.jd.com/babelDiy/Zeus/3KSjXqQabiTuD1cJ28QskrpWoBKT/index.html%22%20%7D",
+  illiii1l = require("./function/jdCommon"),
+  i11l1lii = require("./utils/h5st.js");
+let liIIiiii = llIIil(32, "1234567890qwertyuiopasdfghjklzxcvbnm"),
+  ii11IIi1 = llIIil(2, "1234567890") + "-" + llIIil(4, "1234567890") + "-" + llIIil(4, "1234567890") + "-" + llIIil(5, "1234567890"),
+  i1IiIl1 = "106.475" + Math.floor(Math.random() * 899 + 100),
+  iI1lilll = "29.503" + Math.floor(Math.random() * 899 + 100),
+  I11li11I = true;
+const l1liilIl = require("fs");
+let l1ill1Ii = false,
+  IIlIiI1I = "./Fruit_ShareCache.json",
+  Il1Illl1 = l1liilIl.existsSync(IIlIiI1I),
+  ilIII11l = [];
+Il1Illl1 && (console.log("检测到东东农场缓存文件Fruit_ShareCache.json，载入..."), ilIII11l = l1liilIl.readFileSync(IIlIiI1I, "utf-8"), ilIII11l && (ilIII11l = ilIII11l.toString(), ilIII11l = JSON.parse(ilIII11l)));
+let IIiliIii = 0,
+  i1I1iiii = false,
+  liiIlIIi = [];
 !(async () => {
-  await ii11();
+  await Ill1llil();
   if (!cookiesArr[0]) {
     $.msg($.name, "【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取", "https://bean.m.jd.com/bean/signIndex.action", {
       "open-url": "https://bean.m.jd.com/bean/signIndex.action"
@@ -62,50 +62,46 @@ let Iii1lI = 0,
     return;
   }
   console.log("\n【若多次提示403，务必更换IP运行.....】\n");
-  if (iiil1i) {
+  if (I11li11I) {
     console.log("\n【开始收集您的互助码，用于账号内部互助，请稍等...】\n");
-    for (let l1iiI1 = 0; l1iiI1 < cookiesArr.length; l1iiI1++) {
-      if (cookiesArr[l1iiI1]) {
-        cookie = cookiesArr[l1iiI1];
+    for (let illilIII = 0; illilIII < cookiesArr.length; illilIII++) {
+      if (cookiesArr[illilIII]) {
+        cookie = cookiesArr[illilIII];
         $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1]);
-        $.index = l1iiI1 + 1;
+        $.index = illilIII + 1;
         $.isLogin = true;
         $.nickName = "";
         if (!$.isLogin) {
           $.msg($.name, "【提示】cookie已失效", "京东账号" + $.index + " " + ($.nickName || $.UserName) + "\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action", {
             "open-url": "https://bean.m.jd.com/bean/signIndex.action"
           });
-          if ($.isNode()) {
-            await notify.sendNotify($.name + "cookie已失效 - " + $.UserName, "京东账号" + $.index + " " + $.UserName + "\n请重新登录获取cookie");
-          }
+          $.isNode() && (await notify.sendNotify($.name + "cookie已失效 - " + $.UserName, "京东账号" + $.index + " " + $.UserName + "\n请重新登录获取cookie"));
           continue;
         }
-        i11iI = "";
-        lIiII = "";
-        l1lii1 = {};
-        $.UA = liIlIl.genUA($.UserName);
+        iIIlIiii = "";
+        iiI1l1II = "";
+        lIi1il1 = {};
+        $.UA = illiii1l.genUA($.UserName);
         $.retry = 0;
-        I1liii = false;
-        await Iii1ll();
-        I1liii && (await $.wait(5000), Iii1lI++);
-        Iii1lI == 10 && (console.log("\n【访问接口次数达到10次，休息一分钟.....】\n"), await $.wait(60 * 1000), Iii1lI = 0);
+        i1I1iiii = false;
+        await i1I1iI1I();
+        i1I1iiii && (await $.wait(5000), IIiliIii++);
+        IIiliIii == 10 && (console.log("\n【访问接口次数达到10次，休息一分钟.....】\n"), await $.wait(60 * 1000), IIiliIii = 0);
       }
     }
-    if (ilIIll) {
-      var IIIlli = JSON.stringify(liIIii, null, 2);
-      ilIIli.writeFile(iIliil, IIIlli, function (Il1iIl) {
-        if (Il1iIl) console.log(Il1iIl), console.log("\n【缓存文件Fruit_ShareCache.json更新失败!】\n");else {
-          console.log("\n【缓存文件Fruit_ShareCache.json更新成功!】\n");
-        }
+    if (l1ill1Ii) {
+      var ii1111li = JSON.stringify(ilIII11l, null, 2);
+      l1liilIl.writeFile(IIlIiI1I, ii1111li, function (lli1lliI) {
+        lli1lliI ? (console.log(lli1lliI), console.log("\n【缓存文件Fruit_ShareCache.json更新失败!】\n")) : console.log("\n【缓存文件Fruit_ShareCache.json更新成功!】\n");
       });
     }
   }
   console.log("\n【互助码已经收集完毕，现在开始账号内部互助，请稍等...】\n");
-  for (let I1lilI = 0; I1lilI < cookiesArr.length; I1lilI++) {
-    if (cookiesArr[I1lilI]) {
-      cookie = cookiesArr[I1lilI];
+  for (let I111111l = 0; I111111l < cookiesArr.length; I111111l++) {
+    if (cookiesArr[I111111l]) {
+      cookie = cookiesArr[I111111l];
       $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1]);
-      $.index = I1lilI + 1;
+      $.index = I111111l + 1;
       $.isLogin = true;
       $.nickName = "";
       console.log("\n开始【京东账号" + $.index + "】" + ($.nickName || $.UserName) + "\n");
@@ -116,76 +112,69 @@ let Iii1lI = 0,
         $.isNode() && (await notify.sendNotify($.name + "cookie已失效 - " + $.UserName, "京东账号" + $.index + " " + $.UserName + "\n请重新登录获取cookie"));
         continue;
       }
-      i11iI = "";
-      lIiII = "";
-      l1lii1 = {};
-      $.UA = liIlIl.genUA($.UserName);
+      iIIlIiii = "";
+      iiI1l1II = "";
+      lIi1il1 = {};
+      $.UA = illiii1l.genUA($.UserName);
       $.retry = 0;
-      Iii1lI++;
-      await l1I11I();
-      if (Iii1lI == 3) {
-        console.log("\n【访问接口次数达到3次，休息一分钟.....】\n");
-        await $.wait(60 * 1000);
-        Iii1lI = 0;
-      }
+      IIiliIii++;
+      await l1iI11I1();
+      IIiliIii == 5 && (console.log("\n【访问接口次数达到5次，休息一分钟.....】\n"), await $.wait(60 * 1000), IIiliIii = 0);
     }
   }
   $.isNode() && allMessage && $.ctrTemp && (await notify.sendNotify("" + $.name, "" + allMessage));
-})().catch(Iii1l1 => {
-  $.log("", "❌ " + $.name + ", 失败! 原因: " + Iii1l1 + "!", "");
+})().catch(illill => {
+  $.log("", "❌ " + $.name + ", 失败! 原因: " + illill + "!", "");
 }).finally(() => {
   $.done();
 });
-async function l1I11I() {
-  lIiII = "【京东账号" + $.index + "】" + ($.nickName || $.UserName);
+async function l1iI11I1() {
+  iiI1l1II = "【京东账号" + $.index + "】" + ($.nickName || $.UserName);
   try {
-    await ilIIlI();
+    await iliilIi();
     if ($.farmInfo?.["farmUserPro"]) {
       console.log("\n【已成功兑换水果】" + $.farmInfo?.["farmUserPro"]?.["winTimes"] + "次\n");
-      await IliIi1();
-      await I1liil();
+      await l11lllii();
+      await lliliIii();
       if ($.farmInfo?.["treeState"] === 2 || $.farmInfo?.["treeState"] === 3) {
-        l1lii1["open-url"] = ilI1I1;
+        lIi1il1["open-url"] = IilIl1li;
         return;
       } else {
         if ($.farmInfo?.["treeState"] === 1) console.log("\n当前种植：" + $.farmInfo?.["farmUserPro"]?.["name"] + "（等级" + $.farmInfo?.["farmUserPro"]?.["prizeLevel"] + "）\n");else {
           if ($.farmInfo?.["treeState"] === 0) {
-            l1lii1["open-url"] = ilI1I1;
+            lIi1il1["open-url"] = IilIl1li;
             return;
           }
         }
       }
     } else {
       if ($.farmInfo?.["code"] == 3) console.log("农场异常: " + $.farmInfo?.["code"] + ",未登录");else {
-        if ($.farmInfo?.["code"] == 6) {
-          console.log("农场异常: " + $.farmInfo?.["code"] + ",活动太火爆");
-        } else $.farmInfo?.["code"] == 2 ? console.log("农场异常: " + $.farmInfo?.["code"] + "," + $.farmInfo?.["echo"]) : console.log("农场异常: " + $.farmInfo?.["code"] + "," + $.farmInfo?.["message"]);
+        if ($.farmInfo?.["code"] == 6) console.log("农场异常: " + $.farmInfo?.["code"] + ",活动太火爆");else $.farmInfo?.["code"] == 2 ? console.log("农场异常: " + $.farmInfo?.["code"] + "," + $.farmInfo?.["echo"]) : console.log("农场异常: " + $.farmInfo?.["code"] + "," + $.farmInfo?.["message"]);
       }
-      ($.farmInfo?.["code"] == 402 || $.farmInfo?.["code"] == 403) && (await $.wait(parseInt(Math.random() * 2000 + 30000, 10)));
-      await $.wait(parseInt(Math.random() * 2000 + 2000, 10));
-      $.retry < 2 && ($.retry++, console.log("等待3秒后重试,第:" + $.retry + "次"), await $.wait(3000), await l1I11I());
+      ($.farmInfo?.["code"] == 402 || $.farmInfo?.["code"] == 403) && (await $.wait(parseInt(Math.random() * 2000 + 10000, 10)));
+      $.retry < 2 && ($.retry++, console.log("等待3秒后重试,第:" + $.retry + "次"), await $.wait(3000), await l1iI11I1());
     }
-  } catch (I1IIii) {
-    $.logErr(I1IIii);
+  } catch (IlIlI11l) {
+    $.logErr(IlIlI11l);
   }
 }
-async function I1liil() {
-  await l1I11l();
+async function lliliIii() {
+  await IliIlIii();
   if ($.initForTurntableFarmRes?.["code"] === "0") {
     let {
-      timingIntervalHours: lI1iI1,
-      timingLastSysTime: iIIIi1,
-      sysTime: lIiIiI,
-      remainLotteryTimes: ilIliI,
-      turntableInfos: II1li
+      timingIntervalHours: iiill11I,
+      timingLastSysTime: lI1iliI1,
+      sysTime: IliiIIlI,
+      remainLotteryTimes: IIIIIllI,
+      turntableInfos: lIl11lIl
     } = $.initForTurntableFarmRes;
     console.log("开始天天抽奖--好友助力--每人每天只有三次助力机会.");
-    for (let Ii1lIi of newShareCodes) {
-      if (Ii1lIi === $.farmInfo?.["farmUserPro"]?.["shareCode"]) {
+    for (let lii1I1ll of newShareCodes) {
+      if (lii1I1ll === $.farmInfo?.["farmUserPro"]?.["shareCode"]) {
         console.log("天天抽奖-不能自己给自己助力\n");
         continue;
       }
-      await l1IlII(Ii1lIi);
+      await l11IIlI1(lii1I1ll);
       if ($.lotteryMasterHelpRes?.["helpResult"]) {
         if ($.lotteryMasterHelpRes?.["helpResult"]?.["code"] === "0") console.log("天天抽奖-助力" + $.lotteryMasterHelpRes?.["helpResult"]?.["masterUserInfo"]?.["nickName"] + "成功\n");else {
           if ($.lotteryMasterHelpRes?.["helpResult"]?.["code"] === "11") console.log("天天抽奖-不要重复助力" + $.lotteryMasterHelpRes?.["helpResult"]?.["masterUserInfo"]?.["nickName"] + "\n");else {
@@ -197,216 +186,212 @@ async function I1liil() {
         }
       }
     }
-    console.log("天天抽奖次数共-" + ilIliI + "次");
-    if (ilIliI > 0) {
+    console.log("天天抽奖次数共-" + IIIIIllI + "次");
+    if (IIIIIllI > 0) {
       console.log("开始抽奖");
-      let iIIIiI = "";
-      for (let li1iI = 0; li1iI < new Array(ilIliI).fill("").length; li1iI++) {
-        await iIliii();
-        console.log("第" + (li1iI + 1) + "次抽奖结果" + JSON.stringify($.lotteryRes));
+      let Il1ilIIi = "";
+      for (let iIlillII = 0; iIlillII < new Array(IIIIIllI).fill("").length; iIlillII++) {
+        await iii1Il1();
+        console.log("第" + (iIlillII + 1) + "次抽奖结果" + JSON.stringify($.lotteryRes));
         if ($.lotteryRes.code === "0") {
-          II1li.map(I1IIi1 => {
-            if (I1IIi1.type === $.lotteryRes.type) {
+          lIl11lIl.map(iIi1liI => {
+            if (iIi1liI.type === $.lotteryRes.type) {
               console.log("lotteryRes.type" + $.lotteryRes?.["type"]);
-              if ($.lotteryRes.type.match(/bean/g) && $.lotteryRes.type.match(/bean/g)[0] === "bean") iIIIiI += I1IIi1.name + "个，";else $.lotteryRes.type.match(/water/g) && $.lotteryRes.type.match(/water/g)[0] === "water" ? iIIIiI += I1IIi1.name + "，" : iIIIiI += I1IIi1.name + "，";
+              if ($.lotteryRes.type.match(/bean/g) && $.lotteryRes.type.match(/bean/g)[0] === "bean") Il1ilIIi += iIi1liI.name + "个，";else $.lotteryRes.type.match(/water/g) && $.lotteryRes.type.match(/water/g)[0] === "water" ? Il1ilIIi += iIi1liI.name + "，" : Il1ilIIi += iIi1liI.name + "，";
             }
           });
           if ($.lotteryRes?.["remainLotteryTimes"] === 0) break;
         }
       }
-      iIIIiI && console.log("【天天抽奖】" + iIIIiI.substr(0, iIIIiI.length - 1) + "\n");
+      Il1ilIIi && console.log("【天天抽奖】" + Il1ilIIi.substr(0, Il1ilIIi.length - 1) + "\n");
     } else console.log("抽奖完成没有次数啦~");
   } else console.log("初始化天天抽奖得好礼失败");
 }
-async function IliIi1() {
+async function l11lllii() {
   await $.wait(2000);
-  await ilIIlI();
-  let Il1I11 = 0,
-    lIl1II = 3,
-    Ii1Ili = "";
-  if (iiil1i) {
+  await iliilIi();
+  let iII1i1iI = 0,
+    i1l11I = 3,
+    i1l1liII = "";
+  if (I11li11I) {
     console.log("开始助力好友");
-    for (let Ii1Iii of newShareCodes) {
-      if (liiiIi) {
-        var IIiI11 = false;
-        for (let Ii1Iil of liiiIi) {
-          if (Ii1Iii == Ii1Iil) {
-            IIiI11 = true;
+    for (let l11ili1l of newShareCodes) {
+      if (liiIlIIi) {
+        var l1I1iil = false;
+        for (let l1ilil1 of liiIlIIi) {
+          if (l11ili1l == l1ilil1) {
+            l1I1iil = true;
             break;
           }
         }
-        if (IIiI11) {
-          console.log(Ii1Iii + "助力已满，跳过...");
+        if (l1I1iil) {
+          console.log(l11ili1l + "助力已满，跳过...");
           continue;
         }
       }
-      console.log($.UserName + "开始助力: " + Ii1Iii);
-      if (!Ii1Iii) continue;
+      console.log($.UserName + "开始助力: " + l11ili1l);
+      if (!l11ili1l) continue;
       if (!$.farmInfo?.["farmUserPro"]) {
         console.log("未种植,跳过助力\n");
         continue;
       }
-      if (Ii1Iii === $.farmInfo?.["farmUserPro"]?.["shareCode"]) {
+      if (l11ili1l === $.farmInfo?.["farmUserPro"]?.["shareCode"]) {
         console.log("不能为自己助力哦，跳过自己的shareCode\n");
         continue;
       }
-      await liIIlI(Ii1Iii);
+      await lll1li1I(l11ili1l);
       if ($.helpResult?.["code"] === "0") {
-        if ($.helpResult?.["helpResult"]?.["code"] === "0") Il1I11 += $.helpResult?.["helpResult"]?.["salveHelpAddWater"], console.log("【助力好友结果】: 已成功给【" + $.helpResult?.["helpResult"]?.["masterUserInfo"]?.["nickName"] + "】助力"), console.log("给好友【" + $.helpResult?.["helpResult"]?.["masterUserInfo"]?.["nickName"] + "】助力获得" + $.helpResult?.["helpResult"]?.["salveHelpAddWater"] + "g水滴"), Ii1Ili += ($.helpResult?.["helpResult"]?.["masterUserInfo"]?.["nickName"] || "匿名用户") + ",";else {
-          if ($.helpResult?.["helpResult"]?.["code"] === "8") console.log("【助力好友结果】: 助力【" + $.helpResult?.["helpResult"]?.["masterUserInfo"]?.["nickName"] + "】失败，您今天助力次数已耗尽");else {
-            if ($.helpResult?.["helpResult"]?.["code"] === "9") console.log("【助力好友结果】: 之前给【" + $.helpResult?.["helpResult"]?.["masterUserInfo"]?.["nickName"] + "】助力过了");else $.helpResult?.["helpResult"]?.["code"] === "10" ? (liiiIi.push(Ii1Iii), console.log("【助力好友结果】: 好友【" + $.helpResult?.["helpResult"]?.["masterUserInfo"]?.["nickName"] + "】已满五人助力")) : console.log("助力其他情况：" + JSON.stringify($.helpResult?.["helpResult"]));
+        if ($.helpResult?.["helpResult"]?.["code"] === "0") iII1i1iI += $.helpResult?.["helpResult"]?.["salveHelpAddWater"], console.log("【助力好友结果】: 已成功给【" + $.helpResult?.["helpResult"]?.["masterUserInfo"]?.["name"] + "】助力"), console.log("给好友【" + $.helpResult?.["helpResult"]?.["masterUserInfo"]?.["name"] + "】助力获得" + $.helpResult?.["helpResult"]?.["salveHelpAddWater"] + "g水滴"), i1l1liII += ($.helpResult?.["helpResult"]?.["masterUserInfo"]?.["name"] || "匿名用户") + ",";else {
+          if ($.helpResult?.["helpResult"]?.["code"] === "8") console.log("【助力好友结果】: 助力【" + $.helpResult?.["helpResult"]?.["masterUserInfo"]?.["name"] + "】失败，您今天助力次数已耗尽");else {
+            if ($.helpResult?.["helpResult"]?.["code"] === "9") console.log("【助力好友结果】: 之前给【" + $.helpResult?.["helpResult"]?.["masterUserInfo"]?.["name"] + "】助力过了");else $.helpResult?.["helpResult"]?.["code"] === "10" ? (liiIlIIi.push(l11ili1l), console.log("【助力好友结果】: 好友【" + $.helpResult?.["helpResult"]?.["masterUserInfo"]?.["name"] + "】助力已满")) : console.log("助力其他情况：" + JSON.stringify($.helpResult?.["helpResult"]));
           }
         }
         console.log("【今日助力次数还剩】" + $.helpResult?.["helpResult"]?.["remainTimes"] + "次\n");
-        lIl1II = $.helpResult?.["helpResult"]?.["remainTimes"];
+        i1l11I = $.helpResult?.["helpResult"]?.["remainTimes"];
         if ($.helpResult?.["helpResult"]?.["remainTimes"] === 0) {
           console.log("您当前助力次数已耗尽，跳出助力");
           break;
         }
       } else {
-        if ($.helpResult?.["code"] == 3) {
-          console.log("助力失败: " + $.helpResult?.["code"] + ",未登录");
-        } else {
+        if ($.helpResult?.["code"] == 3) console.log("助力失败: " + $.helpResult?.["code"] + ",未登录");else {
           if ($.helpResult?.["code"] == 6) console.log("助力失败: " + $.helpResult?.["code"] + ",活动太火爆");else $.helpResult?.["code"] == 2 ? console.log("助力失败: " + $.helpResult?.["code"] + "," + $.helpResult?.["echo"]) : console.log("助力失败: " + $.helpResult?.["code"] + "," + $.helpResult?.["message"]);
         }
-        ($.helpResult?.["code"] == 402 || $.helpResult?.["code"] == 403) && (await $.wait(parseInt(Math.random() * 2000 + 30000, 10)));
+        ($.helpResult?.["code"] == 402 || $.helpResult?.["code"] == 403) && (await $.wait(parseInt(Math.random() * 2000 + 5000, 10)));
       }
     }
   }
   if ($.isLoon() || $.isQuanX() || $.isSurge()) {
-    let l1iI1l = l1IlI1() + $.farmInfo?.["farmUserPro"]?.["shareCode"];
-    !$.getdata(l1iI1l) && ($.setdata("", l1IlI1(Date.now() - 24 * 60 * 60 * 1000) + $.farmInfo?.["farmUserPro"]?.["shareCode"]), $.setdata("", l1iI1l));
-    Ii1Ili && ($.getdata(l1iI1l) ? $.setdata($.getdata(l1iI1l) + "," + Ii1Ili, l1iI1l) : $.setdata(Ii1Ili, l1iI1l));
-    Ii1Ili = $.getdata(l1iI1l);
+    let lilii11l = l1I1ll1l() + $.farmInfo?.["farmUserPro"]?.["shareCode"];
+    !$.getdata(lilii11l) && ($.setdata("", l1I1ll1l(Date.now() - 24 * 60 * 60 * 1000) + $.farmInfo?.["farmUserPro"]?.["shareCode"]), $.setdata("", lilii11l));
+    i1l1liII && ($.getdata(lilii11l) ? $.setdata($.getdata(lilii11l) + "," + i1l1liII, lilii11l) : $.setdata(i1l1liII, lilii11l));
+    i1l1liII = $.getdata(lilii11l);
   }
-  if (Ii1Ili && Ii1Ili.length > 0) {}
-  Il1I11 > 0 && console.log("【助力好友👬】获得" + Il1I11 + "g💧\n");
+  if (i1l1liII && i1l1liII.length > 0) {}
+  iII1i1iI > 0 && console.log("【助力好友👬】获得" + iII1i1iI + "g💧\n");
   console.log("助力好友结束，即将开始领取额外水滴奖励\n");
 }
-async function Iii1ll() {
+async function i1I1iI1I() {
   try {
     console.log("\n【京东账号" + $.index + "（" + $.UserName + "）的" + $.name + "好友互助码】");
-    var IiIii1 = false,
-      l1lIIl = "";
-    if (liIIii) {
-      for (let I11l = 0; I11l < liIIii.length; I11l++) {
-        liIIii[I11l].pt_pin == $.UserName && (IiIii1 = true, l1lIIl = liIIii[I11l].ShareCode);
-      }
+    var l111IIii = false,
+      Ii1i11li = "";
+    if (ilIII11l) for (let iIiI1iI = 0; iIiI1iI < ilIII11l.length; iIiI1iI++) {
+      ilIII11l[iIiI1iI].pt_pin == $.UserName && (l111IIii = true, Ii1i11li = ilIII11l[iIiI1iI].ShareCode);
     }
-    if (!IiIii1) {
+    if (!l111IIii) {
       console.log($.UserName + "该账号无缓存，尝试联网获取互助码.....");
-      I1liii = true;
-      await ilIIlI();
+      i1I1iiii = true;
+      await iliilIi();
       if ($.farmInfo?.["farmUserPro"]) {
-        var i1lIl = {};
-        l1lIIl = $.farmInfo?.["farmUserPro"]?.["shareCode"];
-        i1lIl = {
+        var i11111il = {};
+        Ii1i11li = $.farmInfo?.["farmUserPro"]?.["shareCode"];
+        i11111il = {
           "pt_pin": $.UserName,
-          "ShareCode": l1lIIl
+          "ShareCode": Ii1i11li
         };
-        liIIii.push(i1lIl);
-        ilIIll = true;
+        ilIII11l.push(i11111il);
+        l1ill1Ii = true;
       }
     }
-    l1lIIl ? (console.log("\n" + l1lIIl), newShareCodes.push(l1lIIl)) : console.log("\n数据异常");
-  } catch (illI1l) {
-    $.logErr(illI1l);
+    Ii1i11li ? (console.log("\n" + Ii1i11li), newShareCodes.push(Ii1i11li)) : console.log("\n数据异常");
+  } catch (i11l1Il1) {
+    $.logErr(i11l1Il1);
   }
 }
-async function liiiIl() {
-  return new Promise(i1IiIl => {
-    const ll1Ill = {
+async function IiIlI1II() {
+  return new Promise(Illll1ii => {
+    const lll1I = {
       "type": 2,
       "version": 6,
       "channel": 2
     };
-    $.post(liiiII("getFullCollectionReward", ll1Ill), (IlII, IiIili, llIiil) => {
+    $.post(IiIlllIi("getFullCollectionReward", lll1I), (iIl11Ii, I11l1i11, iIl1Il1i) => {
       try {
-        IlII ? (console.log("\n东东农场: API查询请求失败 ‼️‼️"), console.log(JSON.stringify(IlII)), $.logErr(IlII)) : liI1(llIiil) && ($.duckRes = JSON.parse(llIiil));
-      } catch (III1iI) {
-        $.logErr(III1iI, IiIili);
+        iIl11Ii ? (console.log("\n东东农场: API查询请求失败 ‼️‼️"), console.log(JSON.stringify(iIl11Ii)), $.logErr(iIl11Ii)) : ilI11IIl(iIl1Il1i) && ($.duckRes = JSON.parse(iIl1Il1i));
+      } catch (IlllI1i) {
+        $.logErr(IlllI1i, I11l1i11);
       } finally {
-        i1IiIl();
+        Illll1ii();
       }
     });
   });
 }
-async function liIIiI() {
-  $.totalWaterReward = await liIIil("totalWaterTaskForFarm");
+async function l11li11() {
+  $.totalWaterReward = await Ii11iIIl("totalWaterTaskForFarm");
 }
-async function Iii1li() {
-  $.firstWaterReward = await liIIil("firstWaterTaskForFarm");
+async function lI1iiIil() {
+  $.firstWaterReward = await Ii11iIIl("firstWaterTaskForFarm");
 }
-async function iIl1l() {
-  $.waterFriendGotAwardRes = await liIIil("waterFriendGotAwardForFarm", {
+async function iIiiIIIl() {
+  $.waterFriendGotAwardRes = await Ii11iIIl("waterFriendGotAwardForFarm", {
     "version": 4,
     "channel": 1
   });
 }
-async function iIl1i() {
-  $.myCardInfoRes = await liIIil("myCardInfoForFarm", {
+async function IlI1Iiii() {
+  $.myCardInfoRes = await Ii11iIIl("myCardInfoForFarm", {
     "version": 5,
     "channel": 1
   });
 }
-async function i11i1(IlI1) {
-  $.userMyCardRes = await liIIil("userMyCardForFarm", {
-    "cardType": IlI1
+async function llIiIIll(l1l1ii1) {
+  $.userMyCardRes = await Ii11iIIl("userMyCardForFarm", {
+    "cardType": l1l1ii1
   });
 }
-async function liIIi1(I1IlIi) {
-  $.gotStageAwardForFarmRes = await liIIil("gotStageAwardForFarm", {
-    "type": I1IlIi
+async function llIIllI(Iilii1I) {
+  $.gotStageAwardForFarmRes = await Ii11iIIl("gotStageAwardForFarm", {
+    "type": Iilii1I
   });
 }
-async function I1liiI() {
+async function iiIli1II() {
   await $.wait(1000);
   console.log("等待了1秒");
-  $.waterResult = await liIIil("waterGoodForFarm");
+  $.waterResult = await Ii11iIIl("waterGoodForFarm");
 }
-async function l1I11l() {
-  $.initForTurntableFarmRes = await liIIil("initForTurntableFarm", {
+async function IliIlIii() {
+  $.initForTurntableFarmRes = await Ii11iIIl("initForTurntableFarm", {
     "version": 4,
     "channel": 1
   });
 }
-async function iIliii() {
+async function iii1Il1() {
   await $.wait(2000);
   console.log("等待了2秒");
-  $.lotteryRes = await liIIil("lotteryForTurntableFarm", {
+  $.lotteryRes = await Ii11iIIl("lotteryForTurntableFarm", {
     "type": 1,
     "version": 4,
     "channel": 1
   });
 }
-async function l1I11i() {
-  $.timingAwardRes = await liIIil("timingAwardForTurntableFarm", {
+async function iiiIII() {
+  $.timingAwardRes = await Ii11iIIl("timingAwardForTurntableFarm", {
     "version": 4,
     "channel": 1
   });
 }
-async function iIlii1(lIiIll, lIlliI) {
-  lIiIll === 1 && console.log("浏览爆品会场");
-  lIiIll === 2 && console.log("天天抽奖浏览任务领取水滴");
-  const IiIiil = {
-    "type": lIiIll,
-    "adId": lIlliI,
+async function IIIiillI(liill1i1, II1111lI) {
+  liill1i1 === 1 && console.log("浏览爆品会场");
+  liill1i1 === 2 && console.log("天天抽奖浏览任务领取水滴");
+  const li1l11I = {
+    "type": liill1i1,
+    "adId": II1111lI,
     "version": 4,
     "channel": 1
   };
-  $.browserForTurntableFarmRes = await liIIil("browserForTurntableFarm", IiIiil);
+  $.browserForTurntableFarmRes = await Ii11iIIl("browserForTurntableFarm", li1l11I);
 }
-async function IIiil1(i1111) {
-  const IlIi1l = {
+async function iIliI1I(iII1lil) {
+  const iI1i1lll = {
     "type": 2,
-    "adId": i1111,
+    "adId": iII1lil,
     "version": 4,
     "channel": 1
   };
-  $.browserForTurntableFarm2Res = await liIIil("browserForTurntableFarm", IlIi1l);
+  $.browserForTurntableFarm2Res = await Ii11iIIl("browserForTurntableFarm", iI1i1lll);
 }
-async function l1IlII() {
-  $.lotteryMasterHelpRes = await liIIil("initForFarm", {
+async function l11IIlI1() {
+  $.lotteryMasterHelpRes = await Ii11iIIl("initForFarm", {
     "imageUrl": "",
     "nickName": "",
     "shareCode": arguments[0] + "-3",
@@ -415,28 +400,28 @@ async function l1IlII() {
     "channel": 1
   });
 }
-async function ii1i() {
-  $.masterGotFinished = await liIIil("masterGotFinishedTaskForFarm");
+async function l11Il1ii() {
+  $.masterGotFinished = await Ii11iIIl("masterGotFinishedTaskForFarm");
 }
-async function ilIIl1() {
-  $.masterHelpResult = await liIIil("masterHelpTaskInitForFarm");
+async function iIi1l1ll() {
+  $.masterHelpResult = await Ii11iIIl("masterHelpTaskInitForFarm");
 }
-async function ii1l() {
-  $.farmAssistResult = await liIIil("farmAssistInit", {
+async function Ii1IilIi() {
+  $.farmAssistResult = await Ii11iIIl("farmAssistInit", {
     "version": 14,
     "channel": 1,
     "babelChannel": "120"
   });
 }
-async function iIl1I() {
-  $.receiveStageEnergy = await liIIil("receiveStageEnergy", {
+async function lli1lI1() {
+  $.receiveStageEnergy = await Ii11iIIl("receiveStageEnergy", {
     "version": 14,
     "channel": 1,
     "babelChannel": "120"
   });
 }
-async function liIi() {
-  $.inviteFriendRes = await liIIil("initForFarm", {
+async function iili11I1() {
+  $.inviteFriendRes = await Ii11iIIl("initForFarm", {
     "imageUrl": "",
     "nickName": "",
     "shareCode": arguments[0] + "-inviteFriend",
@@ -444,8 +429,8 @@ async function liIi() {
     "channel": 2
   });
 }
-async function liIIlI() {
-  $.helpResult = await liIIil("initForFarm", {
+async function lll1li1I() {
+  $.helpResult = await Ii11iIIl("initForFarm", {
     "imageUrl": "",
     "nickName": "",
     "shareCode": arguments[0],
@@ -454,63 +439,65 @@ async function liIIlI() {
     "channel": 1
   });
 }
-async function IliIil() {
-  const l1iiii = {
+async function iliiiII() {
+  const lI1li11 = {
     "type": 1,
     "hongBaoTimes": 100,
     "version": 3
   };
-  $.waterRain = await liIIil("waterRainForFarm", l1iiii);
+  $.waterRain = await Ii11iIIl("waterRainForFarm", lI1li11);
 }
-async function iliiIi() {
-  $.clockInInit = await liIIil("clockInInitForFarm");
+async function iiiIil1l() {
+  $.clockInInit = await Ii11iIIl("clockInInitForFarm");
 }
-async function i11Ill() {
-  $.clockInForFarmRes = await liIIil("clockInForFarm", {
+async function llIliIl1() {
+  $.clockInForFarmRes = await Ii11iIIl("clockInForFarm", {
     "type": 1
   });
 }
-async function iliiIl(lill1, IiIIl, IiIIi) {
-  let iiiIl1 = {
-    "id": lill1,
-    "type": IiIIl,
-    "step": IiIIi
+async function I11lilii(I11111Ii, I1I1lI1l, iiIIIIIi) {
+  let i1i1i1 = {
+    "id": I11111Ii,
+    "type": I1I1lI1l,
+    "step": iiIIIIIi
   };
-  if (IiIIl === "theme") {
-    if (IiIIi === "1") $.themeStep1 = await liIIil("clockInFollowForFarm", iiiIl1);else IiIIi === "2" && ($.themeStep2 = await liIIil("clockInFollowForFarm", iiiIl1));
+  if (I1I1lI1l === "theme") {
+    if (iiIIIIIi === "1") $.themeStep1 = await Ii11iIIl("clockInFollowForFarm", i1i1i1);else iiIIIIIi === "2" && ($.themeStep2 = await Ii11iIIl("clockInFollowForFarm", i1i1i1));
   } else {
-    if (IiIIl === "venderCoupon") {
-      if (IiIIi === "1") $.venderCouponStep1 = await liIIil("clockInFollowForFarm", iiiIl1);else IiIIi === "2" && ($.venderCouponStep2 = await liIIil("clockInFollowForFarm", iiiIl1));
+    if (I1I1lI1l === "venderCoupon") {
+      if (iiIIIIIi === "1") {
+        $.venderCouponStep1 = await Ii11iIIl("clockInFollowForFarm", i1i1i1);
+      } else iiIIIIIi === "2" && ($.venderCouponStep2 = await Ii11iIIl("clockInFollowForFarm", i1i1i1));
     }
   }
 }
-async function IliIii() {
-  $.gotClockInGiftRes = await liIIil("gotClockInGift", {
+async function i1llIIlI() {
+  $.gotClockInGiftRes = await Ii11iIIl("gotClockInGift", {
     "type": 2
   });
 }
-async function liIIl1() {
-  $.threeMeal = await liIIil("gotThreeMealForFarm");
+async function Ilil11Il() {
+  $.threeMeal = await Ii11iIIl("gotThreeMealForFarm");
 }
-async function iIliiI(i1Ii1I, llIiIl) {
-  if (llIiIl === 0) $.browseResult = await liIIil("browseAdTaskForFarm", {
-    "advertId": i1Ii1I,
-    "type": llIiIl
-  });else llIiIl === 1 && ($.browseRwardResult = await liIIil("browseAdTaskForFarm", {
-    "advertId": i1Ii1I,
-    "type": llIiIl
+async function Il1I1lil(illl1lI, liiIlII1) {
+  if (liiIlII1 === 0) $.browseResult = await Ii11iIIl("browseAdTaskForFarm", {
+    "advertId": illl1lI,
+    "type": liiIlII1
+  });else liiIlII1 === 1 && ($.browseRwardResult = await Ii11iIIl("browseAdTaskForFarm", {
+    "advertId": illl1lI,
+    "type": liiIlII1
   }));
 }
-async function IIiilI() {
-  $.goalResult = await liIIil("gotWaterGoalTaskForFarm", {
+async function II1iiii() {
+  $.goalResult = await Ii11iIIl("gotWaterGoalTaskForFarm", {
     "type": 3
   });
 }
-async function I1lii1() {
-  $.signResult = await liIIil("signForFarm");
+async function l1i1lIii() {
+  $.signResult = await Ii11iIIl("signForFarm");
 }
-async function ilIIlI() {
-  $.farmInfo = await liIIil("initForFarm", {
+async function iliilIi() {
+  $.farmInfo = await Ii11iIIl("initForFarm", {
     "mpin": "",
     "utm_campaign": "",
     "utm_medium": "appshare",
@@ -520,96 +507,97 @@ async function ilIIlI() {
     "imageUrl": "",
     "nickName": "",
     "babelChannel": "10",
-    "sid": Il1i,
-    "un_area": lIiIl,
+    "sid": liIIiiii,
+    "un_area": ii11IIi1,
     "version": 22,
-    "lat": Il1l,
-    "lng": iiil1l,
+    "lat": iI1lilll,
+    "lng": i1IiIl1,
     "channel": 1
   });
 }
-async function liiiI1() {
+async function liiiilII() {
   console.log("\n初始化任务列表");
-  $.farmTask = await liIIil("taskInitForFarm", {
+  $.farmTask = await Ii11iIIl("taskInitForFarm", {
     "version": 18,
     "channel": 1,
     "babelChannel": "121"
   });
 }
-async function iIl11() {
-  $.friendList = await liIIil("friendListInitForFarm", {
+async function ilII11ll() {
+  $.friendList = await Ii11iIIl("friendListInitForFarm", {
     "version": 18,
     "channel": 1,
     "babelChannel": "45"
   });
 }
-async function ii1I() {
-  $.awardInviteFriendRes = await liIIil("awardInviteFriendForFarm");
+async function I1IlilIi() {
+  $.awardInviteFriendRes = await Ii11iIIl("awardInviteFriendForFarm");
 }
-async function i11Ili(iilli1) {
-  const Iil1l = {
-    "shareCode": iilli1,
+async function lIIiI11l(i1lI11lI) {
+  const il1IiIlI = {
+    "shareCode": i1lI11lI,
     "version": 18,
     "channel": 1,
     "babelChannel": "121"
   };
-  $.waterFriendForFarmRes = await liIIil("waterFriendForFarm", Iil1l);
+  $.waterFriendForFarmRes = await Ii11iIIl("waterFriendForFarm", il1IiIlI);
 }
-async function liII() {
-  if ($.isNode() && process.env.FRUIT_NOTIFY_CONTROL) $.ctrTemp = "" + process.env.FRUIT_NOTIFY_CONTROL === "false";else $.getdata("jdFruitNotify") ? $.ctrTemp = $.getdata("jdFruitNotify") === "false" : $.ctrTemp = "" + ii1i1l === "false";
-  $.ctrTemp ? ($.msg($.name, lIiII, i11iI, l1lii1), $.isNode() && (allMessage += lIiII + "\n" + i11iI + ($.index !== cookiesArr.length ? "\n\n" : ""))) : $.log("\n" + i11iI + "\n");
+async function IliiiIIi() {
+  if ($.isNode() && process.env.FRUIT_NOTIFY_CONTROL) {
+    $.ctrTemp = "" + process.env.FRUIT_NOTIFY_CONTROL === "false";
+  } else $.getdata("jdFruitNotify") ? $.ctrTemp = $.getdata("jdFruitNotify") === "false" : $.ctrTemp = "" + iii1Iii1 === "false";
+  $.ctrTemp ? ($.msg($.name, iiI1l1II, iIIlIiii, lIi1il1), $.isNode() && (allMessage += iiI1l1II + "\n" + iIIlIiii + ($.index !== cookiesArr.length ? "\n\n" : ""))) : $.log("\n" + iIIlIiii + "\n");
 }
-function l1IlI1(IllIi) {
-  let iII11;
-  if (IllIi) {
-    iII11 = new Date(IllIi);
-  } else iII11 = new Date();
-  return iII11.getFullYear() + "-" + (iII11.getMonth() + 1 >= 10 ? iII11.getMonth() + 1 : "0" + (iII11.getMonth() + 1)) + "-" + (iII11.getDate() >= 10 ? iII11.getDate() : "0" + iII11.getDate());
+function l1I1ll1l(II1ll1i1) {
+  let IiIII1I;
+  return II1ll1i1 ? IiIII1I = new Date(II1ll1i1) : IiIII1I = new Date(), IiIII1I.getFullYear() + "-" + (IiIII1I.getMonth() + 1 >= 10 ? IiIII1I.getMonth() + 1 : "0" + (IiIII1I.getMonth() + 1)) + "-" + (IiIII1I.getDate() >= 10 ? IiIII1I.getDate() : "0" + IiIII1I.getDate());
 }
-function ii11() {
-  return new Promise(liIII1 => {
+function Ill1llil() {
+  return new Promise(II1I11I1 => {
     console.log("开始获取配置文件\n");
     notify = $.isNode() ? require("./sendNotify") : "";
-    const I111ii = $.isNode() ? require("./jdCookie.js") : "";
+    const il1iIlI = $.isNode() ? require("./jdCookie.js") : "";
     if ($.isNode()) {
-      Object.keys(I111ii).forEach(Ililll => {
-        I111ii[Ililll] && cookiesArr.push(I111ii[Ililll]);
-      });
-      if (process.env.JD_DEBUG && process.env.JD_DEBUG === "false") console.log = () => {};
-    } else cookiesArr = [$.getdata("CookieJD"), $.getdata("CookieJD2"), ...Ii1I1($.getdata("CookiesJD") || "[]").map(Ililli => Ililli.cookie)].filter(lii1 => !!lii1);
-    console.log("共" + cookiesArr.length + "个京东账号\n");
-    $.shareCodesArr = [];
-    liIII1();
-  });
-}
-function liIIil(iIii1l, iIliIi = {}, IIil1l = 1000) {
-  return new Promise(IIllIl => {
-    setTimeout(async () => {
-      $.post(await liiiII(iIii1l, iIliIi), (lIl1i1, l1Ilil, iIili) => {
-        try {
-          lIl1i1 ? (console.log("\n东东农场: API查询请求失败 ‼️‼️"), console.log(JSON.stringify(lIl1i1)), console.log("function_id:" + iIii1l), $.logErr(lIl1i1)) : liI1(iIili) && (iIili = JSON.parse(iIili));
-        } catch (iil1Il) {
-          $.logErr(iil1Il, l1Ilil);
-        } finally {
-          IIllIl(iIili);
+      Object.keys(il1iIlI).forEach(l1IlIllI => {
+        if (il1iIlI[l1IlIllI]) {
+          cookiesArr.push(il1iIlI[l1IlIllI]);
         }
       });
-    }, IIil1l);
+      if (process.env.JD_DEBUG && process.env.JD_DEBUG === "false") console.log = () => {};
+    } else {
+      cookiesArr = [$.getdata("CookieJD"), $.getdata("CookieJD2"), ...i1ill11l($.getdata("CookiesJD") || "[]").map(iIiii1li => iIiii1li.cookie)].filter(IiII1Ii => !!IiII1Ii);
+    }
+    console.log("共" + cookiesArr.length + "个京东账号\n");
+    $.shareCodesArr = [];
+    II1I11I1();
   });
 }
-function liI1(IlIll) {
-  if (!IlIll) {
-    return console.log("京东服务器返回数据为空"), false;
-  }
+function Ii11iIIl(liiIilil, l1llli1 = {}, il111lI1 = 4000) {
+  return new Promise(lIlliII => {
+    setTimeout(async () => {
+      $.post(await IiIlllIi(liiIilil, l1llli1), (il111iI1, IIIli11l, IiIliIli) => {
+        try {
+          il111iI1 ? (console.log("\n东东农场: API查询请求失败 ‼️‼️"), console.log(JSON.stringify(il111iI1)), console.log("function_id:" + liiIilil), $.logErr(il111iI1)) : ilI11IIl(IiIliIli) && (IiIliIli = JSON.parse(IiIliIli));
+        } catch (I111i) {
+          $.logErr(I111i, IIIli11l);
+        } finally {
+          lIlliII(IiIliIli);
+        }
+      });
+    }, il111lI1);
+  });
+}
+function ilI11IIl(lII1Iii) {
+  if (!lII1Iii) return console.log("京东服务器返回数据为空"), false;
   try {
-    if (typeof JSON.parse(IlIll) == "object") {
+    if (typeof JSON.parse(lII1Iii) == "object") {
       return true;
     }
-  } catch (lIl1iI) {
-    return console.log(lIl1iI), false;
+  } catch (I1liilil) {
+    return console.log(I1liilil), false;
   }
 }
-const IliIiI = {
+const lIiiIl1I = {
   "initForFarm": "8a2af",
   "taskInitForFarm": "fcb5a",
   "browseAdTaskForFarm": "53f09",
@@ -649,21 +637,21 @@ const IliIiI = {
   "clockInInitForFarm": "08dc3",
   "guideTaskAward": "59bc4"
 };
-async function liiiII(iil1II, iii11I = {}) {
-  let iI11iI = "";
-  if (!IliIiI[iil1II]) iI11iI = "https://api.m.jd.com/client.action?functionId=" + iil1II + "&body=" + encodeURIComponent(JSON.stringify(iii11I)) + "&appid=wh5", console.log(iI11iI);else {
-    const iIil1 = {
+async function IiIlllIi(lIliiill, iii1l1iI = {}) {
+  let l1I1IlIi = "";
+  if (!lIiiIl1I[lIliiill]) l1I1IlIi = "https://api.m.jd.com/client.action?functionId=" + lIliiill + "&body=" + encodeURIComponent(JSON.stringify(iii1l1iI)) + "&appid=wh5", console.log(l1I1IlIi);else {
+    const Ii1I1IIi = {
         "appid": "signed_wh5",
         "client": "iOS",
         "clientVersion": "10.1.0",
-        "functionId": iil1II,
-        "body": iii11I
+        "functionId": lIliiill,
+        "body": iii1l1iI
       },
-      l1IllI = await IIiili(IliIiI[iil1II], iIil1);
-    iI11iI = "https://api.m.jd.com/client.action?" + l1IllI;
+      Il1i1i = await IiiIIl1l(lIiiIl1I[lIliiill], Ii1I1IIi);
+    l1I1IlIi = "https://api.m.jd.com/client.action?" + Il1i1i;
   }
   return {
-    "url": iI11iI,
+    "url": l1I1IlIi,
     "headers": {
       "Host": "api.m.jd.com",
       "Accept": "*/*",
@@ -675,88 +663,86 @@ async function liiiII(iil1II, iii11I = {}) {
       "x-requested-with": "com.jingdong.app.mall",
       "Cookie": cookie
     },
-    "timeout": 10000
+    "timeout": 30000
   };
 }
-async function IIiili(lIi1Ii, iiilII) {
+async function IiiIIl1l(iilI1Ill, i1111IIl) {
   try {
-    let lili = new I1lI1l({
-      "appId": lIi1Ii,
+    let ii1ili1I = new i11l1lii({
+      "appId": iilI1Ill,
       "appid": "signed_wh5",
-      "clientVersion": iiilII?.["clientVersion"],
-      "client": iiilII?.["client"],
+      "clientVersion": i1111IIl?.["clientVersion"],
+      "client": i1111IIl?.["client"],
       "pin": $.UserName,
       "ua": $.UA,
       "version": "4.1"
     });
-    return await lili.genAlgo(), body = await lili.genUrlParams(iiilII.functionId, iiilII.body), body;
-  } catch (lIi1Il) {}
+    return await ii1ili1I.genAlgo(), body = await ii1ili1I.genUrlParams(i1111IIl.functionId, i1111IIl.body), body;
+  } catch (I1lilil1) {}
 }
-async function IIiiiI(Ii1lII, iliI11) {
-  let ll111I = {
+async function I11l1Ill(Ii11iill, IiiIl1i1) {
+  let i1li11 = {
       "searchParams": {
-        ...iliI11,
-        "appId": Ii1lII
+        ...IiiIl1i1,
+        "appId": Ii11iill
       },
       "pt_pin": $.UserName,
-      "client": iliI11?.["client"],
-      "clientVersion": iliI11?.["clientVersion"]
+      "client": IiiIl1i1?.["client"],
+      "clientVersion": IiiIl1i1?.["clientVersion"]
     },
-    liIl1I = {
+    iIi1l1Ii = {
       "Content-Type": "application/json",
       "User-Agent": $.UA
     },
-    IIl111 = {
+    iiIi = {
       "url": "http://h5st.kingran.cf/api/h5st",
-      "body": JSON.stringify(ll111I),
-      "headers": liIl1I,
+      "body": JSON.stringify(i1li11),
+      "headers": iIi1l1Ii,
       "timeout": 30000
     };
-  return new Promise(async iIiii => {
-    $.post(IIl111, (lil1, illIII, iliI1l) => {
-      let iliI1i = "";
+  return new Promise(async IIII11lI => {
+    $.post(iiIi, (III1I, lll1Il1, IIllIlII) => {
+      let lII11ilI = "";
       try {
-        if (lil1) console.log($.name + " getH5st API请求失败，请检查网路重试");else {
-          iliI1l = JSON.parse(iliI1l);
-          console.log(JSON.stringify(iliI1l));
-          if (typeof iliI1l === "object" && iliI1l && iliI1l.body) {
-            if (iliI1l.body) iliI1i = iliI1l || "";
-          } else iliI1l.code == 400 ? console.log("\n" + iliI1l.msg) : console.log("\n可能连接不上接口，请检查网络");
+        if (III1I) console.log($.name + " getH5st API请求失败，请检查网路重试");else {
+          IIllIlII = JSON.parse(IIllIlII);
+          console.log(JSON.stringify(IIllIlII));
+          if (typeof IIllIlII === "object" && IIllIlII && IIllIlII.body) {
+            if (IIllIlII.body) lII11ilI = IIllIlII || "";
+          } else IIllIlII.code == 400 ? console.log("\n" + IIllIlII.msg) : console.log("\n可能连接不上接口，请检查网络");
         }
-      } catch (IIl11i) {
-        $.logErr(IIl11i, illIII);
+      } catch (iIIli1li) {
+        $.logErr(iIIli1li, lll1Il1);
       } finally {
-        iIiii(lIi1l1(iliI1i));
+        IIII11lI(lilIi1iI(lII11ilI));
       }
     });
   });
 }
-function lIi1l1(Ilili1, iIiiI = {}) {
-  let l1iiiI = [],
-    Ii111l = iIiiI.connector || "&",
-    iI11li = Object.keys(Ilili1);
-  if (iIiiI.sort) iI11li = iI11li.sort();
-  for (let l1Illi of iI11li) {
-    let iiilIi = Ilili1[l1Illi];
-    if (iiilIi && typeof iiilIi === "object") iiilIi = JSON.stringify(iiilIi);
-    if (iiilIi && iIiiI.encode) iiilIi = encodeURIComponent(iiilIi);
-    l1iiiI.push(l1Illi + "=" + iiilIi);
+function lilIi1iI(llIlliiI, il1111il = {}) {
+  let I11111il = [],
+    iI1iiIl = il1111il.connector || "&",
+    I1l1iI = Object.keys(llIlliiI);
+  if (il1111il.sort) I1l1iI = I1l1iI.sort();
+  for (let Il1lIll of I1l1iI) {
+    let IIIIiii = llIlliiI[Il1lIll];
+    if (IIIIiii && typeof IIIIiii === "object") IIIIiii = JSON.stringify(IIIIiii);
+    if (IIIIiii && il1111il.encode) IIIIiii = encodeURIComponent(IIIIiii);
+    I11111il.push(Il1lIll + "=" + IIIIiii);
   }
-  return l1iiiI.join(Ii111l);
+  return I11111il.join(iI1iiIl);
 }
-function i11IlI(l1Illl, Ii111I = "qwertyuiopasdfghjklzxcvbnm") {
-  let liIl1i = "";
-  for (let lIi1I = 0; lIi1I < l1Illl; lIi1I++) {
-    liIl1i += Ii111I[Math.floor(Math.random() * Ii111I.length)];
+function llIIil(liiIliI, iliII1Ii = "qwertyuiopasdfghjklzxcvbnm") {
+  let iiI11I = "";
+  for (let Il1lli1I = 0; Il1lli1I < liiIliI; Il1lli1I++) {
+    iiI11I += iliII1Ii[Math.floor(Math.random() * iliII1Ii.length)];
   }
-  return liIl1i;
+  return iiI11I;
 }
-function Ii1I1(Ii1111) {
-  if (typeof Ii1111 == "string") {
-    try {
-      return JSON.parse(Ii1111);
-    } catch (iIii1) {
-      return console.log(iIii1), $.msg($.name, "", "请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie"), [];
-    }
+function i1ill11l(Illlliil) {
+  if (typeof Illlliil == "string") try {
+    return JSON.parse(Illlliil);
+  } catch (ili1iliI) {
+    return console.log(ili1iliI), $.msg($.name, "", "请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie"), [];
   }
 }

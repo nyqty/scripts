@@ -17,25 +17,26 @@ JOY_COIN_MAXIMIZE =      最大化硬币收益，如果合成后全部挖土后�
 */
 const Env=require('./utils/Env.js');
 const $ = new Env('特价版-牛牛乐园');
-const _0x3d92d8 = $.isNode() ? require("./jdCookie.js") : "",
-  _0xa2ddf4 = $.isNode() ? require("./sendNotify") : "",
-  _0x414d3c = require("./function/krgetua");
-let _0xd45eee = [],
-  _0x370a5b = "",
-  _0x43e6ab = false,
-  _0x4f7eeb = 0;
+const l1iiII = $.isNode() ? require("./jdCookie.js") : "",
+  I1lI1I = $.isNode() ? require("./sendNotify") : "",
+  l1l11 = require("./function/jdCommon"),
+  illill = require("./utils/h5st.js");
+let IIIli1 = [],
+  I1lI11 = "",
+  I1I1Il = false,
+  l1l1I = 0;
 if ($.isNode()) {
-  Object.keys(_0x3d92d8).forEach(_0x4c07d2 => {
-    _0xd45eee.push(_0x3d92d8[_0x4c07d2]);
+  Object.keys(l1iiII).forEach(iIlI11 => {
+    IIIli1.push(l1iiII[iIlI11]);
   });
   if (process.env.JD_DEBUG && process.env.JD_DEBUG === "false") console.log = () => {};
-} else _0xd45eee = [$.getdata("CookieJD"), $.getdata("CookieJD2"), ..._0x552aa0($.getdata("CookiesJD") || "[]").map(_0x19f2c3 => _0x19f2c3.cookie)].filter(_0x58a860 => !!_0x58a860);
+} else IIIli1 = [$.getdata("CookieJD"), $.getdata("CookieJD2"), ...Illii($.getdata("CookiesJD") || "[]").map(IIII => IIII.cookie)].filter(l1IIlI => !!l1IIlI);
 $.JOY_COIN_MAXIMIZE = process.env.JOY_COIN_MAXIMIZE === "1";
 $.log("最大化收益模式: 已" + ($.JOY_COIN_MAXIMIZE ? "默认开启" : "关闭") + "  ");
-let _0x359e4e = Date.now();
+let I1I1Ii = Date.now();
 message = "";
 !(async () => {
-  if (!_0xd45eee[0]) {
+  if (!IIIli1[0]) {
     $.msg($.name, "【提示】请先获取cookie\n直接使用NobyDa的京东签到获取", "https://bean.m.jd.com/", {
       "open-url": "https://bean.m.jd.com/"
     });
@@ -45,22 +46,22 @@ message = "";
     console.log("\n******检测到您设置了不运行汪汪乐园，停止运行此脚本******\n");
     return;
   }
-  for (let _0x473e8a = 0; _0x473e8a < _0xd45eee.length; _0x473e8a++) {
-    _0x43e6ab = false;
-    _0x4f7eeb = 0;
-    _0x370a5b = _0xd45eee[_0x473e8a];
-    if (_0x370a5b) {
-      $.UserName = decodeURIComponent(_0x370a5b.match(/pt_pin=([^; ]+)(?=;?)/) && _0x370a5b.match(/pt_pin=([^; ]+)(?=;?)/)[1]);
-      $.index = _0x473e8a + 1;
+  for (let iil11l = 0; iil11l < IIIli1.length; iil11l++) {
+    I1I1Il = false;
+    l1l1I = 0;
+    I1lI11 = IIIli1[iil11l];
+    if (I1lI11) {
+      $.UserName = decodeURIComponent(I1lI11.match(/pt_pin=([^; ]+)(?=;?)/) && I1lI11.match(/pt_pin=([^; ]+)(?=;?)/)[1]);
+      $.index = iil11l + 1;
       $.isLogin = true;
       $.nickName = "";
       $.maxJoyCount = 10;
-      UA = await _0x414d3c($.UserName);
+      $.UA = l1l11.genUA($.UserName);
       if (!$.isLogin) {
         $.msg($.name, "【提示】cookie已失效", "京东账号" + $.index + " " + ($.nickName || $.UserName) + "\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action", {
           "open-url": "https://bean.m.jd.com/bean/signIndex.action"
         });
-        $.isNode() && (await _0xa2ddf4.sendNotify($.name + "cookie已失效 - " + $.UserName, "京东账号" + $.index + " " + $.UserName + "\n请重新登录获取cookie"));
+        $.isNode() && (await I1lI1I.sendNotify($.name + "cookie已失效 - " + $.UserName, "京东账号" + $.index + " " + $.UserName + "\n请重新登录获取cookie"));
         continue;
       }
       console.log("\n******开始【京东账号" + $.index + "】" + ($.nickName || $.UserName) + "******\n");
@@ -71,11 +72,11 @@ message = "";
           if ($.kgw_invitePin && $.kgw_invitePin.length) {
             $.kgw_invitePin = [...($.kgw_invitePin || [])][Math.floor(Math.random() * $.kgw_invitePin.length)];
             await $.wait(parseInt(Math.random() * 2000 + 3000, 10));
-            let _0x1223db = await _0x1188fd("", 2, $.kgw_invitePin);
-            if (_0x1223db) {
-              if (_0x1223db.helpState && _0x1223db.helpState === 1) {} else {
-                if (_0x1223db.helpState && _0x1223db.helpState === 3) {} else {
-                  if (_0x1223db.helpState && _0x1223db.helpState === 2) {} else {}
+            let IiIi1l = await IIIl("", 2, $.kgw_invitePin);
+            if (IiIi1l) {
+              if (IiIi1l.helpState && IiIi1l.helpState === 1) {} else {
+                if (IiIi1l.helpState && IiIi1l.helpState === 3) {} else {
+                  if (IiIi1l.helpState && IiIi1l.helpState === 2) {} else {}
                 }
               }
             }
@@ -85,530 +86,554 @@ message = "";
       }
       await $.wait(parseInt(Math.random() * 2000 + 3000, 10));
       $.hasJoyCoin = true;
-      await _0x1188fd("", "", "", true);
+      await IIIl("", "", "", true);
       await $.wait(parseInt(Math.random() * 2000 + 3000, 10));
-      !$.krbreak ? ($.activityJoyList = [], $.workJoyInfoList = [], await _0x2eccf5(true), await _0x9498e7(), await _0x3e2562($.workJoyInfoList)) : console.log("活动太火爆，跳过");
+      if (!$.krbreak) {
+        $.activityJoyList = [];
+        $.workJoyInfoList = [];
+        await IIIi(true);
+        await l1IIli();
+        await lIi1iI($.workJoyInfoList);
+      } else {
+        console.log("活动太火爆，跳过");
+      }
       try {
-        !$.krbreak && (await _0x5a8a3c($.activityJoyList), await $.wait(parseInt(Math.random() * 2000 + 1000, 10)), await _0x47e2b0());
-      } catch (_0x482f3d) {
-        $.logErr(_0x482f3d);
+        !$.krbreak && (await l1IIll($.activityJoyList), await $.wait(parseInt(Math.random() * 2000 + 1000, 10)), await liI11l());
+      } catch (ll11Il) {
+        $.logErr(ll11Il);
       }
       await $.wait(parseInt(Math.random() * 2000 + 1000, 10));
     }
   }
-})().catch(_0x19f871 => $.logErr(_0x19f871)).finally(() => $.done());
-async function _0x1188fd(_0x19909f = "", _0x4f11ac = "", _0x23a492 = "", _0x45adf7 = false) {
-  const _0xed1f69 = {
+})().catch(i11lI => $.logErr(i11lI)).finally(() => $.done());
+async function IIIl(Illl1 = "", iii1I = "", iliII = "", ii1i1I = false) {
+  const iillIl = {
       "functionId": "joyBaseInfo",
       "clientVersion": "10.1.0",
       "client": "ios",
-      "t": _0x359e4e,
+      "t": I1I1Ii,
       "appid": "activities_platform",
-      "body": "{\"taskId\":\"" + _0x19909f + "\",\"inviteType\":\"" + _0x4f11ac + "\",\"inviterPin\":\"" + _0x23a492 + "\",\"linkId\":\"LsQNxL7iWDlXUs6cFl-AAg\"}"
+      "body": "{\"taskId\":\"" + Illl1 + "\",\"inviteType\":\"" + iii1I + "\",\"inviterPin\":\"" + iliII + "\",\"linkId\":\"LsQNxL7iWDlXUs6cFl-AAg\"}"
     },
-    _0x4e8945 = await _0x212825("4abce", _0xed1f69);
-  return new Promise(_0x39a411 => {
-    $.post(_0x32125b(_0x4e8945), async (_0x409cc8, _0x3b0b92, _0x95c16c) => {
+    IiIi1I = await Illil("4abce", iillIl);
+  return new Promise(I1lI1l => {
+    $.post(i11li(IiIi1I), async (Il1i, lIiIl, iiil1l) => {
       try {
-        _0x409cc8 ? (console.log("" + JSON.stringify(_0x409cc8)), console.log($.name + " getJoyBaseInfo API请求失败，请检查网路重试")) : (_0x95c16c = JSON.parse(_0x95c16c), _0x95c16c && (_0x95c16c.success ? (_0x45adf7 && ($.log("等级: " + _0x95c16c.data.level + "|金币: " + _0x95c16c.data.joyCoin), _0x95c16c.data.level >= 30 && $.isNode() && (await _0xa2ddf4.sendNotify($.name + " - 账号" + $.index + " - " + $.nickName, "【京东账号" + $.index + "】" + ($.nickName || $.UserName) + "\n当前等级: " + _0x95c16c.data.level + "\n已达到单次最高等级奖励\n请前往京东极速版APP查看使用优惠券\n活动入口：京东极速版APP->我的->汪汪乐园"), $.log("\n开始解锁新场景...\n"), await _0x483274())), $.joyBaseInfo = _0x95c16c.data) : $.krbreak = true));
-      } catch (_0x39e6a3) {
-        $.logErr(_0x39e6a3, _0x3b0b92);
+        Il1i ? (console.log("" + JSON.stringify(Il1i)), console.log($.name + " getJoyBaseInfo API请求失败，请检查网路重试")) : (iiil1l = JSON.parse(iiil1l), iiil1l && (iiil1l.success ? (ii1i1I && ($.log("等级: " + iiil1l.data.level + "|金币: " + iiil1l.data.joyCoin), iiil1l.data.level >= 30 && $.isNode() && (await I1lI1I.sendNotify($.name + " - 账号" + $.index + " - " + $.nickName, "【京东账号" + $.index + "】" + ($.nickName || $.UserName) + "\n当前等级: " + iiil1l.data.level + "\n已达到单次最高等级奖励\n请前往京东极速版APP查看使用优惠券\n活动入口：京东极速版APP->我的->汪汪乐园"), $.log("\n开始解锁新场景...\n"), await illiil())), $.joyBaseInfo = iiil1l.data) : $.krbreak = true));
+      } catch (liiiIi) {
+        $.logErr(liiiIi, lIiIl);
       } finally {
-        _0x39a411($.joyBaseInfo);
+        I1lI1l($.joyBaseInfo);
       }
     });
   });
 }
-async function _0x2eccf5(_0x2e5913 = false) {
-  const _0x5ce5ff = {
+async function IIIi(Iii1li = false) {
+  const iIl1i = {
       "functionId": "joyList",
       "clientVersion": "10.1.0",
       "client": "ios",
-      "t": _0x359e4e,
+      "t": I1I1Ii,
       "appid": "activities_platform",
       "body": "{\"linkId\":\"LsQNxL7iWDlXUs6cFl-AAg\"}"
     },
-    _0x3ad949 = await _0x212825("e18ed", _0x5ce5ff);
-  if (!_0x3ad949) {
+    i11i1 = await Illil("e18ed", iIl1i);
+  if (!i11i1) {
     console.log("接口获取失败，跳过");
     return;
   }
-  return new Promise(_0x385a57 => {
-    $.get(_0x32125b(_0x3ad949), async (_0x1d29d6, _0x15bc2b, _0x5a3c87) => {
+  return new Promise(IIiilI => {
+    $.get(i11li(i11i1), async (i11Ili, liII, l1IlI1) => {
       try {
-        if (_0x1d29d6) {
-          console.log("" + JSON.stringify(_0x1d29d6));
-          console.log($.name + " getJoyList API请求失败，请检查网路重试");
-        } else {
-          _0x5a3c87 = JSON.parse(_0x5a3c87);
-          if (_0x2e5913) {
+        if (i11Ili) console.log("" + JSON.stringify(i11Ili)), console.log($.name + " getJoyList API请求失败，请检查网路重试");else {
+          l1IlI1 = JSON.parse(l1IlI1);
+          if (Iii1li) {
             $.log("===== 【京东账号" + $.index + "】" + ($.nickName || $.UserName) + " joy 状态 start =====");
             $.log("在逛街的joy⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️");
-            for (let _0x2f9fdc = 0; _0x2f9fdc < _0x5a3c87.data.activityJoyList.length; _0x2f9fdc++) {
-              $.log("id:" + _0x5a3c87.data.activityJoyList[_0x2f9fdc].id + "|name: " + _0x5a3c87.data.activityJoyList[_0x2f9fdc].name + "|level: " + _0x5a3c87.data.activityJoyList[_0x2f9fdc].level);
-              _0x5a3c87.data.activityJoyList[_0x2f9fdc].level >= 30 && $.isNode() && (await _0xa2ddf4.sendNotify($.name + " - 账号" + $.index + " - " + $.nickName, "【京东账号" + $.index + "】" + ($.nickName || $.UserName) + "\n当前等级: " + _0x5a3c87.data.level + "\n已达到单次最高等级奖励\n请尽快前往活动查看领取\n活动入口：京东极速版APP->汪汪乐园\n"), $.log("\n开始解锁新场景...\n"), await _0x483274());
+            for (let liI1 = 0; liI1 < l1IlI1.data.activityJoyList.length; liI1++) {
+              $.log("id:" + l1IlI1.data.activityJoyList[liI1].id + "|name: " + l1IlI1.data.activityJoyList[liI1].name + "|level: " + l1IlI1.data.activityJoyList[liI1].level);
+              l1IlI1.data.activityJoyList[liI1].level >= 30 && $.isNode() && (await I1lI1I.sendNotify($.name + " - 账号" + $.index + " - " + $.nickName, "【京东账号" + $.index + "】" + ($.nickName || $.UserName) + "\n当前等级: " + l1IlI1.data.level + "\n已达到单次最高等级奖励\n请尽快前往活动查看领取\n活动入口：京东极速版APP->汪汪乐园\n"), $.log("\n开始解锁新场景...\n"), await illiil());
             }
             $.log("\n在铲土的joy⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️");
-            for (let _0x17bc4f = 0; _0x17bc4f < _0x5a3c87.data.workJoyInfoList.length; _0x17bc4f++) {
-              $.log("工位: " + _0x5a3c87.data.workJoyInfoList[_0x17bc4f].location + " [" + (_0x5a3c87.data.workJoyInfoList[_0x17bc4f].unlock ? "已开" : "未开") + "]|joy= " + (_0x5a3c87.data.workJoyInfoList[_0x17bc4f].joyDTO ? "id:" + _0x5a3c87.data.workJoyInfoList[_0x17bc4f].joyDTO.id + "|name: " + _0x5a3c87.data.workJoyInfoList[_0x17bc4f].joyDTO.name + "|level: " + _0x5a3c87.data.workJoyInfoList[_0x17bc4f].joyDTO.level : "毛都没有"));
+            for (let IliIiI = 0; IliIiI < l1IlI1.data.workJoyInfoList.length; IliIiI++) {
+              $.log("工位: " + l1IlI1.data.workJoyInfoList[IliIiI].location + " [" + (l1IlI1.data.workJoyInfoList[IliIiI].unlock ? "已开" : "未开") + "]|joy= " + (l1IlI1.data.workJoyInfoList[IliIiI].joyDTO ? "id:" + l1IlI1.data.workJoyInfoList[IliIiI].joyDTO.id + "|name: " + l1IlI1.data.workJoyInfoList[IliIiI].joyDTO.name + "|level: " + l1IlI1.data.workJoyInfoList[IliIiI].joyDTO.level : "毛都没有"));
             }
             $.log("===== 【京东账号" + $.index + "】" + ($.nickName || $.UserName) + " joy 状态  end  =====");
           }
-          $.activityJoyList = _0x5a3c87?.["data"]?.["activityJoyList"];
-          $.workJoyInfoList = _0x5a3c87?.["data"]?.["workJoyInfoList"];
+          $.activityJoyList = l1IlI1?.["data"]?.["activityJoyList"];
+          $.workJoyInfoList = l1IlI1?.["data"]?.["workJoyInfoList"];
         }
-      } catch (_0x10236a) {
-        $.logErr(_0x10236a, _0x15bc2b);
+      } catch (IIiiiI) {
+        $.logErr(IIiiiI, liII);
       } finally {
-        _0x385a57(_0x5a3c87.data);
+        IIiilI(l1IlI1.data);
       }
     });
   });
 }
-async function _0x9498e7() {
-  const _0x13e1e5 = {
+async function l1IIli() {
+  const i11Il1 = {
       "functionId": "gameShopList",
       "clientVersion": "10.1.0",
       "client": "ios",
-      "t": _0x359e4e,
+      "t": I1I1Ii,
       "appid": "activities_platform",
       "body": "{\"linkId\":\"LsQNxL7iWDlXUs6cFl-AAg\"}"
     },
-    _0x3939f6 = await _0x212825("e18ed", _0x13e1e5);
-  return new Promise(_0xce2406 => {
-    $.post(_0x32125b(_0x3939f6), async (_0x362c91, _0x2d943f, _0x42eed3) => {
+    IIIlli = await Illil("e18ed", i11Il1);
+  return new Promise(lIi1lI => {
+    $.post(i11li(IIIlli), async (illiiI, liIl, llli11) => {
       try {
-        _0x362c91 ? (console.log("" + JSON.stringify(_0x362c91)), console.log($.name + " API请求失败，请检查网路重试")) : _0x42eed3 = JSON.parse(_0x42eed3).data.filter(_0x324b56 => _0x324b56.shopStatus === 1);
-      } catch (_0x530768) {
-        $.logErr(_0x530768, _0x2d943f);
+        illiiI ? (console.log("" + JSON.stringify(illiiI)), console.log($.name + " API请求失败，请检查网路重试")) : llli11 = JSON.parse(llli11).data.filter(Ili11l => Ili11l.shopStatus === 1);
+      } catch (I1lill) {
+        $.logErr(I1lill, liIl);
       } finally {
-        _0xce2406(_0x42eed3);
+        lIi1lI(llli11);
       }
     });
   });
 }
-async function _0x30596f(_0x1dcb5c, _0x528933) {
-  let _0x5f09f7 = _0x528933.filter(_0x1d892c => _0x1d892c.unlock && _0x1d892c.joyDTO === null);
-  if (_0x1dcb5c.length !== 0 && _0x5f09f7.length !== 0) {
-    let _0x3d9c3d = Math.max.apply(Math, _0x1dcb5c.map(_0x1b9a52 => _0x1b9a52.level)),
-      _0x1807d5 = _0x1dcb5c.filter(_0x1cb6e0 => _0x1cb6e0.level === _0x3d9c3d);
-    $.log("下地干活！ joyId= " + _0x1807d5[0].id + " location= " + _0x5f09f7[0].location);
-    await _0x3ad137(_0x1807d5[0].id, _0x5f09f7[0].location);
-    await _0x2eccf5();
+async function iII1I1(Ili11i, Il1iI1) {
+  let Ill1Ii = Il1iI1.filter(iIII1 => iIII1.unlock && iIII1.joyDTO === null);
+  if (Ili11i.length !== 0 && Ill1Ii.length !== 0) {
+    let iIlilI = Math.max.apply(Math, Ili11i.map(lIilIi => lIilIi.level)),
+      i11Ii1 = Ili11i.filter(iIiiIl => iIiiIl.level === iIlilI);
+    $.log("下地干活！ joyId= " + i11Ii1[0].id + " location= " + Ill1Ii[0].location);
+    await iiiIIl(i11Ii1[0].id, Ill1Ii[0].location);
+    await IIIi();
     await $.wait(parseInt(Math.random() * 2000 + 1000, 10));
-    await _0x30596f($.activityJoyList, $.workJoyInfoList);
+    await iII1I1($.activityJoyList, $.workJoyInfoList);
     await $.wait(parseInt(Math.random() * 2000 + 1000, 10));
-  } else $.JOY_COIN_MAXIMIZE && (await _0x14b3e6(_0x5f09f7), await $.wait(parseInt(Math.random() * 2000 + 1000, 10)));
+  } else $.JOY_COIN_MAXIMIZE && (await iiiIIi(Ill1Ii), await $.wait(parseInt(Math.random() * 2000 + 1000, 10)));
 }
-async function _0x14b3e6(_0x335611) {
-  if (_0x335611.length !== 0 && $.hasJoyCoin) {
+async function iiiIIi(iIiiIi) {
+  if (iIiiIi.length !== 0 && $.hasJoyCoin) {
     $.log("竟然还有工位挖土？开启瞎买瞎下地模式！");
     await $.wait(parseInt(Math.random() * 2000 + 3000, 10));
-    let _0x2ca32b = await _0x1188fd();
+    let liliIi = await IIIl();
     await $.wait(parseInt(Math.random() * 2000 + 3000, 10));
-    let _0x4665a6 = _0x2ca32b.joyCoin;
-    $.log("还有" + _0x4665a6 + "金币,看看还能买啥下地");
-    let _0x32f07e = await _0x9498e7();
+    let i1Ili = liliIi.joyCoin;
+    $.log("还有" + i1Ili + "金币,看看还能买啥下地");
+    let I1iiI1 = await l1IIli();
     await $.wait(parseInt(Math.random() * 2000 + 1000, 10));
-    let _0x17a382 = false;
-    for (let _0x4c0ef1 = _0x32f07e.length - 1; _0x4c0ef1 >= 0 && _0x4c0ef1 - 3 >= 0; _0x4c0ef1--) {
-      if (_0x4665a6 > _0x32f07e[_0x4c0ef1].consume) {
-        $.log("买一只 " + _0x32f07e[_0x4c0ef1].userLevel + "级的！");
-        _0x4665a6 = _0x4665a6 - _0x32f07e[_0x4c0ef1].consume;
-        let _0x39b115 = await _0x57ad4d(_0x32f07e[_0x4c0ef1].userLevel);
-        if (!_0x39b115.success) break;else {
-          _0x17a382 = true;
-          $.hasJoyCoin = false;
-          _0x4c0ef1++;
-        }
+    let lIiIi1 = false;
+    for (let li11l1 = I1iiI1.length - 1; li11l1 >= 0 && li11l1 - 3 >= 0; li11l1--) {
+      if (i1Ili > I1iiI1[li11l1].consume) {
+        $.log("买一只 " + I1iiI1[li11l1].userLevel + "级的！");
+        i1Ili = i1Ili - I1iiI1[li11l1].consume;
+        let IIlIIl = await illiii(I1iiI1[li11l1].userLevel);
+        if (!IIlIIl.success) break;else lIiIi1 = true, $.hasJoyCoin = false, li11l1++;
       }
     }
     $.hasJoyCoin = false;
-    _0x17a382 && (await _0x2eccf5(), await $.wait(parseInt(Math.random() * 2000 + 1000, 10)), await _0x30596f($.activityJoyList, $.workJoyInfoList), await $.wait(parseInt(Math.random() * 2000 + 3000, 10)), await _0x1188fd(), await $.wait(parseInt(Math.random() * 2000 + 3000, 10)));
+    lIiIi1 && (await IIIi(), await $.wait(parseInt(Math.random() * 2000 + 1000, 10)), await iII1I1($.activityJoyList, $.workJoyInfoList), await $.wait(parseInt(Math.random() * 2000 + 3000, 10)), await IIIl(), await $.wait(parseInt(Math.random() * 2000 + 3000, 10)));
   }
 }
-async function _0x3e2562(_0x305892) {
-  if (_0x305892.filter(_0x27f96b => _0x27f96b.joyDTO).length === 0) return $.log("工位清理完成！"), true;
-  for (let _0x3a0642 = 0; _0x3a0642 < _0x305892.length; _0x3a0642++) {
-    _0x305892[_0x3a0642].unlock && _0x305892[_0x3a0642].joyDTO && (await $.wait(parseInt(Math.random() * 2000 + 1000, 10)), $.log("从工位移除 => id:" + _0x305892[_0x3a0642].joyDTO.id + "|name: " + _0x305892[_0x3a0642].joyDTO.name + "|level: " + _0x305892[_0x3a0642].joyDTO.level), await _0x3ad137(_0x305892[_0x3a0642].joyDTO.id, 0), await $.wait(parseInt(Math.random() * 2000 + 1000, 10)));
+async function lIi1iI(I1IIiI) {
+  if (I1IIiI.filter(li1iI => li1iI.joyDTO).length === 0) return $.log("工位清理完成！"), true;
+  for (let I1IIi1 = 0; I1IIi1 < I1IIiI.length; I1IIi1++) {
+    I1IIiI[I1IIi1].unlock && I1IIiI[I1IIi1].joyDTO && (await $.wait(parseInt(Math.random() * 2000 + 1000, 10)), $.log("从工位移除 => id:" + I1IIiI[I1IIi1].joyDTO.id + "|name: " + I1IIiI[I1IIi1].joyDTO.name + "|level: " + I1IIiI[I1IIi1].joyDTO.level), await iiiIIl(I1IIiI[I1IIi1].joyDTO.id, 0), await $.wait(parseInt(Math.random() * 2000 + 1000, 10)));
   }
   await $.wait(parseInt(Math.random() * 2000 + 1000, 10));
-  await _0x2eccf5();
+  await IIIi();
   await $.wait(parseInt(Math.random() * 2000 + 1000, 10));
-  await _0x3e2562($.workJoyInfoList);
+  await lIi1iI($.workJoyInfoList);
 }
-async function _0x5a8a3c(_0x20928e) {
-  let _0xc90ffc = Math.min.apply(Math, _0x20928e.map(_0x32887c => _0x32887c.level)),
-    _0x264966 = _0x20928e.filter(_0x3c9cbb => _0x3c9cbb.level === _0xc90ffc);
+async function l1IIll(ll1lI1) {
+  let liii11 = Math.min.apply(Math, ll1lI1.map(i1IiIl => i1IiIl.level)),
+    lIiIii = ll1lI1.filter(i1IiIi => i1IiIi.level === liii11);
   await $.wait(parseInt(Math.random() * 2000 + 3000, 10));
-  let _0x33e258 = await _0x1188fd();
+  let i1Ill = await IIIl();
   await $.wait(parseInt(Math.random() * 2000 + 3000, 10));
-  !_0x33e258.fastBuyLevel && (await $.wait(parseInt(Math.random() * 2000 + 3000, 10)), _0x33e258 = await _0x1188fd(), await $.wait(parseInt(Math.random() * 2000 + 3000, 10)));
-  if (!_0x33e258.fastBuyLevel) return $.log("出错，下地后跳出......"), await _0x30596f($.activityJoyList, $.workJoyInfoList), await $.wait(parseInt(Math.random() * 2000 + 1000, 10)), false;
-  let _0x246061 = _0x33e258.fastBuyLevel;
-  if (_0x264966.length >= 2) {
-    $.log("开始合成 " + _0xc90ffc + " " + _0x264966[0].id + " <=> " + _0x264966[1].id + " 【限流严重，5秒后合成！如失败会重试】");
+  !i1Ill.fastBuyLevel && (await $.wait(parseInt(Math.random() * 2000 + 3000, 10)), i1Ill = await IIIl(), await $.wait(parseInt(Math.random() * 2000 + 3000, 10)));
+  if (!i1Ill.fastBuyLevel) {
+    return $.log("出错，下地后跳出......"), await iII1I1($.activityJoyList, $.workJoyInfoList), await $.wait(parseInt(Math.random() * 2000 + 1000, 10)), false;
+  }
+  let Il1I11 = i1Ill.fastBuyLevel;
+  if (lIiIii.length >= 2) {
+    $.log("开始合成 " + liii11 + " " + lIiIii[0].id + " <=> " + lIiIii[1].id + " 【限流严重，5秒后合成！如失败会重试】");
     await $.wait(parseInt(Math.random() * 2000 + 5000, 10));
-    await _0x38ce5e(_0x264966[0].id, _0x264966[1].id);
+    await lIIi11(lIiIii[0].id, lIiIii[1].id);
     await $.wait(parseInt(Math.random() * 2000 + 1000, 10));
-    if (_0x43e6ab) {
+    if (I1I1Il) {
       await $.wait(parseInt(Math.random() * 2000 + 3000, 10));
-      _0x33e258 = await _0x1188fd();
+      i1Ill = await IIIl();
       await $.wait(parseInt(Math.random() * 2000 + 3000, 10));
-      await _0x30596f($.activityJoyList, $.workJoyInfoList);
+      await iII1I1($.activityJoyList, $.workJoyInfoList);
       await $.wait(parseInt(Math.random() * 2000 + 1000, 10));
       return false;
     }
     await $.wait(parseInt(Math.random() * 2000 + 1000, 10));
-    await _0x2eccf5();
+    await IIIi();
     await $.wait(parseInt(Math.random() * 2000 + 1000, 10));
-    await _0x5a8a3c($.activityJoyList);
+    await l1IIll($.activityJoyList);
   } else {
-    if (_0x264966.length === 1 && _0x264966[0].level < _0x246061) {
-      let _0x363d65 = await _0x57ad4d(_0x264966[0].level, $.activityJoyList);
-      _0x363d65.success ? (await _0x2eccf5(), await $.wait(parseInt(Math.random() * 2000 + 1000, 10)), await _0x5a8a3c($.activityJoyList), await $.wait(parseInt(Math.random() * 2000 + 1000, 10))) : ($.log("完成！"), await _0x30596f($.activityJoyList, $.workJoyInfoList), await $.wait(parseInt(Math.random() * 2000 + 1000, 10)));
+    if (lIiIii.length === 1 && lIiIii[0].level < Il1I11) {
+      let iilIii = await illiii(lIiIii[0].level, $.activityJoyList);
+      iilIii.success ? (await IIIi(), await $.wait(parseInt(Math.random() * 2000 + 1000, 10)), await l1IIll($.activityJoyList), await $.wait(parseInt(Math.random() * 2000 + 1000, 10))) : ($.log("完成！"), await iII1I1($.activityJoyList, $.workJoyInfoList), await $.wait(parseInt(Math.random() * 2000 + 1000, 10)));
     } else {
       $.log("没有需要合成的joy 开始买买买🛒🛒🛒🛒🛒🛒🛒🛒");
-      $.log("现在最高可以购买: " + _0x246061 + "  购买 " + _0x246061 + " 的joy   你还有" + _0x33e258.joyCoin + "金币");
-      let _0x10f718 = await _0x57ad4d(_0x246061, $.activityJoyList);
-      _0x10f718.success ? (await _0x2eccf5(), await $.wait(parseInt(Math.random() * 2000 + 1000, 10)), await _0x5a8a3c($.activityJoyList), await $.wait(parseInt(Math.random() * 2000 + 1000, 10))) : ($.log("完成！"), await _0x30596f($.activityJoyList, $.workJoyInfoList), await $.wait(parseInt(Math.random() * 2000 + 1000, 10)));
+      $.log("现在最高可以购买: " + Il1I11 + "  购买 " + Il1I11 + " 的joy   你还有" + i1Ill.joyCoin + "金币");
+      let Ili1ii = await illiii(Il1I11, $.activityJoyList);
+      Ili1ii.success ? (await IIIi(), await $.wait(parseInt(Math.random() * 2000 + 1000, 10)), await l1IIll($.activityJoyList), await $.wait(parseInt(Math.random() * 2000 + 1000, 10))) : ($.log("完成！"), await iII1I1($.activityJoyList, $.workJoyInfoList), await $.wait(parseInt(Math.random() * 2000 + 1000, 10)));
     }
   }
 }
-async function _0x3ad137(_0x426090, _0x2a59b0) {
-  const _0x2f3d9f = {
+async function iiiIIl(IiIili, llIiil) {
+  const l1ll1l = {
       "functionId": "joyMove",
       "clientVersion": "10.1.0",
       "client": "ios",
-      "t": _0x359e4e,
+      "t": I1I1Ii,
       "appid": "activities_platform",
-      "body": "{\"joyId\":" + _0x426090 + ",\"location\":" + _0x2a59b0 + ",\"linkId\":\"LsQNxL7iWDlXUs6cFl-AAg\"}"
+      "body": "{\"joyId\":" + IiIili + ",\"location\":" + llIiil + ",\"linkId\":\"LsQNxL7iWDlXUs6cFl-AAg\"}"
     },
-    _0xc35f02 = await _0x212825("50788", _0x2f3d9f);
-  return new Promise(_0x35a007 => {
-    $.post(_0x32125b(_0xc35f02), async (_0x1bc72c, _0xb156c1, _0x3451dd) => {
+    III1iI = await Illil("50788", l1ll1l);
+  return new Promise(III1i1 => {
+    $.post(i11li(III1iI), async (l1I1i1, I1IlIi, l1ll1i) => {
       try {
-        _0x1bc72c ? (console.log("" + JSON.stringify(_0x1bc72c)), console.log($.name + "  doJoyMove API请求失败，请检查网路重试")) : (_0x2a59b0 !== 0 && $.log("下地完成了！"), _0x3451dd = JSON.parse(_0x3451dd));
-      } catch (_0x35c232) {
-        $.logErr(_0x35c232, _0xb156c1);
+        l1I1i1 ? (console.log("" + JSON.stringify(l1I1i1)), console.log($.name + "  doJoyMove API请求失败，请检查网路重试")) : (llIiil !== 0 && $.log("下地完成了！"), l1ll1i = JSON.parse(l1ll1i));
+      } catch (lIlli1) {
+        $.logErr(lIlli1, I1IlIi);
       } finally {
-        _0x35a007(_0x3451dd.data);
+        III1i1(l1ll1i.data);
       }
     });
   });
 }
-async function _0x38ce5e(_0x2d81c9, _0x4ef36b) {
-  const _0x1088ef = {
+async function lIIi11(I1IlII, l1III) {
+  const III1l1 = {
       "functionId": "joyMergeGet",
       "clientVersion": "10.1.0",
       "client": "ios",
-      "t": _0x359e4e,
+      "t": I1I1Ii,
       "appid": "activities_platform",
-      "body": "{\"joyOneId\":" + _0x2d81c9 + ",\"joyTwoId\":" + _0x4ef36b + ",\"linkId\":\"LsQNxL7iWDlXUs6cFl-AAg\"}"
+      "body": "{\"joyOneId\":" + I1IlII + ",\"joyTwoId\":" + l1III + ",\"linkId\":\"LsQNxL7iWDlXUs6cFl-AAg\"}"
     },
-    _0x357604 = await _0x212825("b08cf", _0x1088ef);
-  return new Promise(_0x1291bd => {
-    $.get(_0x32125b(_0x357604), async (_0x24ab6c, _0x24c816, _0x542b67) => {
+    Il111 = await Illil("b08cf", III1l1);
+  return new Promise(IiII1 => {
+    $.get(i11li(Il111), async (IlIi1i, lIllii, l1il1) => {
       try {
-        _0x24ab6c ? (console.log("" + JSON.stringify(_0x24ab6c)), console.log($.name + " doJoyMerge API请求失败，请检查网路重试"), _0x542b67 = {}, _0x43e6ab = true) : (_0x542b67 = JSON.parse(_0x542b67), $.log("合成 " + _0x2d81c9 + " <=> " + _0x4ef36b + " " + (_0x542b67.success ? "成功！" : "失败！【" + _0x542b67.errMsg + "】 code=" + _0x542b67.code)), _0x542b67.code == "1006" && (_0x4f7eeb += 1), _0x4f7eeb == 5 && (console.log("失败次数多，避免死循环，跳出！"), _0x43e6ab = true));
-      } catch (_0x1df67b) {
-        $.logErr(_0x1df67b, _0x24c816);
-        _0x43e6ab = true;
+        IlIi1i ? (console.log("" + JSON.stringify(IlIi1i)), console.log($.name + " doJoyMerge API请求失败，请检查网路重试"), l1il1 = {}, I1I1Il = true) : (l1il1 = JSON.parse(l1il1), $.log("合成 " + I1IlII + " <=> " + l1III + " " + (l1il1.success ? "成功！" : "失败！【" + l1il1.errMsg + "】 code=" + l1il1.code)), l1il1.code == "1006" && (l1l1I += 1), l1l1I == 5 && (console.log("失败次数多，避免死循环，跳出！"), I1I1Il = true));
+      } catch (iiiIiI) {
+        $.logErr(iiiIiI, lIllii);
+        I1I1Il = true;
       } finally {
-        _0x1291bd(_0x542b67.data);
+        IiII1(l1il1.data);
       }
     });
   });
 }
-async function _0x57ad4d(_0x2f9f20, _0x13a30c) {
-  const _0x43d3f0 = {
+async function illiii(Ill1i1, illl1I) {
+  const Il11i = {
       "functionId": "joyBuy",
       "clientVersion": "10.1.0",
       "client": "ios",
-      "t": _0x359e4e,
+      "t": I1I1Ii,
       "appid": "activities_platform",
-      "body": "{\"level\":" + _0x2f9f20 + ",\"linkId\":\"LsQNxL7iWDlXUs6cFl-AAg\"}"
+      "body": "{\"level\":" + Ill1i1 + ",\"linkId\":\"LsQNxL7iWDlXUs6cFl-AAg\"}"
     },
-    _0x424db4 = await _0x212825("ffb36", _0x43d3f0);
-  return new Promise(_0xd54b0f => {
-    $.post(_0x32125b(_0x424db4), async (_0x4809b6, _0x25576b, _0x63d6ca) => {
+    illl11 = await Illil("ffb36", Il11i);
+  return new Promise(Il11I => {
+    $.post(i11li(illl11), async (l1ill, lIi1I1, l1iili) => {
       try {
-        if (_0x4809b6) {
-          console.log("" + JSON.stringify(_0x4809b6));
-          console.log($.name + " doJoyBuy API请求失败，请检查网路重试");
-        } else {
-          _0x63d6ca = JSON.parse(_0x63d6ca);
-          let _0x313435 = "【不知道啥意思】";
-          switch (_0x63d6ca.code) {
+        if (l1ill) console.log("" + JSON.stringify(l1ill)), console.log($.name + " doJoyBuy API请求失败，请检查网路重试");else {
+          l1iili = JSON.parse(l1iili);
+          let iiIi = "【不知道啥意思】";
+          switch (l1iili.code) {
             case 519:
-              _0x313435 = "【没钱了】";
+              iiIi = "【没钱了】";
               break;
             case 518:
-              _0x313435 = "【没空位】";
-              if (_0x13a30c) {
-                $.log("因为购买 " + _0x2f9f20 + "级🐶 没空位 所以我要删掉比低级的狗了");
-                let _0x19c70a = Math.min.apply(Math, _0x13a30c.map(_0x1d3d21 => _0x1d3d21.level));
-                await _0x352178(_0x13a30c.filter(_0xf00097 => _0xf00097.level === _0x19c70a)[0].id);
+              iiIi = "【没空位】";
+              if (illl1I) {
+                $.log("因为购买 " + Ill1i1 + "级🐶 没空位 所以我要删掉比低级的狗了");
+                let iiIl = Math.min.apply(Math, illl1I.map(Iil1I => Iil1I.level));
+                await IIIll1(illl1I.filter(illIIl => illIIl.level === iiIl)[0].id);
                 await $.wait(parseInt(Math.random() * 2000 + 1000, 10));
               }
               break;
             case 0:
-              _0x313435 = "【OK】";
+              iiIi = "【OK】";
               break;
           }
-          $.log("购买joy level: " + _0x2f9f20 + " " + (_0x63d6ca.success ? "成功！" : "失败！" + _0x63d6ca.errMsg + " code=" + _0x63d6ca.code) + "  code的意思是=" + _0x313435);
+          $.log("购买joy level: " + Ill1i1 + " " + (l1iili.success ? "成功！" : "失败！" + l1iili.errMsg + " code=" + l1iili.code) + "  code的意思是=" + iiIi);
         }
-      } catch (_0x31c75a) {
-        $.logErr(_0x31c75a, _0x25576b);
+      } catch (IllII) {
+        $.logErr(IllII, lIi1I1);
       } finally {
-        _0xd54b0f(_0x63d6ca);
+        Il11I(l1iili);
       }
     });
   });
 }
-async function _0x352178(_0x5c3013) {
-  const _0x1a6d21 = {
+async function IIIll1(llIiIi) {
+  const IIii = {
       "functionId": "joyRecovery",
       "clientVersion": "10.1.0",
       "client": "ios",
-      "t": _0x359e4e,
+      "t": I1I1Ii,
       "appid": "activities_platform",
       "body": "{\"level\":" + level + ",\"linkId\":\"LsQNxL7iWDlXUs6cFl-AAg\"}"
     },
-    _0x2d4d89 = await _0x212825("ffb36", _0x1a6d21);
-  return new Promise(_0x7c3ec6 => {
-    $.post(_0x32125b(_0x2d4d89), async (_0x2990a8, _0x22cf96, _0x3a8ad3) => {
+    i1Ii1I = await Illil("ffb36", IIii);
+  return new Promise(iiiIil => {
+    $.post(i11li(i1Ii1I), async (lilll, l1iilI, lilli) => {
       try {
-        _0x2990a8 ? (console.log("" + JSON.stringify(_0x2990a8)), console.log($.name + " doJoyRecovery API请求失败，请检查网路重试"), _0x3a8ad3 = {}) : (_0x3a8ad3 = JSON.parse(_0x3a8ad3), $.log("回收🐶 " + (_0x3a8ad3.success ? "成功！" : "失败！【" + _0x3a8ad3.errMsg + "】 code=" + _0x3a8ad3.code)));
-      } catch (_0x19dcb8) {
-        $.logErr(_0x19dcb8, _0x22cf96);
+        lilll ? (console.log("" + JSON.stringify(lilll)), console.log($.name + " doJoyRecovery API请求失败，请检查网路重试"), lilli = {}) : (lilli = JSON.parse(lilli), $.log("回收🐶 " + (lilli.success ? "成功！" : "失败！【" + lilli.errMsg + "】 code=" + lilli.code)));
+      } catch (iiII) {
+        $.logErr(iiII, l1iilI);
       } finally {
-        _0x7c3ec6(_0x3a8ad3);
+        iiiIil(lilli);
       }
     });
   });
 }
-async function _0x483274() {
-  const _0x56d70d = {
+async function illiil() {
+  const i1Ii1l = {
       "functionId": "joyRestart",
       "clientVersion": "10.1.0",
       "client": "ios",
-      "t": _0x359e4e,
+      "t": I1I1Ii,
       "appid": "activities_platform",
       "body": "{\"linkId\":\"LsQNxL7iWDlXUs6cFl-AAg\"}"
     },
-    _0x5ee9ae = await _0x212825("ffb36", _0x56d70d);
-  return new Promise(_0x5ed057 => {
-    $.post(_0x32125b(_0x5ee9ae), async (_0xc678cd, _0x1d72ff, _0x37ea11) => {
+    IIll = await Illil("ffb36", i1Ii1l);
+  return new Promise(ilI1il => {
+    $.post(i11li(IIll), async (i11Ii, iII1I, iilli1) => {
       try {
-        if (_0xc678cd) {
-          console.log("" + JSON.stringify(_0xc678cd));
-          console.log($.name + " doJoyRestart API请求失败，请检查网路重试");
-        } else {
-          _0x37ea11 = JSON.parse(_0x37ea11);
-          $.log("新场景解锁 " + (_0x37ea11.success ? "成功！" : "失败！【" + _0x37ea11.errMsg + "】 code=" + _0x37ea11.code));
-        }
-      } catch (_0x1be578) {
-        $.logErr(_0x1be578, _0x1d72ff);
+        i11Ii ? (console.log("" + JSON.stringify(i11Ii)), console.log($.name + " doJoyRestart API请求失败，请检查网路重试")) : (iilli1 = JSON.parse(iilli1), $.log("新场景解锁 " + (iilli1.success ? "成功！" : "失败！【" + iilli1.errMsg + "】 code=" + iilli1.code)));
+      } catch (Iil1i) {
+        $.logErr(Iil1i, iII1I);
       } finally {
-        _0x5ed057(_0x37ea11);
+        ilI1il(iilli1);
       }
     });
   });
 }
-async function _0x47e2b0() {
-  return new Promise(async _0x2f5a4f => {
-    const _0x56a2ad = {
+async function liI11l() {
+  return new Promise(async l1I1i => {
+    const l1I1l = {
         "linkId": "LsQNxL7iWDlXUs6cFl-AAg"
       },
-      _0xdd8271 = {
+      i11II = {
         "url": "https://api.m.jd.com",
-        "body": "functionId=gameMyPrize&body=" + escape(JSON.stringify(_0x56a2ad)) + "&_t=" + +new Date() + "&appid=activities_platform",
+        "body": "functionId=gameMyPrize&body=" + escape(JSON.stringify(l1I1l)) + "&_t=" + +new Date() + "&appid=activities_platform",
         "headers": {
-          "User-Agent": UA,
+          "User-Agent": $.UA,
           "Content-Type": "application/x-www-form-urlencoded",
           "Host": "api.m.jd.com",
           "Origin": "https://joypark.jd.com",
           "Referer": "https://joypark.jd.com/?activityId=LsQNxL7iWDlXUs6cFl-AAg&lng=113.387899&lat=22.512678&sid=4d76080a9da10fbb31f5cd43396ed6cw&un_area=19_1657_52093_0",
-          "Cookie": _0x370a5b
+          "Cookie": I1lI11
         },
         "timeout": 30 * 1000
       };
-    $.post(_0xdd8271, async (_0x307604, _0x842b5a, _0x325a74) => {
+    $.post(i11II, async (IlIi1, i1i1il, i1i1ii) => {
       try {
-        if (_0x307604) {
-          console.log("" + JSON.stringify(_0x307604));
-          console.log($.name + " API请求失败，请检查网路重试");
-        } else {
-          _0x325a74 = JSON.parse(_0x325a74);
-          if (_0x325a74.success && _0x325a74.data) {
-            $.Vos = _0x325a74.data.gamePrizeItemVos;
-            for (let _0x48754d = 0; _0x48754d < $.Vos.length; _0x48754d++) {
-              if ($.Vos[_0x48754d].prizeType == 4 && $.Vos[_0x48754d].status == 1 && $.Vos[_0x48754d].prizeTypeVO.prizeUsed == 0) {
-                $.log("当前账号有【" + $.Vos[_0x48754d].prizeName + "】可提现");
-                $.id = $.Vos[_0x48754d].prizeTypeVO.id;
-                $.poolBaseId = $.Vos[_0x48754d].prizeTypeVO.poolBaseId;
-                $.prizeGroupId = $.Vos[_0x48754d].prizeTypeVO.prizeGroupId;
-                $.prizeBaseId = $.Vos[_0x48754d].prizeTypeVO.prizeBaseId;
-                await _0x5afbf9($.id, $.poolBaseId, $.prizeGroupId, $.prizeBaseId);
+        if (IlIi1) console.log("" + JSON.stringify(IlIi1)), console.log($.name + " API请求失败，请检查网路重试");else {
+          i1i1ii = JSON.parse(i1i1ii);
+          if (i1i1ii.success && i1i1ii.data) {
+            $.Vos = i1i1ii.data.gamePrizeItemVos;
+            for (let Il1ili = 0; Il1ili < $.Vos.length; Il1ili++) {
+              if ($.Vos[Il1ili].prizeType == 4 && $.Vos[Il1ili].status == 1 && $.Vos[Il1ili].prizeTypeVO.prizeUsed == 0) {
+                $.log("当前账号有【" + $.Vos[Il1ili].prizeName + "】可提现");
+                $.id = $.Vos[Il1ili].prizeTypeVO.id;
+                $.poolBaseId = $.Vos[Il1ili].prizeTypeVO.poolBaseId;
+                $.prizeGroupId = $.Vos[Il1ili].prizeTypeVO.prizeGroupId;
+                $.prizeBaseId = $.Vos[Il1ili].prizeTypeVO.prizeBaseId;
+                await l1l1i($.id, $.poolBaseId, $.prizeGroupId, $.prizeBaseId);
               }
             }
           }
         }
-      } catch (_0x4eaaff) {
-        $.logErr(_0x4eaaff, _0x842b5a);
+      } catch (iil1I1) {
+        $.logErr(iil1I1, i1i1il);
       } finally {
-        _0x2f5a4f(_0x325a74);
+        l1I1i(i1i1ii);
       }
     });
   });
 }
-function _0x5afbf9(_0x3a363e, _0x1133e0, _0x4c5ec7, _0x32e15f) {
-  return new Promise(_0x10426c => {
-    const _0x23a264 = {
+function l1l1i(iI11il, iii111, liiI, liIII1) {
+  return new Promise(I1ii1I => {
+    const lii1 = {
         "linkId": "LsQNxL7iWDlXUs6cFl-AAg",
         "businessSource": "JOY_PARK",
         "base": {
           "prizeType": 4,
           "business": "fission",
-          "id": _0x3a363e,
-          "poolBaseId": _0x1133e0,
-          "prizeGroupId": _0x4c5ec7,
-          "prizeBaseId": _0x32e15f
+          "id": iI11il,
+          "poolBaseId": iii111,
+          "prizeGroupId": liiI,
+          "prizeBaseId": liIII1
         }
       },
-      _0x31dcc7 = {
+      iIii1l = {
         "url": "https://api.m.jd.com",
-        "body": "functionId=apCashWithDraw&body=" + escape(JSON.stringify(_0x23a264)) + "&_t=" + +new Date() + "&appid=activities_platform",
+        "body": "functionId=apCashWithDraw&body=" + escape(JSON.stringify(lii1)) + "&_t=" + +new Date() + "&appid=activities_platform",
         "headers": {
-          "User-Agent": UA,
+          "User-Agent": $.UA,
           "Content-Type": "application/x-www-form-urlencoded",
           "Host": "api.m.jd.com",
           "Origin": "https://joypark.jd.com",
           "Referer": "https://joypark.jd.com/?activityId=LsQNxL7iWDlXUs6cFl-AAg&lng=113.387899&lat=22.512678&sid=4d76080a9da10fbb31f5cd43396ed6cw&un_area=19_1657_52093_0",
-          "Cookie": _0x370a5b
+          "Cookie": I1lI11
         },
         "timeout": 30 * 1000
       };
-    $.post(_0x31dcc7, async (_0x11f87a, _0x4454f1, _0x23bb08) => {
+    $.post(iIii1l, async (II1i1I, iIliI1, iIii11) => {
       try {
-        _0x11f87a ? (console.log("" + JSON.stringify(_0x11f87a)), console.log($.name + " API请求失败，请检查网路重试")) : safeGet(_0x23bb08) && (_0x23bb08 = $.toObj(_0x23bb08), _0x23bb08.code === 0 ? _0x23bb08.data.status === "310" ? console.log("提现现金成功！") : console.log("提现现金：失败:" + JSON.stringify(_0x23bb08.data.message)) : console.log("提现现金：异常:" + JSON.stringify(_0x23bb08)));
-      } catch (_0x480722) {
-        $.logErr(_0x480722, _0x4454f1);
+        II1i1I ? (console.log("" + JSON.stringify(II1i1I)), console.log($.name + " API请求失败，请检查网路重试")) : safeGet(iIii11) && (iIii11 = $.toObj(iIii11), iIii11.code === 0 ? iIii11.data.status === "310" ? console.log("提现现金成功！") : console.log("提现现金：失败:" + JSON.stringify(iIii11.data.message)) : console.log("提现现金：异常:" + JSON.stringify(iIii11)));
+      } catch (IIllIi) {
+        $.logErr(IIllIi, iIliI1);
       } finally {
-        _0x10426c(_0x23bb08);
+        I1ii1I(iIii11);
       }
     });
   });
 }
-function _0x43e1c4() {
-  return new Promise(_0x4425f0 => {
+function I1I1II() {
+  return new Promise(II1i11 => {
     $.get({
       "url": "http://code.kingran.cf/wwly.json",
       "headers": {
         "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1 Edg/87.0.4280.88"
       }
-    }, async (_0x27cf1d, _0x50cbd4, _0x3efe86) => {
+    }, async (IlillI, I111l1, iIliII) => {
       try {
-        _0x27cf1d ? (console.log("" + JSON.stringify(_0x27cf1d)), console.log($.name + " API请求失败，请检查网路重试")) : $.kgw_invitePin = JSON.parse(_0x3efe86);
-      } catch (_0x585ab6) {
-        $.logErr(_0x585ab6, _0x50cbd4);
+        IlillI ? (console.log("" + JSON.stringify(IlillI)), console.log($.name + " API请求失败，请检查网路重试")) : $.kgw_invitePin = JSON.parse(iIliII);
+      } catch (I1ii11) {
+        $.logErr(I1ii11, I111l1);
       } finally {
-        _0x4425f0();
+        II1i11();
       }
     });
   });
 }
-function _0x5df2a7(_0x5787d2) {
+function i11ll(IlIil) {
   return {
     "url": "https://api.m.jd.com/",
-    "body": _0x5787d2,
+    "body": IlIil,
     "headers": {
       "User-Agent": $.UA,
       "Content-Type": "application/x-www-form-urlencoded",
       "Host": "api.m.jd.com",
       "Origin": "https://joypark.jd.com",
       "Referer": "https://joypark.jd.com/?activityId=LsQNxL7iWDlXUs6cFl-AAg&lng=113.387899&lat=22.512678&sid=4d76080a9da10fbb31f5cd43396ed6cw&un_area=19_1657_52093_0",
-      "Cookie": _0x370a5b
+      "Cookie": I1lI11
     },
     "timeout": 30 * 1000
   };
 }
-function _0x50b747(_0x6850fa, _0x4bfd3) {
+function Ili11I(iil1Ii, iii11i) {
   return {
-    "url": "https://api.m.jd.com/client.action?functionId=" + _0x4bfd3 + (_0x6850fa ? "&" + _0x6850fa : ""),
+    "url": "https://api.m.jd.com/client.action?functionId=" + iii11i + (iil1Ii ? "&" + iil1Ii : ""),
     "headers": {
       "User-Agent": $.UA,
       "Content-Type": "application/x-www-form-urlencoded",
       "Host": "api.m.jd.com",
       "Origin": "https://joypark.jd.com",
       "Referer": "https://joypark.jd.com/?activityId=LsQNxL7iWDlXUs6cFl-AAg&lng=113.388006&lat=22.512549&sid=4d76080a9da10fbb31f5cd43396ed6cw&un_area=19_1657_52093_0",
-      "Cookie": _0x370a5b
+      "Cookie": I1lI11
     },
     "timeout": 30 * 1000
   };
 }
-function _0x32125b(_0x2f069b) {
+function i11li(l1Ilii) {
   return {
-    "url": "https://api.m.jd.com/?" + _0x2f069b,
+    "url": "https://api.m.jd.com/?" + l1Ilii,
     "headers": {
-      "User-Agent": UA,
+      "User-Agent": $.UA,
       "Content-Type": "application/x-www-form-urlencoded",
       "Host": "api.m.jd.com",
       "Origin": "https://joypark.jd.com",
       "Referer": "https://joypark.jd.com/?activityId=LsQNxL7iWDlXUs6cFl-AAg&lng=113.387899&lat=22.512678&sid=4d76080a9da10fbb31f5cd43396ed6cw&un_area=19_1657_52093_0",
-      "Cookie": _0x370a5b
+      "Cookie": I1lI11
     },
     "timeout": 30 * 1000
   };
 }
-async function _0x212825(_0x4aa4c9, _0x9dd0a3) {
-  let _0x52f1aa = {
-      "appId": _0x4aa4c9,
-      ..._0x9dd0a3,
-      "ua": UA,
-      "pin": $.UserName
-    },
-    _0x3541b8 = {
-      "url": "http://kr.kingran.cf/h5st",
-      "body": JSON.stringify(_0x52f1aa),
-      "headers": {
-        "Content-Type": "application/json"
+async function Illil(l1Ilil, iIili) {
+  try {
+    let IlIll = new illill({
+      "appId": l1Ilil,
+      "appid": "activities_platform",
+      "clientVersion": iIili?.["clientVersion"],
+      "client": iIili?.["client"],
+      "pin": $.UserName,
+      "ua": $.UA,
+      "version": "4.1"
+    });
+    return await IlIll.genAlgo(), body = await IlIll.genUrlParams(iIili.functionId, iIili.body), body;
+  } catch (liil) {}
+}
+async function iil11i(i11l11, IlIli) {
+  let iliil1 = {
+      "searchParams": {
+        ...IlIli,
+        "appId": i11l11
       },
-      "timeout": 30 * 1000
+      "pt_pin": $.UserName,
+      "client": IlIli?.["client"],
+      "clientVersion": IlIli?.["clientVersion"]
+    },
+    i1i1ll = {
+      "Content-Type": "application/json",
+      "User-Agent": $.UA
+    },
+    IIllI1 = {
+      "url": "http://h5st.kingran.cf/api/h5st",
+      "body": JSON.stringify(iliil1),
+      "headers": i1i1ll,
+      "timeout": 30000
     };
-  return new Promise(async _0x50fba2 => {
-    $.post(_0x3541b8, (_0x463689, _0x2a7c17, _0x227622) => {
-      let _0x444be1 = "";
+  return new Promise(async liIIIi => {
+    $.post(IIllI1, (lIi1Il, Ii1lII, iliI11) => {
+      let ii1iI1 = "";
       try {
-        if (_0x463689) console.log($.name + " geth5st API请求失败，请检查网路重试");else {
-          _0x227622 = JSON.parse(_0x227622);
-          if (typeof _0x227622 === "object" && _0x227622 && _0x227622.body) {
-            if (_0x227622.body) _0x444be1 = _0x227622.body || "";
-          } else _0x227622.code == 400 ? console.log("\n" + _0x227622.msg) : console.log("\n可能连接不上接口，请检查网络");
+        if (lIi1Il) console.log($.name + " getH5st API请求失败，请检查网路重试");else {
+          iliI11 = JSON.parse(iliI11);
+          console.log(JSON.stringify(iliI11));
+          if (typeof iliI11 === "object" && iliI11 && iliI11.body) {
+            if (iliI11.body) ii1iI1 = iliI11 || "";
+          } else iliI11.code == 400 ? console.log("\n" + iliI11.msg) : console.log("\n可能连接不上接口，请检查网络");
         }
-      } catch (_0x5de565) {
-        $.logErr(_0x5de565, _0x2a7c17);
+      } catch (IIl111) {
+        $.logErr(IIl111, Ii1lII);
       } finally {
-        _0x50fba2(_0x444be1);
+        liIIIi(Ill1II(ii1iI1));
       }
     });
   });
 }
-function _0x15f866(_0x1541ac) {
-  _0x1541ac = _0x1541ac || 32;
-  let _0x37053b = "abcdef0123456789",
-    _0x2b1e46 = _0x37053b.length,
-    _0x45e9b1 = "";
-  for (i = 0; i < _0x1541ac; i++) _0x45e9b1 += _0x37053b.charAt(Math.floor(Math.random() * _0x2b1e46));
-  return _0x45e9b1;
+function Ill1II(Ill1lI, Ii1lI1 = {}) {
+  let iliI1I = [],
+    ii1iII = Ii1lI1.connector || "&",
+    ll1111 = Object.keys(Ill1lI);
+  if (Ii1lI1.sort) ll1111 = ll1111.sort();
+  for (let IIiIIl of ll1111) {
+    let Il1iil = Ill1lI[IIiIIl];
+    if (Il1iil && typeof Il1iil === "object") Il1iil = JSON.stringify(Il1iil);
+    if (Il1iil && Ii1lI1.encode) Il1iil = encodeURIComponent(Il1iil);
+    iliI1I.push(IIiIIl + "=" + Il1iil);
+  }
+  return iliI1I.join(ii1iII);
 }
-function _0x552aa0(_0x43acf5) {
-  if (typeof _0x43acf5 == "string") {
+function llIili(iIiil) {
+  iIiil = iIiil || 32;
+  let lilI = "abcdef0123456789",
+    ll111i = lilI.length,
+    l1Ill1 = "";
+  for (i = 0; i < iIiil; i++) l1Ill1 += lilI.charAt(Math.floor(Math.random() * ll111i));
+  return l1Ill1;
+}
+function Illii(iliI1l) {
+  if (typeof iliI1l == "string") {
     try {
-      return JSON.parse(_0x43acf5);
-    } catch (_0x44acea) {
-      return console.log(_0x44acea), $.msg($.name, "", "请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie"), [];
+      return JSON.parse(iliI1l);
+    } catch (ii1iIl) {
+      return console.log(ii1iIl), $.msg($.name, "", "请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie"), [];
     }
   }
 }
