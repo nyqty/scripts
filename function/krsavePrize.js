@@ -2,229 +2,259 @@
 new Env('savePrize');
 全品类填地址通用依赖
 */
-const liIii1I1 = require("got");
-async function IlIl1iil(IIIllIIi) {
+
+const Iii1l11I = require("got");
+async function I11iI1Il(i1l1iIIl) {
   let {
-    baseUrl: I1IiI1ii,
-    cookie: ll11l1l,
-    ua: li1I1ii,
-    activityId: ilI11Ill,
-    activityType: Iilllll1,
-    venderId: l1iIilI,
-    secretPin: i1IiIli,
-    prizeName: i1i11i11,
-    generateId: il11i1I
-  } = IIIllIIi;
-  const l1Ill1l = process.env.WX_ADDRESS || "",
-    ii1lI1l1 = process.env.WX_ADDRESS_BLOCK || "";
-  if (l1Ill1l === "") return false;
-  const IiiiiiII = l1Ill1l.split("|"),
-    Il1III = Math.floor(Math.random() * IiiiiiII.length);
-  if (IiiiiiII[Il1III] === "") return console.log("❌ 随机抽取到的收货地址信息为空，请正确使用 \"|\" 管道符以用于分割多个收货地址！\n"), false;
-  const [ililil1i, iIi11I1, iIilll1l, iiIlilil, Il1I1ilI, IIlI11I, l1i1lIii, I1111l1i] = IiiiiiII[Il1III].split("@");
-  if (I1111l1i === undefined) {
+    baseUrl: lIilIlIi,
+    cookie: llIll1Ii,
+    ua: Iii1iIi1,
+    activityId: lIilil1I,
+    activityType: iilIIlli,
+    venderId: lll1i11,
+    secretPin: lIi1iili,
+    prizeName: lI11IIi1,
+    generateId: lllIl1l
+  } = i1l1iIIl;
+  const l1lI11li = process.env.WX_ADDRESS || "",
+    iiIllIIl = process.env.WX_ADDRESS_BLOCK || "";
+  if (l1lI11li === "") {
+    return false;
+  }
+  const iiiii1i1 = l1lI11li.split("|"),
+    lIilillI = Math.floor(Math.random() * iiiii1i1.length);
+  if (iiiii1i1[lIilillI] === "") return console.log("❌ 随机抽取到的收货地址信息为空，请正确使用 \"|\" 管道符以用于分割多个收货地址！\n"), false;
+  const [ilill1Ii, iI1IiIii, li1IlIII, l1l111lI, i1IliiIl, i1iilIiI, iilI111I, iiillI1i] = iiiii1i1[lIilillI].split("@");
+  if (iiillI1i === undefined) {
     return console.log("❌ 随机抽取到的收货地址信息格式存在错误（参数不足或过多）\n"), false;
   }
-  for (let i1IlliI = 0; i1IlliI < 7; i1IlliI++) {
-    if (IiiiiiII[i1IlliI] === "") return console.log("❌ 随机抽取到的收货地址信息格式存在错误（参数不能为空）\n"), false;
+  for (let i1l1liil = 0; i1l1liil < 7; i1l1liil++) {
+    if (iiiii1i1[i1l1liil] === "") return console.log("❌ 随机抽取到的收货地址信息格式存在错误（参数不能为空）\n"), false;
   }
-  if (ii1lI1l1 !== "") {
-    const I1I1IiI = ii1lI1l1.split("@");
-    if (I1I1IiI.some(iIlI1Ill => i1i11i11.includes(iIlI1Ill))) return console.log("\n🚫 触发实物奖品自动登记收货地址屏蔽关键词，跳过~\n"), false;
+  if (iiIllIIl !== "") {
+    const I1iii1ll = iiIllIIl.split("@");
+    if (I1iii1ll.some(ii111I11 => lI11IIi1.includes(ii111I11))) return console.log("\n🚫 触发实物奖品自动登记收货地址屏蔽关键词，跳过~\n"), false;
   }
-  Array.isArray(l1iIilI) && (shopId = l1iIilI[1], l1iIilI = l1iIilI[0]);
-  const l11IIii = {
+  Array.isArray(lll1i11) && (shopId = lll1i11[1], lll1i11 = lll1i11[0]);
+  const IIlIli1l = {
       "headers": {
         "Accept": "application/json",
         "Accept-Encoding": "gzip, deflate, br",
         "Accept-Language": "zh-cn",
         "Connection": "keep-alive",
-        "Host": I1IiI1ii.match(/https?:\/\/([^/]+)/)[1],
-        "Origin": I1IiI1ii,
+        "Host": lIilIlIi.match(/https?:\/\/([^/]+)/)[1],
+        "Origin": lIilIlIi,
         "Content-Type": "application/x-www-form-urlencoded",
-        "Referer": I1IiI1ii + "/wxAddress/save",
-        "Cookie": ll11l1l,
-        "User-Agent": li1I1ii
+        "Referer": lIilIlIi + "/wxAddress/save",
+        "Cookie": llIll1Ii,
+        "User-Agent": Iii1iIi1
       },
-      "body": "venderId=" + l1iIilI + "&pin=" + (I1IiI1ii.includes("cjhy") ? encodeURIComponent(encodeURIComponent(i1IiIli)) : encodeURIComponent(i1IiIli)) + "&activityId=" + ilI11Ill + "&actType=" + Iilllll1 + "&prizeName=" + encodeURIComponent(i1i11i11) + "&receiver=" + encodeURIComponent(ililil1i) + "&phone=" + iIi11I1 + "&province=" + encodeURIComponent(iIilll1l) + "&city=" + encodeURIComponent(iiIlilil) + "&county=" + encodeURIComponent(Il1I1ilI) + "&areaCode=" + l1i1lIii + "&address=" + encodeURIComponent(IIlI11I) + "&generateId=" + il11i1I + "&postalCode=" + I1111l1i,
+      "body": "venderId=" + lll1i11 + "&pin=" + (lIilIlIi.includes("cjhy") ? encodeURIComponent(encodeURIComponent(lIi1iili)) : encodeURIComponent(lIi1iili)) + "&activityId=" + lIilil1I + "&actType=" + iilIIlli + "&prizeName=" + encodeURIComponent(lI11IIi1) + "&receiver=" + encodeURIComponent(ilill1Ii) + "&phone=" + iI1IiIii + "&province=" + encodeURIComponent(li1IlIII) + "&city=" + encodeURIComponent(l1l111lI) + "&county=" + encodeURIComponent(i1IliiIl) + "&areaCode=" + iilI111I + "&address=" + encodeURIComponent(i1iilIiI) + "&generateId=" + lllIl1l + "&postalCode=" + iiillI1i,
       "timeout": 30000
     },
-    lliIl11I = 5;
-  let l1lIiIIi = 0,
-    liIillII = null;
-  while (l1lIiIIi < lliIl11I) {
-    const l1Iill = await liIii1I1.post(I1IiI1ii + "/wxAddress/save", l11IIii).catch(async ii1llIii => {
-      if (ii1llIii?.["response"]) {
-        ii1llIii = ii1llIii.response;
-        if (typeof ii1llIii === "string" && ii1llIii.includes("Timeout awaiting 'request'")) liIillII = "请求超时，请检查网络重试";else {
-          const ili1ilIl = l1Iill?.["statusCode"];
-          if (ili1ilIl) {
-            if ([403, 493].includes(ili1ilIl)) liIillII = "请求失败，IP被限制（Response code " + ili1ilIl + "）";else [400, 404].includes(ili1ilIl) ? liIillII = "请求配置参数错误，请联系开发者进行反馈（Response code " + ili1ilIl + "）" : liIillII = "请求失败（Response code " + ili1ilIl + "）";
-          } else liIillII = "API请求失败 " + (ii1llIii.message || ii1llIii);
+    I1ilIiIl = 5;
+  let l1iI1Ii1 = 0,
+    I11iIIi1 = null;
+  while (l1iI1Ii1 < I1ilIiIl) {
+    const I1I111i1 = await Iii1l11I.post(lIilIlIi + "/wxAddress/save", IIlIli1l).catch(async iIlIiI1 => {
+      if (iIlIiI1?.["response"]) {
+        iIlIiI1 = iIlIiI1.response;
+        if (typeof iIlIiI1 === "string" && iIlIiI1.includes("Timeout awaiting 'request'")) I11iIIi1 = "请求超时，请检查网络重试";else {
+          const IlI1illI = I1I111i1?.["statusCode"];
+          if (IlI1illI) {
+            if ([403, 493].includes(IlI1illI)) I11iIIi1 = "请求失败，IP被限制（Response code " + IlI1illI + "）";else [400, 404].includes(IlI1illI) ? I11iIIi1 = "请求配置参数错误，请联系开发者进行反馈（Response code " + IlI1illI + "）" : I11iIIi1 = "请求失败（Response code " + IlI1illI + "）";
+          } else I11iIIi1 = "API请求失败 " + (iIlIiI1.message || iIlIiI1);
         }
       } else {
-        if (ii1llIii?.["response"]?.["body"]) liIillII = "请求失败 " + ii1llIii.response.body + " ";else {
-          liIillII = "请求失败 " + (ii1llIii || "") + " ";
+        if (iIlIiI1?.["response"]?.["body"]) I11iIIi1 = "请求失败 " + iIlIiI1.response.body + " ";else {
+          I11iIIi1 = "请求失败 " + (iIlIiI1 || "") + " ";
         }
       }
-      l1lIiIIi++;
+      l1iI1Ii1++;
     });
-    if (l1Iill && typeof l1Iill === "object") {
-      if (l1Iill.body) try {
-        const IIIiI11l = JSON.parse(l1Iill.body);
-        if (IIIiI11l && IIIiI11l.result) return console.log("已提交收货地址 ✅\n登记为随机抽取到的第" + (Il1III + 1) + "套收货地址信息\n联系信息：" + ililil1i + " (" + iIi11I1.replace(/^(\d{3})\d{4}(\d{4})$/, "$1****$2") + "）\n"), true;else {
-          if (l1lIiIIi === 0 && shopId) l11IIii.body = "venderId=" + shopId + "&pin=" + (I1IiI1ii.includes("cjhy") ? encodeURIComponent(encodeURIComponent(i1IiIli)) : encodeURIComponent(i1IiIli)) + "&activityId=" + ilI11Ill + "&actType=" + Iilllll1 + "&prizeName=" + encodeURIComponent(i1i11i11) + "&receiver=" + encodeURIComponent(ililil1i) + "&phone=" + iIi11I1 + "&province=" + encodeURIComponent(iIilll1l) + "&city=" + encodeURIComponent(iiIlilil) + "&county=" + encodeURIComponent(Il1I1ilI) + "&areaCode=" + l1i1lIii + "&address=" + encodeURIComponent(IIlI11I) + "&generateId=" + il11i1I + "&postalCode=" + I1111l1i, l1lIiIIi++;else return console.log("🚫 保存收货地址失败 ➜ " + (IIIiI11l.errorMessage || JSON.stringify(l1Iill))), false;
+    if (I1I111i1 && typeof I1I111i1 === "object") {
+      if (I1I111i1.body) try {
+        const Iiii1I = JSON.parse(I1I111i1.body);
+        if (Iiii1I && Iiii1I.result) return console.log("已提交收货地址 ✅\n登记为随机抽取到的第" + (lIilillI + 1) + "套收货地址信息\n联系信息：" + ilill1Ii + " (" + iI1IiIii.replace(/^(\d{3})\d{4}(\d{4})$/, "$1****$2") + "）\n"), true;else {
+          if (l1iI1Ii1 === 0 && shopId) {
+            IIlIli1l.body = "venderId=" + shopId + "&pin=" + (lIilIlIi.includes("cjhy") ? encodeURIComponent(encodeURIComponent(lIi1iili)) : encodeURIComponent(lIi1iili)) + "&activityId=" + lIilil1I + "&actType=" + iilIIlli + "&prizeName=" + encodeURIComponent(lI11IIi1) + "&receiver=" + encodeURIComponent(ilill1Ii) + "&phone=" + iI1IiIii + "&province=" + encodeURIComponent(li1IlIII) + "&city=" + encodeURIComponent(l1l111lI) + "&county=" + encodeURIComponent(i1IliiIl) + "&areaCode=" + iilI111I + "&address=" + encodeURIComponent(i1iilIiI) + "&generateId=" + lllIl1l + "&postalCode=" + iiillI1i;
+            l1iI1Ii1++;
+          } else return console.log("🚫 保存收货地址失败 ➜ " + (Iiii1I.errorMessage || JSON.stringify(I1I111i1))), false;
         }
-      } catch (IIIiiili) {
-        return console.log("🚫 保存收货地址接口响应处理异常 ➜ " + (IIIiiili.message || IIIiiili)), false;
+      } catch (Ii1I1lIi) {
+        return console.log("🚫 保存收货地址接口响应处理异常 ➜ " + (Ii1I1lIi.message || Ii1I1lIi)), false;
       } else {
-        liIillII = "请求失败，无响应数据";
-        l1lIiIIi++;
+        I11iIIi1 = "请求失败，无响应数据";
+        l1iI1Ii1++;
       }
     }
   }
-  if (l1lIiIIi >= lliIl11I) {
-    console.log("🚫 保存收货地址异常 ➜ " + liIillII);
+  return l1iI1Ii1 >= I1ilIiIl && console.log("🚫 保存收货地址异常 ➜ " + I11iIIi1), false;
+}
+async function Ii11iiiI(i1lili) {
+  let {
+    baseUrl: i1II11,
+    newbaseUrl: iI1IIlIl,
+    cookie: IIl1111,
+    ua: Iiiiilll,
+    token: I11lliil,
+    prizeName: I1Il11il,
+    orderCode: i1illIIl
+  } = i1lili;
+  const lI1liiIi = process.env.WX_ADDRESS || "",
+    I1l1llIl = process.env.WX_ADDRESS_BLOCK || "";
+  if (lI1liiIi === "") return false;
+  const ll1IiIIl = lI1liiIi.split("|"),
+    IiiIill1 = Math.floor(Math.random() * ll1IiIIl.length);
+  if (ll1IiIIl[IiiIill1] === "") {
+    return console.log("❌ 随机抽取到的收货地址信息为空，请正确使用 \"|\" 管道符以用于分割多个收货地址！\n"), false;
+  }
+  const [i1IiilIi, iIl1II, IiIllIil, il1I1i1i, I1iiI1li, iilllIi] = ll1IiIIl[IiiIill1].split("@");
+  for (let I1iilIl = 0; I1iilIl < 6; I1iilIl++) {
+    if (ll1IiIIl[I1iilIl] === "") {
+      return console.log("❌ 随机抽取到的收货地址信息格式存在错误（参数不能为空）\n"), false;
+    }
+  }
+  if (I1l1llIl !== "") {
+    const l1IiI111 = I1l1llIl.split("@");
+    if (l1IiI111.some(l1i1i111 => I1Il11il.includes(l1i1i111))) return console.log("\n🚫 触发实物奖品自动登记收货地址屏蔽关键词，跳过~\n"), false;
+  }
+  const liiliili = i1II11.match(/https?:\/\/([^/]+)/)[1],
+    iiiIllI1 = {
+      "realName": i1IiilIi,
+      "mobile": iIl1II,
+      "address": iilllIi,
+      "orderCode": i1illIIl,
+      "province": IiIllIil,
+      "city": il1I1i1i,
+      "county": I1iiI1li
+    },
+    l1li1ill = {
+      "headers": {
+        "Accept": "application/json",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Accept-Language": "zh-cn",
+        "Connection": "keep-alive",
+        "Host": liiliili,
+        "Origin": i1II11,
+        "Content-Type": "application/json;charset=UTF-8",
+        "Referer": iI1IIlIl + "/api/my/prize/update",
+        "token": I11lliil,
+        "Cookie": IIl1111,
+        "User-Agent": Iiiiilll
+      },
+      "body": JSON.stringify(iiiIllI1),
+      "timeout": 30000
+    },
+    iIiIIi1i = 5;
+  let lIIII1ll = 0,
+    iIlIi11i = null;
+  while (lIIII1ll < iIiIIi1i) {
+    const l11l1lil = await Iii1l11I.post(iI1IIlIl + "/api/my/prize/update", l1li1ill).catch(async i1Ili111 => {
+      if (i1Ili111?.["response"]) {
+        i1Ili111 = i1Ili111.response;
+        if (typeof i1Ili111 === "string" && i1Ili111.includes("Timeout awaiting 'request'")) iIlIi11i = "请求超时，请检查网络重试";else {
+          const i1lI111i = l11l1lil?.["statusCode"];
+          if (i1lI111i) {
+            if ([403, 493].includes(i1lI111i)) iIlIi11i = "请求失败，IP被限制（Response code " + i1lI111i + "）";else [400, 404].includes(i1lI111i) ? iIlIi11i = "请求配置参数错误，请联系开发者进行反馈（Response code " + i1lI111i + "）" : iIlIi11i = "请求失败（Response code " + i1lI111i + "）";
+          } else iIlIi11i = "API请求失败 " + (i1Ili111.message || i1Ili111);
+        }
+      } else i1Ili111?.["response"]?.["body"] ? iIlIi11i = "请求失败 " + i1Ili111.response.body + " " : iIlIi11i = "请求失败 " + (i1Ili111 || "") + " ";
+      lIIII1ll++;
+    });
+    if (l11l1lil.body) {
+      try {
+        const IlllliI = JSON.parse(l11l1lil.body);
+        if (IlllliI && IlllliI.resp_code === 0) {
+          return console.log("已提交收货地址 ✅\n登记为随机抽取到的第" + (IiiIill1 + 1) + "套收货地址信息\n联系信息：" + i1IiilIi + " (" + iIl1II.replace(/^(\d{3})\d{4}(\d{4})$/, "$1****$2") + "）\n"), true;
+        } else {
+          if (IlllliI && IlllliI.resp_code === 2) return console.log("🚫 保存收货地址失败 ➜ " + (IlllliI.resp_msg || JSON.stringify(IlllliI))), false;else {
+            if (lIIII1ll < 5) {
+              console.log("🚫 保存收货地址失败 ➜ " + (IlllliI.resp_msg || JSON.stringify(IlllliI)));
+              lIIII1ll++;
+            } else return console.log("🚫 保存收货地址失败 ➜ " + (IlllliI.resp_msg || JSON.stringify(IlllliI))), false;
+          }
+        }
+      } catch (lIiIlIil) {
+        return console.log("🚫 保存收货地址接口响应处理异常 ➜ " + (lIiIlIil.message || lIiIlIil)), false;
+      }
+    } else iIlIi11i = "请求失败，无响应数据", lIIII1ll++;
+  }
+  if (lIIII1ll >= iIiIIi1i) {
+    console.log("🚫 保存收货地址异常 ➜ " + iIlIi11i);
   }
   return false;
 }
-async function l1ll111I(IIlliil) {
-  const {
-      baseUrl: iiIlII1I,
-      cookie: llIIliI1,
-      ua: IlliI1II,
-      token: Il11il1l,
-      prizeName: Il1lI1I,
-      orderCode: iiilllIl
-    } = IIlliil,
-    iiliiI11 = process.env.WX_LOREAL_ADDRESS ? process.env.WX_LOREAL_ADDRESS : "",
-    ii111ii = process.env.WX_ADDRESS_BLOCK ? process.env.WX_ADDRESS_BLOCK : process.env.WX_LOREAL_ADDRESS_BLOCK ? process.env.WX_LOREAL_ADDRESS_BLOCK : "";
-  if (iiliiI11 === "") return false;
-  const i1ili1li = iiliiI11.split("|"),
-    lIiIl1ii = Math.floor(Math.random() * i1ili1li.length);
-  if (i1ili1li[lIiIl1ii] === "") {
-    return console.log("❌ 随机抽取到的收货地址信息为空，请正确使用 \"|\" 管道符以用于分割多个收货地址！\n"), false;
+async function l1iiIIl1(liiIIil, lI1liII1, i1iiIIi, liill1I, IiIIlIl, I1Il1l, liI1Iiil, ilIllil, Ii1Iii11) {
+  const iIIiIiI = process.env.WX_ADDRESS || "",
+    i1lllIl1 = process.env.WX_ADDRESS_BLOCK ? process.env.WX_ADDRESS_BLOCK : "";
+  let iiIIliiI = [];
+  if (iIIiIiI != "") iiIIliiI = iIIiIiI.split("|");else return false;
+  var lIlilll = Math.floor(Math.random() * iiIIliiI.length);
+  if (iiIIliiI[lIlilll] == "") return console.log("❌ 随机抽取到的收货地址信息为空，请正确使用 \"|\" 管道符以用于分割多个收货地址！\n"), false;else {
+    iiIIliiI = iiIIliiI[lIlilll];
   }
-  const [I1lIiIi1, Il1IilI, i1llIlIi, lIill1II, lIl1Illi, i11iIIIl] = i1ili1li[lIiIl1ii].split("@");
-  for (let il11lII = 0; il11lII < 6; il11lII++) {
-    if (i1ili1li[il11lII] === "") return console.log("❌ 随机抽取到的收货地址信息格式存在错误（参数不能为空）\n"), false;
+  iiIIliiI = iiIIliiI.split("@");
+  if (iiIIliiI.length != 8) return console.log("❌ 随机抽取到的收货地址信息格式存在错误（参数不足或过多）\n"), false;
+  for (let iili1III = 0; iili1III < 7; iili1III++) {
+    if (iiIIliiI[iili1III] == "") return console.log("❌ 随机抽取到的收货地址信息格式存在错误（参数不能为空）\n"), false;
   }
-  if (ii111ii !== "") {
-    const l1iI1li1 = ii111ii.split("@");
-    if (l1iI1li1.some(i1ilIIiI => Il1lI1I.includes(i1ilIIiI))) {
-      return console.log("\n🚫 触发实物奖品自动登记收货地址屏蔽关键词，跳过~\n"), false;
-    }
-  }
-  const li1i1ii = iiIlII1I.match(/https?:\/\/([^/]+)/)[1],
-    i1iiI1I = {
-      "realName": I1lIiIi1,
-      "mobile": Il1IilI,
-      "address": i11iIIIl,
-      "orderCode": iiilllIl,
-      "province": i1llIlIi,
-      "city": lIill1II,
-      "county": lIl1Illi
-    };
-  let iI111ll = false;
-  try {
-    const iI1lllll = await liIii1I1.post(iiIlII1I + "/prod/cc/interactsaas/api/my/prize/update", {
-      "headers": {
-        "Accept": "application/json",
-        "Accept-Encoding": "gzip, deflate, br",
-        "Accept-Language": "zh-cn",
-        "Connection": "keep-alive",
-        "Host": li1i1ii,
-        "Origin": iiIlII1I,
-        "Content-Type": "application/json;charset=UTF-8",
-        "Referer": iiIlII1I + "/prod/cc/interactsaas/api/my/prize/update",
-        "token": Il11il1l,
-        "Cookie": llIIliI1,
-        "User-Agent": IlliI1II
-      },
-      "json": i1iiI1I
-    });
-    if (iI1lllll && iI1lllll.resp_code === 0) {
-      console.log("\n已自动提交收货地址 ✅\n");
-      console.log("登记模板：采用第" + (lIiIl1ii + 1) + "套收货地址信息（随机抽取）");
-      console.log("联系信息：" + I1lIiIi1 + " (" + Il1IilI.replace(/^(\d{3})\d{4}(\d{4})$/, "$1****$2") + "）");
-      console.log("");
-      iI111ll = true;
-    } else console.log("🚫 保存收货地址失败 ➜ " + (iI1lllll.resp_msg || JSON.stringify(iI1lllll)));
-  } catch (li1iii11) {
-    console.log("🚫 保存收货地址异常 ➜ " + li1iii11);
-  }
-  return iI111ll;
-}
-async function i1ii11l1(liI1I1i, l1l1iil, i11iiIii, lIii1Il, i1l1ilII, iii11IlI, i1Il11, iliIi11, ilI1Ii1I) {
-  const iIlIll11 = process.env.WX_ADDRESS || "",
-    ii111lIl = process.env.WX_ADDRESS_BLOCK ? process.env.WX_ADDRESS_BLOCK : "";
-  let illi1lIl = [];
-  if (iIlIll11 != "") illi1lIl = iIlIll11.split("|");else {
-    return false;
-  }
-  var IIiI1i1I = Math.floor(Math.random() * illi1lIl.length);
-  if (illi1lIl[IIiI1i1I] == "") return console.log("❌ 随机抽取到的收货地址信息为空，请正确使用 \"|\" 管道符以用于分割多个收货地址！\n"), false;else illi1lIl = illi1lIl[IIiI1i1I];
-  illi1lIl = illi1lIl.split("@");
-  if (illi1lIl.length != 8) return console.log("❌ 随机抽取到的收货地址信息格式存在错误（参数不足或过多）\n"), false;
-  for (let il1111I1 = 0; il1111I1 < 7; il1111I1++) {
-    if (illi1lIl[il1111I1] == "") return console.log("❌ 随机抽取到的收货地址信息格式存在错误（参数不能为空）\n"), false;
-  }
-  const il1I1lII = illi1lIl[0],
-    lIIiI = illi1lIl[1],
-    lI1lii1l = illi1lIl[2],
-    li11lII = illi1lIl[3],
-    l1III1iI = illi1lIl[4],
-    liII1iIi = illi1lIl[5],
-    IiI1Ili = illi1lIl[6],
-    l1ilil1 = illi1lIl[7];
-  if (ii111lIl != "") {
-    let IIili1li = ii111lIl.split("@"),
-      Ii1llIi = false;
-    for (let Iii1I11l of IIili1li) {
-      if (iliIi11.includes(Iii1I11l)) {
-        console.log("\n🚫 触发（" + Iii1I11l + "）实物奖品自动登记收货地址屏蔽关键词，跳过~\n");
-        Ii1llIi = true;
+  const i1iIil1 = iiIIliiI[0],
+    lII1iI1i = iiIIliiI[1],
+    li11iil = iiIIliiI[2],
+    iiIi11Ii = iiIIliiI[3],
+    lIIIIi1I = iiIIliiI[4],
+    I1iIi111 = iiIIliiI[5],
+    ii1liII = iiIIliiI[6],
+    l1IIII1I = iiIIliiI[7];
+  if (i1lllIl1 != "") {
+    let l1li1iIl = i1lllIl1.split("@"),
+      i1lll1iI = false;
+    for (let l1iiIiII of l1li1iIl) {
+      if (ilIllil.includes(l1iiIiII)) {
+        console.log("\n🚫 触发（" + l1iiIiII + "）实物奖品自动登记收货地址屏蔽关键词，跳过~\n");
+        i1lll1iI = true;
         break;
       }
     }
-    if (Ii1llIi) return false;
+    if (i1lll1iI) return false;
   }
-  const ill1l111 = liI1I1i.includes("cjhy") ? encodeURIComponent(encodeURIComponent(i1Il11)) : encodeURIComponent(i1Il11),
-    l1Il111I = liI1I1i.match(/https?:\/\/([^/]+)/)[1],
-    IllilI1l = "venderId=" + iii11IlI + "&pin=" + ill1l111 + "&activityId=" + lIii1Il + "&actType=" + i1l1ilII + "&prizeName=" + encodeURIComponent(iliIi11) + "&receiver=" + encodeURIComponent(il1I1lII) + "&phone=" + lIIiI + "&province=" + encodeURIComponent(lI1lii1l) + "&city=" + encodeURIComponent(li11lII) + "&county=" + encodeURIComponent(l1III1iI) + "&areaCode=" + IiI1Ili + "&address=" + encodeURIComponent(liII1iIi) + "&generateId=" + ilI1Ii1I + "&postalCode=" + l1ilil1;
-  let iIi1l11I = false;
+  const iliiiill = liiIIil.includes("cjhy") ? encodeURIComponent(encodeURIComponent(liI1Iiil)) : encodeURIComponent(liI1Iiil),
+    iiI1lIiI = liiIIil.match(/https?:\/\/([^/]+)/)[1],
+    IlIlllil = "venderId=" + I1Il1l + "&pin=" + iliiiill + "&activityId=" + liill1I + "&actType=" + IiIIlIl + "&prizeName=" + encodeURIComponent(ilIllil) + "&receiver=" + encodeURIComponent(i1iIil1) + "&phone=" + lII1iI1i + "&province=" + encodeURIComponent(li11iil) + "&city=" + encodeURIComponent(iiIi11Ii) + "&county=" + encodeURIComponent(lIIIIi1I) + "&areaCode=" + ii1liII + "&address=" + encodeURIComponent(I1iIi111) + "&generateId=" + Ii1Iii11 + "&postalCode=" + l1IIII1I;
+  let IlIIiI1 = false;
   try {
-    let i1i1I1II = await liIii1I1.post(liI1I1i + "/wxAddress/save", {
+    let llIiiil1 = await Iii1l11I.post(liiIIil + "/wxAddress/save", {
       "headers": {
         "Accept": "application/json",
         "Accept-Encoding": "gzip, deflate, br",
         "Accept-Language": "zh-cn",
         "Connection": "keep-alive",
-        "Host": l1Il111I,
-        "Origin": liI1I1i,
+        "Host": iiI1lIiI,
+        "Origin": liiIIil,
         "Content-Type": "application/x-www-form-urlencoded",
-        "Referer": liI1I1i + "/wxAddress/save",
-        "Cookie": l1l1iil,
-        "User-Agent": i11iiIii
+        "Referer": liiIIil + "/wxAddress/save",
+        "Cookie": lI1liII1,
+        "User-Agent": i1iiIIi
       },
-      "body": IllilI1l
-    }).json().catch(llliiI1I => {
-      console.error("🚫 wxSavePrize API请求失败 ➜ (" + llliiI1I.response.statusCode + " " + llliiI1I.response.statusMessage + ")\n");
+      "body": IlIlllil
+    }).json().catch(II11IIll => {
+      console.error("🚫 wxSavePrize API请求失败 ➜ (" + II11IIll.response.statusCode + " " + II11IIll.response.statusMessage + ")\n");
     });
-    if (i1i1I1II && i1i1I1II.result) {
+    if (llIiiil1 && llIiiil1.result) {
       console.log("\n已自动提交收货地址 ✅\n");
-      console.log("登记模板：采用第" + (IIiI1i1I + 1) + "套收货地址信息（随机抽取）");
-      console.log("联系信息：" + il1I1lII + " (" + lIIiI.replace(/^(\d{3})\d{4}(\d{4})$/, "$1****$2") + "）");
+      console.log("登记模板：采用第" + (lIlilll + 1) + "套收货地址信息（随机抽取）");
+      console.log("联系信息：" + i1iIil1 + " (" + lII1iI1i.replace(/^(\d{3})\d{4}(\d{4})$/, "$1****$2") + "）");
       console.log("");
-      iIi1l11I = true;
-    } else i1i1I1II.errorMessage ? console.log("🚫 保存收货地址失败 ➜ " + i1i1I1II.errorMessage) : console.log("🚫 保存收货地址失败 ➜ " + JSON.stringify(i1i1I1II)), console.log("");
-  } catch (iiI1lii) {
-    console.log("🚫 保存收货地址异常 ➜ " + iiI1lii);
+      IlIIiI1 = true;
+    } else llIiiil1.errorMessage ? console.log("🚫 保存收货地址失败 ➜ " + llIiiil1.errorMessage) : console.log("🚫 保存收货地址失败 ➜ " + JSON.stringify(llIiiil1)), console.log("");
+  } catch (I1lilllI) {
+    console.log("🚫 保存收货地址异常 ➜ " + I1lilllI);
   }
-  return iIi1l11I;
+  return IlIIiI1;
 }
 module.exports = {
-  "wxSavePrize": i1ii11l1,
-  "wuxian_savePrize": IlIl1iil,
-  "loreal_savePrize": l1ll111I
+  "wxSavePrize": l1iiIIl1,
+  "wuxian_savePrize": I11iI1Il,
+  "loreal_savePrize": Ii11iiiI
 };
