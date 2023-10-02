@@ -1,6 +1,6 @@
 /*
 活动名称：幸运抽奖（超级无线）
-活动链接：https://lzkj-isv.isvjcloud.com/prod/cc/interactsaas/index?activityType=<10020/10021/10026/10041/10042/10046/10062/10063/10073/10080>&templateId=<模板id>&activityId=<活动id>&nodeId=<nodeid>&prd=cjwx
+活动链接：https://lzkj-isv.isvjcloud.com/prod/cc/interactsaas/index?activityType=<10001/10004/10020/10021/10026/10041/10042/10046/10054/10062/10063/10073/10080>&templateId=<模板id>&activityId=<活动id>&prd=cjwx
 环境变量：jd_lzkj_loreal_draw_url // 活动链接
           jd_lzkj_loreal_draw_Notify // 是否推送通知（true/false），默认不推送
 		  jd_lzkj_loreal_draw_opencard // 是否入会（true/false），默认不入会
@@ -23,50 +23,53 @@ cron:1 1 1 1 *
 */
 const Env=require('./utils/Env.js');
 const $ = new Env('幸运抽奖（超级无线）');
-const i11I1iI1 = $.isNode() ? require("./jdCookie") : "",
-  ll1iiIil = require("./function/jdCommon"),
-  l1I1liIl = require("./function/sendJDNotify"),
-  liI1li11 = require("./function/krh5st"),
-  l11l1l11 = require("./function/krgetToken"),
+const I1I1111l = $.isNode() ? require("./jdCookie") : "",
+  III1lIl1 = require("./function/jdCommon"),
+  lIiIll11 = require("./function/sendJDNotify"),
+  I111lIiI = require("./function/krgetToken"),
   {
-    loreal_savePrize: iiIilI1
+    loreal_savePrize: lI1ilIii
   } = require("./function/krsavePrize"),
-  lIi1ll1l = require("crypto-js");
-let Iill11l1 = [];
-const l11I1llI = process.env.jd_lzkj_loreal_draw_url || "",
-  iIiI1lI = process.env.jd_lzkj_loreal_draw_opencard === "true",
-  llIiiiil = process.env.jd_lzkj_loreal_draw_Notify === "true",
-  I1lliiIl = process.env.jd_lzkj_loreal_draw_break === "true",
-  i1llI1i = process.env.jd_lzkj_loreal_draw_Interval || "";
-let ii1i1Ii1 = process.env.jd_lzkj_loreal_draw_MaxMiss || "",
-  IIlII1i1 = true,
-  li1iillI = process.env.jd_lzkj_loreal_draw_Number ? process.env.jd_lzkj_loreal_draw_Number : "7",
-  l1li1Il1 = "",
-  lIiIIIi1 = "";
+  ilIlll1I = require("crypto-js");
+let liI1i1II = [];
+const II1IIi11 = process.env.jd_lzkj_loreal_draw_url || "",
+  lIlII1l1 = process.env.jd_lzkj_loreal_draw_opencard === "true",
+  IiillliI = process.env.jd_lzkj_loreal_draw_Notify === "true",
+  I1il1ll1 = process.env.jd_lzkj_loreal_draw_break === "true",
+  iilI1Ii = process.env.jd_lzkj_loreal_draw_Interval || "";
+let Iil1lii = process.env.jd_lzkj_loreal_draw_MaxMiss || "",
+  Il1illIl = true,
+  IIii111l = process.env.jd_lzkj_loreal_draw_Number ? process.env.jd_lzkj_loreal_draw_Number : "7",
+  lIIIi1Il = "",
+  l1lliiII = "";
 if ($.isNode()) {
   if (JSON.stringify(process.env).indexOf("GITHUB") > -1) process.exit(0);
-  Object.keys(i11I1iI1).forEach(llIiI1I1 => {
-    Iill11l1.push(i11I1iI1[llIiI1I1]);
+  Object.keys(I1I1111l).forEach(lIl1 => {
+    liI1i1II.push(I1I1111l[lIl1]);
   });
   if (process.env.JD_DEBUG && process.env.JD_DEBUG === "false") console.log = () => {};
-} else Iill11l1 = [$.getdata("CookieJD"), $.getdata("CookieJD2"), ...$.toObj($.getdata("CookiesJD") || "[]").map(iIIi1lli => iIIi1lli.cookie)].filter(ii1i1I1 => !!ii1i1I1);
-!Iill11l1[0] && ($.msg($.name, "【提示】请先获取Cookie"), process.exit(1));
+} else liI1i1II = [$.getdata("CookieJD"), $.getdata("CookieJD2"), ...$.toObj($.getdata("CookiesJD") || "[]").map(IIIIiIi => IIIIiIi.cookie)].filter(IliI1I1l => !!IliI1I1l);
+!liI1i1II[0] && ($.msg($.name, "【提示】请先获取Cookie"), process.exit(1));
 !(async () => {
-  if (!l11I1llI) {
+  if (!II1IIi11) {
     console.log("⚠ 请先定义必要的环境变量后再运行脚本");
     return;
   }
-  const lI1i1l1I = ll1iiIil.parseUrl(l11I1llI);
-  if (!lI1i1l1I) {
+  const i1l1li = III1lIl1.parseUrl(II1IIi11);
+  if (!i1l1li) {
     console.log("⚠ 请填写格式正确的链接");
     return;
   }
-  $.activityUrl = l11I1llI;
-  $.activityId = ll1iiIil.getUrlParameter(l11I1llI, "activityId");
-  $.activityType = ll1iiIil.getUrlParameter(l11I1llI, "activityType");
-  $.hostname = lI1i1l1I?.["hostname"];
+  $.activityUrl = II1IIi11;
+  $.activityId = III1lIl1.getUrlParameter(II1IIi11, "activityId");
+  $.activityType = III1lIl1.getUrlParameter(II1IIi11, "activityType");
+  $.hostname = i1l1li?.["hostname"];
   if ($.hostname) {
-    if ($.hostname.includes("lorealjdcampaign-rc")) $.wxActType = "apps/interact";else $.hostname.includes("lzkj") && ($.wxActType = l11I1llI.match(/\/(prod\/cc\/interact\w*)\//)[1]);
+    if ($.hostname.includes("lorealjdcampaign-rc")) $.wxActType = "apps/interact";else {
+      if ($.hostname.includes("lzkj")) {
+        $.wxActType = II1IIi11.match(/\/(prod\/cc\/interact\w*)\//)[1];
+      }
+    }
     $.baseUrl = "https://" + $.hostname;
     $.newbaseUrl = "https://" + $.hostname + "/" + $.wxActType;
     $.origin = $.baseUrl;
@@ -76,53 +79,55 @@ if ($.isNode()) {
     return;
   }
   try {
-    ii1i1Ii1 = parseInt(ii1i1Ii1);
+    Iil1lii = parseInt(Iil1lii);
   } catch {
-    ii1i1Ii1 = 0;
+    Iil1lii = 0;
   }
-  l1I1liIl.config({
+  lIiIll11.config({
     "title": $.name
   });
   console.log("活动入口：" + $.activityUrl);
-  console.log("\n是否推送通知【" + (llIiiiil == true ? "通知" : "不通知") + "】 是否开卡 【" + (iIiI1lI == true ? "不开卡" : "默认开卡") + "】");
-  console.log("\n当前设定连续 【" + li1iillI + "】 次无抽奖次数跳出");
-  console.log("\n当前设定 493 是否继续运行【" + (I1lliiIl == true ? "不退出" : "退出") + "】");
-  for (let I1iiIl11 = 0; I1iiIl11 < Iill11l1.length; I1iiIl11++) {
-    if (I1iiIl11 > li1iillI && IIlII1i1) {
+  console.log("\n是否推送通知【" + (IiillliI == true ? "通知" : "不通知") + "】 是否开卡 【" + (lIlII1l1 == true ? "不开卡" : "默认开卡") + "】");
+  console.log("\n当前设定连续 【" + IIii111l + "】 次无抽奖次数跳出");
+  console.log("\n当前设定 493 是否继续运行【" + (I1il1ll1 == true ? "不退出" : "退出") + "】");
+  for (let i111i11i = 0; i111i11i < liI1i1II.length; i111i11i++) {
+    if (i111i11i > IIii111l && Il1illIl) {
       console.log("\n检测到多次无抽奖次数，跳过此次运行\n");
       break;
     }
     $.outFlag = false;
-    if (Iill11l1[I1iiIl11]) {
-      $.index = I1iiIl11 + 1;
-      l1li1Il1 = Iill11l1[I1iiIl11];
-      lIiIIIi1 = Iill11l1[I1iiIl11];
-      $.UserName = decodeURIComponent(ll1iiIil.getCookieValue(l1li1Il1, "pt_pin"));
-      $.UA = ll1iiIil.genUA($.UserName);
-      $.UUID = ll1iiIil.genUuid("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+    if (liI1i1II[i111i11i]) {
+      $.index = i111i11i + 1;
+      lIIIi1Il = liI1i1II[i111i11i];
+      l1lliiII = liI1i1II[i111i11i];
+      III1lIl1.setCookie(l1lliiII);
+      $.UserName = decodeURIComponent(III1lIl1.getCookieValue(lIIIi1Il, "pt_pin"));
+      $.UA = III1lIl1.genUA($.UserName);
+      $.UUID = III1lIl1.genUuid("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
       $.te = Math.floor(Math.random() * 9000) + 1000;
-      $.message = l1I1liIl.create($.index, $.UserName);
+      $.message = lIiIll11.create($.index, $.UserName);
       $.nickName = "";
       console.log("\n******开始【京东账号" + $.index + "】" + ($.nickName || $.UserName) + "******\n");
-      await I1IIIiII();
+      await il11ilI1();
+      III1lIl1.unsetCookie();
       if ($.outFlag || $.runEnd) break;
     }
   }
-  llIiiiil && l1I1liIl.getMessage() && (l1I1liIl.updateContent(l1I1liIl.content + ("\n【活动地址】：" + $.activityUrl)), await l1I1liIl.push());
-})().catch(llil1iII => $.logErr(llil1iII)).finally(() => $.done());
-async function I1IIIiII() {
+  IiillliI && lIiIll11.getMessage() && (lIiIll11.updateContent(lIiIll11.content + ("\n【活动地址】：" + $.activityUrl)), await lIiIll11.push());
+})().catch(Il11l1l1 => $.logErr(Il11l1l1)).finally(() => $.done());
+async function il11ilI1() {
   try {
     $.skipRun = false;
     $.token = "";
     $.pinToken = "";
     if ($.runEnd || $.outFlag) return;
-    $.jdToken = await l11l1l11(lIiIIIi1, $.baseUrl);
+    $.jdToken = await I111lIiI(l1lliiII, $.baseUrl);
     if (!$.jdToken) {
       console.log("获取 Token 失败！");
       $.message.fix("获取[Token]失败");
       return;
     }
-    await iIIii1iI("login");
+    await I111II1l("login");
     if ($.runEnd || $.outFlag || $.skipRun) return;
     if (!$.token) {
       console.log("未能获取用户鉴权信息！");
@@ -133,21 +138,18 @@ async function I1IIIiII() {
     if ($.joinCode) {
       switch ($.joinCode) {
         case "1004":
-          await iIIii1iI("follow"), await $.wait(500);
+          await I111II1l("follow"), await $.wait(500);
           break;
         case "1005":
         case "1006":
-          $.joinCode !== "1005" && (await iIIii1iI("follow"));
-          if (iIiI1lI) {
-            $.errorJoinShop = "";
-            $.joinVenderId = $.venderId;
-            for (let illiiliI = 0; illiiliI < Array(3).length; illiiliI++) {
-              if (illiiliI > 0) console.log("第" + illiiliI + "次 重新入会");
-              await Iil1l111();
-              await $.wait(500);
-              if ($.errorJoinShop.indexOf("活动太火爆，请稍后再试") == -1) break;
+          $.joinCode !== "1005" && (await I111II1l("follow"));
+          if (lIlII1l1) {
+            const ilIIiI1l = await III1lIl1.joinShopMember($.venderId);
+            if (ilIIiI1l) console.log("加入店铺会员成功");else {
+              console.log("加入店铺会员失败，活动仅限店铺会员参与哦~");
+              $.message.fix("加入店铺会员失败，活动仅限店铺会员参与");
+              return;
             }
-            $.errorJoinShop.indexOf("活动太火爆，请稍后再试") > -1 && (console.log("❌ 入会失败"), $.skipRun = true);
           } else {
             console.log("活动仅限店铺会员参与哦~");
             $.message.fix("活动仅限店铺会员参与");
@@ -170,7 +172,7 @@ async function I1IIIiII() {
       return;
     }
     if ($.hostname.includes("lzkj")) {
-      await iIIii1iI("initPinToken");
+      await I111II1l("initPinToken");
       if (!$.pinToken) {
         console.log("获取 pinToken 失败！");
         $.message.fix("获取[pinToken]失败");
@@ -180,9 +182,11 @@ async function I1IIIiII() {
     }
     if ($.runEnd || $.outFlag || $.skipRun) return;
     if ($.index === 1) {
-      await iIIii1iI("basicInfo");
+      await I111II1l("basicInfo");
       if ($.runEnd || $.outFlag || $.skipRun) return;
       switch ($.activityType) {
+        case "10001":
+        case "10004":
         case "10020":
         case "10021":
         case "10026":
@@ -205,54 +209,50 @@ async function I1IIIiII() {
       if ($.runEnd || $.outFlag) return;
       await $.wait(500);
     }
-    await iIIii1iI("drawPrize");
+    await I111II1l("drawPrize");
     await $.wait(500);
-    if ($.index === 1) {
-      let lIIiIiil = false,
-        iI1i11Il = "";
-      for (let ilII11li = 0; ilII11li < $.prizeInfo.length; ilII11li++) {
-        const Iliil11I = $.prizeInfo[ilII11li],
-          ilIl1Iil = Iliil11I.prizeName,
-          iiI1l1li = Iliil11I.leftNum,
-          Ill1Illl = Iliil11I.prizeType;
-        iiI1l1li >= 1 && (lIIiIiil = true);
-        iI1i11Il += "  " + ilIl1Iil + (Ill1Illl === 5 ? "[专享价]" : Ill1Illl === 3 ? "[实物]" : "") + " - " + (iiI1l1li >= 1 ? "剩余" + iiI1l1li + "件" : "已发完") + "\n";
+    if ($.index === 1 && $.prizeInfo) {
+      let IllIll1 = false,
+        IiI1II1 = "";
+      for (let IlI1IlII = 0; IlI1IlII < $.prizeInfo.length; IlI1IlII++) {
+        const IllIiIlI = $.prizeInfo[IlI1IlII],
+          ll1I1I1l = IllIiIlI.prizeName,
+          il1I1ll1 = IllIiIlI.leftNum,
+          lI11l1iI = IllIiIlI.prizeType;
+        il1I1ll1 >= 1 && (IllIll1 = true);
+        IiI1II1 += "  " + ll1I1I1l + (lI11l1iI === 5 ? "[专享价]" : lI11l1iI === 3 ? "[实物]" : "") + "，" + (il1I1ll1 >= 1 ? "剩余" + il1I1ll1 + "件" : "已发完") + "\n";
       }
-      console.log(($.shopName ? "店铺名称：" + $.shopName + "\n" : "") + "店铺链接：https://shop.m.jd.com/?venderId=" + $.venderId + "\n活动奖品：\n" + iI1i11Il);
-      l1I1liIl.updateContent(l1I1liIl.content + (($.shopName && "\n【店铺名称】" + $.shopName) + "\n【活动奖品】" + iI1i11Il));
-      const i1111lII = $.time("yyyy-MM-dd HH:mm", $.actStartTime),
-        llii = $.time("yyyy-MM-dd HH:mm", $.actEndTime);
+      console.log(($.shopName ? "店铺名称：" + $.shopName + "\n" : "") + "店铺链接：https://shop.m.jd.com/?venderId=" + $.venderId + "\n活动奖品：\n" + IiI1II1);
+      lIiIll11.updateContent(lIiIll11.content + (($.shopName && "\n【店铺名称】" + $.shopName) + "\n【活动奖品】\n" + IiI1II1));
+      const i1iIilI = $.time("yyyy-MM-dd HH:mm", $.actStartTime),
+        liill11 = $.time("yyyy-MM-dd HH:mm", $.actEndTime);
       switch ($.actStatus) {
         case 0:
-          const IllII1II = Date.now();
-          if ($.actStartTime && IllII1II < $.actStartTime) {
-            console.log("活动将在 " + i1111lII + " 开始，晚点再来吧~");
-            $.message.fix("活动尚未开始，开始时间：" + i1111lII);
+          const Ill1lIll = Date.now();
+          if ($.actStartTime && Ill1lIll < $.actStartTime) {
+            console.log("活动将在 " + i1iIilI + " 开始，晚点再来吧~");
+            $.message.fix("活动尚未开始，开始时间：" + i1iIilI);
             $.runEnd = true;
             return;
           }
-          if ($.actEndTime && IllII1II > $.actEndTime) {
-            console.log("活动已于 " + llii + " 结束，下次早点来吧~");
-            $.message.fix("活动已结束，结束时间：" + llii);
+          if ($.actEndTime && Ill1lIll > $.actEndTime) {
+            console.log("活动已于 " + liill11 + " 结束，下次早点来吧~");
+            $.message.fix("活动已结束，结束时间：" + liill11);
             $.runEnd = true;
             return;
           }
           break;
         case 1:
-          console.log("活动将在 " + i1111lII + " 开始，晚点再来吧~"), $.message.fix("活动尚未开始，开始时间：" + i1111lII), $.runEnd = true;
+          console.log("活动将在 " + i1iIilI + " 开始，晚点再来吧~"), $.message.fix("活动尚未开始，开始时间：" + i1iIilI), $.runEnd = true;
           return;
         case 2:
-          console.log("活动已于 " + llii + " 结束，下次早点来吧~"), $.message.fix("活动已结束，结束时间：" + llii), $.runEnd = true;
+          console.log("活动已于 " + liill11 + " 结束，下次早点来吧~"), $.message.fix("活动已结束，结束时间：" + liill11), $.runEnd = true;
           return;
         default:
-          if ($.actStatus) {
-            console.log("未知活动状态 " + $.actStatus);
-            $.message.fix("未知活动状态 " + $.actStatus);
-            $.runEnd = true;
-          }
+          $.actStatus && (console.log("未知活动状态 " + $.actStatus), $.message.fix("未知活动状态 " + $.actStatus), $.runEnd = true);
           break;
       }
-      if (!lIIiIiil) {
+      if (!IllIll1) {
         console.log("奖品已全部发完，下次早点来吧~");
         $.message.fix("奖品已发完");
         $.runEnd = true;
@@ -271,76 +271,84 @@ async function I1IIIiII() {
       case "10063":
       case "10073":
         if ($.drawNumber <= 0) {
-          if (["10020", "10021"].includes($.activityType)) await iIIii1iI("task_jiugongge");else ["10054"].includes($.activityType) ? await iIIii1iI("getTask_upperSign") : await iIIii1iI("task_lotteryCenter");
+          if (["10020", "10021"].includes($.activityType)) await I111II1l("jiugongge_activity");else ["10054"].includes($.activityType) ? await I111II1l("upperSign_getTask") : await I111II1l("lotteryCenter_activity");
           await $.wait(500);
           if ($.runEnd || $.outFlag || $.skipRun) return;
-          for (let lliIiII1 = 0; lliIiII1 < $.taskList.length; lliIiII1++) {
-            const iIiIl11I = $.taskList[lliIiII1],
-              ii1Ilii1 = iIiIl11I?.["status"] || 0,
-              lIii1i11 = iIiIl11I.taskType;
-            if (ii1Ilii1 === 0) {
-              if (iIiIl11I.taskId) switch (lIii1i11) {
-                case 1:
-                case 2:
-                case 4:
-                case 6:
-                case 9:
-                case 14:
-                  $.taskId = iIiIl11I.taskId, $.skuId = "", await iIIii1iI("toDo"), await $.wait(500);
-                  break;
-                case 3:
-                case 5:
-                case 7:
-                  $.taskId = iIiIl11I.taskId;
-                  const iIlIi1l1 = iIiIl11I.skuInfoVO || [];
-                  for (let il1IiilI = 0; il1IiilI < iIlIi1l1.length; il1IiilI++) {
-                    iIlIi1l1[il1IiilI].status !== 1 && ($.skuId = iIlIi1l1[il1IiilI].skuId, await iIIii1iI("toDo"), await $.wait(500));
-                  }
-                  break;
-                case 10:
-                case 12:
-                  const IlIIiI1 = iIiIl11I?.["finishNum"],
-                    IlIIi1Il = iIiIl11I?.["shareCount"];
-                  if (IlIIi1Il <= IlIIiI1) {
-                    $.taskId = iIiIl11I.taskId;
-                    $.skuId = "";
-                    for (let il1ii111 = 0; il1ii111 < IlIIiI1; il1ii111++) {
-                      await iIIii1iI("toDo");
-                      await $.wait(500);
+          for (let i1lllI = 0; i1lllI < $.taskList.length; i1lllI++) {
+            const lilIil11 = $.taskList[i1lllI],
+              iIli1il1 = lilIil11?.["status"] || 0,
+              IliIIiIi = lilIil11.taskType;
+            if (iIli1il1 === 0) {
+              if (lilIil11.taskId) {
+                switch (IliIIiIi) {
+                  case 1:
+                  case 2:
+                  case 4:
+                  case 6:
+                  case 9:
+                  case 14:
+                    $.taskId = lilIil11.taskId, $.skuId = "", await I111II1l("toDo"), await $.wait(500);
+                    break;
+                  case 3:
+                  case 5:
+                  case 7:
+                    $.taskId = lilIil11.taskId;
+                    const iilI1I1l = lilIil11.skuInfoVO || [];
+                    for (let i1II11ll = 0; i1II11ll < iilI1I1l.length; i1II11ll++) {
+                      iilI1I1l[i1II11ll].status !== 1 && ($.skuId = iilI1I1l[i1II11ll].skuId, await I111II1l("toDo"), await $.wait(500));
                     }
-                  }
-                  break;
-                case 15:
-                  !$.shareUserId && ($.maxShareTimes = iIiIl11I.finishNum || 1);
-                  await iIIii1iI("getUserId"), await $.wait(500);
-                  break;
-                case 8:
-                case 13:
-                case 22:
-                  break;
-                default:
-                  break;
+                    break;
+                  case 10:
+                  case 12:
+                    const IIIiIlI1 = lilIil11?.["finishNum"],
+                      i1IIiIli = lilIil11?.["shareCount"];
+                    if (i1IIiIli <= IIIiIlI1) {
+                      $.taskId = lilIil11.taskId;
+                      $.skuId = "";
+                      for (let l1lIIlIl = 0; l1lIIlIl < IIIiIlI1; l1lIIlIl++) {
+                        await I111II1l("toDo");
+                        await $.wait(500);
+                      }
+                    }
+                    break;
+                  case 15:
+                    !$.shareUserId && ($.maxShareTimes = lilIil11.finishNum || 1);
+                    await I111II1l("getUserId"), await $.wait(500);
+                    break;
+                  case 8:
+                  case 13:
+                  case 22:
+                    break;
+                  default:
+                    break;
+                }
               }
             }
           }
-          await iIIii1iI("drawPrize");
+          await I111II1l("drawPrize");
           await $.wait(500);
         }
+        break;
+      case "10001":
+      case "10004":
+        await I111II1l("sign_add"), await $.wait(500);
         break;
       case "10026":
       case "10080":
         break;
     }
     if ($.runEnd || $.outFlag || $.skipRun) return;
-    let iIii = 500;
-    if (i1llI1i) try {
-      const ii1IIiIl = parseInt(i1llI1i) * 1000;
-      iIii = ii1IIiIl || 500;
+    let I1Ii1Ili = 500;
+    if (iilI1Ii) try {
+      const I1i11i1i = parseInt(iilI1Ii) * 1000;
+      I1Ii1Ili = I1i11i1i || 500;
     } catch {
       $.index === 1 && console.log("自定义抽奖间隔格式错误，已使用默认值");
     }
     $.drawMissTimes = 0;
     switch ($.activityType) {
+      case "10001":
+      case "10004":
       case "10020":
       case "10021":
       case "10041":
@@ -354,11 +362,11 @@ async function I1IIIiII() {
           $.message.fix("抽奖机会不足");
           return;
         }
-        for (let ll11liII = 0; ll11liII < $.drawNumber; ll11liII++) {
-          await iIIii1iI("draw");
-          if (ii1i1Ii1 && $.drawMissTimes >= ii1i1Ii1) break;
-          await $.wait(iIii);
-          if (ll11liII >= 8) {
+        for (let I1ill1i1 = 0; I1ill1i1 < $.drawNumber; I1ill1i1++) {
+          await I111II1l("draw");
+          if (Iil1lii && $.drawMissTimes >= Iil1lii) break;
+          await $.wait(I1Ii1Ili);
+          if (I1ill1i1 >= 8) {
             console.log("\n抽奖太多次了，下次再继续吧~");
             $.message.insert("抽奖太多次了，下次再抽");
             break;
@@ -368,188 +376,190 @@ async function I1IIIiII() {
       case "10026":
       case "10073":
       case "10080":
-        await iIIii1iI("getPoints");
+        await I111II1l("getPoints");
         if ($.runEnd || $.outFlag || $.skipRun) return;
         $.drawNumber && ["10073", "10080"].includes($.activityType) && ($.poorScore += $.drawNumber * $.consumePoints);
-        const iilIIl = parseInt($.poorScore / $.consumePoints);
-        if (iilIIl <= 0) {
+        const lil11lll = parseInt($.poorScore / $.consumePoints);
+        if (lil11lll <= 0) {
           console.log("积分不足无法抽奖~");
           $.message.insert("积分不足");
           return;
         }
         await $.wait(500);
-        for (let l1I11l1i = 0; l1I11l1i < iilIIl; l1I11l1i++) {
-          await iIIii1iI("draw");
-          if (ii1i1Ii1 && $.drawMissTimes >= ii1i1Ii1) break;
-          if (l1I11l1i >= 8) {
+        for (let i1i1I1l = 0; i1i1I1l < lil11lll; i1i1I1l++) {
+          await I111II1l("draw");
+          if (Iil1lii && $.drawMissTimes >= Iil1lii) break;
+          if (i1i1I1l >= 8) {
             console.log("\n抽奖太多次了，下次再继续吧~");
             $.message.insert("抽奖太多次了，下次再抽");
             break;
           }
-          await $.wait(iIii);
+          await $.wait(I1Ii1Ili);
         }
         break;
     }
-  } catch (il1IliII) {
-    console.log("❌ 脚本运行遇到了错误\n" + il1IliII);
+  } catch (IIiilii) {
+    console.log("❌ 脚本运行遇到了错误\n" + IIiilii);
   }
 }
-async function IIlII11(iII1liI, I1iI1l) {
+async function ilii1ii1(I1IiIi1l, il1iIll) {
   try {
-    switch (iII1liI) {
+    switch (I1IiIi1l) {
       case "login":
-        if (I1iI1l.resp_code === 0 && I1iI1l.data) $.token = I1iI1l?.["data"]?.["token"], $.joinInfo = I1iI1l?.["data"]?.["joinInfo"], $.openCardUrl = $.joinInfo?.["openCardUrl"], $.shopId = I1iI1l?.["data"]?.["shopId"], $.venderId = ll1iiIil.getUrlParameter($.openCardUrl, "venderId"), $.shopName = I1iI1l?.["data"]?.["shopName"], $.joinCode = $.joinInfo?.["joinCodeInfo"]?.["joinCode"], $.joinDes = $.joinInfo?.["joinCodeInfo"]?.["joinDes"], $.shareUserId && ($.shareTimes += 1);else I1iI1l.resp_msg ? (console.log(iII1liI + " " + I1iI1l.resp_msg), $.message.fix(I1iI1l.resp_msg), $.skipRun = true) : console.log("❓" + iII1liI + " " + JSON.stringify(I1iI1l));
+        if (il1iIll.resp_code === 0 && il1iIll.data) $.token = il1iIll?.["data"]?.["token"], $.joinInfo = il1iIll?.["data"]?.["joinInfo"], $.openCardUrl = $.joinInfo?.["openCardUrl"], $.shopId = il1iIll?.["data"]?.["shopId"], $.venderId = III1lIl1.getUrlParameter($.openCardUrl, "venderId"), $.shopName = il1iIll?.["data"]?.["shopName"], $.joinCode = $.joinInfo?.["joinCodeInfo"]?.["joinCode"], $.joinDes = $.joinInfo?.["joinCodeInfo"]?.["joinDes"], $.shareUserId && ($.shareTimes += 1);else il1iIll.resp_msg ? (console.log(I1IiIi1l + " " + il1iIll.resp_msg), $.message.fix(il1iIll.resp_msg), $.skipRun = true) : console.log("❓" + I1IiIi1l + " " + JSON.stringify(il1iIll));
         break;
       case "follow":
-        if (I1iI1l.resp_code === 0) {} else {
-          if (I1iI1l.resp_msg) {
-            console.log(iII1liI + " " + I1iI1l.resp_msg);
-            $.message.fix(I1iI1l.resp_msg);
-            $.skipRun = true;
-          } else console.log("❓" + iII1liI + " " + JSON.stringify(I1iI1l));
-        }
+        if (il1iIll.resp_code === 0) {} else il1iIll.resp_msg ? (console.log(I1IiIi1l + " " + il1iIll.resp_msg), $.message.fix(il1iIll.resp_msg), $.skipRun = true) : console.log("❓" + I1IiIi1l + " " + JSON.stringify(il1iIll));
         break;
       case "initPinToken":
-        if (I1iI1l.resp_code === 0 && I1iI1l.data) {
-          I1iI1l = JSON.parse(I1iI1l.data);
-          if (I1iI1l.resp_code === 0 && I1iI1l.data) $.pinToken = I1iI1l?.["data"]?.["pinToken"], $.encryptPin = I1iI1l?.["data"]?.["encryptPin"];else {
-            if (I1iI1l.resp_code === 1000) console.log(iII1liI + " " + I1iI1l.resp_msg), $.message.fix(I1iI1l.resp_msg), $.skipRun = true;else I1iI1l.resp_msg ? (console.log(iII1liI + " " + I1iI1l.resp_msg), $.message.fix(I1iI1l.resp_msg), $.skipRun = true) : (console.log("❓" + iII1liI + " " + JSON.stringify(I1iI1l)), $.skipRun = true);
+        if (il1iIll.resp_code === 0 && il1iIll.data) {
+          il1iIll = JSON.parse(il1iIll.data);
+          if (il1iIll.resp_code === 0 && il1iIll.data) $.pinToken = il1iIll?.["data"]?.["pinToken"], $.encryptPin = il1iIll?.["data"]?.["encryptPin"];else {
+            if (il1iIll.resp_code === 1000) console.log(I1IiIi1l + " " + il1iIll.resp_msg), $.message.fix(il1iIll.resp_msg), $.skipRun = true;else il1iIll.resp_msg ? (console.log(I1IiIi1l + " " + il1iIll.resp_msg), $.message.fix(il1iIll.resp_msg), $.skipRun = true) : (console.log("❓" + I1IiIi1l + " " + JSON.stringify(il1iIll)), $.skipRun = true);
           }
-        } else console.log("❓" + iII1liI + " " + JSON.stringify(I1iI1l));
+        } else console.log("❓" + I1IiIi1l + " " + JSON.stringify(il1iIll));
         break;
       case "basicInfo":
-        if (I1iI1l.resp_code === 0 && I1iI1l.data) $.actStartTime = I1iI1l.data?.["startTime"], $.actEndTime = I1iI1l.data?.["endTime"], $.actStatus = I1iI1l.data?.["actStatus"], !$.activityType && ($.activityType = String(I1iI1l.data?.["actType"] || ""));else I1iI1l.resp_msg ? (console.log(iII1liI + " " + I1iI1l.resp_msg), $.message.fix(I1iI1l.resp_msg), $.runEnd) : console.log("❓" + iII1liI + " " + JSON.stringify(I1iI1l));
+        if (il1iIll.resp_code === 0 && il1iIll.data) {
+          $.actStartTime = il1iIll.data?.["startTime"];
+          $.actEndTime = il1iIll.data?.["endTime"];
+          $.actStatus = il1iIll.data?.["actStatus"];
+          if (!$.activityType) {
+            $.activityType = String(il1iIll.data?.["actType"] || "");
+          }
+        } else il1iIll.resp_msg ? (console.log(I1IiIi1l + " " + il1iIll.resp_msg), $.message.fix(il1iIll.resp_msg), $.runEnd) : console.log("❓" + I1IiIi1l + " " + JSON.stringify(il1iIll));
         break;
       case "getPoints":
-        if (I1iI1l.resp_code === 0 && I1iI1l.data) $.consumePoints = I1iI1l.data?.["consumePoints"], $.poorScore = I1iI1l.data?.["poorScore"];else I1iI1l.resp_msg ? (console.log(iII1liI + " " + I1iI1l.resp_msg), $.message.fix(I1iI1l.resp_msg), $.skipRun = true) : console.log("❓" + iII1liI + " " + JSON.stringify(I1iI1l));
+        if (il1iIll.resp_code === 0 && il1iIll.data) $.consumePoints = il1iIll.data?.["consumePoints"], $.poorScore = il1iIll.data?.["poorScore"];else il1iIll.resp_msg ? (console.log(I1IiIi1l + " " + il1iIll.resp_msg), $.message.fix(il1iIll.resp_msg), $.skipRun = true) : console.log("❓" + I1IiIi1l + " " + JSON.stringify(il1iIll));
         break;
       case "getUserId":
-        if (I1iI1l.resp_code === 0 && I1iI1l.data) !$.shareUserIdArray && ($.shareUserIdArray = [], $.shareTimes = 0), $.shareUserIdArray.push(I1iI1l.data?.["shareUserId"]), !$.shareUserId && ($.shareUserId = I1iI1l.data?.["shareUserId"]), $.shareTimes >= $.maxShareTimes && ($.shareUserId = $.shareUserIdArray[0] || "", $.shareTimes = 0);else {
-          if (I1iI1l.resp_msg) {
-            console.log(iII1liI + " " + I1iI1l.resp_msg);
-          } else {
-            console.log("❓" + iII1liI + " " + JSON.stringify(I1iI1l));
-          }
+        if (il1iIll.resp_code === 0 && il1iIll.data) !$.shareUserIdArray && ($.shareUserIdArray = [], $.shareTimes = 0), $.shareUserIdArray.push(il1iIll.data?.["shareUserId"]), !$.shareUserId && ($.shareUserId = il1iIll.data?.["shareUserId"]), $.shareTimes >= $.maxShareTimes && ($.shareUserId = $.shareUserIdArray[0] || "", $.shareTimes = 0);else il1iIll.resp_msg ? console.log(I1IiIi1l + " " + il1iIll.resp_msg) : console.log("❓" + I1IiIi1l + " " + JSON.stringify(il1iIll));
+        break;
+      case "jiugongge_activity":
+      case "lotteryCenter_activity":
+      case "upperSign_getTask":
+        if (il1iIll.resp_code === 0) $.taskList = il1iIll?.["data"]?.["taskList"] || [];else {
+          if (il1iIll.resp_code === 1000) {
+            console.log(I1IiIi1l + " 获取任务失败");
+            $.message.insert("获取任务失败");
+          } else il1iIll.resp_msg ? console.log(I1IiIi1l + " " + il1iIll.resp_msg) : console.log("❓" + I1IiIi1l + " " + JSON.stringify(il1iIll));
         }
         break;
-      case "task_jiugongge":
-      case "task_lotteryCenter":
-      case "getTask_upperSign":
-        if (I1iI1l.resp_code === 0) $.taskList = I1iI1l?.["data"]?.["taskList"] || [];else {
-          if (I1iI1l.resp_code === 1000) console.log(iII1liI + " 获取任务失败"), $.message.insert("获取任务失败");else I1iI1l.resp_msg ? console.log(iII1liI + " " + I1iI1l.resp_msg) : console.log("❓" + iII1liI + " " + JSON.stringify(I1iI1l));
-        }
-        break;
-      case "toDo":
-        if (I1iI1l.resp_code === 0) {} else {
-          if (I1iI1l.resp_code === 50013 || I1iI1l.resp_code === 50012) {} else {
-            if (I1iI1l.resp_msg) console.log(iII1liI + " " + I1iI1l.resp_msg);else {
-              console.log("❓" + iII1liI + " " + JSON.stringify(I1iI1l));
+      case "sign_add":
+        if (il1iIll.resp_code === 0) il1iIll.data && il1iIll.data?.["score"] && ($.drawNumber += il1iIll.data?.["score"]);else {
+          if (il1iIll.resp_code === 50013 || il1iIll.resp_code === 50012) {} else {
+            if (il1iIll.resp_msg) console.log(I1IiIi1l + " " + il1iIll.resp_msg);else {
+              console.log("❓" + I1IiIi1l + " " + JSON.stringify(il1iIll));
             }
           }
         }
         break;
+      case "toDo":
+        if (il1iIll.resp_code === 0) {} else {
+          if (il1iIll.resp_code === 50013 || il1iIll.resp_code === 50012) {} else il1iIll.resp_msg ? console.log(I1IiIi1l + " " + il1iIll.resp_msg) : console.log("❓" + I1IiIi1l + " " + JSON.stringify(il1iIll));
+        }
+        break;
       case "draw":
-        if (I1iI1l.resp_code === 0) {
-          IIlII1i1 = false;
-          if (I1iI1l.data === "1") {
+        if (il1iIll.resp_code === 0) {
+          if (il1iIll.data === "1") {
             console.log("积分不足无法抽奖");
             $.message.insert("积分不足");
           } else {
-            if (I1iI1l.data === "2") console.log("抽奖机会不足"), $.message.insert("抽奖机会不足");else {
-              drawInfo = I1iI1l.data;
-              if (drawInfo) switch (drawInfo.prizeType) {
-                case 1:
-                  console.log("🎉 " + drawInfo.prizeName + " 🐶"), $.message.insert(drawInfo.prizeName + "🐶");
-                  break;
-                case 2:
-                  console.log("🗑️ 优惠券"), $.message.insert("🗑️ 优惠券");
-                  break;
-                case 3:
-                  const ll1I1IIi = I1iI1l.data.addressId,
-                    IlllIlI = drawInfo.prizeName;
-                  console.log("🎉 恭喜获得实物~"), console.log("奖品名称：" + IlllIlI);
-                  if (drawInfo.showImg) console.log("预览图片：" + drawInfo.showImg);
-                  const I111lI1 = {
-                      "baseUrl": $.baseUrl,
-                      "newbaseUrl": $.newbaseUrl,
-                      "cookie": lIiIIIi1,
-                      "ua": $.UA,
-                      "token": $.token,
-                      "prizeName": IlllIlI,
-                      "orderCode": ll1I1IIi
-                    },
-                    lII1I1Il = await iiIilI1(I111lI1);
-                  if (!llIiiiil && lII1I1Il) {
-                    await l1I1liIl.sendNotify($.name + "中奖通知", "【京东账号" + $.index + "】" + $.nickName + "\n抽中实物 " + IlllIlI + "，已成功自动登记收货地址\n\n" + $.activityUrl);
-                  }
-                  $.message.insert(IlllIlI + "(" + (lII1I1Il ? "已填地址" : "未填地址") + ")🎁");
-                  break;
-                case 4:
-                case 11:
-                  console.log("🗑️ " + drawInfo.prizeName + " 🎟️"), $.message.insert("🗑️ " + drawInfo.prizeName + " 🎟️");
-                  break;
-                case 5:
-                  console.log("🗑️ 专享价"), $.message.insert("🗑️ 专享价");
-                  break;
-                case 6:
-                  console.log("🎉 " + drawInfo.prizeName + " 🧧"), $.message.insert("🎉 " + drawInfo.prizeName + " 🧧");
-                  break;
-                case 7:
-                case 8:
-                case 9:
-                case 10:
-                case 12:
-                  console.log("🎉 恭喜获得" + drawInfo.prizeName + " 🎁"), $.message.insert("🎉 恭喜获得" + drawInfo.prizeName + " 🎁");
-                  if (!llIiiiil) {
-                    await l1I1liIl.sendNotify($.name + "中奖通知", "【京东账号" + $.index + "】" + $.nickName + "\n抽中 " + drawInfo.prizeName + "\n\n" + $.activityUrl);
-                  }
-                  break;
-                default:
-                  console.log(drawInfo);
-                  break;
+            if (il1iIll.data === "2") console.log("抽奖机会不足"), $.message.insert("抽奖机会不足");else {
+              const I1lli11 = il1iIll.data;
+              if (I1lli11) {
+                switch (I1lli11.prizeType) {
+                  case 1:
+                    console.log("🎉 " + I1lli11.prizeName + " 🐶"), $.message.insert(I1lli11.prizeName + "🐶");
+                    break;
+                  case 2:
+                    console.log("🗑️ 优惠券"), $.message.insert("🗑️ 优惠券");
+                    break;
+                  case 3:
+                    const lll1lll = il1iIll.data.addressId,
+                      iIlil1i1 = I1lli11.prizeName;
+                    console.log("🎉 恭喜获得实物~"), console.log("奖品名称：" + iIlil1i1);
+                    if (I1lli11.showImg) console.log("预览图片：" + I1lli11.showImg);
+                    const i1ll1I1I = {
+                        "baseUrl": $.baseUrl,
+                        "newbaseUrl": $.newbaseUrl,
+                        "cookie": l1lliiII,
+                        "ua": $.UA,
+                        "token": $.token,
+                        "prizeName": iIlil1i1,
+                        "orderCode": lll1lll
+                      },
+                      liIiI1I1 = await lI1ilIii(i1ll1I1I);
+                    !IiillliI && liIiI1I1 && (await lIiIll11.sendNotify($.name + "中奖通知", "【京东账号" + $.index + "】" + $.nickName + "\n抽中实物 " + iIlil1i1 + "，已成功自动登记收货地址\n\n" + $.activityUrl));
+                    $.message.insert(iIlil1i1 + "(" + (liIiI1I1 ? "已填地址" : "未填地址") + ")🎁");
+                    break;
+                  case 4:
+                  case 11:
+                    console.log("🗑️ " + I1lli11.prizeName + " 🎟️"), $.message.insert("🗑️ " + I1lli11.prizeName + " 🎟️");
+                    break;
+                  case 5:
+                    console.log("🗑️ 专享价"), $.message.insert("🗑️ 专享价");
+                    break;
+                  case 6:
+                    console.log("🎉 " + I1lli11.prizeName + " 🧧"), $.message.insert("🎉 " + I1lli11.prizeName + " 🧧");
+                    break;
+                  case 7:
+                  case 8:
+                  case 9:
+                  case 10:
+                  case 12:
+                    console.log("🎉 恭喜获得" + I1lli11.prizeName + " 🎁"), $.message.insert("🎉 恭喜获得" + I1lli11.prizeName + " 🎁");
+                    !IiillliI && (await lIiIll11.sendNotify($.name + "中奖通知", "【京东账号" + $.index + "】" + $.nickName + "\n抽中 " + I1lli11.prizeName + "\n\n" + $.activityUrl));
+                    break;
+                  default:
+                    console.log(I1lli11);
+                    break;
+                }
               } else $.drawMissTimes += 1, console.log("💨 空气"), $.message.insert("💨 空气");
             }
           }
         } else {
-          if (I1iI1l.resp_msg) {
-            console.log(iII1liI + " " + I1iI1l.resp_msg);
-            for (let i1lI1l1l of ["未开始", "结束", "不存在", "不在"]) {
-              if (I1iI1l.resp_msg.includes(i1lI1l1l)) {
+          if (il1iIll.resp_msg) {
+            console.log(I1IiIi1l + " " + il1iIll.resp_msg);
+            for (let iII1lIi1 of ["未开始", "结束", "不存在", "不在"]) {
+              if (il1iIll.resp_msg.includes(iII1lIi1)) {
                 $.runEnd = true;
                 break;
               }
             }
-            $.message.fix(I1iI1l.resp_msg);
-          } else console.log("❓" + iII1liI + " " + JSON.stringify(I1iI1l));
+            $.message.fix(il1iIll.resp_msg);
+          } else console.log("❓" + I1IiIi1l + " " + JSON.stringify(il1iIll));
         }
         break;
       case "drawPrize":
-        if (I1iI1l.resp_code === 0) $.drawNumber = I1iI1l?.["data"]?.["drawNumber"], $.prizeInfo = I1iI1l?.["data"]?.["prizeInfo"] || [];else {
-          if (I1iI1l.resp_msg) {
-            console.log(iII1liI + " " + I1iI1l.resp_msg);
-            for (let iI11Il of ["未开始", "结束", "不存在", "不在"]) {
-              if (I1iI1l.resp_msg.includes(iI11Il)) {
+        if (il1iIll.resp_code === 0) $.drawNumber = il1iIll?.["data"]?.["drawNumber"], $.prizeInfo = il1iIll?.["data"]?.["prizeInfo"] || [];else {
+          if (il1iIll.resp_msg) {
+            console.log(I1IiIi1l + " " + il1iIll.resp_msg);
+            for (let IilIliiI of ["未开始", "结束", "不存在", "不在"]) {
+              if (il1iIll.resp_msg.includes(IilIliiI)) {
                 $.runEnd = true;
                 break;
               }
             }
-            $.message.fix(I1iI1l.resp_msg);
-          } else console.log("❓" + iII1liI + " " + JSON.stringify(I1iI1l));
+            $.message.fix(il1iIll.resp_msg);
+          } else {
+            console.log("❓" + I1IiIi1l + " " + JSON.stringify(il1iIll));
+          }
         }
         break;
     }
-  } catch (iliii1ii) {
-    console.log("❌ 未能正确处理 " + iII1liI + " 请求响应 " + (iliii1ii.message || iliii1ii));
+  } catch (il1iili1) {
+    console.log("❌ 未能正确处理 " + I1IiIi1l + " 请求响应 " + (il1iili1.message || il1iili1));
   }
 }
-async function iIIii1iI(I1II1I1I) {
+async function I111II1l(lI1l1ii1) {
   if ($.runEnd || $.outFlag) return;
-  let IlI1i1 = $.newbaseUrl,
-    IiIIiliI = {},
-    iI11i1I = "POST";
-  switch (I1II1I1I) {
+  let iIi1liIl = $.newbaseUrl,
+    ili111iI = {},
+    illIiiII = "POST";
+  switch (lI1l1ii1) {
     case "login":
-      IlI1i1 += "/api/user-info/login", IiIIiliI = {
+      iIi1liIl += "/api/user-info/login", ili111iI = {
         "status": "1",
         "activityId": $.activityId,
         "tokenPin": $.jdToken,
@@ -559,63 +569,62 @@ async function iIIii1iI(I1II1I1I) {
       };
       break;
     case "follow":
-      IlI1i1 += "/api/task/followShop/follow";
+      iIi1liIl += "/api/task/followShop/follow";
       break;
     case "initPinToken":
-      iI11i1I = "GET", IlI1i1 += "/api/user-info/initPinToken?status=1&activityId=" + $.activityId + "&jdToken=" + $.jdToken + "&source=01&shareUserId=" + ($.shareUserId || "") + "&uuid=" + $.UUID + "&clientTime=" + Date.now() + "&shopId=" + $.shopId;
+      illIiiII = "GET", iIi1liIl += "/api/user-info/initPinToken?status=1&activityId=" + $.activityId + "&jdToken=" + $.jdToken + "&source=01&shareUserId=" + ($.shareUserId || "") + "&uuid=" + $.UUID + "&clientTime=" + Date.now() + "&shopId=" + $.shopId;
       break;
     case "basicInfo":
-      IlI1i1 += "/api/active/basicInfo", IiIIiliI = {
+      iIi1liIl += "/api/active/basicInfo", ili111iI = {
         "activityId": $.activityId
       };
       break;
     case "getPoints":
-      IlI1i1 += "/api/task/points/getPoints";
+      iIi1liIl += "/api/task/points/getPoints";
       break;
     case "getUserId":
-      IlI1i1 += "/api/task/share/getUserId";
+      iIi1liIl += "/api/task/share/getUserId";
       break;
-    case "task_jiugongge":
-      IlI1i1 += "/api/task/jiugongge/activity";
+    case "jiugongge_activity":
+      iIi1liIl += "/api/task/jiugongge/activity";
       break;
-    case "task_lotteryCenter":
-      IlI1i1 += "/api/task/lotteryCenter/activity";
+    case "lotteryCenter_activity":
+      iIi1liIl += "/api/task/lotteryCenter/activity";
       break;
-    case "getTask_upperSign":
-      IlI1i1 += "/api/task/upperSign/getTask", IiIIiliI = {
+    case "upperSign_getTask":
+      iIi1liIl += "/api/task/upperSign/getTask", ili111iI = {
         "shareUserId": $.shareUserId || ""
       };
       break;
+    case "sign_add":
+      iIi1liIl += "/api/task/sign/add";
+      break;
     case "toDo":
-      IlI1i1 += "/api/basic/task/toDo", IiIIiliI = {
+      iIi1liIl += "/api/basic/task/toDo", ili111iI = {
         "taskId": $.taskId,
         "skuId": $.skuId
       };
       break;
     case "drawPrize":
-      IlI1i1 += "/api/prize/drawPrize";
+      iIi1liIl += "/api/prize/drawPrize";
       break;
     case "draw":
-      IlI1i1 += "/api/prize/draw";
-      if ($.hostname.includes("lorealjdcampaign-rc")) IiIIiliI = {
+      iIi1liIl += "/api/prize/draw";
+      if ($.hostname.includes("lorealjdcampaign-rc")) ili111iI = {
         "consumePoints": $.consumePoints || 0
-      };else {
-        if ($.hostname.includes("lzkj")) {
-          IiIIiliI = {
-            "ecyText": IIIIl1II({
-              "consumePoints": $.consumePoints || 0,
-              "actId": $.activityId
-            }, $.pinToken, $.te)
-          };
-        }
-      }
+      };else $.hostname.includes("lzkj") && (ili111iI = {
+        "ecyText": IiliIi1({
+          "consumePoints": $.consumePoints || 0,
+          "actId": $.activityId
+        }, $.pinToken, $.te)
+      });
       break;
     default:
-      console.log("❌ 未知请求 " + I1II1I1I);
+      console.log("❌ 未知请求 " + lI1l1ii1);
       return;
   }
-  const lililIil = {
-    "url": IlI1i1,
+  const lIi1Illl = {
+    "url": iIi1liIl,
     "headers": {
       "Accept": "application/json, text/plain, */*",
       "Accept-Encoding": "gzip, deflate, br",
@@ -632,213 +641,170 @@ async function iIIii1iI(I1II1I1I) {
       "token": $.token,
       "User-Agent": $.UA
     },
-    "body": JSON.stringify(IiIIiliI),
+    "body": JSON.stringify(ili111iI),
     "timeout": 30000
   };
-  iI11i1I === "GET" && (delete lililIil.body, delete lililIil["Content-Type"]);
-  const I1Iiiil = 5;
-  let lilllIl1 = 0,
-    I1ll1i1 = null,
-    I1III1 = false;
-  while (lilllIl1 < I1Iiiil) {
-    lilllIl1 > 0 && (await $.wait(1000));
+  illIiiII === "GET" && (delete lIi1Illl.body, delete lIi1Illl.headers["Content-Type"]);
+  const Iii1iilI = 5;
+  let IlIIIi11 = 0,
+    lIi1llIi = null,
+    iIIIIlI = false;
+  while (IlIIIi11 < Iii1iilI) {
+    IlIIIi11 > 0 && (await $.wait(1000));
     const {
-      err: I1Iiill,
-      res: ii1IIl1i,
-      data: l1iii1ii
-    } = await liiIll(lililIil, iI11i1I);
-    if (I1Iiill) {
-      if (typeof I1Iiill === "string" && I1Iiill.includes("Timeout awaiting 'request'")) I1ll1i1 = I1II1I1I + " 请求超时，请检查网络重试";else {
-        const i1IIiII1 = ii1IIl1i?.["statusCode"];
-        if (i1IIiII1) {
-          if ([403, 493].includes(i1IIiII1)) I1ll1i1 = I1II1I1I + " 请求失败，IP被限制（Response code " + i1IIiII1 + "）", I1III1 = true;else [400, 404].includes(i1IIiII1) ? I1ll1i1 = I1II1I1I + " 请求配置参数错误，请联系开发者进行反馈（Response code " + i1IIiII1 + "）" : I1ll1i1 = I1II1I1I + " 请求失败（Response code " + i1IIiII1 + "）";
-        } else I1ll1i1 = I1II1I1I + " 请求失败 => " + (I1Iiill.message || I1Iiill);
+      err: II1lIi,
+      res: IllIl1lI,
+      data: iI1iilii
+    } = await iilIliII(lIi1Illl, illIiiII);
+    if (II1lIi) {
+      if (typeof II1lIi === "string" && II1lIi.includes("Timeout awaiting 'request'")) lIi1llIi = lI1l1ii1 + " 请求超时，请检查网络重试";else {
+        const lI1il1li = IllIl1lI?.["statusCode"];
+        if (lI1il1li) {
+          if ([403, 493].includes(lI1il1li)) lIi1llIi = lI1l1ii1 + " 请求失败，IP被限制（Response code " + lI1il1li + "）", iIIIIlI = true;else [400, 404].includes(lI1il1li) ? lIi1llIi = lI1l1ii1 + " 请求配置参数错误，请联系开发者进行反馈（Response code " + lI1il1li + "）" : lIi1llIi = lI1l1ii1 + " 请求失败（Response code " + lI1il1li + "）";
+        } else lIi1llIi = lI1l1ii1 + " 请求失败 => " + (II1lIi.message || II1lIi);
       }
-      lilllIl1++;
+      IlIIIi11++;
     } else {
-      const liIi1lI1 = ll1iiIil.getResponseCookie(ii1IIl1i),
-        IiI11 = false;
-      if (IiI11) {
+      const iiIiill1 = III1lIl1.getResponseCookie(IllIl1lI),
+        li1iII1 = false;
+      if (li1iII1) {
         console.log("\n---------------------------------------------------\n");
-        console.log("🔧 " + I1II1I1I + " 响应Body => " + (l1iii1ii || "无") + "\n");
-        console.log("🔧 " + I1II1I1I + " 响应Cookie => " + (liIi1lI1 || "无") + "\n");
-        console.log("🔧 " + I1II1I1I + " 请求参数");
-        console.log(lililIil);
+        console.log("🔧 " + lI1l1ii1 + " 响应Body => " + (iI1iilii || "无") + "\n");
+        console.log("🔧 " + lI1l1ii1 + " 响应Cookie => " + (iiIiill1 || "无") + "\n");
+        console.log("🔧 " + lI1l1ii1 + " 请求参数");
+        console.log(lIi1Illl);
         console.log("\n---------------------------------------------------\n");
       }
-      if (!["accessLog", "accessLogWithAD"].includes(I1II1I1I)) try {
-        const iIilIlii = JSON.parse(l1iii1ii);
-        IIlII11(I1II1I1I, iIilIlii);
-        break;
-      } catch (IlI1IlII) {
-        I1ll1i1 = "❌ " + I1II1I1I + " 接口响应数据解析失败: " + IlI1IlII.message;
-        console.log("🚫 " + I1II1I1I + " => " + String(l1iii1ii || "无响应数据"));
-        if (IiI11) {
-          console.log("\n---------------------------------------------------\n");
-          console.log(activityCookie);
-          console.log("\n---------------------------------------------------\n");
+      if (!["accessLog", "accessLogWithAD"].includes(lI1l1ii1)) {
+        try {
+          const iIIil11l = JSON.parse(iI1iilii);
+          ilii1ii1(lI1l1ii1, iIIil11l);
+          break;
+        } catch (I11l1iIi) {
+          lIi1llIi = "❌ " + lI1l1ii1 + " 接口响应数据解析失败: " + I11l1iIi.message;
+          console.log("🚫 " + lI1l1ii1 + " => " + String(iI1iilii || "无响应数据"));
+          if (li1iII1) {
+            console.log("\n---------------------------------------------------\n");
+            console.log(activityCookie);
+            console.log("\n---------------------------------------------------\n");
+          }
+          IlIIIi11++;
         }
-        lilllIl1++;
-      } else {
-        break;
-      }
-      I1III1 = false;
+      } else break;
+      iIIIIlI = false;
     }
   }
-  lilllIl1 >= I1Iiiil && (console.log(I1ll1i1), I1III1 && !I1lliiIl && ($.outFlag = true, $.message && $.message.fix(I1ll1i1)));
+  if (IlIIIi11 >= Iii1iilI) {
+    console.log(lIi1llIi);
+    if (iIIIIlI) {
+      !I1il1ll1 && ($.outFlag = true, $.message && $.message.fix(lIi1llIi));
+    }
+  }
 }
-async function liiIll(ili1Ii11, IIi1lll1 = "POST") {
-  if (IIi1lll1 === "POST") return new Promise(async lIIlIlIl => {
-    $.post(ili1Ii11, (Il1iiiil, li1iIill, IllliiIl) => {
-      lIIlIlIl({
-        "err": Il1iiiil,
-        "res": li1iIill,
-        "data": IllliiIl
+async function iilIliII(lli1111l, iIii111I = "POST") {
+  if (iIii111I === "POST") {
+    return new Promise(async llIi1i1i => {
+      $.post(lli1111l, (i1iIIIl1, lllIlIli, lIl111) => {
+        llIi1i1i({
+          "err": i1iIIIl1,
+          "res": lllIlIli,
+          "data": lIl111
+        });
       });
     });
-  });else {
-    if (IIi1lll1 === "GET") return new Promise(async iiiIi1Ii => {
-      $.get(ili1Ii11, (Il1l1iII, iilIlii1, iilIiiiI) => {
-        iiiIi1Ii({
-          "err": Il1l1iII,
-          "res": iilIlii1,
-          "data": iilIiiiI
+  } else {
+    if (iIii111I === "GET") return new Promise(async ll1l1lil => {
+      $.get(lli1111l, (ll1111Ii, iiiiIi, IIlliiii) => {
+        ll1l1lil({
+          "err": ll1111Ii,
+          "res": iiiiIi,
+          "data": IIlliiii
         });
       });
     });else {
-      const iIlli1II = "不支持的请求方法";
+      const llii111i = "不支持的请求方法";
       return {
-        "err": iIlli1II,
+        "err": llii111i,
         "res": null,
         "data": null
       };
     }
   }
 }
-async function Iil1l111() {
-  if (!$.joinVenderId) return;
-  return new Promise(async llIII1 => {
-    $.errorJoinShop = "活动太火爆，请稍后再试";
-    let Il1iiliI = "";
-    if ($.shopactivityId) Il1iiliI = ",\"activityId\":" + $.shopactivityId;
-    const ilIii1 = "{\"venderId\":\"" + $.joinVenderId + "\",\"shopId\":\"" + $.joinVenderId + "\",\"bindByVerifyCodeFlag\":1,\"registerExtend\":{},\"writeChildFlag\":0" + Il1iiliI + ",\"channel\":406}",
-      I1II1il1 = {
-        "appid": "shopmember_m_jd_com",
-        "functionId": "bindWithVender",
-        "clientVersion": "9.2.0",
-        "client": "H5",
-        "body": JSON.parse(ilIii1)
-      },
-      l1ilIiil = await liI1li11("27004", I1II1il1),
-      lli1IlI = {
-        "url": "https://api.m.jd.com/client.action?appid=shopmember_m_jd_com&functionId=bindWithVender&body=" + ilIii1 + "&clientVersion=9.2.0&client=H5&uuid=88888&h5st=" + encodeURIComponent(l1ilIiil),
-        "headers": {
-          "Content-Type": "application/json;charset=utf-8",
-          "Origin": "https://api.m.jd.com",
-          "Host": "api.m.jd.com",
-          "accept": "*/*",
-          "User-Agent": $.UA,
-          "Cookie": l1li1Il1
+function IiliIi1(I1iiIl1l, i1l1iIl, IIIIl1li) {
+  function Il1IIIi1(IiiIIlII) {
+    IiiIIlII = IiiIIlII.split("").reverse().join("");
+    const llI1llll = new Uint8Array(12),
+      li11l1ll = new TextEncoder().encode(IiiIIlII);
+    for (let I11iiIii = 0; I11iiIii < li11l1ll.length; I11iiIii += 2) {
+      let iililI1l = li11l1ll[I11iiIii] << 5 | li11l1ll[I11iiIii + 1] & 255;
+      iililI1l %= 63;
+      llI1llll[I11iiIii >> 1] = iililI1l;
+    }
+    let l111liil = "";
+    for (let I11liiI1 = 0; I11liiI1 < llI1llll.length; I11liiI1++) {
+      l111liil += (llI1llll[I11liiI1] + 256).toString(2).slice(1);
+    }
+    let lII1I11 = "",
+      liII11i1 = "";
+    for (let ll1liII1 = 0; ll1liII1 < 16; ll1liII1++) {
+      if (ll1liII1 !== 0) {
+        const lllliII1 = ll1liII1 * 6,
+          lIlIliI = l111liil.substring(lllliII1, lllliII1 + 6);
+        let II1iIII = parseInt(lIlIliI, 2);
+        const lililI1 = liII11i1.split("");
+        for (let lIIIlIlI = 0; lIIIlIlI < lililI1.length; lIIIlIlI++) {
+          lililI1[lIIIlIlI] === "1" && (II1iIII = (II1iIII >> 6 - lIIIlIlI | II1iIII << lIIIlIlI) & 63);
         }
-      };
-    $.get(lli1IlI, async (IlIl1Il1, ilI1iIiI, l1llII1) => {
-      try {
-        if (IlIl1Il1) console.log(IlIl1Il1);else {
-          const Ii111II = JSON.parse(l1llII1);
-          if (typeof Ii111II === "object") {
-            if (Ii111II.success === true) {
-              console.log(Ii111II.message);
-              $.errorJoinShop = Ii111II.message;
-              if (Ii111II.result && Ii111II.result.giftInfo) {
-                for (let llIIiI11 of Ii111II.result.giftInfo.giftList) {
-                  console.log("入会获得：" + llIIiI11.discountString + llIIiI11.prizeName + llIIiI11.secondLineDesc);
-                }
-              }
-            } else typeof Ii111II == "object" && Ii111II.message ? ($.errorJoinShop = Ii111II.message, console.log("" + (Ii111II.message || ""))) : console.log(l1llII1);
-          } else console.log(l1llII1);
-        }
-      } catch (I1i1lIi) {
-        $.logErr(I1i1lIi, ilI1iIiI);
-      } finally {
-        llIII1();
-      }
-    });
-  });
-}
-function IIIIl1II(Ili1lIii, lI11l1iI, i1I1IIli) {
-  function iIi1I1(liIilI1i) {
-    liIilI1i = liIilI1i.split("").reverse().join("");
-    const lili1I = new Uint8Array(12),
-      IIIi11li = new TextEncoder().encode(liIilI1i);
-    for (let Il1iIlII = 0; Il1iIlII < IIIi11li.length; Il1iIlII += 2) {
-      let l1l1I1ii = IIIi11li[Il1iIlII] << 5 | IIIi11li[Il1iIlII + 1] & 255;
-      l1l1I1ii %= 63;
-      lili1I[Il1iIlII >> 1] = l1l1I1ii;
+        liII11i1 = (II1iIII & 63).toString(2).padStart(6, "0");
+      } else liII11i1 = l111liil.substring(0, 6);
+      lII1I11 += liII11i1;
     }
-    let I1iil1iI = "";
-    for (let Il1liiil = 0; Il1liiil < lili1I.length; Il1liiil++) {
-      I1iil1iI += (lili1I[Il1liiil] + 256).toString(2).slice(1);
+    for (let l1ii111 = 0; l1ii111 < 12; l1ii111++) {
+      const lii1Il1I = l1ii111 * 8;
+      llI1llll[l1ii111] = parseInt(lII1I11.substring(lii1Il1I, lii1Il1I + 8), 2);
     }
-    let lIIilIIi = "",
-      IIlIliIi = "";
-    for (let Ilil1liI = 0; Ilil1liI < 16; Ilil1liI++) {
-      if (Ilil1liI !== 0) {
-        const iiiiillI = Ilil1liI * 6,
-          I1llIl1i = I1iil1iI.substring(iiiiillI, iiiiillI + 6);
-        let l11IIIi = parseInt(I1llIl1i, 2);
-        const IilI1111 = IIlIliIi.split("");
-        for (let l1iiI1l1 = 0; l1iiI1l1 < IilI1111.length; l1iiI1l1++) {
-          IilI1111[l1iiI1l1] === "1" && (l11IIIi = (l11IIIi >> 6 - l1iiI1l1 | l11IIIi << l1iiI1l1) & 63);
-        }
-        IIlIliIi = (l11IIIi & 63).toString(2).padStart(6, "0");
-      } else IIlIliIi = I1iil1iI.substring(0, 6);
-      lIIilIIi += IIlIliIi;
-    }
-    for (let IiiIIiIi = 0; IiiIIiIi < 12; IiiIIiIi++) {
-      const l1il1ili = IiiIIiIi * 8;
-      lili1I[IiiIIiIi] = parseInt(lIIilIIi.substring(l1il1ili, l1il1ili + 8), 2);
-    }
-    const IiIi11ll = btoa(String.fromCharCode.apply(null, lili1I));
-    return IiIi11ll;
+    const l1I1i1Ii = btoa(String.fromCharCode.apply(null, llI1llll));
+    return l1I1i1Ii;
   }
-  const iiI1I11 = ["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"];
-  let lli1lIIl = Date.now() + parseInt(i1I1IIli);
-  typeof Ili1lIii != "object" && (Ili1lIii = JSON.parse(Ili1lIii));
-  Ili1lIii.nowTime = lli1lIIl;
-  let liIIllI = lI11l1iI + lli1lIIl;
-  const lilI111i = liIIllI.substring(0, liIIllI.length - 5);
-  let I1Ili111 = "";
-  for (let il11 = 0; il11 < lilI111i.length; il11++) {
-    let lI11111i = lilI111i.charCodeAt(il11),
-      liIlII11 = lI11111i % 10,
-      liii1llI = iiI1I11[liIlII11][il11];
-    I1Ili111 += liii1llI;
+  const i1IIIII1 = ["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"];
+  let iII1Iii = Date.now() + parseInt(IIIIl1li);
+  typeof I1iiIl1l != "object" && (I1iiIl1l = JSON.parse(I1iiIl1l));
+  I1iiIl1l.nowTime = iII1Iii;
+  let I11I1III = i1l1iIl + iII1Iii;
+  const IlIlllil = I11I1III.substring(0, I11I1III.length - 5);
+  let lii11iil = "";
+  for (let IiI111i1 = 0; IiI111i1 < IlIlllil.length; IiI111i1++) {
+    let Iii1l1I1 = IlIlllil.charCodeAt(IiI111i1),
+      liIlIlI1 = Iii1l1I1 % 10,
+      II1IIii1 = i1IIIII1[liIlIlI1][IiI111i1];
+    lii11iil += II1IIii1;
   }
-  var li1i1IlI = I1Ili111.length,
-    il111il1 = Math.floor(li1i1IlI / 24),
-    II1l11l = "";
-  for (var IiliIili = 0; IiliIili < 24; IiliIili++) {
-    var IiiI11l = (IiliIili + 1) * il111il1;
-    IiliIili === 23 && (IiiI11l = li1i1IlI);
-    var II1l11I1 = I1Ili111.substring(IiliIili * il111il1, IiiI11l),
-      ii1I1i11 = [];
-    for (var iI1Ii11i = 0; iI1Ii11i < II1l11I1.length; iI1Ii11i++) {
-      ii1I1i11.push(II1l11I1.charCodeAt(iI1Ii11i));
+  var i1l11l1i = lii11iil.length,
+    Iil1llI = Math.floor(i1l11l1i / 24),
+    iIiliI1i = "";
+  for (var liilIII1 = 0; liilIII1 < 24; liilIII1++) {
+    var i11Ii = (liilIII1 + 1) * Iil1llI;
+    liilIII1 === 23 && (i11Ii = i1l11l1i);
+    var iii11IlI = lii11iil.substring(liilIII1 * Iil1llI, i11Ii),
+      iI1iIlll = [];
+    for (var iiiIiiI = 0; iiiIiiI < iii11IlI.length; iiiIiiI++) {
+      iI1iIlll.push(iii11IlI.charCodeAt(iiiIiiI));
     }
-    var llllIII1 = ii1I1i11.reduce(function (l1iil1i, lI1li11i) {
-        return l1iil1i + lI1li11i;
+    var Il1Iilli = iI1iIlll.reduce(function (iIi1IIIi, liiIlil1) {
+        return iIi1IIIi + liiIlil1;
       }, 0),
-      IIIi11iI = Math.floor(llllIII1 / ii1I1i11.length);
-    II1l11l += String.fromCharCode(IIIi11iI);
+      l11i1ili = Math.floor(Il1Iilli / iI1iIlll.length);
+    iIiliI1i += String.fromCharCode(l11i1ili);
   }
-  I1Ili111 = II1l11l;
-  const II1iIii = iIi1I1(I1Ili111),
-    l111iiIl = lIi1ll1l.enc.Utf8.parse(II1iIii),
-    iii1I1II = lIi1ll1l.enc.Utf8.parse(""),
-    Iii1l11 = lIi1ll1l.AES.encrypt(JSON.stringify(Ili1lIii), l111iiIl, {
-      "iv": iii1I1II,
-      "mode": lIi1ll1l.mode.ECB,
-      "padding": lIi1ll1l.pad.Pkcs7
+  lii11iil = iIiliI1i;
+  const IiIll1li = Il1IIIi1(lii11iil),
+    I111ilI = ilIlll1I.enc.Utf8.parse(IiIll1li),
+    I1iI1IIi = ilIlll1I.enc.Utf8.parse(""),
+    l1illi1 = ilIlll1I.AES.encrypt(JSON.stringify(I1iiIl1l), I111ilI, {
+      "iv": I1iI1IIi,
+      "mode": ilIlll1I.mode.ECB,
+      "padding": ilIlll1I.pad.Pkcs7
     });
-  return Iii1l11.toString();
+  return l1illi1.toString();
 }

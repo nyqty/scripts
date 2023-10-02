@@ -1,267 +1,369 @@
 /*
 发财挖宝助力
-更新时间：2023-8-11
+更新时间：2023-8-28
 活动入口：京东APP-发财挖宝
 
-基本都是火爆 
-入口:京东APP-领京豆-转赚红包-悬浮 挖财宝  欢乐淘金
-
-建议手动进入挖一下
-
 变量：
-//export krWait="秒" //自行填写变量，延时多长时间。(不填写默认延时0.2秒)
+//export krWait="秒" //自行填写变量，延时多长时间。(不填写默认延时1秒)
 
 //export fcwbhelpnum="人数" //自行填写变量，需要邀请多少人停止。(不填写默认邀请60停止)
+
+//export jd_fcwb_id="活动ID" // 不填默认跑地址2邀请
+
+挖宝目前有2个地址
+地址1：https://bnzf.jd.com/?activityId=xpEf-M3RyE8Cd8nP8Zd0eA
+地址2：https://bnzf.jd.com/?activityId=cNAsHasSnzWTAtWhIQR4dA
 
 cron:7 7 7 7 *
 ============Quantumultx===============
 [task_local]
 #发财挖宝助力
-cron:7 7 7 7 * jd_fcwb_help.js, tag=发财挖宝助力, enabled=true
+cron:7 7 7 7 * jd_fcwb_mfhelp.js, tag=KR发财挖宝助力-加密, enabled=true
 
 */
 const Env=require('./utils/Env.js');
 const $ = new Env('发财挖宝助力');
-const iI1Ill = $.isNode() ? require("./sendNotify") : "",
-  lilI1 = require("./function/jdCommon"),
-  IIIi1 = require("./utils/h5st.js"),
-  i1llli = $.isNode() ? require("./jdCookie.js") : "",
-  i1llll = "https://api.m.jd.com";
-let iI1Ili = [],
-  llIIiI = "",
-  iI1111,
-  IIIl1 = [];
+const lliIiii1 = $.isNode() ? require("./sendNotify") : "",
+  IilIIIl1 = require("./function/h5st41.js"),
+  ilIlii1l = $.isNode() ? require("./jdCookie.js") : "",
+  li1i11iI = "https://api.m.jd.com";
+let l1lI1ii = [],
+  l11lI11I = "",
+  ii1i1lI1,
+  Iill1I = [];
 $.hasEnd = false;
-let ii1ii = "xpEf-M3RyE8Cd8nP8Zd0eA";
-let I1I1lI = "0.2";
-I1I1lI = $.isNode() ? process.env.krWait ? process.env.krWait : "" + I1I1lI : $.getdata("krWait") ? $.getdata("krWait") : "" + I1I1lI;
+let ii111lIi = "cNAsHasSnzWTAtWhIQR4dA";
+process.env.jd_fcwb_id && process.env.jd_fcwb_id != "cNAsHasSnzWTAtWhIQR4dA" && (ii111lIi = process.env.jd_fcwb_id);
+let l1ii11I = "2";
+l1ii11I = $.isNode() ? process.env.krWait ? process.env.krWait : "" + l1ii11I : $.getdata("krWait") ? $.getdata("krWait") : "" + l1ii11I;
 CryptoJS = $.isNode() ? require("crypto-js") : CryptoJS;
+let l11i1I1l = Date.now();
 if ($.isNode()) {
-  Object.keys(i1llli).forEach(IIIii => {
-    iI1Ili.push(i1llli[IIIii]);
+  Object.keys(ilIlii1l).forEach(i11I1 => {
+    l1lI1ii.push(ilIlii1l[i11I1]);
   });
   if (process.env.JD_DEBUG && process.env.JD_DEBUG === "false") console.log = () => {};
-} else iI1Ili = [$.getdata("CookieJD"), $.getdata("CookieJD2"), ...ii1iI($.getdata("CookiesJD") || "[]").map(iI111i => iI111i.cookie)].filter(I1I1l1 => !!I1I1l1);
-let l1iIlI = "60",
-  iI111I = "";
-l1iIlI = $.isNode() ? process.env.fcwbhelpnum ? process.env.fcwbhelpnum : "" + l1iIlI : $.getdata("fcwbhelpnum") ? $.getdata("fcwbhelpnum") : "" + l1iIlI;
-iI111I = $.isNode() ? process.env.nolanh5st_token ? process.env.nolanh5st_token : "" + iI111I : $.getdata("nolanh5st_token") ? $.getdata("nolanh5st_token") : "" + iI111I;
+} else l1lI1ii = [$.getdata("CookieJD"), $.getdata("CookieJD2"), ...l1i11i1l($.getdata("CookiesJD") || "[]").map(lI11lll1 => lI11lll1.cookie)].filter(IiliiiII => !!IiliiiII);
+let lIlii11i = "60",
+  ill11III = "";
+lIlii11i = $.isNode() ? process.env.fcwbhelpnum ? process.env.fcwbhelpnum : "" + lIlii11i : $.getdata("fcwbhelpnum") ? $.getdata("fcwbhelpnum") : "" + lIlii11i;
+ill11III = $.isNode() ? process.env.nolanh5st_token ? process.env.nolanh5st_token : "" + ill11III : $.getdata("nolanh5st_token") ? $.getdata("nolanh5st_token") : "" + ill11III;
 !(async () => {
-  console.log("\n【默认全部助力账号一，邀请满" + l1iIlI + "自动停止】\n【加密脚本，不放心可禁用】\n【可能限制时段，留意频道通知】\n");
-  if (!iI1Ili[0]) {
+  if (!l1lI1ii[0]) {
     $.msg($.name, "【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取", "https://bean.m.jd.com/bean/signIndex.action", {
       "open-url": "https://bean.m.jd.com/bean/signIndex.action"
     });
     return;
   }
-  for (let I1I1iI = 0; I1I1iI < iI1Ili.length; I1I1iI++) {
-    if (iI1Ili[I1I1iI]) {
-      llIIiI = iI1Ili[I1I1iI];
-      $.UserName = decodeURIComponent(llIIiI.match(/pt_pin=([^; ]+)(?=;?)/) && llIIiI.match(/pt_pin=([^; ]+)(?=;?)/)[1]);
-      $.index = I1I1iI + 1;
+  console.log("默认全部助力账号一，邀请满" + lIlii11i + "自动停止");
+  console.log("当前设置活动ID为：" + ii111lIi);
+  for (let l1ii1IlI = 0; l1ii1IlI < l1lI1ii.length; l1ii1IlI++) {
+    if (l1lI1ii[l1ii1IlI]) {
+      l11lI11I = l1lI1ii[l1ii1IlI];
+      $.UserName = decodeURIComponent(l11lI11I.match(/pt_pin=([^; ]+)(?=;?)/) && l11lI11I.match(/pt_pin=([^; ]+)(?=;?)/)[1]);
+      $.index = l1ii1IlI + 1;
       $.isLogin = true;
       $.nickName = "";
-      iI1111 = "";
+      ii1i1lI1 = "";
       console.log("\n******开始【京东账号" + $.index + "】" + ($.nickName || $.UserName) + "*********\n");
       if (!$.isLogin) {
         $.msg($.name, "【提示】cookie已失效", "京东账号" + $.index + " " + ($.nickName || $.UserName) + "\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action", {
           "open-url": "https://bean.m.jd.com/bean/signIndex.action"
         });
-        if ($.isNode()) {
-          await iI1Ill.sendNotify($.name + "cookie已失效 - " + $.UserName, "京东账号" + $.index + " " + $.UserName + "\n请重新登录获取cookie");
-        }
+        $.isNode() && (await lliIiii1.sendNotify($.name + "cookie已失效 - " + $.UserName, "京东账号" + $.index + " " + $.UserName + "\n请重新登录获取cookie"));
         continue;
       }
-      $.UA = lilI1.genUA($.UserName);
-      await IIIlI1();
-      I1I1lI && $.index != iI1Ili.length && (console.log("【请求限制，暂时休整等待" + I1I1lI + "秒~~~~~~~】"), await $.wait(parseInt(I1I1lI, 10) * 1000));
+      $.UA = await IiIlIll();
+      $.jda = "__jda=" + iIl1il1l("1xxxxxxxx.164xxxxxxxxxxxxxxxxxxx.164xxxxxxx.165xxxxxx.165xxxxxx.1xx");
+      await Il1illlI();
+      if (l1ii11I) {
+        if ($.index != l1lI1ii.length) {
+          console.log("【请求限制，暂时休整等待" + l1ii11I + "秒~~~~~~~】");
+          await $.wait(parseInt(l1ii11I, 10) * 1000);
+        }
+      }
       if ($.hasEnd) break;
     }
   }
-})().catch(ili1Ii => {
-  $.log("", "❌ " + $.name + ", 失败! 原因: " + ili1Ii + "!", "");
+})().catch(iliIlllI => {
+  $.log("", "❌ " + $.name + ", 失败! 原因: " + iliIlllI + "!", "");
 }).finally(() => {
   $.done();
 });
-async function IIIlI1() {
+async function Il1illlI() {
   $.personNum = 0;
   try {
-    await i1lIiI();
+    await ilI11II();
     if ($.index != 1) {}
-    await IiiIl();
+    await iill1li();
     if ($.index == 1) $.helpCount = $.personNum;else $.helpok == true && $.helpCount++;
     console.log("【账号" + $.index + "】已邀请人数：" + $.personNum + ($.index != 1 && " 【账号1】已邀请人数：" + $.helpCount || ""));
-    if ($.helpCount >= l1iIlI) $.hasEnd = true;
-  } catch (Iili) {
-    console.log(Iili);
+    if ($.helpCount >= lIlii11i) $.hasEnd = true;
+  } catch (l11I1lI) {
+    console.log(l11I1lI);
   }
 }
-function i1lIiI() {
-  return new Promise(iiIiIi => {
-    let IilI = {
-      "linkId": ii1ii
+function ilI11II() {
+  return new Promise(lIli1III => {
+    let lii1ii11 = {
+      "linkId": ii111lIi
     };
-    $.get(IIIil("happyDigHome", IilI), async (Iillll, lllI1, III11I) => {
+    $.get(liiil1lI("happyDigHome", lii1ii11), async (lIlIli11, II1lll11, l1IlilII) => {
       try {
-        if (Iillll) console.log("" + JSON.stringify(Iillll)), console.log($.name + " API请求失败，请检查网路重试");else {
-          if (l1iIl1(III11I)) {
-            III11I = JSON.parse(III11I);
-            if ($.index === 1) III11I.success == true && (curRound = III11I.data.curRound, inviteCode = III11I.data.inviteCode, inviter = III11I.data.markedPin, blood = III11I.data.blood, console.log("【当前助力】:" + III11I.data.inviteCode), III11I.data && III11I.data.inviteCode && IIIl1.length === 0 && IIIl1.push({
-              "user": $.UserName,
-              "fcwbinviteCode": III11I.data.inviteCode,
-              "fcwbinviter": III11I.data.markedPin
-            }));else III11I.success == false && console.log("抱歉，貌似账号已黑，跳过！");
-          }
-        }
-      } catch (l1i11) {
-        $.logErr(l1i11, lllI1);
-      } finally {
-        iiIiIi(III11I);
-      }
-    });
-  });
-}
-function IiiIl() {
-  return new Promise(lil1l => {
-    let Iliii = {
-      "pageNum": 1,
-      "pageSize": 50,
-      "linkId": ii1ii
-    };
-    $.get(IIIil("happyDigHelpList", Iliii), async (l1l1Ii, IIIIlI, l1i11l) => {
-      try {
-        if (l1l1Ii) {
-          console.log("" + JSON.stringify(l1l1Ii));
+        if (lIlIli11) {
+          console.log("" + JSON.stringify(lIlIli11));
           console.log($.name + " API请求失败，请检查网路重试");
         } else {
-          if (l1iIl1(l1i11l)) {
-            l1i11l = JSON.parse(l1i11l);
-            if (l1i11l.success == true) $.personNum = l1i11l.data.personNum;else l1i11l.success == false && console.log("抱歉，貌似账号已黑，跳过！");
+          if (iIlIlilI(l1IlilII)) {
+            l1IlilII = JSON.parse(l1IlilII);
+            if ($.index === 1) l1IlilII.success == true && (curRound = l1IlilII.data.curRound, inviteCode = l1IlilII.data.inviteCode, inviter = l1IlilII.data.markedPin, blood = l1IlilII.data.blood, console.log("【当前助力】:" + l1IlilII.data.inviteCode), l1IlilII.data && l1IlilII.data.inviteCode && Iill1I.length === 0 && Iill1I.push({
+              "user": $.UserName,
+              "fcwbinviteCode": l1IlilII.data.inviteCode,
+              "fcwbinviter": l1IlilII.data.markedPin
+            }));else l1IlilII.success == false && console.log("抱歉，貌似账号已黑，跳过！");
           }
         }
-      } catch (I1lIII) {
-        $.logErr(I1lIII, IIIIlI);
+      } catch (lII111Ii) {
+        $.logErr(lII111Ii, II1lll11);
       } finally {
-        lil1l(l1i11l);
+        lIli1III(l1IlilII);
       }
     });
   });
 }
-function ii1l1l() {
-  return new Promise(l11iIi => {
-    let IlilI = "{\"linkId\":\"xpEf-M3RyE8Cd8nP8Zd0eA\",\"inviter\":\"" + inviter + "\",\"inviteCode\":\"" + inviteCode + "\"}",
-      llIi1 = Date.now(),
-      IliIII = {
-        "url": "https://api.m.jd.com/?functionId=happyDigHelpPage&body=" + IlilI + "&t=" + llIi1 + "&appid=activities_platform&client=H5&clientVersion=1.0.0",
+function iill1li() {
+  return new Promise(async iiiIll => {
+    const I1l1llli = {
+        "functionId": "happyDigHelpList",
+        "appid": "activities_platform",
+        "clientVersion": "12.0.1",
+        "client": "ios",
+        "t": l11i1I1l,
+        "body": {
+          "pageNum": 1,
+          "pageSize": 50,
+          "linkId": ii111lIi
+        }
+      },
+      Ii1111I = await llIl1lII("8dd95", I1l1llli);
+    let liili11i = {
+      "url": "https://api.m.jd.com/api?" + Ii1111I,
+      "headers": {
+        "Cookie": l11lI11I + $.jda,
+        "Origin": "https://bnzf.jd.com",
+        "User-Agent": $.UA,
+        "referer": "https://bnzf.jd.com/?activityId=cNAsHasSnzWTAtWhIQR4dA&inviterId=&inviterCode=&utm_user=plusmember&ad_od=share&utm_source=androidapp&utm_medium=appshare&utm_campaign=t_335139774&utm_term=Wxfriends&lng=106.477132&lat=29.502772&sid=84c83c76030880654e4e98b6bcda688w&un_area=4_50952_106_0"
+      }
+    };
+    $.get(liili11i, async (ii1IiIil, liIil1, iill1IlI) => {
+      try {
+        if (ii1IiIil) {
+          console.log("" + JSON.stringify(ii1IiIil));
+          console.log($.name + " API请求失败，请检查网路重试");
+        } else {
+          if (iIlIlilI(iill1IlI)) {
+            iill1IlI = JSON.parse(iill1IlI);
+            if (iill1IlI.success == true) $.personNum = iill1IlI.data.personNum;else iill1IlI.success == false && console.log("抱歉，貌似账号已黑，跳过！");
+          }
+        }
+      } catch (i1Ili111) {
+        $.logErr(i1Ili111, liIil1);
+      } finally {
+        iiiIll(iill1IlI);
+      }
+    });
+  });
+}
+function ilIi1ilI() {
+  return new Promise(lilll1Ii => {
+    let iI111l1 = "{\"linkId\":\"" + ii111lIi + "\",\"inviter\":\"" + inviter + "\",\"inviteCode\":\"" + inviteCode + "\"}",
+      iil1Ii1I = Date.now(),
+      lI1illil = {
+        "url": "https://api.m.jd.com/api?functionId=happyDigHelpPage&body=" + iI111l1 + "&t=" + iil1Ii1I + "&appid=activities_platform&client=H5&clientVersion=1.0.0",
         "headers": {
-          "Cookie": llIIiI,
+          "Cookie": l11lI11I,
           "Origin": "https://api.m.jd.com",
           "User-Agent": $.UA
         }
       };
-    $.get(IliIII, async (II1l, liiiiI, II1i) => {
+    $.get(lI1illil, async (ilIIiI1I, ii11lIi1, IIiIlli1) => {
       try {
-        if (II1l) {
-          console.log("" + JSON.stringify(II1l));
-          console.log($.name + " API请求失败，请检查网路重试");
-        } else l1iIl1(II1i) && (II1i = JSON.parse(II1i), console.log(II1i));
-      } catch (l1ilII) {
-        $.logErr(l1ilII, liiiiI);
+        if (ilIIiI1I) console.log("" + JSON.stringify(ilIIiI1I)), console.log($.name + " API请求失败，请检查网路重试");else {
+          if (iIlIlilI(IIiIlli1)) {
+            IIiIlli1 = JSON.parse(IIiIlli1);
+            console.log(IIiIlli1);
+          }
+        }
+      } catch (ilIII1l) {
+        $.logErr(ilIII1l, ii11lIi1);
       } finally {
-        l11iIi(II1i);
+        lilll1Ii(IIiIlli1);
       }
     });
   });
 }
-function l1lli1() {
-  return new Promise(async i11iIl => {
-    let IIiiI1 = Date.now();
-    const IIIIi1 = {
+function I1IIili1() {
+  return new Promise(async li1l1ii => {
+    const iii1i1 = {
         "functionId": "happyDigHelp",
         "appid": "activities_platform",
-        "clientVersion": "10.1.0",
-        "client": "android",
-        "t": IIiiI1,
+        "clientVersion": "12.0.1",
+        "client": "ios",
+        "t": l11i1I1l,
         "body": {
-          "linkId": ii1ii,
+          "linkId": ii111lIi,
           "inviter": inviter,
           "inviteCode": inviteCode
         }
       },
-      ii1IIl = await IiiIi("8dd95", IIIIi1);
-    let ii1IIi = {
-      "url": "https://api.m.jd.com/?" + ii1IIl,
+      l1i111Ii = await llIl1lII("8dd95", iii1i1);
+    let Il1iil1l = {
+      "url": "https://api.m.jd.com/api?" + l1i111Ii,
       "headers": {
-        "Cookie": llIIiI,
+        "Cookie": l11lI11I + $.jda,
         "Origin": "https://bnzf.jd.com",
         "User-Agent": $.UA,
-        "referer": "https://bnzf.jd.com/?activityId=xpEf-M3RyE8Cd8nP8Zd0eA&inviterId=&inviterCode=&utm_user=plusmember&ad_od=share&utm_source=androidapp&utm_medium=appshare&utm_campaign=t_335139774&utm_term=Wxfriends&lng=106.477132&lat=29.502772&sid=84c83c76030880654e4e98b6bcda688w&un_area=4_50952_106_0"
+        "referer": "https://bnzf.jd.com/?activityId=cNAsHasSnzWTAtWhIQR4dA&inviterId=&inviterCode=&utm_user=plusmember&ad_od=share&utm_source=androidapp&utm_medium=appshare&utm_campaign=t_335139774&utm_term=Wxfriends&lng=106.477132&lat=29.502772&sid=84c83c76030880654e4e98b6bcda688w&un_area=4_50952_106_0"
       }
     };
-    $.get(ii1IIi, async (I1ll1l, I1ll1i, i11iII) => {
+    $.get(Il1iil1l, async (iIl1lIll, l1l1l111, l11lIiIi) => {
       try {
-        if (I1ll1l) console.log("" + JSON.stringify(I1ll1l)), console.log($.name + " API请求失败，请检查网路重试");else {
-          if (l1iIl1(i11iII)) {
-            i11iII = JSON.parse(i11iII);
-            $.helpok = i11iII.success;
-            if (i11iII.success == true) console.log("【助力状态】：" + i11iII.errMsg);else {
-              if (i11iII.success == false) {
-                console.log("【助力状态】：" + i11iII.errMsg);
-              }
-            }
+        if (iIl1lIll) console.log("" + JSON.stringify(iIl1lIll)), console.log($.name + " API请求失败，请检查网路重试");else {
+          if (iIlIlilI(l11lIiIi)) {
+            l11lIiIi = JSON.parse(l11lIiIi);
+            $.helpok = l11lIiIi.success;
+            if (l11lIiIi.success == true) console.log("【助力状态】：" + l11lIiIi.errMsg);else l11lIiIi.success == false && console.log("【助力状态】：" + l11lIiIi.errMsg);
           }
         }
-      } catch (i1I1l) {
-        $.logErr(i1I1l, I1ll1i);
+      } catch (llI11iIi) {
+        $.logErr(llI11iIi, l1l1l111);
       } finally {
-        i11iIl(i11iII);
+        li1l1ii(l11lIiIi);
       }
     });
   });
 }
-async function IiiIi(IIiiII, llIiI) {
+async function llIl1lII(Ili11iil, iiIIlI1i) {
   try {
-    let Ilili = new IIIi1({
-      "appId": IIiiII,
+    let ilI1I = new IilIIIl1({
+      "appId": Ili11iil,
       "appid": "activities_platform",
-      "clientVersion": llIiI?.["clientVersion"],
-      "client": llIiI?.["client"],
+      "clientVersion": iiIIlI1i?.["clientVersion"],
+      "client": iiIIlI1i?.["client"],
       "pin": $.UserName,
       "ua": $.UA,
       "version": "4.1"
     });
-    return await Ilili.genAlgo(), body = await Ilili.genUrlParams(llIiI.functionId, llIiI.body), body;
-  } catch (I1ll1I) {}
+    return await ilI1I.genAlgo(), body = await ilI1I.genUrlParams(iiIIlI1i.functionId, iiIIlI1i.body), body;
+  } catch (ll1llI1I) {}
 }
-function ii1l1i(Iii1I1) {
-  Iii1I1 = Iii1I1 || 32;
-  let Iii1II = "abcdef0123456789",
-    llIlI = Iii1II.length,
-    l1iIil = "";
-  for (i = 0; i < Iii1I1; i++) l1iIil += Iii1II.charAt(Math.floor(Math.random() * llIlI));
-  return l1iIil;
+async function iIii11ll(ii1lIiiI, l1lili1) {
+  let llIll1ll = {
+      "searchParams": {
+        ...l1lili1,
+        "appId": ii1lIiiI
+      },
+      "pt_pin": $.UserName,
+      "client": l1lili1?.["client"],
+      "clientVersion": l1lili1?.["clientVersion"]
+    },
+    ili11iiI = {
+      "url": "http://h5st.kingran.cf/api/h5st",
+      "body": JSON.stringify(llIll1ll),
+      "headers": {
+        "Content-Type": "application/json",
+        "User-Agent": $.UA
+      },
+      "timeout": 30000
+    };
+  return new Promise(async i1IIl1I1 => {
+    $.post(ili11iiI, (llII1IiI, l11lII1l, lIiIlIll) => {
+      let ll1I1l1I = "";
+      try {
+        if (llII1IiI) console.log($.name + " getH5st API请求失败，请检查网路重试");else {
+          lIiIlIll = JSON.parse(lIiIlIll);
+          if (typeof lIiIlIll === "object" && lIiIlIll && lIiIlIll.body) {
+            if (lIiIlIll.body) ll1I1l1I = lIiIlIll || "";
+          } else {
+            if (lIiIlIll.code == 400) {
+              console.log("\n" + lIiIlIll.msg);
+            } else console.log("\n可能连接不上接口，请检查网络");
+          }
+        }
+      } catch (ililiII1) {
+        $.logErr(ililiII1, l11lII1l);
+      } finally {
+        i1IIl1I1(i11lIl1l(ll1I1l1I));
+      }
+    });
+  });
 }
-function l1iIl1(IIIIii) {
+function i11lIl1l(iIlIl11, iiliIi = {}) {
+  let li1ill1I = [],
+    iil1Ilil = iiliIi.connector || "&",
+    ii1iIl1 = Object.keys(iIlIl11);
+  if (iiliIi.sort) ii1iIl1 = ii1iIl1.sort();
+  for (let ii1l1il1 of ii1iIl1) {
+    let IiIIIiI = iIlIl11[ii1l1il1];
+    if (IiIIIiI && typeof IiIIIiI === "object") IiIIIiI = JSON.stringify(IiIIIiI);
+    if (IiIIIiI && iiliIi.encode) IiIIIiI = encodeURIComponent(IiIIIiI);
+    li1ill1I.push(ii1l1il1 + "=" + IiIIIiI);
+  }
+  return li1ill1I.join(iil1Ilil);
+}
+function iIl1il1l(iIllIii1 = "xxxxxxxxxxxxxxxxxxxx") {
+  return iIllIii1.replace(/[xy]/g, function (IillIi1) {
+    var i1IillIl = Math.random() * 10 | 0,
+      IiIiilI1 = IillIi1 == "x" ? i1IillIl : i1IillIl & 3 | 8;
+    return jdaid = IiIiilI1.toString(), jdaid;
+  });
+}
+function l1Iiii1l(Ill11il) {
+  Ill11il = Ill11il || 32;
+  let lIli11 = "abcdef0123456789",
+    i1i1iilI = lIli11.length,
+    lII1lI1I = "";
+  for (i = 0; i < Ill11il; i++) lII1lI1I += lIli11.charAt(Math.floor(Math.random() * i1i1iilI));
+  return lII1lI1I;
+}
+function iIlIlilI(lIill1l) {
   try {
-    if (typeof JSON.parse(IIIIii) == "object") return true;
-  } catch (liiili) {
-    return console.log(liiili), console.log("京东服务器访问数据为空，请检查自身设备网络情况"), false;
+    if (typeof JSON.parse(lIill1l) == "object") return true;
+  } catch (I1I1lll1) {
+    return console.log(I1I1lll1), console.log("京东服务器访问数据为空，请检查自身设备网络情况"), false;
   }
 }
-function ii1iI(I1ll11) {
-  if (typeof I1ll11 == "string") {
-    try {
-      return JSON.parse(I1ll11);
-    } catch (i1i111) {
-      return console.log(i1i111), $.msg($.name, "", "请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie"), [];
-    }
+function l1i11i1l(I1l1iIi) {
+  if (typeof I1l1iIi == "string") try {
+    return JSON.parse(I1l1iIi);
+  } catch (ii1iIIii) {
+    return console.log(ii1iIIii), $.msg($.name, "", "请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie"), [];
   }
 }
-function IIIil(ii1l1I, lI1lII) {
+async function IiIlIll() {
+  for (var l111l111 = "", ll1li1Ii = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ", lilllIII = 0; lilllIII < 16; lilllIII++) {
+    var IIlil1Ii = Math.round(Math.random() * (ll1li1Ii.length - 1));
+    l111l111 += ll1li1Ii.substring(IIlil1Ii, IIlil1Ii + 1);
+  }
+  return uuid = Buffer.from(l111l111, "utf8").toString("base64"), ep = encodeURIComponent(JSON.stringify({
+    "hdid": "JM9F1ywUPwflvMIpYPok0tt5k9kW4ArJEU3lfLhxBqw=",
+    "ts": new Date().getTime(),
+    "ridx": -1,
+    "cipher": {
+      "sv": "CJGkEK==",
+      "ud": uuid,
+      "iad": ""
+    },
+    "ciphertype": 5,
+    "version": "1.0.3",
+    "appname": "com.360buy.jdmobile"
+  })), "jdapp;iPhone;12.0.1;;;M/5.0;appBuild/168684;jdSupportDarkMode/0;ef/1;ep/" + ep + ";Mozilla/5.0 (iPhone; CPU iPhone OS 14_8 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1;";
+}
+function liiil1lI(ii1lIli, iIiiilii) {
   return {
-    "url": i1llll + "/?functionId=" + ii1l1I + "&body=" + escape(JSON.stringify(lI1lII)) + "&t=1635561607124&appid=activities_platform&client=H5&clientVersion=1.2.0",
+    "url": li1i11iI + "/api?functionId=" + ii1lIli + "&body=" + escape(JSON.stringify(iIiiilii)) + "&t=1635561607124&appid=activities_platform&client=H5&clientVersion=1.2.0",
     "headers": {
-      "Cookie": llIIiI,
+      "Cookie": l11lI11I,
       "Origin": "https://bnzf.jd.com",
       "User-Agent": $.UA
     }

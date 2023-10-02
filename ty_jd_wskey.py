@@ -20,13 +20,43 @@ import json  # 用于Json解析
 import os  # 用于导入系统变量
 import sys  # 实现 sys.exit
 import logging  # 用于日志输出
-import time  # 时间
+import random,time
 import re
 from urllib.parse import quote  # 正则过滤
 from utils.jdsign import get_sign,base64Encode
 
 WSKEY_MODE = 0
 CLOUD_SIGN=False
+
+def randomuserAgent():
+    global ua
+    struuid=''.join(random.sample(['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','0','1','2','3','4','5','6','7','8','9','a','b','c','z'], 40))
+    addressid = ''.join(random.sample('1234567898647', 10))
+    iosVer = ''.join(random.sample(["15.1.1","14.5.1", "14.4", "14.3", "14.2", "14.1", "14.0.1"], 1))
+    iosV = iosVer.replace('.', '_')
+    iPhone = ''.join(random.sample(["8", "9", "10", "11", "12", "13"], 1))
+    ADID = ''.join(random.sample('0987654321ABCDEF', 8)) + '-' + ''.join(random.sample('0987654321ABCDEF', 4)) + '-' + ''.join(random.sample('0987654321ABCDEF', 4)) + '-' + ''.join(random.sample('0987654321ABCDEF', 4)) + '-' + ''.join(random.sample('0987654321ABCDEF', 12))
+    ua=f'jdapp;iPhone;10.0.4;{iosVer};{struuid};network/wifi;ADID/{ADID};model/iPhone{iPhone},1;addressid/{addressid};appBuild/167707;jdSupportDarkMode/0;Mozilla/5.0 (iPhone; CPU iPhone OS {iosV} like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/null;supportJDSHWK/1'
+
+def get_proxy_api(proxy_url, max_retries=5, timeout=60, retry_delay=1):
+    for retry in range(max_retries):
+        res = get(url=proxy_url)
+        print(f"本次获取到的代理：{res.text}")
+        proxy_ip_port = res.text.strip()
+        proxy_address = f"http://{proxy_ip_port}"
+
+        try:
+            response = get("https://jd.com", proxies={"http": proxy_address, "https": proxy_address}, timeout=timeout)
+            if response.status_code == 200:
+                return proxy_address
+        except Exception as e:
+            print(f"代理检测失败，错误信息：{e}")
+
+        print("代理检测失败，重新获取...")
+        time.sleep(retry_delay)
+    
+    print("无法获取可用的代理IP，尝试次数已达上限。")
+    return None
 
 # 0 = Default / 1 = Debug!
 if "WSKEY_DEBUG" in os.environ or WSKEY_MODE:  # 判断调试模式变量
@@ -38,6 +68,7 @@ else:  # 判断分支
     logger = logging.getLogger(__name__)  # 主模块
 
 try:  # 异常捕捉
+    from requests import get, post, put, packages
     import requests  # 导入HTTP模块
 except Exception as e:  # 异常捕捉
     logger.info(str(e) + "\n缺少requests模块, 请执行命令：pip3 install requests\n")  # 日志输出
@@ -369,6 +400,7 @@ def ql_disable(id):
 
 
 def ql_AddUp(uid,ws,userName):
+    randomuserAgent()
     for count in range(tryCount):  # for循环 [tryCount]
         count += 1  # 自增
         return_ws = genToken(ws,userName)  # 使用 WSKEY 请求获取 JD_COOKIE bool jd_ck
@@ -411,6 +443,23 @@ if __name__ == '__main__':  # Python主函数执行入口
     else:  # 判断分支
         logger.info("未添加变量TYQLDG_URL或TYQLDG_TOKEN")  # 标准日志输出
         #sys.exit(0)  # 脚本退出
+
+    print("版本: 20230602")
+    print("隧道型代理池接口:export WSKEY_PROXY_TUNNRL='http://127.0.0.1:123456'")
+    print("拉取型代理API接口(数据格式:txt;提取数量:每次一个):export WSKEY_PROXY_URL='http://xxx.com/apiUrl'")
+    print("没有代理可以自行注册，比如携趣，巨量，每日免费1000IP，完全够用")
+    print("====================================")
+    config=""
+    global proxy_url
+    proxy_url=os.environ.get("WSKEY_PROXY_URL") or os.environ.get("WSKEY_PROXY_TUNNRL") or None
+    iswxpusher=False
+    counttime=0
+
+    if proxy_url is None:
+        print("没有配置代理，无法使用代理!\n请配置环境变量WSKEY_PROXY_TUNNRL或WSKEY_PROXY_URL\n")
+        print("====================================")
+    else:
+        print(f"已配置代理: {proxy_url}\n")
 
     notify_api='{0}/api/notify.php?access_token={1}'.format(TYQLDG_URL,TYQLDG_TOKEN)
     ck_api='{0}/api/cookie.php?access_token={1}'.format(TYQLDG_URL,TYQLDG_TOKEN)
