@@ -1,617 +1,513 @@
 /*
-活动名称：签到有礼（超级无线欧莱雅）
-活动链接：https://lzkj-isv.isvjcloud.com/prod/cc/interactsaas/index?activityType=<10023/10040>&templateId=<模板id>&activityId=<活动id>&nodeId=<nodeid>&prd=cjwx
+活动名称：签到有礼（超级无线）
+活动链接：https://lzkj-isv.isvjcloud.com/prod/cc/interactsaas/index?activityType=<10023/10040>&templateId=<模板id>&activityId=<活动id>&prd=cjwx
 环境变量：jd_lzkj_loreal_daySign_url // 活动链接
-         jd_lzkj_loreal_daySign_openCard // 是否开卡，默认不开卡
+		jd_lzkj_loreal_daySign_opencard // 是否入会（true/false），默认不入会
+        jd_lzkj_loreal_daySign_Notify // 是否推送通知（true/false），默认不推送
+		jd_lzkj_loreal_daySign_break // 493后继续执行，默认退出运行（true/false）
+		
+cron:1 1 1 1 *
+============Quantumultx===============
+[task_local]
+#签到有礼（超级无线）
+1 1 1 1 * jd_lzkj_loreal_daySign.js, tag=签到有礼（超级无线）, enabled=true		
 
 */
 
 const Env=require('./utils/Env.js');
-const $ = new Env('签到有礼（超级无线欧莱雅）')
-const notify = $.isNode() ? require('./sendNotify') : ''
-const jdCookieNode = $.isNode() ? require('./jdCookie') : ''
-const getH5st = require('./function/getH5st3_0')
-const getToken = require('./function/getToken')
-
-let lz_cookie = {},
-  activityUrl = process.env.jd_lzkj_loreal_daySign_url,
-  openCard = process.env.jd_lzkj_loreal_daySign_openCard === "true" ? true : false,
-  activityCookie = "";
-$.activityEnd = false;
-let cookiesArr = [],
-  cookie = "",
-  message = "";
-if ($.isNode()) {
-  if (process.env.jd_lzkj_loreal_daySign_url) activityUrl = process.env.jd_lzkj_loreal_daySign_url;
-  if (JSON.stringify(process.env).indexOf("GITHUB") > -1) process.exit(0);
-  Object.keys(jdCookieNode).forEach(l1i1llI => {
-    cookiesArr.push(jdCookieNode[l1i1llI]);
+const $ = new Env('签到有礼（超级无线）')
+const ililil = require("./jdCookie"),
+  ii1i1ll = require("./function/jdCommon"),
+  liIli11i = require("./function/sendJDNotify"),
+  lili1IIi = require("./function/krgetToken"),
+  {
+    loreal_savePrize: IiIIil1
+  } = require("./function/krsavePrize"),
+  iIli1lli = process.env.jd_lzkj_loreal_daySign_url || "",
+  IiiIlII1 = process.env.jd_lzkj_loreal_daySign_opencard === "true",
+  lIIlil1 = process.env.jd_lzkj_loreal_daySign_break === "true",
+  lIili11l = process.env.jd_lzkj_loreal_daySign_Notify === "true";
+let l1Ii1iil = "",
+  llIililI = "";
+const iI1iIiII = Object.keys(ililil).map(Il1Ili11 => ililil[Il1Ili11]).filter(i1l1ilIl => i1l1ilIl);
+!iI1iIiII[0] && ($.msg($.name, "【提示】请先获取Cookie"), process.exit(1));
+!(async () => {
+  if (!iIli1lli) {
+    console.log("⚠ 请先定义必要的环境变量后再运行脚本");
+    return;
+  }
+  const IlilIiII = ii1i1ll.parseUrl(iIli1lli);
+  if (!IlilIiII) {
+    console.log("⚠ 请填写格式正确的链接");
+    return;
+  }
+  $.activityUrl = iIli1lli;
+  $.activityId = ii1i1ll.getUrlParameter(iIli1lli, "activityId");
+  $.activityType = ii1i1ll.getUrlParameter(iIli1lli, "activityType");
+  $.hostname = IlilIiII.hostname;
+  $.pathname = IlilIiII.pathname;
+  let illlliIi = "";
+  if ($.hostname) {
+    if ($.hostname.includes("lorealjdcampaign-rc")) illlliIi = "apps/interact";else {
+      if ($.hostname.includes("lzkj")) {
+        illlliIi = $.pathname.replace(/\/index$/, "");
+      }
+    }
+    $.baseUrl = "https://" + $.hostname;
+    $.newbaseUrl = "https://" + $.hostname + "/" + illlliIi;
+    $.origin = $.baseUrl;
+  }
+  if (!$.activityId || !illlliIi || !$.hostname) {
+    console.log("⚠ 请填写格式正确的变量");
+    return;
+  }
+  liIli11i.config({
+    "title": $.name
   });
-  if (process.env.JD_DEBUG && process.env.JD_DEBUG === "false") console.log = () => {};
-} else cookiesArr = [$.getdata("CookieJD"), $.getdata("CookieJD2"), ...$.toObj($.getdata("CookiesJD") || "[]").map(lIlil1I1 => lIlil1I1.cookie)].filter(IIliII1l => !!IIliII1l);
-let isGetCookie = typeof $request !== "undefined";
-isGetCookie && (GetCookie(), $.done());
-if (activityUrl) {
-  activityId = getQueryString("" + activityUrl, "activityId");
-  activityType = getQueryString("" + activityUrl, "activityType");
-  templateId = getQueryString("" + activityUrl, "templateId");
-  if (activityUrl.includes("lorealjdcampaign-rc")) wxActType = "apps/interact";else {
-    if (activityUrl.includes("lzkj")) wxActType = activityUrl.match(/\/(prod\/cc\/interact\w*)\//)[1];else {
-      console.log("暂不支持的类型");
+  console.log("活动入口：" + $.activityUrl);
+  for (let II1lii11 = 0; II1lii11 < iI1iIiII.length; II1lii11++) {
+    $.index = II1lii11 + 1;
+    l1Ii1iil = iI1iIiII[II1lii11];
+    llIililI = iI1iIiII[II1lii11];
+    ii1i1ll.setCookie(llIililI);
+    $.UserName = decodeURIComponent(ii1i1ll.getCookieValue(l1Ii1iil, "pt_pin"));
+    $.UA = ii1i1ll.genUA($.UserName);
+    $.UUID = ii1i1ll.genUuid("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+    $.te = Math.floor(Math.random() * 9000) + 1000;
+    $.message = liIli11i.create($.index, $.UserName);
+    $.nickName = "";
+    console.log("\n******开始【京东账号" + $.index + "】" + ($.nickName || $.UserName) + "******\n");
+    await i1ll1lli();
+    ii1i1ll.unsetCookie();
+    if ($.outFlag || $.runEnd) break;
+  }
+  lIili11l && liIli11i.getMessage() && (liIli11i.updateContent(liIli11i.content + ("\n【活动地址】" + $.activityUrl)), await liIli11i.push());
+})().catch(lll1iI1l => $.logErr(lll1iI1l)).finally(() => $.done());
+async function i1ll1lli() {
+  try {
+    $.skipRun = false;
+    $.token = "";
+    $.pinToken = "";
+    if ($.runEnd || $.outFlag) return;
+    $.jdToken = await lili1IIi(llIililI, $.baseUrl);
+    if (!$.jdToken) {
+      console.log("获取 Token 失败！");
+      $.message.fix("获取[Token]失败");
       return;
     }
-  }
-  $.domain = activityUrl.match(/https?:\/\/([^/]+)/)[1];
-}
-let domains = "https://" + $.domain;
-!(async () => {
-  if (activityId == null) {
-    $.msg($.name, "", "活动id不存在");
-    $.done();
-    return;
-  }
-  console.log("活动入口：" + activityUrl);
-  if (!cookiesArr[0]) {
-    $.msg($.name, "【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取", "https://bean.m.jd.com/", {
-      "open-url": "https://bean.m.jd.com/"
-    });
-    return;
-  }
-  for (let IiiilIiI = 0; IiiilIiI < cookiesArr.length; IiiilIiI++) {
-    if (cookiesArr[IiiilIiI]) {
-      cookie = cookiesArr[IiiilIiI];
-      originCookie = cookiesArr[IiiilIiI];
-      $.UserName = decodeURIComponent(cookie.match(/pt_pin=(.+?);/) && cookie.match(/pt_pin=(.+?);/)[1]);
-      $.index = IiiilIiI + 1;
-      $.isLogin = true;
-      $.nickName = "";
-      console.log("\n******开始【京东账号" + $.index + "】" + ($.nickName || $.UserName) + "******\n");
-      if (!$.isLogin) {
-        $.msg($.name, "【提示】cookie已失效", "京东账号" + $.index + " " + ($.nickName || $.UserName) + "\n请重新登录获取\nhttps://bean.m.jd.com/", {
-          "open-url": "https://bean.m.jd.com/"
-        });
-        $.isNode() && (await notify.sendNotify($.name + "cookie已失效 - " + $.UserName, "京东账号" + $.index + " " + $.UserName + "\n请重新登录获取cookie"));
-        continue;
+    await IlIIlII("login");
+    if ($.runEnd || $.outFlag || $.skipRun) return;
+    if (!$.token) {
+      console.log("未能获取用户鉴权信息！");
+      $.message.fix("未能获取用户鉴权信息");
+      return;
+    }
+    await $.wait(500);
+    if ($.joinCode) {
+      switch ($.joinCode) {
+        case "1004":
+          await IlIIlII("follow"), await $.wait(500);
+          break;
+        case "1005":
+        case "1006":
+          $.joinCode !== "1005" && (await IlIIlII("follow"));
+          if (IiiIlII1) {
+            const IIlI1i11 = await ii1i1ll.joinShopMember($.venderId);
+            if (IIlI1i11) {
+              console.log("加入店铺会员成功");
+            } else {
+              console.log("加入店铺会员失败，活动仅限店铺会员参与哦~");
+              $.message.fix("加入店铺会员失败，活动仅限店铺会员参与");
+              return;
+            }
+          } else {
+            console.log("活动仅限店铺会员参与哦~");
+            $.message.fix("活动仅限店铺会员参与");
+            return;
+          }
+          break;
+        default:
+          if ($.joinCode !== "1001") {
+            console.log($.joinDes);
+            $.message.fix($.joinDes);
+            return;
+          }
+          break;
       }
-      await getUA();
-      await Main();
-      await $.wait(2000);
-      if ($.hasEnd || $.activityEnd || $.outFlag) {
+      if ($.runEnd || $.outFlag || $.skipRun) return;
+    } else {
+      if ($.runEnd || $.outFlag || $.skipRun) return;
+      console.log("未能获取用户活动状态");
+      $.message.fix("未能获取用户活动状态");
+      return;
+    }
+    if ($.hostname.includes("lzkj") && $.pathname.includes("/prod/cc/interactsaas")) {
+      await IlIIlII("initPinToken");
+      if (!$.pinToken) {
+        console.log("获取 pinToken 失败！");
+        $.message.fix("获取[pinToken]失败");
+        return;
+      }
+      await $.wait(500);
+    }
+    if ($.runEnd || $.outFlag || $.skipRun) return;
+    if ($.index === 1) {
+      await IlIIlII("basicInfo");
+      if ($.runEnd || $.outFlag || $.skipRun) return;
+      switch ($.activityType) {
+        case "10023":
+        case "10040":
+          break;
+        case "":
+          console.log("未能获取活动类型"), $.message.fix("未能获取活动类型"), $.runEnd = true;
+          return;
+        default:
+          console.log("❌ 当前活动类型（" + $.activityType + "）暂不受本脚本支持，请联系作者进行反馈！"), $.message.fix("活动类型（" + $.activityType + "）不受支持"), $.runEnd = true;
+          return;
+      }
+      if ($.runEnd || $.outFlag) return;
+      await $.wait(500);
+    }
+    await IlIIlII("activity");
+    await $.wait(500);
+    if ($.runEnd || $.outFlag || $.skipRun) return;
+    if ($.index === 1) {
+      await IlIIlII("drawPrize");
+      await $.wait(500);
+      if ($.runEnd || $.outFlag || $.skipRun) return;
+      let iI1l1llI = false,
+        I1liIll = "";
+      for (let iiI1Illl = 0; iiI1Illl < $.prizeInfo.length; iiI1Illl++) {
+        const I1IIlii1 = $.prizeInfo[iiI1Illl],
+          IIllI1 = I1IIlii1.prizeName,
+          lIll1llI = I1IIlii1.leftNum,
+          lii1iIII = I1IIlii1.prizeType,
+          ili1ll1i = $.activityContent?.["signPiize"][iiI1Illl]["signNumber"];
+        lIll1llI >= 1 && (iI1l1llI = true);
+        I1liIll += "  签到" + ili1ll1i + "天，" + IIllI1 + (lii1iIII === 5 ? "[专享价]" : lii1iIII === 3 ? "[实物]" : "") + "，" + (lIll1llI >= 1 ? "剩余" + lIll1llI + "件" : "已发完") + "\n";
+      }
+      console.log(($.shopName ? "店铺名称：" + $.shopName + "\n" : "") + "店铺链接：https://shop.m.jd.com/?venderId=" + $.venderId + "\n活动奖品：\n" + I1liIll);
+      liIli11i.updateContent(liIli11i.content + (($.shopName && "\n【店铺名称】" + $.shopName) + "\n【活动奖品】\n" + I1liIll));
+      const ilIiIl1i = $.time("yyyy-MM-dd HH:mm", $.actStartTime),
+        ilIil1l = $.time("yyyy-MM-dd HH:mm", $.actEndTime);
+      switch ($.actStatus) {
+        case 0:
+          const ilI1Illl = Date.now();
+          if ($.actStartTime && ilI1Illl < $.actStartTime) {
+            console.log("活动将在 " + ilIiIl1i + " 开始，晚点再来吧~");
+            $.message.fix("活动尚未开始，开始时间：" + ilIiIl1i);
+            $.runEnd = true;
+            return;
+          }
+          if ($.actEndTime && ilI1Illl > $.actEndTime) {
+            console.log("活动已于 " + ilIil1l + " 结束，下次早点来吧~");
+            $.message.fix("活动已结束，结束时间：" + ilIil1l);
+            $.runEnd = true;
+            return;
+          }
+          break;
+        case 1:
+          console.log("活动将在 " + ilIiIl1i + " 开始，晚点再来吧~"), $.message.fix("活动尚未开始，开始时间：" + ilIiIl1i), $.runEnd = true;
+          return;
+        case 2:
+          console.log("活动已于 " + ilIil1l + " 结束，下次早点来吧~"), $.message.fix("活动已结束，结束时间：" + ilIil1l), $.runEnd = true;
+          return;
+        default:
+          if ($.actStatus) {
+            console.log("未知活动状态 " + $.actStatus);
+            $.message.fix("未知活动状态 " + $.actStatus);
+            $.runEnd = true;
+          }
+          break;
+      }
+      if (!iI1l1llI) {
+        console.log("奖品已全部发完了，下次早点来吧~");
+        $.message.fix("奖品已发完");
+        $.runEnd = true;
+        return;
+      }
+    }
+    if ($.runEnd || $.outFlag || $.skipRun) return;
+    const i1iIiII = $.activityContent?.["signNum"],
+      llllii1l = $.activityContent?.["continuityNum"],
+      l11iIill = $.activityContent?.["sign"];
+    if (llllii1l > 0 || i1iIiII > 0) {
+      console.log("当前连续签到 " + llllii1l + " 天，累计签到 " + i1iIiII + " 天\n");
+    }
+    l11iIill ? (await IlIIlII("getSignClick"), await $.wait(500)) : console.log("今天已经签过了，明天再来吧~");
+  } catch (ll1iIl1l) {
+    console.log("❌ 脚本运行遇到了错误\n" + ll1iIl1l);
+  }
+}
+async function IIll1I1(illliliI, lIi1IiI1) {
+  try {
+    switch (illliliI) {
+      case "login":
+        if (lIi1IiI1.resp_code === 0 && lIi1IiI1.data) $.token = lIi1IiI1?.["data"]?.["token"], $.joinInfo = lIi1IiI1?.["data"]?.["joinInfo"], $.openCardUrl = $.joinInfo?.["openCardUrl"], $.shopId = lIi1IiI1?.["data"]?.["shopId"], $.venderId = ii1i1ll.getUrlParameter($.openCardUrl, "venderId"), $.shopName = lIi1IiI1?.["data"]?.["shopName"], $.joinCode = $.joinInfo?.["joinCodeInfo"]?.["joinCode"], $.joinDes = $.joinInfo?.["joinCodeInfo"]?.["joinDes"];else lIi1IiI1.resp_msg ? (console.log(illliliI + " " + lIi1IiI1.resp_msg), $.message.fix(lIi1IiI1.resp_msg), $.skipRun = true) : console.log("❓" + illliliI + " " + JSON.stringify(lIi1IiI1));
+        break;
+      case "follow":
+        if (lIi1IiI1.resp_code === 0) {} else lIi1IiI1.resp_msg ? (console.log(illliliI + " " + lIi1IiI1.resp_msg), $.message.fix(lIi1IiI1.resp_msg), $.skipRun = true) : console.log("❓" + illliliI + " " + JSON.stringify(lIi1IiI1));
+        break;
+      case "initPinToken":
+        if (lIi1IiI1.resp_code === 0 && lIi1IiI1.data) {
+          lIi1IiI1 = JSON.parse(lIi1IiI1.data);
+          if (lIi1IiI1.resp_code === 0 && lIi1IiI1.data) $.pinToken = lIi1IiI1?.["data"]?.["pinToken"], $.encryptPin = lIi1IiI1?.["data"]?.["encryptPin"];else {
+            if (lIi1IiI1.resp_code === 1000) console.log(illliliI + " " + lIi1IiI1.resp_msg), $.message.fix(lIi1IiI1.resp_msg), $.skipRun = true;else lIi1IiI1.resp_msg ? (console.log(illliliI + " " + lIi1IiI1.resp_msg), $.message.fix(lIi1IiI1.resp_msg), $.skipRun = true) : (console.log("❓" + illliliI + " " + JSON.stringify(lIi1IiI1)), $.skipRun = true);
+          }
+        } else console.log("❓" + illliliI + " " + JSON.stringify(lIi1IiI1));
+        break;
+      case "basicInfo":
+        if (lIi1IiI1.resp_code === 0 && lIi1IiI1.data) $.actStartTime = lIi1IiI1.data?.["startTime"], $.actEndTime = lIi1IiI1.data?.["endTime"], $.actStatus = lIi1IiI1.data?.["actStatus"], !$.activityType && ($.activityType = String(lIi1IiI1.data?.["actType"] || ""));else {
+          if (lIi1IiI1.resp_msg) console.log(illliliI + " " + lIi1IiI1.resp_msg), $.message.fix(lIi1IiI1.resp_msg);else {
+            console.log("❓" + illliliI + " " + JSON.stringify(lIi1IiI1));
+          }
+        }
+        break;
+      case "activity":
+        if (lIi1IiI1.resp_code === 0 && lIi1IiI1.data) $.activityContent = lIi1IiI1.data;else {
+          if (lIi1IiI1.resp_msg) {
+            console.log(illliliI + " " + lIi1IiI1.resp_msg);
+            $.message.fix(lIi1IiI1.resp_msg);
+            $.skipRun = true;
+            for (let iiIII1ii of ["未开始", "结束", "不存在", "不在"]) {
+              if (lIi1IiI1.resp_msg.includes(iiIII1ii)) {
+                $.runEnd = true;
+                break;
+              }
+            }
+          } else {
+            console.log("❓" + illliliI + " " + JSON.stringify(lIi1IiI1));
+            $.skipRun = true;
+          }
+        }
+        break;
+      case "drawPrize":
+        if (lIi1IiI1.resp_code === 0) $.prizeInfo = lIi1IiI1?.["data"]?.["prizeInfo"] || [];else {
+          if (lIi1IiI1.resp_msg) {
+            console.log(illliliI + " " + lIi1IiI1.resp_msg);
+            for (let iiIlll1i of ["未开始", "结束", "不存在", "不在"]) {
+              if (lIi1IiI1.resp_msg.includes(iiIlll1i)) {
+                $.runEnd = true;
+                break;
+              }
+            }
+            $.message.fix(lIi1IiI1.resp_msg);
+          } else console.log("❓" + illliliI + " " + JSON.stringify(lIi1IiI1));
+        }
+        break;
+      case "getSignClick":
+        if (lIi1IiI1.resp_code === 0) {
+          const iIl1111l = lIi1IiI1.data;
+          if (iIl1111l) {
+            process.stdout.write("签到成功 ➜ ");
+            switch (iIl1111l.prizeType) {
+              case 1:
+                console.log("🎉 " + iIl1111l.prizeName + " 🐶"), $.message.insert(iIl1111l.prizeName + "🐶");
+                break;
+              case 2:
+                console.log("🗑️ 优惠券"), $.message.insert("🗑️ 优惠券");
+                break;
+              case 3:
+                const lliIil = lIi1IiI1.data.addressId,
+                  i1I1ii1 = iIl1111l.prizeName;
+                console.log("🎉 恭喜获得实物~"), console.log("奖品名称：" + i1I1ii1);
+                if (iIl1111l.showImg) console.log("预览图片：" + iIl1111l.showImg);
+                const lI1l1III = {
+                    "baseUrl": $.baseUrl,
+                    "newbaseUrl": $.newbaseUrl,
+                    "cookie": llIililI,
+                    "ua": $.UA,
+                    "token": $.token,
+                    "prizeName": i1I1ii1,
+                    "orderCode": lliIil
+                  },
+                  il11lI11 = await IiIIil1(lI1l1III);
+                !lIili11l && il11lI11 && (await liIli11i.sendNotify($.name + "中奖通知", "【京东账号" + $.index + "】" + $.nickName + "\n抽中实物 " + i1I1ii1 + "，已成功自动登记收货地址\n\n" + $.activityUrl));
+                $.message.insert(i1I1ii1 + "(" + (il11lI11 ? "已填地址" : "未填地址") + ")🎁");
+                break;
+              case 4:
+              case 11:
+                console.log("🗑️ " + iIl1111l.prizeName + " 🎟️"), $.message.insert("🗑️ " + iIl1111l.prizeName + " 🎟️");
+                break;
+              case 5:
+                console.log("🗑️ 专享价"), $.message.insert("🗑️ 专享价");
+                break;
+              case 6:
+                console.log("🎉 " + iIl1111l.prizeName + " 🧧"), $.message.insert("🎉 " + iIl1111l.prizeName + " 🧧");
+                break;
+              case 7:
+              case 8:
+              case 9:
+              case 10:
+              case 12:
+                console.log("🎉 恭喜获得" + iIl1111l.prizeName + " 🎁"), $.message.insert("🎉 恭喜获得" + iIl1111l.prizeName + " 🎁");
+                !lIili11l && (await liIli11i.sendNotify($.name + "中奖通知", "【京东账号" + $.index + "】" + $.nickName + "\n抽中 " + iIl1111l.prizeName + "\n\n" + $.activityUrl));
+                break;
+              default:
+                console.log(iIl1111l);
+                break;
+            }
+          } else {
+            console.log("签到成功");
+          }
+        } else {
+          if (lIi1IiI1.resp_msg) {
+            console.log(illliliI + " " + lIi1IiI1.resp_msg);
+            for (let lli1IIl1 of ["未开始", "结束", "不存在", "不在"]) {
+              if (lIi1IiI1.resp_msg.includes(lli1IIl1)) {
+                $.runEnd = true;
+                break;
+              }
+            }
+            $.message.fix(lIi1IiI1.resp_msg);
+          } else {
+            console.log("❓" + illliliI + " " + JSON.stringify(lIi1IiI1));
+          }
+        }
+        break;
+    }
+  } catch (iIlIlI11) {
+    console.log("❌ 未能正确处理 " + illliliI + " 请求响应 " + (iIlIlI11.message || iIlIlI11));
+  }
+}
+async function IlIIlII(lIlllIIl) {
+  if ($.runEnd || $.outFlag) return;
+  let li11Ii11 = $.newbaseUrl,
+    lIIllilI = {},
+    l11I1Ill = "POST";
+  switch (lIlllIIl) {
+    case "login":
+      li11Ii11 += "/api/user-info/login", lIIllilI = {
+        "status": "1",
+        "activityId": $.activityId,
+        "tokenPin": $.jdToken,
+        "source": "01",
+        "shareUserId": $.shareUserId || "",
+        "uuid": $.UUID
+      };
+      break;
+    case "follow":
+      li11Ii11 += "/api/task/followShop/follow";
+      break;
+    case "initPinToken":
+      l11I1Ill = "GET", li11Ii11 += "/api/user-info/initPinToken?status=1&activityId=" + $.activityId + "&jdToken=" + $.jdToken + "&source=01&shareUserId=" + ($.shareUserId || "") + "&uuid=" + $.UUID + "&clientTime=" + Date.now() + "&shopId=" + $.shopId;
+      break;
+    case "basicInfo":
+      li11Ii11 += "/api/active/basicInfo", lIIllilI = {
+        "activityId": $.activityId
+      };
+      break;
+    case "activity":
+      li11Ii11 += "/api/task/daySign/activity";
+      break;
+    case "drawPrize":
+      li11Ii11 += "/api/prize/drawPrize";
+      break;
+    case "getSignClick":
+      li11Ii11 += "/api/task/daySign/getSignClick";
+      break;
+    default:
+      console.log("❌ 未知请求 " + lIlllIIl);
+      return;
+  }
+  const i11lilil = {
+    "url": li11Ii11,
+    "headers": {
+      "Accept": "application/json, text/plain, */*",
+      "Accept-Encoding": "gzip, deflate, br",
+      "Accept-Language": "zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7,en-GB;q=0.6",
+      "Connection": "keep-alive",
+      "Content-Type": "application/json;charset=UTF-8",
+      "Cookie": "IsvToken=" + $.jdToken + "; " + ($.pinToken ? ";pToken=" + $.pinToken : "") + ($.te ? ";te=" + $.te : ""),
+      "Host": $.hostname,
+      "Origin": $.origin,
+      "Referer": $.activityUrl,
+      "Sec-Fetch-Dest": "empty",
+      "Sec-Fetch-Mode": "cors",
+      "Sec-Fetch-Site": "same-origin",
+      "User-Agent": $.UA
+    },
+    "body": JSON.stringify(lIIllilI),
+    "timeout": 30000
+  };
+  $.token && (i11lilil.headers.token = $.token);
+  l11I1Ill === "GET" && (delete i11lilil.body, delete i11lilil.headers["Content-Type"]);
+  const IiI1Iii = 5;
+  let i1111lii = 0,
+    Illi1ll = null,
+    Illill1 = false;
+  while (i1111lii < IiI1Iii) {
+    if (i1111lii > 0) {
+      await $.wait(1000);
+    }
+    const {
+      err: Iil1l1l1,
+      res: li1lIii1,
+      data: liIIIiiI
+    } = await i1lIi1lI(i11lilil, l11I1Ill);
+    if (Iil1l1l1) {
+      if (typeof Iil1l1l1 === "string" && Iil1l1l1.includes("Timeout awaiting 'request'")) Illi1ll = lIlllIIl + " 请求超时，请检查网络重试";else {
+        const IiiiI11 = li1lIii1?.["statusCode"];
+        if (IiiiI11) {
+          if ([403, 493].includes(IiiiI11)) Illi1ll = lIlllIIl + " 请求失败，IP被限制（Response code " + IiiiI11 + "）", Illill1 = true;else [400, 404].includes(IiiiI11) ? Illi1ll = lIlllIIl + " 请求配置参数错误，请联系开发者进行反馈（Response code " + IiiiI11 + "）" : Illi1ll = lIlllIIl + " 请求失败（Response code " + IiiiI11 + "）";
+        } else Illi1ll = lIlllIIl + " 请求失败 => " + (Iil1l1l1.message || Iil1l1l1);
+      }
+      i1111lii++;
+    } else {
+      const l11liii1 = ii1i1ll.getResponseCookie(li1lIii1),
+        IIIliI1i = false;
+      if (IIIliI1i) {
+        console.log("\n---------------------------------------------------\n");
+        console.log("🔧 " + lIlllIIl + " 响应Body => " + (liIIIiiI || "无") + "\n");
+        console.log("🔧 " + lIlllIIl + " 响应Cookie => " + (l11liii1 || "无") + "\n");
+        console.log("🔧 " + lIlllIIl + " 请求参数");
+        console.log(i11lilil);
+        console.log("\n---------------------------------------------------\n");
+      }
+      if (!["accessLog", "accessLogWithAD"].includes(lIlllIIl)) try {
+        const Ii1IiIiI = JSON.parse(liIIIiiI);
+        IIll1I1(lIlllIIl, Ii1IiIiI);
+        break;
+      } catch (i11IIl1) {
+        Illi1ll = "❌ " + lIlllIIl + " 接口响应数据解析失败: " + i11IIl1.message;
+        console.log("🚫 " + lIlllIIl + " => " + String(liIIIiiI || "无响应数据"));
+        IIIliI1i && (console.log("\n---------------------------------------------------\n"), console.log(activityCookie), console.log("\n---------------------------------------------------\n"));
+        i1111lii++;
+      } else {
         break;
       }
+      Illill1 = false;
     }
   }
-})().catch(liIIlii => {
-  $.log("", " " + $.name + ", 失败! 原因: " + liIIlii + "!", "");
-}).finally(() => {
-  $.done();
-});
-async function Main() {
-  $.acquire = 0;
-  $.shareUser = 0;
-  $.shareUserNum = 0;
-  $.token = "";
-  $.Pin = "";
-  $.OpenCard = false;
-  $.token = await getToken(cookie, domains);
-  if ($.token == "") {
-    console.log("获取[token]失败！");
-    return;
-  }
-  if ($.token) {
-    await login("api/user-info/login", {
-      "status": "1",
-      "activityId": activityId,
-      "tokenPin": $.token,
-      "source": "01",
-      "shareUserId": ""
-    });
-    if ($.hasEnd || $.activityEnd || $.outFlag || $.OpenCard) return;
-    await $.wait(300);
-    await follow();
-    await login("api/user-info/login", {
-      "status": "1",
-      "activityId": activityId,
-      "tokenPin": $.token,
-      "source": "01",
-      "shareUserId": ""
-    });
-    await $.wait(300);
-    await activity("daySign");
-    if ($.hasEnd || $.activityEnd || $.outFlag) return;
-    await drawPrize();
-    await $.wait(300);
-    if ($.index == 1) {
-      $.prizeList = "";
-      for (let i1iili11 = 0; i1iili11 < $.prizeInfo.length; i1iili11++) {
-        $.prizeName = $.prizeInfo[i1iili11].prizeName;
-        $.leftNum = $.prizeInfo[i1iili11].leftNum;
-        $.prizeType = $.prizeInfo[i1iili11].prizeType;
-        $.position = $.signPiize[i1iili11].signNumber || 99;
-        switch ($.prizeType) {
-          case 1:
-            $.prizeType = "[京豆]";
-            break;
-          case 2:
-            $.prizeType = "[优惠券]";
-            break;
-          case 3:
-            $.prizeType = "[实物]";
-            break;
-          case 4:
-            $.prizeType = "[积分]";
-            break;
-          case 5:
-            $.prizeType = "[专享价]";
-            break;
-          case 6:
-            $.prizeType = "[红包]";
-            break;
-          case 7:
-            $.prizeType = "[礼品卡]";
-            break;
-          case 8:
-            $.prizeType = "[E卡]";
-            break;
-          case 9:
-            $.prizeType = "[PLUS会员]";
-            break;
-          case 10:
-            $.prizeType = "[爱奇艺会员]";
-            break;
-          case 11:
-            $.prizeType = "[积分]";
-            break;
-          default:
-            console.log("未成功获取数据");
-            return;
-        }
-        i1iili11 != $.prizeInfo.length - 1 ? $.prizeList += "签到" + $.position + "天，" + $.prizeType + $.prizeName + "（剩余" + $.leftNum + "件）\n" : $.prizeList += "签到" + $.position + "天，" + $.prizeType + $.prizeName + "（剩余" + $.leftNum + "件）\n";
-      }
-      console.log("店铺名称：" + $.shopName + "\n活动名称：" + $.actName + "\n累计奖励：" + $.prizeList + "\n");
-    }
-    console.log("连续签到天数：" + $.signNum + "  累计签到天数: " + $.continuityNum + "\n");
-    await getSignClick();
-    if ($.hasEnd || $.activityEnd || $.outFlag) return;
-  } else console.log("【京东账号" + $.index + "】 未能获取活动信息");
+  i1111lii >= IiI1Iii && (console.log(Illi1ll), Illill1 && !lIIlil1 && ($.outFlag = true, $.message && $.message.fix(Illi1ll)));
 }
-function getShopOpenCardInfo(IlIlilii) {
-  let lI1lII1l = {
-    "url": "https://api.m.jd.com/client.action?appid=jd_shop_member&functionId=getShopOpenCardInfo&body=" + encodeURIComponent(JSON.stringify(IlIlilii)) + "&client=H5&clientVersion=9.2.0&uuid=88888&h5st=20220412164645241%3B3634d1aeada6d9cd11a7526a3a6ac63e%3B169f1%3Btk02wd66f1d7418nXuLjsmO3oJMCxUqKVwIf4q1WRptKRT3nJSrx01oYYBAylbSuyg4sipnEzyEJOZuFjfG2QERcBtzd%3B6b455234e93be4ec963cd7c575d70882b838ba588149a1f54b69c8d0dacf14da%3B3.0%3B1649753205241",
-    "headers": {
-      "Host": "api.m.jd.com",
-      "Accept": "*/*",
-      "Connection": "keep-alive",
-      "Cookie": cookie,
-      "User-Agent": $.UA,
-      "Referer": "https://shopmember.m.jd.com/shopcard/?venderId=" + $.joinVenderId + "&channel=801&returnUrl=" + encodeURIComponent(activityUrl),
-      "Accept-Encoding": "gzip, deflate, br"
-    }
-  };
-  return new Promise(llIilI1i => {
-    $.get(lI1lII1l, (iiiiiliI, IIill1Ii, i1I1llI) => {
-      try {
-        if (iiiiiliI) {
-          if (iiiiiliI === "Response code 403 (Forbidden)") {
-            $.err = true;
-            console.log(String(iiiiiliI));
-          }
-        } else {
-          res = JSON.parse(i1I1llI);
-          res.success && ($.openCardStatus = res.result.userInfo.openCardStatus, res.result.interestsRuleList && ($.openCardActivityId = res.result.interestsRuleList[0].interestsInfo.activityId));
-        }
-      } catch (ilil1l) {
-        console.log(ilil1l);
-      } finally {
-        llIilI1i();
-      }
+async function i1lIi1lI(i1i1I1ii, Iiii1iI = "POST") {
+  if (Iiii1iI === "POST") return new Promise(async il1iil => {
+    $.post(i1i1I1ii, (l1IlIIll, l1I1IIll, IililiIl) => {
+      il1iil({
+        "err": l1IlIIll,
+        "res": l1I1IIll,
+        "data": IililiIl
+      });
     });
-  });
-}
-function showMsg() {
-  return new Promise(Iii1II1l => {
-    $.msg($.name, "", "【京东账号" + $.index + "】" + $.nickName + "\n" + message);
-    Iii1II1l();
-  });
-}
-function login(i1iiIil1, lIIl1iil) {
-  return new Promise(l1IIIll => {
-    $.post(taskPostUrl(i1iiIil1, lIIl1iil), async (II1iiIIi, I1lIIlli, IIl11IiI) => {
-      try {
-        if (II1iiIIi) {
-          console.log("" + JSON.stringify(II1iiIIi));
-          console.log($.name + " login API请求失败，请检查网路重试");
-        } else {
-          IIl11IiI = JSON.parse(IIl11IiI);
-          if (IIl11IiI && IIl11IiI.data) {
-            $.tokens = IIl11IiI.data.token;
-            $.customerId = IIl11IiI.data.customerId;
-            $.joinVenderId = IIl11IiI.data.joinInfo.shopId;
-            $.openCardUrl = IIl11IiI.data.joinInfo.openCardUrl;
-            $.shopName = IIl11IiI.data.shopName;
-            $.actName = IIl11IiI.data.actName;
-            $.openCardUrl && ($.joinVenderId = IIl11IiI.data.joinInfo.openCardUrl.match(/venderId=(\d+)/)[1]);
-            $.joinDes = IIl11IiI.data.joinInfo.joinCodeInfo.joinDes;
-            if (openCard) {
-              if ($.joinDes.indexOf("不是会员") > -1 || $.joinDes.indexOf("加入会员") > -1) {
-                $.errorJoinShop = "";
-                await getshopactivityId();
-                for (let i1Il111i = 0; i1Il111i < Array(2).length; i1Il111i++) {
-                  if (i1Il111i > 0) console.log("第" + i1Il111i + "次 重新开卡");
-                  await joinShop();
-                  if ($.errorJoinShop.indexOf("活动太火爆，请稍后再试") == -1 && $.errorJoinShop.indexOf("加入店铺会员失败") == -1) break;
-                  $.errorJoinShop.indexOf("活动太火爆，请稍后再试") > -1 && (console.log("开卡失败❌ ，重新执行脚本"), $.OpenCard = true);
-                }
-              }
-            }
-          } else console.log(IIl11IiI);
-          I1lIIlli.status == 200 && refreshToken(I1lIIlli);
-        }
-      } catch (liI11IIl) {
-        $.logErr(liI11IIl, I1lIIlli);
-      } finally {
-        l1IIIll();
-      }
-    });
-  });
-}
-function follow() {
-  return new Promise(llii11Ii => {
-    let i1Iiiil = {};
-    $.post(taskPostUrl("api/task/followShop/follow", i1Iiiil), async (li11I1i1, lIIIIIl, l111il) => {
-      try {
-        if (li11I1i1) {
-          console.log("" + JSON.stringify(li11I1i1));
-          console.log($.name + " follow API请求失败，请检查网路重试");
-        } else {
-          l111il = JSON.parse(l111il);
-          if (l111il && l111il.resp_code == 0) {} else {
-            console.log(l111il.resp_msg);
-            for (let li11l1i of ["未开始", "结束", "不存在", "不在"]) {
-              if (l111il.resp_msg.includes(li11l1i)) {
-                $.activityEnd = true;
-                break;
-              }
-            }
-          }
-          lIIIIIl.status == 200 && refreshToken(lIIIIIl);
-        }
-      } catch (lIi11I1l) {
-        $.logErr(lIi11I1l, lIIIIIl);
-      } finally {
-        llii11Ii();
-      }
-    });
-  });
-}
-function activity() {
-  return new Promise(Iii1ii => {
-    let llII1Ii1 = {};
-    $.post(taskPostUrl("api/task/daySign/activity", llII1Ii1), async (iIi1ii1, llIill1l, illIiI1l) => {
-      try {
-        if (iIi1ii1) {
-          console.log("" + JSON.stringify(iIi1ii1));
-          console.log($.name + " activity API请求失败，请检查网路重试");
-        } else {
-          illIiI1l = JSON.parse(illIiI1l);
-          if (illIiI1l && illIiI1l.data) {
-            $.sign = illIiI1l?.["data"]?.["sign"] || false;
-            $.signNum = illIiI1l?.["data"]?.["signNum"] || 0;
-            $.leftNum = illIiI1l?.["data"]?.["leftNum"] || 0;
-            $.isFocusShop = illIiI1l?.["data"]?.["isFocusShop"] || false;
-            $.continuityNum = illIiI1l?.["data"]?.["continuityNum"] || 0;
-            $.signContinuityNum = illIiI1l?.["data"]?.["signContinuityNum"] || 0;
-            $.signPiize = illIiI1l?.["data"]?.["signPiize"] || [];
-          } else {
-            console.log(illIiI1l.resp_msg);
-            for (let illIli1 of ["未开始", "结束", "不存在", "不在"]) {
-              if (illIiI1l.resp_msg.includes(illIli1)) {
-                $.activityEnd = true;
-                break;
-              }
-            }
-          }
-          llIill1l.status == 200 && refreshToken(llIill1l);
-        }
-      } catch (il1Iil1I) {
-        $.logErr(il1Iil1I, llIill1l);
-      } finally {
-        Iii1ii();
-      }
-    });
-  });
-}
-function getSignClick() {
-  return new Promise(ll1lilI1 => {
-    let iililI1 = {};
-    $.post(taskPostUrl("api/task/daySign/getSignClick", iililI1), async (lI1IiiII, I1l11ll, I1il1l1I) => {
-      try {
-        if (lI1IiiII) {
-          console.log("" + JSON.stringify(lI1IiiII));
-          console.log($.name + " getSignClick API请求失败，请检查网路重试");
-        } else {
-          I1il1l1I = JSON.parse(I1il1l1I);
-          if (I1il1l1I && I1il1l1I.resp_code == 0) {
-            if (!I1il1l1I.data) console.log("💨 空气");else {
-              drawInfo = I1il1l1I.data;
-              if (drawInfo) switch (drawInfo.prizeType) {
-                case 1:
-                  console.log("🎉 " + drawInfo.prizeName + " 🐶");
-                  break;
-                case 2:
-                  console.log("🗑️ 优惠券");
-                  break;
-                case 3:
-                  generateId = I1il1l1I.data.prizeInfoId;
-                  prizeName = drawInfo.prizeName;
-                  console.log(I1il1l1I);
-                  console.log("🎉 恭喜获得实物~");
-                  console.log("奖品名称：" + prizeName);
-                  break;
-                case 4:
-                case 11:
-                  console.log("🗑️ " + drawInfo.prizeName + " 🎟️");
-                  break;
-                case 5:
-                  console.log("🗑️ 专享价");
-                  break;
-                case 6:
-                  console.log("🎉 " + drawInfo.prizeName + " 🧧");
-                  break;
-                case 8:
-                  console.log("🎉 恭喜获得" + drawInfo.prizeName + " 🎁");
-                  break;
-                case 7:
-                case 9:
-                case 10:
-                case 12:
-                  console.log("🎉 恭喜获得" + drawInfo.prizeName + " 🎁");
-                  break;
-                default:
-                  console.log(drawInfo);
-                  break;
-              }
-            }
-          } else {
-            console.log(I1il1l1I.resp_msg);
-            for (let iI11I1l1 of ["未开始", "结束", "不存在", "不在"]) {
-              if (I1il1l1I.resp_msg.includes(iI11I1l1)) {
-                $.activityEnd = true;
-                break;
-              }
-            }
-          }
-          I1l11ll.status == 200 && refreshToken(I1l11ll);
-        }
-      } catch (III1ill1) {
-        $.logErr(III1ill1, I1l11ll);
-      } finally {
-        ll1lilI1();
-      }
-    });
-  });
-}
-function basicInfo() {
-  return new Promise(I1i1Ilil => {
-    let iii1IiIl = {
-      "taskId": $.taskId,
-      "skuId": ""
-    };
-    $.post(taskPostUrl("api/active/basicInfo", iii1IiIl), async (lI1IIil1, lill1ili, Ili1I1I) => {
-      try {
-        lI1IIil1 ? (console.log("" + JSON.stringify(lI1IIil1)), console.log($.name + " basicInfo API请求失败，请检查网路重试")) : (Ili1I1I = JSON.parse(Ili1I1I), Ili1I1I && Ili1I1I.resp_code == 0 ? ($.actName = Ili1I1I.data.actName, $.shopName = Ili1I1I.data.shopName) : console.log(Ili1I1I), lill1ili.status == 200 && refreshToken(lill1ili));
-      } catch (iiiII1il) {
-        $.logErr(iiiII1il, lill1ili);
-      } finally {
-        I1i1Ilil();
-      }
-    });
-  });
-}
-function drawPrize() {
-  return new Promise(iII1lI11 => {
-    let ii1I1Iii = {};
-    $.post(taskPostUrl("api/prize/drawPrize", ii1I1Iii), async (Ii11lIii, I1Iii1iI, ilii11il) => {
-      try {
-        if (Ii11lIii) {
-          console.log("" + JSON.stringify(Ii11lIii));
-          console.log($.name + " drawPrize API请求失败，请检查网路重试");
-        } else {
-          ilii11il = JSON.parse(ilii11il);
-          if (ilii11il && ilii11il.resp_code == 0) {
-            $.drawNumber = ilii11il.data.drawNumber;
-            $.prizeInfo = ilii11il.data.prizeInfo || [];
-          } else {
-            console.log(ilii11il);
-          }
-          if (I1Iii1iI.status == 200) {
-            refreshToken(I1Iii1iI);
-          }
-        }
-      } catch (l11iilIi) {
-        $.logErr(l11iilIi, I1Iii1iI);
-      } finally {
-        iII1lI11();
-      }
-    });
-  });
-}
-async function joinShop() {
-  if (!$.joinVenderId) return;
-  return new Promise(async i11IIIi => {
-    $.errorJoinShop = "活动太火爆，请稍后再试";
-    let iiil1l1l = "";
-    if ($.shopactivityId) iiil1l1l = ",\"activityId\":" + $.shopactivityId;
-    const IliIl1ll = "{\"venderId\":\"" + $.joinVenderId + "\",\"shopId\":\"" + $.joinVenderId + "\",\"bindByVerifyCodeFlag\":1,\"registerExtend\":{},\"writeChildFlag\":0" + iiil1l1l + ",\"channel\":406}",
-      IiiII1lI = {
-        "appid": "jd_shop_member",
-        "functionId": "bindWithVender",
-        "clientVersion": "9.2.0",
-        "client": "H5",
-        "body": JSON.parse(IliIl1ll)
-      },
-      llli1Iil = await getH5st("8adfb", IiiII1lI),
-      Ii11i1 = {
-        "url": "https://api.m.jd.com/client.action?appid=jd_shop_member&functionId=bindWithVender&body=" + IliIl1ll + "&clientVersion=9.2.0&client=H5&uuid=88888&h5st=" + encodeURIComponent(llli1Iil),
-        "headers": {
-          "accept": "*/*",
-          "accept-encoding": "gzip, deflate, br",
-          "accept-language": "zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7",
-          "cookie": originCookie,
-          "origin": "https://shopmember.m.jd.com/",
-          "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36"
-        }
+  });else {
+    if (Iiii1iI === "GET") {
+      return new Promise(async iiilIll1 => {
+        $.get(i1i1I1ii, (i1ll11il, Ii11li11, i11I1l11) => {
+          iiilIll1({
+            "err": i1ll11il,
+            "res": Ii11li11,
+            "data": i11I1l11
+          });
+        });
+      });
+    } else {
+      const li1IiIli = "不支持的请求方法";
+      return {
+        "err": li1IiIli,
+        "res": null,
+        "data": null
       };
-    $.get(Ii11i1, async (liI1l1i, liIl11I, IliIlIiI) => {
-      try {
-        IliIlIiI = IliIlIiI && IliIlIiI.match(/jsonp_.*?\((.*?)\);/) && IliIlIiI.match(/jsonp_.*?\((.*?)\);/)[1] || IliIlIiI;
-        let il1111I1 = $.toObj(IliIlIiI, IliIlIiI);
-        if (il1111I1 && typeof il1111I1 == "object") {
-          if (il1111I1 && il1111I1.success === true) {
-            console.log(il1111I1.message);
-            $.errorJoinShop = il1111I1.message;
-            if (il1111I1.result && il1111I1.result.giftInfo) for (let Il1li1I1 of il1111I1.result.giftInfo.giftList) {
-              console.log("入会获得: " + Il1li1I1.discountString + Il1li1I1.prizeName + Il1li1I1.secondLineDesc);
-            }
-            console.log("");
-          } else il1111I1 && typeof il1111I1 == "object" && il1111I1.message ? ($.errorJoinShop = il1111I1.message, console.log("" + (il1111I1.message || ""))) : console.log(IliIlIiI);
-        } else {
-          console.log(IliIlIiI);
-        }
-      } catch (lliIl1II) {
-        $.logErr(lliIl1II, liIl11I);
-      } finally {
-        i11IIIi();
-      }
-    });
-  });
-}
-async function getshopactivityId() {
-  return new Promise(async i1IiI1Ii => {
-    let ll11ll1 = "{\"venderId\":\"" + $.joinVenderId + "\",\"channel\":406,\"payUpShop\":true}";
-    const lIlil1I = {
-        "appid": "jd_shop_member",
-        "functionId": "getShopOpenCardInfo",
-        "clientVersion": "9.2.0",
-        "client": "H5",
-        "body": JSON.parse(ll11ll1)
-      },
-      l1lI1i1I = await getH5st("ef79a", lIlil1I),
-      iIliii = {
-        "url": "https://api.m.jd.com/client.action?appid=jd_shop_member&functionId=getShopOpenCardInfo&body=" + ll11ll1 + "&clientVersion=9.2.0&client=H5&uuid=88888&h5st=" + encodeURIComponent(l1lI1i1I),
-        "headers": {
-          "accept": "*/*",
-          "accept-encoding": "gzip, deflate, br",
-          "accept-language": "zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7",
-          "cookie": originCookie,
-          "origin": "https://shopmember.m.jd.com/",
-          "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36"
-        }
-      };
-    $.get(iIliii, async (IIlii11l, ll1iiiii, i1ii1iI) => {
-      try {
-        i1ii1iI = i1ii1iI && i1ii1iI.match(/jsonp_.*?\((.*?)\);/) && i1ii1iI.match(/jsonp_.*?\((.*?)\);/)[1] || i1ii1iI;
-        let llilll1l = $.toObj(i1ii1iI, i1ii1iI);
-        llilll1l && typeof llilll1l == "object" ? llilll1l && llilll1l.success == true && (console.log("\n去加入店铺会员：" + (llilll1l.result.shopMemberCardInfo.venderCardName || "")), $.shopactivityId = llilll1l.result.interestsRuleList && llilll1l.result.interestsRuleList[0] && llilll1l.result.interestsRuleList[0].interestsInfo && llilll1l.result.interestsRuleList[0].interestsInfo.activityId || "") : console.log(i1ii1iI);
-      } catch (l1l1i1li) {
-        $.logErr(l1l1i1li, ll1iiiii);
-      } finally {
-        i1IiI1Ii();
-      }
-    });
-  });
-}
-function taskPostUrl(ll1i1ii1, II1Ii) {
-  return {
-    "url": "" + domains + "/" + wxActType + "/" + ll1i1ii1,
-    "body": JSON.stringify(II1Ii),
-    "headers": {
-      "Accept": "application/json",
-      "Accept-Encoding": "gzip, deflate, br",
-      "Accept-Language": "zh-cn",
-      "Connection": "keep-alive",
-      "Host": $.domain,
-      "Origin": domains,
-      "Content-Type": "application/json;charset=UTF-8",
-      "Referer": activityUrl,
-      "Cookie": cookie + activityCookie + ";IsvToken=" + $.token + ";AUTH_C_USER=" + $.AUTH_C_USER,
-      "User-Agent": $.UA,
-      "token": $.tokens
-    },
-    "timeout": 15 * 1000
-  };
-}
-function refreshToken(i1l11llI) {
-  if (i1l11llI) {
-    if (i1l11llI.headers["set-cookie"]) {
-      cookie = originCookie + ";";
-      for (let IIlill of i1l11llI.headers["set-cookie"]) {
-        lz_cookie[IIlill.split(";")[0].substr(0, IIlill.split(";")[0].indexOf("="))] = IIlill.split(";")[0].substr(IIlill.split(";")[0].indexOf("=") + 1);
-      }
-      for (const iI1l11i1 of Object.keys(lz_cookie)) {
-        cookie += iI1l11i1 + "=" + lz_cookie[iI1l11i1] + ";";
-      }
-      activityCookie = cookie;
-    }
-  }
-}
-function getAuthorCodeList(lIIi1i1l) {
-  return new Promise(iilIi1 => {
-    const I1iI111l = {
-      "url": lIIi1i1l + "?" + new Date(),
-      "timeout": 10000,
-      "headers": {
-        "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1 Edg/87.0.4280.88"
-      }
-    };
-    $.get(I1iI111l, async (li11iIlI, i1I11ii1, iiill1ii) => {
-      try {
-        if (li11iIlI) $.getAuthorCodeListerr = false;else {
-          if (iiill1ii) iiill1ii = JSON.parse(iiill1ii);
-          $.getAuthorCodeListerr = true;
-        }
-      } catch (IlIllI) {
-        $.logErr(IlIllI, i1I11ii1);
-        iiill1ii = null;
-      } finally {
-        iilIi1(iiill1ii);
-      }
-    });
-  });
-}
-function getUA() {
-  $.UA = "jdapp;iPhone;10.2.2;14.3;" + randomString(40) + ";M/5.0;network/wifi;ADID/;model/iPhone12,1;addressid/4199175193;appBuild/167863;jdSupportDarkMode/0;Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1;";
-}
-function randomString(iiIiIIi1) {
-  iiIiIIi1 = iiIiIIi1 || 32;
-  let liI1lllI = "abcdef0123456789",
-    I1i1lIi1 = liI1lllI.length,
-    iI1111l = "";
-  for (i = 0; i < iiIiIIi1; i++) iI1111l += liI1lllI.charAt(Math.floor(Math.random() * I1i1lIi1));
-  return iI1111l;
-}
-function getQueryString(iiII1lil, IllIlli) {
-  let IIlilIli = new RegExp("(^|[&?])" + IllIlli + "=([^&]*)(&|$)"),
-    llI1iiil = iiII1lil.match(IIlilIli);
-  if (llI1iiil != null) {
-    return decodeURIComponent(llI1iiil[2]);
-  }
-  return "";
-}
-function safeGet(i1l1IIIl) {
-  if (!i1l1IIIl) return console.log("京东服务器返回数据为空"), false;
-  try {
-    if (typeof JSON.parse(i1l1IIIl) == "object") return true;
-  } catch (IllI111) {
-    return console.log(IllI111), false;
-  }
-}
-function jsonParse(IiiillI1) {
-  if (typeof IiiillI1 == "string") {
-    try {
-      return JSON.parse(IiiillI1);
-    } catch (iilllli1) {
-      return console.log(iilllli1), $.msg($.name, "", "请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie"), [];
     }
   }
 }

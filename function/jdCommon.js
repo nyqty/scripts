@@ -2,93 +2,104 @@
 通用代码库
 new Env('jdCommon');
 */
-const lil1Illl = require("crypto-js/sha1"),
-  lIll1iii = require("got");
-class ilIili1 {
+
+const l1I11il = require("crypto-js/sha1"),
+  II1ii = require("got");
+class l1iiil1i {
   constructor() {
     this.ck = "";
     this.UserAgent = "";
     this.getH5st = null;
   }
-  ["getUrlParameter"](lIliilIi, l1l1i1Il) {
+  ["getUrlParameter"](II11iIi1, ilIlIi1l) {
     try {
-      const II1l11ll = new URL(lIliilIi),
-        liI1iI1 = II1l11ll.searchParams.get(l1l1i1Il);
-      return liI1iI1 || "";
+      const IIIiiIli = new URL(II11iIi1),
+        iil1lli = IIIiiIli.searchParams.get(ilIlIi1l);
+      return iil1lli || "";
     } catch {
       return "";
     }
   }
-  ["parseUrl"](lliil111) {
+  ["parseUrl"](Il1iiiI) {
     try {
-      const illi1iil = new URL(lliil111);
-      return illi1iil;
-    } catch (ililIilI) {
+      const iliilill = new URL(Il1iiiI);
+      return iliilill;
+    } catch (lllIllli) {
       return {};
     }
   }
-  ["parseUrlParameter"](iilI11il) {
+  ["parseUrlParameter"](ll1iiliI) {
     try {
-      const ilIlili = this.parseUrl(iilI11il),
-        iiIlIIli = new URLSearchParams(ilIlili?.["search"]),
-        liiIl1i = {};
-      for (const [Ill1IlII, llili111] of iiIlIIli) {
-        liiIl1i[Ill1IlII] = llili111;
+      const lI1IllII = this.parseUrl(ll1iiliI),
+        lI1iIlII = new URLSearchParams(lI1IllII?.["search"]),
+        lIIlIlll = {};
+      for (const [I1Illlil, liil111I] of lI1iIlII) {
+        lIIlIlll[I1Illlil] = liil111I;
       }
-      return liiIl1i;
+      return lIIlIlll;
     } catch {
       return {};
     }
   }
-  ["objectToQueryString"](liiIII1) {
-    const IIiiI11I = [];
-    for (const i1iIiilI in liiIII1) {
-      if (liiIII1.hasOwnProperty(i1iIiilI)) {
-        const lII11l11 = liiIII1[i1iIiilI];
-        if (lII11l11 !== undefined && lII11l11 !== null) {
-          const iIl1llli = encodeURIComponent(i1iIiilI),
-            iliI111l = encodeURIComponent(lII11l11);
-          IIiiI11I.push(iIl1llli + "=" + iliI111l);
+  ["objectToQueryString"](i1i11ii) {
+    const iIii111 = [];
+    for (const iilI1ii1 in i1i11ii) {
+      if (i1i11ii.hasOwnProperty(iilI1ii1)) {
+        const i1iIII1i = i1i11ii[iilI1ii1];
+        if (i1iIII1i !== undefined && i1iIII1i !== null) {
+          const iIII1lll = encodeURIComponent(iilI1ii1),
+            lIl11II1 = encodeURIComponent(i1iIII1i);
+          iIii111.push(iIII1lll + "=" + lIl11II1);
         }
       }
     }
-    return IIiiI11I.join("&");
+    return iIii111.join("&");
   }
-  ["getResponseCookie"](i1i11ill, ll11ll11) {
-    let lIIi1111 = "";
-    if (i1i11ill.headers["set-cookie"]) for (let iIII1l1i of i1i11ill.headers["set-cookie"]) {
-      lIIi1111 += iIII1l1i.split(";")[0].split("=")[0] + "=" + iIII1l1i.split(";")[0].split("=")[1] + "; ";
-    } else ll11ll11 && (lIIi1111 = ll11ll11);
-    return lIIi1111;
-  }
-  ["getCookieValue"](Iliiliil, I1iIilI) {
-    if (!Iliiliil || !I1iIilI) return "";
-    var Il11i1Ii = new RegExp(I1iIilI + "=" + "([^;]*)" + ";"),
-      iII1l1I = Il11i1Ii.exec(Iliiliil);
-    return iII1l1I && iII1l1I[1] || "";
-  }
-  ["parseCookie"](I1llIlil) {
-    const IIiIii1i = {},
-      I11llliI = I1llIlil.split(";");
-    for (const i1Il1liI of I11llliI) {
-      const [iIIiiI11, ill1lII1] = i1Il1liI.trim().split("=");
-      IIiIii1i[iIIiiI11] = ill1lII1;
+  ["getResponseCookie"](IIliIil, Ili1iiil) {
+    let Ii11iii = "";
+    if (IIliIil.headers["set-cookie"]) for (let liIllii1 of IIliIil.headers["set-cookie"]) {
+      Ii11iii += liIllii1.split(";")[0].split("=")[0] + "=" + liIllii1.split(";")[0].split("=")[1] + "; ";
+    } else {
+      Ili1iiil && (Ii11iii = Ili1iiil);
     }
-    return IIiIii1i;
+    return Ii11iii;
   }
-  ["genUuid"](lIIlillI = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx", I1IiiiiI = "0123456789abcdef") {
-    let iIiIIlli = "";
-    for (let llI1iI of lIIlillI) {
-      if (llI1iI == "x") iIiIIlli += I1IiiiiI.charAt(Math.floor(Math.random() * I1IiiiiI.length));else llI1iI == "X" ? iIiIIlli += I1IiiiiI.charAt(Math.floor(Math.random() * I1IiiiiI.length)).toUpperCase() : iIiIIlli += llI1iI;
+  ["getCookieValue"](lliI1iI, iII111i) {
+    if (!lliI1iI || !iII111i) {
+      return "";
     }
-    return iIiIIlli;
+    var lIli11ii = new RegExp(iII111i + "=" + "([^;]*)" + ";"),
+      lI1li11l = lIli11ii.exec(lliI1iI);
+    return lI1li11l && lI1li11l[1] || "";
   }
-  ["genEp"](iIiIi11i, lllIl11l = "15.1.1") {
-    let I11iI = {
+  ["parseCookie"](ilI1ilII) {
+    const llI1lIll = {},
+      i1IilI11 = ilI1ilII.split(";");
+    for (const ii1lIlI1 of i1IilI11) {
+      const [lI11II1i, ilI11iii] = ii1lIlI1.trim().split("=");
+      llI1lIll[lI11II1i] = ilI11iii;
+    }
+    return llI1lIll;
+  }
+  ["genUuid"](lIIIlI11 = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx", i1Il1lIi = "0123456789abcdef") {
+    let iiIi1lII = "";
+    for (let lilill11 of lIIIlI11) {
+      if (lilill11 == "x") iiIi1lII += i1Il1lIi.charAt(Math.floor(Math.random() * i1Il1lIi.length));else {
+        if (lilill11 == "X") {
+          iiIi1lII += i1Il1lIi.charAt(Math.floor(Math.random() * i1Il1lIi.length)).toUpperCase();
+        } else {
+          iiIi1lII += lilill11;
+        }
+      }
+    }
+    return iiIi1lII;
+  }
+  ["genEp"](liiIi11l, i11lI1 = "15.1.1") {
+    let ili1iiiI = {
       "ciphertype": 5,
       "cipher": {
-        "ud": this._base64Encode(lil1Illl(iIiIi11i).toString()),
-        "sv": this._base64Encode(lllIl11l),
+        "ud": this._base64Encode(l1I11il(liiIi11l).toString()),
+        "sv": this._base64Encode(i11lI1),
         "iad": ""
       },
       "ts": Math.floor(Date.now() / 1000),
@@ -97,10 +108,10 @@ class ilIili1 {
       "appname": "com.360buy.jdmobile",
       "ridx": -1
     };
-    return JSON.stringify(I11iI);
+    return JSON.stringify(ili1iiiI);
   }
-  ["genUA"](I1l1lIII, lilIi1Il = "jd", lI111ili = {}) {
-    const I1lII1 = {
+  ["genUA"](lIl1IIII, illiIIli = "jd", ilIlIlII = {}) {
+    const lII1IiII = {
         "jd": {
           "app": "jdapp",
           "appBuild": "168858",
@@ -114,211 +125,189 @@ class ilIili1 {
           "clientVersion": "6.0.0"
         }
       },
-      IlIiIil = lI111ili?.["ep"] ? lI111ili?.["ep"] : true,
-      iil1i1Ii = lI111ili?.["client"] ? lI111ili?.["client"] : I1lII1[lilIi1Il].client,
-      IIi11l1 = lI111ili?.["clientVersion"] ? lI111ili?.["clientVersion"] : I1lII1[lilIi1Il].clientVersion,
-      lllIiii1 = ["16.6", "16.5", "16.4", "16.3", "16.2", "16.1", "16.0", "15.6", "15.1", "14.5"],
-      I1ll11i = lllIiii1[Math.floor(Math.random() * lllIiii1.length)],
-      I1II1iIl = "iPhone; CPU iPhone OS " + I1ll11i.replace(".", "_") + " like Mac OS X",
-      i11lIiIi = iil1i1Ii === "apple" || iil1i1Ii === "iPhone" ? "iPhone" : "android",
-      l11Iiil1 = this.genEp(I1l1lIII, I1ll11i),
-      lIilI1I = this.genUuid(),
-      IIIliII1 = [I1lII1[lilIi1Il].app, i11lIiIi, IIi11l1, "", "rn/" + lIilI1I, "M/5.0", "appBuild/" + I1lII1[lilIi1Il].appBuild, "jdSupportDarkMode/0", "ef/1", IlIiIil ? "ep/" + encodeURIComponent(l11Iiil1) : "", "Mozilla/5.0 (" + I1II1iIl + ") AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148", "supportJDSHWK/1", ""],
-      l1IIl11i = IIIliII1.join(";");
-    return this.UserAgent = l1IIl11i, l1IIl11i;
+      lII1ii11 = ilIlIlII?.["ep"] ? ilIlIlII?.["ep"] : true,
+      IliiillI = ilIlIlII?.["client"] ? ilIlIlII?.["client"] : lII1IiII[illiIIli].client,
+      Ill11I1 = ilIlIlII?.["clientVersion"] ? ilIlIlII?.["clientVersion"] : lII1IiII[illiIIli].clientVersion,
+      Ill11Iil = ["16.6", "16.5", "16.4", "16.3", "16.2", "16.1", "16.0", "15.6", "15.1", "14.5"],
+      lI11llli = Ill11Iil[Math.floor(Math.random() * Ill11Iil.length)],
+      iiiI111I = "iPhone; CPU iPhone OS " + lI11llli.replace(".", "_") + " like Mac OS X",
+      Ii1i = IliiillI === "apple" || IliiillI === "iPhone" ? "iPhone" : "android",
+      Ii1lil1 = this.genEp(lIl1IIII, lI11llli),
+      iililiII = this.genUuid(),
+      iiIIIli = [lII1IiII[illiIIli].app, Ii1i, Ill11I1, "", "rn/" + iililiII, "M/5.0", "appBuild/" + lII1IiII[illiIIli].appBuild, "jdSupportDarkMode/0", "ef/1", lII1ii11 ? "ep/" + encodeURIComponent(Ii1lil1) : "", "Mozilla/5.0 (" + iiiI111I + ") AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148", "supportJDSHWK/1", ""],
+      lii1lIi1 = iiIIIli.join(";");
+    return this.UserAgent = lii1lIi1, lii1lIi1;
   }
   async ["loadH5st"]() {
     if (!this.getH5st) try {
       this.getH5st = require(__dirname + "/krh5st");
-    } catch (illi1Il1) {
+    } catch (IlI11lll) {
       console.log("❌ H5st 加载失败");
     }
   }
-  async ["getLoginStatus"](ii1il1Il = this.ck) {
-    return new Promise(async Ii1li1l1 => {
-      if (!ii1il1Il) {
+  async ["getLoginStatus"](ii1iIIII = this.ck) {
+    return new Promise(async iiiiI1l1 => {
+      if (!ii1iIIII) {
         console.log("🚫 Cookie 未设置");
-        Ii1li1l1(undefined);
+        iiiiI1l1(undefined);
         return;
       }
-      let Il1IllIi = 0,
-        IlIiliIi = null;
-      const Il11IliI = 3;
-      while (Il1IllIi < Il11IliI) {
-        const iIliiiIl = {
-          "url": "https://plogin.m.jd.com/cgi-bin/ml/islogin",
-          "headers": {
-            "Accept": "*/*",
-            "Accept-Encoding": "gzip, deflate, br",
-            "Accept-Language": "zh-CN,zh-Hans;q=0.9",
-            "Connection": "keep-alive",
-            "Cookie": ii1il1Il,
-            "Host": "plogin.m.jd.com",
-            "User-Agent": this.UserAgent || "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1 Edg/116.0.0.0"
-          }
-        };
+      let I11iil1I = 0,
+        iii1III1 = null;
+      const llllI1il = 1;
+      while (I11iil1I < llllI1il) {
+        const IIlIII1I = "https://plogin.m.jd.com/cgi-bin/ml/islogin",
+          illi1Iil = {
+            "headers": {
+              "Accept": "*/*",
+              "Accept-Encoding": "gzip, deflate, br",
+              "Accept-Language": "zh-CN,zh-Hans;q=0.9",
+              "Connection": "keep-alive",
+              "Cookie": ii1iIIII,
+              "Host": "plogin.m.jd.com",
+              "User-Agent": this.UserAgent || "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1 Edg/116.0.0.0"
+            },
+            "timeout": 10000
+          };
         try {
-          const l1I1I1ii = await lIll1iii.post(iIliiiIl.url, iIliiiIl);
-          if (l1I1I1ii.body) {
-            try {
-              const l11ii11i = JSON.parse(l1I1I1ii.body);
-              if (l11ii11i) {
-                if (l11ii11i.islogin === "1") {
-                  Ii1li1l1(true);
-                } else {
-                  if (l11ii11i.islogin === "0") Ii1li1l1(false);else {
-                    Ii1li1l1(undefined);
-                  }
+          const I1iiill = await II1ii.post(IIlIII1I, illi1Iil);
+          if (I1iiill.body) try {
+            const lIllI1lI = JSON.parse(I1iiill.body);
+            if (lIllI1lI) {
+              if (lIllI1lI.islogin === "1") iiiiI1l1(true);else {
+                if (lIllI1lI.islogin === "0") iiiiI1l1(false);else {
+                  iiiiI1l1(undefined);
                 }
-              } else {
-                Ii1li1l1(undefined);
               }
-            } catch (i11I1li) {
-              IlIiliIi = "🚫 账号有效性检测接口处理响应数据失败 ➜ " + (i11I1li.message || i11I1li);
-              Il1IllIi++;
-            }
-          } else IlIiliIi = "🚫 账号有效性检测接口请求失败，无响应数据", Il1IllIi++;
-        } catch (Illllli) {
-          IlIiliIi = "🚫 账号有效性检测接口异常 ➜ " + (Illllli.message || Illllli);
-          Il1IllIi++;
+            } else iiiiI1l1(undefined);
+          } catch (l1liIIiI) {
+            iii1III1 = "🚫 getLoginStatus 处理响应数据失败 ➜ " + (l1liIIiI.message || l1liIIiI);
+            I11iil1I++;
+          } else iii1III1 = "🚫 getLoginStatus 请求失败，无响应数据", I11iil1I++;
+        } catch (lliii1li) {
+          iii1III1 = "🚫 getLoginStatus 异常 ➜ " + (lliii1li.message || lliii1li);
+          I11iil1I++;
         }
       }
-      Il1IllIi >= Il11IliI && console.log(IlIiliIi);
-      Ii1li1l1(undefined);
+      I11iil1I >= llllI1il && console.log(iii1III1);
+      iiiiI1l1(undefined);
     });
   }
-  async ["joinShopMember"](llI1i1Ii, i1iI1llI = this.ck) {
-    if (!llI1i1Ii) return;
-    return new Promise(async l1illl1 => {
-      const i1Ii111l = "{\"venderId\":\"" + llI1i1Ii + "\",\"shopId\":\"" + llI1i1Ii + "\",\"bindByVerifyCodeFlag\":1,\"registerExtend\":{},\"writeChildFlag\":0,\"channel\":406}",
-        llIill = {
+  async ["joinShopMember"](Ii11iil1, ll1IilIl = this.ck) {
+    if (!Ii11iil1) return;
+    return new Promise(async i1IIiliI => {
+      const ii1Ii1l = "{\"venderId\":\"" + Ii11iil1 + "\",\"shopId\":\"" + Ii11iil1 + "\",\"bindByVerifyCodeFlag\":1,\"registerExtend\":{},\"writeChildFlag\":0,\"channel\":406}",
+        I1liIlll = {
           "appid": "shopmember_m_jd_com",
           "functionId": "bindWithVender",
           "clientVersion": "9.2.0",
           "client": "H5",
-          "body": JSON.parse(i1Ii111l)
+          "body": JSON.parse(ii1Ii1l)
         };
       await this.loadH5st();
-      const IlI1lI11 = await this.getH5st("27004", llIill),
-        lliIIIll = {
-          "url": "https://api.m.jd.com/client.action?appid=shopmember_m_jd_com&functionId=bindWithVender&body=" + i1Ii111l + "&clientVersion=9.2.0&client=H5&uuid=88888&h5st=" + encodeURIComponent(IlI1lI11),
+      const IiIIl1 = await this.getH5st("27004", I1liIlll),
+        illi1lll = "https://api.m.jd.com/client.action?appid=shopmember_m_jd_com&functionId=bindWithVender&body=" + ii1Ii1l + "&clientVersion=9.2.0&client=H5&uuid=88888&h5st=" + encodeURIComponent(IiIIl1),
+        Il1ii1lI = {
           "headers": {
             "Content-Type": "application/json;charset=utf-8",
             "Origin": "https://api.m.jd.com",
             "Host": "api.m.jd.com",
             "accept": "*/*",
             "User-Agent": this.UserAgent || "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1 Edg/116.0.0.0",
-            "Cookie": i1iI1llI
-          }
+            "Cookie": ll1IilIl
+          },
+          "timeout": 10000
         };
       try {
-        const ll1lil = await lIll1iii.get(lliIIIll.url, {
-          "headers": lliIIIll.headers
-        });
-        if (ll1lil.body) {
-          const III1i1i = JSON.parse(ll1lil.body);
-          if (typeof III1i1i === "object") {
-            if (III1i1i.success === true) {
-              if (III1i1i.result && III1i1i.result.giftInfo) for (let lIlIl1lI of III1i1i.result?.["giftInfo"]?.["giftList"]) {
-                console.log(" >> 入会获得：" + lIlIl1lI.discountString + lIlIl1lI.prizeName + lIlIl1lI.secondLineDesc);
-              }
-              l1illl1(true);
-            } else III1i1i.message ? (console.log("🚫 加入店铺会员失败 ➜ " + III1i1i.message), l1illl1(false)) : (console.log("🚫 加入店铺会员失败 ➜ " + JSON.stringify(III1i1i)), l1illl1(false));
-          } else console.log(ll1lil.body), l1illl1(undefined);
-        } else console.log("🚫 加入店铺会员接口请求失败，无响应数据"), l1illl1(undefined);
-      } catch (iIiililI) {
-        console.log("🚫 加入店铺会员接口异常 ➜ " + (iIiililI.message || iIiililI));
-        l1illl1(undefined);
+        const llI11liI = await II1ii.get(illi1lll, Il1ii1lI);
+        if (llI11liI.body) {
+          const l1I1iI1I = JSON.parse(llI11liI.body);
+          if (l1I1iI1I.success === true) {
+            if (l1I1iI1I.result && l1I1iI1I.result.giftInfo) for (let I1Iii1I1 of l1I1iI1I.result?.["giftInfo"]?.["giftList"]) {
+              console.log(" >> 入会获得：" + I1Iii1I1.discountString + I1Iii1I1.prizeName + I1Iii1I1.secondLineDesc);
+            }
+            i1IIiliI(true);
+          } else l1I1iI1I.message ? (console.log("🚫 加入店铺会员失败 ➜ " + l1I1iI1I.message), i1IIiliI(false)) : (console.log("🚫 加入店铺会员失败 ➜ " + JSON.stringify(l1I1iI1I)), i1IIiliI(undefined));
+        } else {
+          console.log("🚫 bindWithVender API请求失败 ➜ 无响应数据");
+          i1IIiliI(undefined);
+        }
+      } catch (lll1i1I1) {
+        console.log("🚫 bindWithVender API在处理请求时遇到了错误 ➜ " + (lll1i1I1.message || lll1i1I1));
+        i1IIiliI(undefined);
       }
     });
   }
-  async ["getShopMemberStatus"](IlIiIll, iI1IIIiI = this.ck) {
-    return new Promise(async IIiI1iI1 => {
-      let i1iliIll = "{\"venderId\":\"" + IlIiIll + "\",\"channel\":406,\"payUpShop\":true}";
-      const i1lilii = {
+  async ["getShopMemberStatus"](l1lIi1I1, iIiI1liI = this.ck) {
+    return new Promise(async I1iiIli => {
+      let iliII1 = "{\"venderId\":\"" + l1lIi1I1 + "\",\"channel\":406,\"payUpShop\":true}";
+      const Ii111lIi = {
         "appid": "shopmember_m_jd_com",
         "functionId": "getShopOpenCardInfo",
         "clientVersion": "9.2.0",
         "client": "H5",
-        "body": JSON.parse(i1iliIll)
+        "body": JSON.parse(iliII1)
       };
       await this.loadH5st();
-      const ii11Iil = await this.getH5st("27004", i1lilii),
-        li1Ill = {
-          "url": "https://api.m.jd.com/client.action?appid=shopmember_m_jd_com&functionId=getShopOpenCardInfo&body=" + i1iliIll + "&clientVersion=9.2.0&client=H5&uuid=88888&h5st=" + encodeURIComponent(ii11Iil),
+      const IlII1ll1 = await this.getH5st("27004", Ii111lIi),
+        lIIlil = "https://api.m.jd.com/client.action?appid=shopmember_m_jd_com&functionId=getShopOpenCardInfo&body=" + iliII1 + "&clientVersion=9.2.0&client=H5&uuid=88888&h5st=" + encodeURIComponent(IlII1ll1),
+        I1ll1I1i = {
           "headers": {
             "Content-Type": "application/json;charset=utf-8",
             "Origin": "https://api.m.jd.com",
             "Host": "api.m.jd.com",
             "accept": "*/*",
             "User-Agent": this.UserAgent || "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1 Edg/116.0.0.0",
-            "Cookie": iI1IIIiI
-          }
+            "Cookie": iIiI1liI
+          },
+          "timeout": 10000
         };
       try {
-        const ili11i1I = await lIll1iii.get(li1Ill.url, {
-          "headers": li1Ill.headers
-        });
-        if (ili11i1I.body) {
-          const Iiiilil1 = JSON.parse(ili11i1I.body);
-          if (typeof Iiiilil1 === "object") {
-            if (Iiiilil1.success === true) {
-              console.log("去加入：" + (Iiiilil1.result.shopMemberCardInfo.venderCardName || "未知"));
-              openCardStatus = Iiiilil1.result?.["userInfo"]?.["openCardStatus"];
-              openCardStatus === 1 ? IIiI1iI1(true) : IIiI1iI1(false);
-            }
-          } else console.log(ili11i1I.body), IIiI1iI1(undefined);
-        } else console.log("🚫 店铺会员状态获取接口请求失败，无响应数据"), IIiI1iI1(undefined);
-      } catch (l1111l1) {
-        console.log("🚫 店铺会员状态获取接口异常 ➜ " + (l1111l1.message || l1111l1));
-        IIiI1iI1(undefined);
+        const IliI1l1l = await II1ii.get(lIIlil, I1ll1I1i);
+        if (IliI1l1l.body) {
+          const ll11Illl = JSON.parse(IliI1l1l.body);
+          if (ll11Illl.success === true) console.log("去加入：" + (ll11Illl.result.shopMemberCardInfo.venderCardName || "未知")), openCardStatus = ll11Illl.result?.["userInfo"]?.["openCardStatus"], openCardStatus === 1 ? I1iiIli(true) : I1iiIli(false);else ll11Illl.message ? (console.log("🚫 获取店铺会员状态异常 ➜ " + ll11Illl.message), I1iiIli(false)) : (console.log("🚫 获取店铺会员状态异常 ➜ " + JSON.stringify(ll11Illl)), I1iiIli(undefined));
+        } else console.log("🚫 getShopOpenCardInfo API请求失败 ➜ 无响应数据"), I1iiIli(undefined);
+      } catch (IIIlIIIl) {
+        console.log("🚫 getShopOpenCardInfo API在处理请求时遇到了错误 ➜ " + (IIIlIIIl.message || IIIlIIIl));
+        I1iiIli(undefined);
       }
     });
   }
-  ["setCookie"](llliiiI1) {
-    this.ck = llliiiI1;
+  ["setCookie"](llllii1l) {
+    this.ck = llllii1l;
   }
   ["unsetCookie"]() {
     this.ck = "";
     this.UserAgent = "";
   }
-  ["_utf8Encode"](l1Iii1ii) {
-    l1Iii1ii = l1Iii1ii.replace(/rn/g, "n");
-    for (var l1i1ilIl = 0; l1i1ilIl < l1Iii1ii.length; l1i1ilIl++) {
-      var iiilII1i = "",
-        iIIlllil = l1Iii1ii.charCodeAt(l1i1ilIl);
-      if (iIIlllil < 128) iiilII1i += String.fromCharCode(iIIlllil);else iIIlllil > 127 && iIIlllil < 2048 ? (iiilII1i += String.fromCharCode(iIIlllil >> 6 | 192), iiilII1i += String.fromCharCode(iIIlllil & 63 | 128)) : (iiilII1i += String.fromCharCode(iIIlllil >> 12 | 224), iiilII1i += String.fromCharCode(iIIlllil >> 6 & 63 | 128), iiilII1i += String.fromCharCode(iIIlllil & 63 | 128));
+  ["_utf8Encode"](llilllil) {
+    llilllil = llilllil.replace(/rn/g, "n");
+    for (var l1ill1II = 0; l1ill1II < llilllil.length; l1ill1II++) {
+      var lilii1i1 = "",
+        iii1Il1 = llilllil.charCodeAt(l1ill1II);
+      if (iii1Il1 < 128) lilii1i1 += String.fromCharCode(iii1Il1);else iii1Il1 > 127 && iii1Il1 < 2048 ? (lilii1i1 += String.fromCharCode(iii1Il1 >> 6 | 192), lilii1i1 += String.fromCharCode(iii1Il1 & 63 | 128)) : (lilii1i1 += String.fromCharCode(iii1Il1 >> 12 | 224), lilii1i1 += String.fromCharCode(iii1Il1 >> 6 & 63 | 128), lilii1i1 += String.fromCharCode(iii1Il1 & 63 | 128));
     }
-    return iiilII1i;
+    return lilii1i1;
   }
-  ["_base64Encode"](iI1lIIi1, Il1IiIl1 = "KLMNOPQRSTABCDEFGHIJUVWXYZabcdopqrstuvwxefghijklmnyz0123456789+/") {
-    var IIii = "",
-      IIlI1lIl,
-      iiii1I1l,
-      iiiIIi1,
-      llli1ll,
-      lIII1iIi,
-      IiIi1i1l,
-      IIIiiI11,
-      I1lii11 = 0;
-    iI1lIIi1 = this._utf8Encode(iI1lIIi1);
-    while (I1lii11 < iI1lIIi1.length) {
-      IIlI1lIl = iI1lIIi1.charCodeAt(I1lii11++);
-      iiii1I1l = iI1lIIi1.charCodeAt(I1lii11++);
-      iiiIIi1 = iI1lIIi1.charCodeAt(I1lii11++);
-      llli1ll = IIlI1lIl >> 2;
-      lIII1iIi = (IIlI1lIl & 3) << 4 | iiii1I1l >> 4;
-      IiIi1i1l = (iiii1I1l & 15) << 2 | iiiIIi1 >> 6;
-      IIIiiI11 = iiiIIi1 & 63;
-      if (isNaN(iiii1I1l)) IiIi1i1l = IIIiiI11 = 64;else {
-        if (isNaN(iiiIIi1)) {
-          IIIiiI11 = 64;
-        }
-      }
-      IIii = IIii + Il1IiIl1.charAt(llli1ll) + Il1IiIl1.charAt(lIII1iIi) + Il1IiIl1.charAt(IiIi1i1l) + Il1IiIl1.charAt(IIIiiI11);
+  ["_base64Encode"](iI11il11, I1liII1i = "KLMNOPQRSTABCDEFGHIJUVWXYZabcdopqrstuvwxefghijklmnyz0123456789+/") {
+    var ilIlI1II = "";
+    var iillii1i, lIIIlIiI, i11lIIi, iII1lII1, l1i1I1i, IIiIIli, lii11II;
+    var liii1ii = 0;
+    iI11il11 = this._utf8Encode(iI11il11);
+    while (liii1ii < iI11il11.length) {
+      iillii1i = iI11il11.charCodeAt(liii1ii++);
+      lIIIlIiI = iI11il11.charCodeAt(liii1ii++);
+      i11lIIi = iI11il11.charCodeAt(liii1ii++);
+      iII1lII1 = iillii1i >> 2;
+      l1i1I1i = (iillii1i & 3) << 4 | lIIIlIiI >> 4;
+      IIiIIli = (lIIIlIiI & 15) << 2 | i11lIIi >> 6;
+      lii11II = i11lIIi & 63;
+      if (isNaN(lIIIlIiI)) IIiIIli = lii11II = 64;else isNaN(i11lIIi) && (lii11II = 64);
+      ilIlI1II = ilIlI1II + I1liII1i.charAt(iII1lII1) + I1liII1i.charAt(l1i1I1i) + I1liII1i.charAt(IIiIIli) + I1liII1i.charAt(lii11II);
     }
-    while (IIii.length % 4 > 1) IIii += "=";
-    return IIii;
+    while (ilIlI1II.length % 4 > 1) ilIlI1II += "=";
+    return ilIlI1II;
   }
 }
-module.exports = new ilIili1();
+module.exports = new l1iiil1i();
