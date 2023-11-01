@@ -1,435 +1,357 @@
 /*
 东东农场快速浇水
-默认使用快速浇水卡，成熟了自动收取红包和种植新的水果
-11 11 11 11 * jd_fruit_watering.js, tag=东东农场快速浇水, enabled=true
+环境变量：FRUIT_PLANT_LEVEL // 自动种植的作物等级（正整数），默认为2
+        FRUIT_WATERING_NOTIFY // 是否推送通知（true/false），默认不推送
+
+每月或每周只能领2次红包，由于常规浇水太慢，脚本优先使用快速浇水卡
+
 */
 
 const Env=require('./utils/Env.js');
-const $ = new Env('东东农场快速浇水');
-let Ii1I1l = [],
-  IIlIl = "",
-  ili11l,
-  Iiilli = "",
-  IIlIi = "",
-  ili11i = {},
-  iiIi1l = false;
-const lliiII = process.env.FRUIT_PLANT_LEVEL ? process.env.FRUIT_PLANT_LEVEL : "2",
-  liI1ll = require("./function/jdCommon"),
-  ll1II = require("./utils/h5st.js");
-let IllIil = ii1Ii(32, "1234567890qwertyuiopasdfghjklzxcvbnm"),
-  ill1Ii = ii1Ii(2, "1234567890") + "-" + ii1Ii(4, "1234567890") + "-" + ii1Ii(4, "1234567890") + "-" + ii1Ii(5, "1234567890"),
-  llIIl1 = "106.475" + Math.floor(Math.random() * 899 + 100),
-  ill1Il = "29.503" + Math.floor(Math.random() * 899 + 100);
+const $ = new Env('东东农场快速浇水')
+const jdCookie = require('./jdCookie')
+const notify = require('./function/sendJDNotify')
+const H5st = require('./function/krgetH5st')
+const common = require('./function/jdCommon')
+
+
+const FRUIT_PLANT_LEVEL = process.env.FRUIT_PLANT_LEVEL || "2",
+  isNotify = process.env.FRUIT_WATERING_NOTIFY === "true";
+let cookie = "";
+const cookiesArr = Object.keys(jdCookie).map(l11ii1Ii => jdCookie[l11ii1Ii]).filter(lilIIIiI => lilIIIiI);
+!cookiesArr[0] && ($.msg($.name, "【提示】请先获取Cookie"), process.exit(1));
 !(async () => {
-  await iI1IlI();
-  if (!Ii1I1l[0]) {
-    $.msg($.name, "【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取", "https://bean.m.jd.com/bean/signIndex.action", {
-      "open-url": "https://bean.m.jd.com/bean/signIndex.action"
-    });
-    return;
-  }
-  console.log("\n无法浇水大概率是IP：403，请更换后运行\n");
-  for (let IIIlI1 = 0; IIIlI1 < Ii1I1l.length; IIIlI1++) {
-    if (Ii1I1l[IIIlI1]) {
-      IIlIl = Ii1I1l[IIIlI1];
-      $.UserName = decodeURIComponent(IIlIl.match(/pt_pin=([^; ]+)(?=;?)/) && IIlIl.match(/pt_pin=([^; ]+)(?=;?)/)[1]);
-      $.index = IIIlI1 + 1;
-      $.isLogin = true;
+  notify.config({
+    title: $.name
+  });
+  console.log("每月或每周只能领2次红包，由于常规浇水太慢，脚本优先使用快速浇水卡");
+  for (let iI1iiIIi = 0; iI1iiIIi < cookiesArr.length; iI1iiIIi++) {
+    if (cookiesArr[iI1iiIIi]) {
+      cookie = cookiesArr[iI1iiIIi];
+      $.UserName = decodeURIComponent(common.getCookieValue(cookie, "pt_pin"));
+      $.index = iI1iiIIi + 1;
       $.nickName = "";
-      console.log("\n******开始【京东账号" + $.index + "】" + ($.nickName || $.UserName) + "*********\n");
-      if (!$.isLogin) {
-        $.msg($.name, "【提示】cookie已失效", "京东账号" + $.index + " " + ($.nickName || $.UserName) + "\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action", {
-          "open-url": "https://bean.m.jd.com/bean/signIndex.action"
-        });
-        $.isNode() && (await ili11l.sendNotify($.name + "cookie已失效 - " + $.UserName, "京东账号" + $.index + " " + $.UserName + "\n请重新登录获取cookie"));
-        continue;
-      }
-      Iiilli = "";
-      IIlIi = "";
-      ili11i = {};
-      $.UA = liI1ll.genUA($.UserName);
-      await l1i1Ii();
-      await $.wait(parseInt(Math.random() * 2000 + 4000, 10));
+      $.message = notify.create($.index, $.UserName);
+      $.UA = common.genUA($.UserName);
+      console.log("\n******开始【京东账号" + $.index + "】" + ($.nickName || $.UserName) + "******\n");
+      await Main();
     }
   }
-})().catch(IiiIi => {
-  $.log("", "❌ " + $.name + ", 失败! 原因: " + IiiIi + "!", "");
-}).finally(() => {
-  $.done();
-});
-async function l1i1Ii() {
-  IIlIi = "【京东账号" + $.index + "】" + ($.nickName || $.UserName);
+  if (isNotify && notify.getMessage()) {
+    notify.updateContent(notify.content);
+    await notify.push();
+  }
+})().catch(II1I1l1 => $.logErr(II1I1l1)).finally(() => $.done());
+async function Main() {
+  let Ill1iiII = false;
   try {
-    await IllIll();
-    if ($.farmInfo?.["farmUserPro"]) {
-      if ($.farmInfo.treeState === 2 || $.farmInfo.treeState === 3) {
-        const l1iIll = $.farmInfo?.["farmUserPro"]?.["name"];
-        await i1lllI();
-        if ($.gotCouponForFarmRes?.["riskTips"]["includes"]("异常")) {
-          console.log($.gotCouponForFarmRes?.["riskTips"]);
-          return;
-        }
-        await IllIll();
-        const l1iIli = $.farmInfo?.["myHongBaoInfo"]?.["hongBao"];
-        console.log(l1iIll + "已成熟并自动收获");
-        console.log("获得" + l1iIli?.["discount"] + "元红包");
-        console.log(ill1I1(l1iIli?.["endTime"]) + "过期，请及时使用");
-        await lliiI1();
-        return;
-      } else {
-        if ($.farmInfo?.["treeState"] === 1) console.log("当前种植：" + $.farmInfo?.["farmUserPro"]?.["name"] + "（等级" + $.farmInfo?.["farmUserPro"]?.["prizeLevel"] + "）");else {
-          if ($.farmInfo?.["treeState"] === 0) {
-            console.log("还没有种植新的水果\n");
-            await lliiI1();
-            return;
-          }
-        }
-      }
-      await l1iI1();
-    } else {
-      if ($.farmInfo?.["code"] == 3) console.log("农场异常: " + $.farmInfo?.["code"] + ",未登录");else {
-        if ($.farmInfo?.["code"] == 6) console.log("农场异常: " + $.farmInfo?.["code"] + ",暂时不清楚什么原因");else $.farmInfo?.["code"] == 2 ? console.log("农场异常: " + $.farmInfo?.["code"] + "," + $.farmInfo?.["echo"]) : console.log("农场异常: " + $.farmInfo?.["code"] + "," + $.farmInfo?.["message"]);
-      }
-      ($.farmInfo?.["code"] == 402 || $.farmInfo?.["code"] == 403) && (await $.wait(parseInt(Math.random() * 2000 + 30000, 10)));
-      await $.wait(parseInt(Math.random() * 2000 + 2000, 10));
-    }
-  } catch (ili1Il) {
-    console.log("任务执行异常，请检查执行日志");
-    $.logErr(ili1Il);
-  }
-}
-async function l1iI1() {
-  await IllIll();
-  let ll11I = $.farmInfo?.["farmUserPro"]?.["totalEnergy"] || 0;
-  console.log("目前共有 " + ll11I + "g 💧");
-  await IiiI1();
-  const {
-    fastCard: iIi1I,
-    doubleCard: liIIl,
-    beanCard: IlI1lI,
-    signCard: liIIi
-  } = $.myCardInfoRes;
-  console.log("快速浇水卡：" + (iIi1I === -1 ? "未解锁" : iIi1I + " 🎟️"));
-  if (ll11I >= 100 && $.myCardInfoRes.fastCard > 0) {
-    let ili1II = parseInt(ll11I / 100) > $.myCardInfoRes?.["fastCard"] ? $.myCardInfoRes?.["fastCard"] : parseInt(ll11I / 100);
-    for (let liIllI = 0; liIllI < ili1II; liIllI++) {
-      console.log("");
-      await lilII("fastCard");
-      if ($.userMyCardRes.code === "0") {
-        ll11I -= 100;
-        console.log("使用快速浇水卡 ✅");
-        if ($.userMyCardRes?.["treeFinished"]) {
-          iiIi1l = true;
-          break;
-        } else console.log("当前剩余 " + ll11I + "g 💧");
-        await $.wait(parseInt(Math.random() * 2000 + 2000, 10));
-      } else {
-        console.log("" + JSON.stringify($.userMyCardRes));
-        console.log("❌ 浇水异常，可能触发风控，请稍后再试~");
-        break;
-      }
-    }
-  }
-  if (iiIi1l) {
-    console.log("\n🎉 水果已可领取");
-    const IlI1li = $.farmInfo?.["farmUserPro"]?.["name"];
-    await i1lllI();
-    await IllIll();
-    const IlI1ll = $.farmInfo?.["myHongBaoInfo"]?.["hongBao"];
-    console.log(IlI1li + "已成熟并自动收获");
-    console.log("获得" + IlI1ll?.["discount"] + "元红包");
-    console.log(ill1I1(IlI1ll?.["endTime"]) + "过期，请及时使用");
-    await lliiI1();
-    return;
-  }
-  if (ll11I >= 10) {
-    iiIi1l = false;
-    for (let ll11l = 0; ll11l < parseInt(ll11I / 10); ll11l++) {
-      console.log("");
-      await IIIiI();
-      if ($.waterResult.code === "0") {
-        console.log("浇水10g ✅");
-        if ($.waterResult.finished) {
-          iiIi1l = true;
-          break;
-        } else await iii1i1(), console.log("当前剩余 " + $.waterResult?.["totalEnergy"] + "g 💧");
-        await $.wait(parseInt(Math.random() * 1000 + 1000, 10));
-      } else {
-        console.log("" + JSON.stringify($.waterResult));
-        console.log("❌ 浇水异常，可能触发风控，请稍后再试~");
-        break;
-      }
-    }
-    if (iiIi1l) {
-      console.log("\n🎉 水果已可领取");
-      const l1llli = $.farmInfo?.["farmUserPro"]?.["name"];
-      await i1lllI();
-      await IllIll();
-      const iI1lII = $.farmInfo?.["myHongBaoInfo"]?.["hongBao"];
-      console.log(l1llli + "已成熟并自动收获");
-      console.log("获得" + iI1lII?.["discount"] + "元红包");
-      onsole.log(ill1I1(iI1lII?.["endTime"]) + "过期，请及时使用");
-      await lliiI1();
+    const IilIliII = await common.getLoginStatus(cookie);
+    if (!IilIliII && typeof IilIliII !== undefined) {
+      console.log("账号无效");
       return;
     }
-  }
-}
-async function lliiI1() {
-  await IllIll();
-  const l1llll = $.farmInfo?.["farmLevelWinGoods"][lliiII];
-  if (l1llll && l1llll.length) {
-    const Iliii = l1llll[Math.floor(Math.random() * l1llll.length)];
-    await llIIi1(Iliii?.["type"]);
-    $.choiceGoodsForFarmRes.code * 1 === 0 ? (console.log("【提醒⏰】您没有种植新的水果"), console.log("已自动为您种植等级" + lliiII + "的" + $.choiceGoodsForFarmRes?.["farmUserPro"]?.["name"])) : (console.log("【提醒⏰】您没有种植新的水果"), onsole.log("尝试自动种植" + Iliii?.["name"] + "失败，请打开京东APP手动尝试"));
-  } else console.log("【提醒⏰】您没有种植新的水果"), console.log("指定的等级" + lliiII + "暂无水果可供选择，请打开京东APP检查");
-}
-async function IiiI1() {
-  $.myCardInfoRes = await l1i1Il("myCardInfoForFarm", {
-    "version": 5,
-    "channel": 1
-  });
-}
-async function lilII(l1i1i) {
-  $.userMyCardRes = await l1i1Il("userMyCardForFarm", {
-    "cardType": l1i1i
-  });
-}
-async function IIIiI() {
-  await $.wait(parseInt(Math.random() * 1000 + 1000, 10));
-  $.waterResult = await l1i1Il("waterGoodForFarm");
-}
-function iii1i1() {
-  return new Promise(async liiii1 => {
-    if ($.waterResult?.["waterStatus"] === 0 && $.waterResult?.["treeEnergy"] === 10) console.log("果树发芽了，奖励30g水滴"), await gotStageAwardForFarm("1"), console.log("浇水阶段奖励1领取结果 " + JSON.stringify($.gotStageAwardForFarmRes)), $.gotStageAwardForFarmRes?.["code"] === "0" && (console.log("【果树发芽了】奖励" + $.gotStageAwardForFarmRes?.["addEnergy"]), console.log(""));else {
-      if ($.waterResult?.["waterStatus"] === 1) console.log("果树开花了,奖励 40g 💧"), await gotStageAwardForFarm("2"), console.log("浇水阶段奖励2领取结果 " + JSON.stringify($.gotStageAwardForFarmRes)), $.gotStageAwardForFarmRes?.["code"] === "0" && (console.log("【果树开花了】奖励 " + $.gotStageAwardForFarmRes?.["addEnergy"] + "g 💧"), console.log(""));else {
-        if ($.waterResult?.["waterStatus"] === 2) {
-          console.log("果树长出小果子啦, 奖励 50g 💧");
-          await gotStageAwardForFarm("3");
-          console.log("浇水阶段奖励3领取结果 " + JSON.stringify($.gotStageAwardForFarmRes));
-          if ($.gotStageAwardForFarmRes?.["code"] === "0") {
-            console.log("【果树结果了】奖励 " + $.gotStageAwardForFarmRes?.["addEnergy"] + "g 💧");
-            console.log("");
-          }
+    await initForFarm();
+    if ($.farmInfo?.["farmUserPro"]) {
+      if ($.farmInfo?.["treeState"] === 2 || $.farmInfo?.["treeState"] === 3) {
+        await autoCrop();
+        return;
+      } else {
+        if ($.farmInfo?.["treeState"] === 1) {
+          console.log("当前种植：" + $.farmInfo?.["farmUserPro"]?.["name"] + "（等级" + $.farmInfo?.["farmUserPro"]?.["prizeLevel"] + "，进度" + ($.farmInfo?.["farmUserPro"]?.["treeEnergy"] / $.farmInfo?.["farmUserPro"]?.["treeTotalEnergy"] * 100).toFixed(2) + "%，已浇水" + $.farmInfo?.["farmUserPro"]?.["treeEnergy"] / 10 + "次还需" + ($.farmInfo?.["farmUserPro"]?.["treeTotalEnergy"] - $.farmInfo?.["farmUserPro"]?.["treeEnergy"]) / 10 + "次）");
+        } else {
+          $.farmInfo?.["treeState"] === 0 && (await autoPlant());
         }
       }
+    } else {
+      console.log("初始化农场数据异常, 请登录京东App查看农场功能是否正常 " + JSON.stringify($.farmInfo));
+      return;
     }
-    liiii1();
-  });
-}
-async function IllIll() {
-  $.farmInfo = await l1i1Il("initForFarm", {
-    "mpin": "",
-    "utm_campaign": "",
-    "utm_medium": "appshare",
-    "shareCode": "",
-    "utm_term": "Wxfriends",
-    "utm_source": "iosapp",
-    "imageUrl": "",
-    "nickName": "",
-    "babelChannel": "10",
-    "sid": IllIil,
-    "un_area": ill1Ii,
-    "version": 22,
-    "lat": ill1Il,
-    "lng": llIIl1,
-    "channel": 1
-  });
-}
-async function i1lllI() {
-  const IlilI = {
-    "version": 11,
-    "channel": 3,
-    "babelChannel": 0
-  };
-  $.gotCouponForFarmRes = await l1i1Il("gotCouponForFarm", IlilI);
-}
-async function llIIi1(liiiiI) {
-  const illli1 = {
-    "imageUrl": "",
-    "nickName": "",
-    "shareCode": "",
-    "goodsType": liiiiI,
-    "type": "0",
-    "version": 11,
-    "channel": 3,
-    "babelChannel": 0
-  };
-  $.choiceGoodsForFarmRes = await l1i1Il("choiceGoodsForFarm", illli1);
-}
-function iI1IlI() {
-  return new Promise(l11iIl => {
-    ili11l = $.isNode() ? require("./sendNotify") : "";
-    const IIIIll = $.isNode() ? require("./jdCookie") : "";
-    if ($.isNode()) {
-      Object.keys(IIIIll).forEach(liiiii => {
-        IIIIll[liiiii] && Ii1I1l.push(IIIIll[liiiii]);
-      });
-      if (process.env.JD_DEBUG && process.env.JD_DEBUG === "false") console.log = () => {};
-    } else Ii1I1l = [$.getdata("CookieJD"), $.getdata("CookieJD2"), ...l1iII($.getdata("CookiesJD") || "[]").map(lI1111 => lI1111.cookie)].filter(Ilil1 => !!Ilil1);
-    l11iIl();
-  });
-}
-function l1i1Il(IliII1, l1iIi1 = {}, i1I1I = 1000) {
-  return new Promise(Ilili => {
-    setTimeout(async () => {
-      $.post(await Ii1I11(IliII1, l1iIi1), (liiili, I1ll11, lI1lIi) => {
-        try {
-          if (liiili) {
-            console.log("\n东东农场: API查询请求失败 ‼️‼️");
-            console.log(JSON.stringify(liiili));
-            console.log("function_id:" + IliII1);
-            $.logErr(liiili);
-          } else l1i1II(lI1lIi) && (lI1lIi = JSON.parse(lI1lIi));
-        } catch (illlli) {
-          $.logErr(illlli, I1ll11);
-        } finally {
-          Ilili(lI1lIi);
+    let Ii1Iiii1 = $.farmInfo?.["farmUserPro"]?.["totalEnergy"];
+    console.log("目前共有水滴 " + Ii1Iiii1 + "g💧");
+    await myCardInfoForFarm();
+    const {
+      fastCard: llilI1II,
+      doubleCard: ii1Il11I,
+      beanCard: iiI1iIiI,
+      signCard: llliiil
+    } = $.myCardInfoRes;
+    console.log("快速浇水卡 " + (llilI1II === -1 ? "未解锁" : llilI1II + " 🎟️") + "\n");
+    if (Ii1Iiii1 < 10) {
+      console.log("水滴不足");
+      return;
+    }
+    if (Ii1Iiii1 >= 100 && $.myCardInfoRes.fastCard > 0) {
+      let illiI1i = parseInt(Ii1Iiii1 / 100) > $.myCardInfoRes.fastCard ? $.myCardInfoRes.fastCard : parseInt(Ii1Iiii1 / 100);
+      for (let illIIIIi = 0; illIIIIi < illiI1i; illIIIIi++) {
+        await userMyCardForFarm("fastCard");
+        if ($.userMyCardRes.code === "0") {
+          Ii1Iiii1 -= 100;
+          if ($.userMyCardRes.treeFinished) {
+            Ill1iiII = true;
+            console.log("已使用快速浇水卡，剩余" + Ii1Iiii1 + "g💧（作物已成熟）");
+            break;
+          } else {
+            console.log("已使用快速浇水卡，剩余" + Ii1Iiii1 + "g💧");
+          }
+          await $.wait(500);
+        } else {
+          console.log("" + JSON.stringify($.userMyCardRes));
+          console.log("❌ 浇水异常，可能触发风控，请稍后再试~");
+          break;
         }
-      });
-    }, i1I1I);
-  });
-}
-function ill1I1(IIIIiI) {
-  let i1i111;
-  return IIIIiI ? i1i111 = new Date(IIIIiI) : i1i111 = new Date(), i1i111.getFullYear() + "-" + (i1i111.getMonth() + 1 >= 10 ? i1i111.getMonth() + 1 : "0" + (i1i111.getMonth() + 1)) + "-" + (i1i111.getDate() >= 10 ? i1i111.getDate() : "0" + i1i111.getDate());
-}
-function l1i1II(liliii) {
-  if (!liliii) return console.log("京东服务器返回数据为空"), false;
-  try {
-    if (typeof JSON.parse(liliii) == "object") return true;
-  } catch (l1lI1I) {
-    return console.log(l1lI1I), false;
+      }
+      if (Ill1iiII) {
+        await initForFarm();
+        await autoCrop();
+        return;
+      }
+    }
+    if (Ii1Iiii1 >= 10) {
+      do {
+        await waterGoodForFarm();
+        $.waterResult.totalEnergy && (Ii1Iiii1 = $.waterResult.totalEnergy);
+        if ($.waterResult.code === "0") {
+          if ($.waterResult.finished) {
+            Ill1iiII = true;
+            console.log("已浇水10g，剩余" + $.waterResult.totalEnergy + "g💧（作物已成熟）");
+            break;
+          } else {
+            if ($.waterResult.waterStatus === 0 && $.waterResult.treeEnergy === 10) {
+              await gotStageAwardForFarm("1");
+              $.gotStageAwardForFarmRes.code === "0" && console.log("果树发芽了，奖励" + $.gotStageAwardForFarmRes.addEnergy + "g💧\n");
+            } else {
+              if ($.waterResult.waterStatus === 1) {
+                await gotStageAwardForFarm("2");
+                $.gotStageAwardForFarmRes.code === "0" && console.log("果树开花了，奖励" + $.gotStageAwardForFarmRes.addEnergy + "g💧\n");
+              } else {
+                $.waterResult.waterStatus === 2 && (await gotStageAwardForFarm("3"), $.gotStageAwardForFarmRes.code === "0" && console.log("果树结果了，奖励" + $.gotStageAwardForFarmRes.addEnergy + "g💧"));
+              }
+            }
+            console.log("已浇水10g，剩余" + $.waterResult.totalEnergy + "g💧");
+          }
+          await $.wait(500);
+        } else {
+          console.log("" + JSON.stringify($.waterResult));
+          console.log("❌ 浇水异常，可能触发风控，请稍后再试~");
+          break;
+        }
+      } while (Ii1Iiii1 >= 10);
+      if (Ill1iiII) {
+        await initForFarm();
+        await autoCrop();
+        return;
+      }
+    }
+  } catch (Il1i1) {
+    console.log("任务执行异常，请检查执行日志");
+    $.logErr(Il1i1);
   }
 }
-const ili111 = {
-  "initForFarm": "8a2af",
-  "taskInitForFarm": "fcb5a",
-  "browseAdTaskForFarm": "53f09",
-  "firstWaterTaskForFarm": "0cf1e",
-  "waterFriendGotAwardForFarm": "d08ff",
-  "ddnc_getTreasureBoxAward": "67dfc",
-  "totalWaterTaskForFarm": "102f5",
-  "gotThreeMealForFarm": "57b30",
-  "waterGoodForFarm": "0c010",
-  "choiceGoodsForFarm": "5f4ca",
-  "gotCouponForFarm": "b1515",
-  "gotStageAwardForFarm": "81591",
-  "followVenderForBrand": "71547",
-  "gotWaterGoalTaskForFarm": "c901b",
-  "gotNewUserTaskForFarm": "de8f8",
-  "orderTaskGotWaterForFarm": "eed5c",
-  "clockInForFarm": "32b94",
-  "clockInFollowForFarm": "4a0b4",
-  "waterFriendForFarm": "673a0",
-  "awardFirstFriendForFarm": "9b655",
-  "awardInviteFriendForFarm": "2b5ca",
-  "awardCallOrInviteFriendForFarm": "b0b03",
-  "userMyCardForFarm": "86ba5",
-  "getCallUserCardForFarm": "2ca57",
-  "deleteFriendForFarm": "eaf91",
-  "gotLowFreqWaterForFarm": "8172b",
-  "getFullCollectionReward": "5c767",
-  "getOrderPayLotteryWater": "ef089",
-  "receiveStageEnergy": "15507",
-  "exchangeGood": "52963",
-  "farmAssistInit": "92354",
-  "myCardInfoForFarm": "157b6",
-  "gotPopFirstPurchaseTaskForFarm": "d432f",
-  "limitWaterInitForFarm": "6bdc2",
-  "ddnc_surpriseModal": "e81c1",
-  "friendInitForFarm": "a5a9c",
-  "clockInInitForFarm": "08dc3",
-  "guideTaskAward": "59bc4"
-};
-async function Ii1I11(ll1llI, i11lIl = {}) {
-  let lI1iii = "";
-  if (!ili111[ll1llI]) lI1iii = "https://api.m.jd.com/client.action?functionId=" + ll1llI + "&body=" + encodeURIComponent(JSON.stringify(i11lIl)) + "&appid=wh5";else {
-    const I1iiil = {
-        "appid": "signed_wh5",
-        "client": "iOS",
-        "clientVersion": "10.1.0",
-        "functionId": ll1llI,
-        "body": i11lIl
-      },
-      Illll1 = await IllIli(ili111[ll1llI], I1iiil);
-    lI1iii = "https://api.m.jd.com/client.action?" + Illll1;
+async function autoPlant() {
+  const Ii11I1lI = $.farmInfo?.["farmLevelWinGoods"];
+  if (Ii11I1lI) {
+    const I1lIIIli = $.farmInfo?.["farmLevelWinGoods"][FRUIT_PLANT_LEVEL];
+    if (I1lIIIli && I1lIIIli.length) {
+      const IilII1I1 = I1lIIIli[Math.floor(Math.random() * I1lIIIli.length)];
+      await choiceGoodsForFarm(IilII1I1.type);
+      $.choiceGoodsForFarmRes.code * 1 === 0 ? console.log("当前没有种植新的水果，已自动种植等级" + FRUIT_PLANT_LEVEL + "的" + $.choiceGoodsForFarmRes.farmUserPro.name + "\n") : console.log("当前没有种植新的水果，尝试自动种植失败，请打开京东APP手动尝试");
+    } else {
+      console.log("当前没有种植新的水果，指定的等级" + FRUIT_PLANT_LEVEL + "暂无水果可供选择，请打开京东APP检查");
+    }
+  } else {
+    console.log("当前没有可种植的水果（可能本月已领取两次红包达到了上限）");
+  }
+}
+async function autoCrop() {
+  const lIli1i1i = $.farmInfo?.["farmUserPro"]?.["name"];
+  console.log("🌳 当前种植的 ”" + lIli1i1i + "“ 已成熟");
+  await gotCouponForFarm();
+  const lli1li1l = $.gotCouponForFarmRes?.["hongbaoResult"],
+    li1i11li = lli1li1l?.["resultCode"];
+  if (lli1li1l && li1i11li) {
+    switch (li1i11li) {
+      case 200:
+        const llI1i1iI = lli1li1l?.["hongBao"]?.["discount"],
+          l11ll1lI = lli1li1l?.["hongBao"]?.["endTime"];
+        console.log("🎉 收获成功，获得" + llI1i1iI + "元红包🧧（将在 " + $.time("yyyy-MM-dd HH:mm:ss", l11ll1lI) + " 过期）");
+        $.message.insert("收获成功，获得" + llI1i1iI + "红包🧧");
+        await initForFarm();
+        await autoPlant();
+        break;
+      case 409:
+        console.log("当前已达到领取上限，过一段时间再领取吧~");
+        $.message.insert("已达到领取上限，请过一段时间再领取");
+        break;
+      default:
+        console.log("收获失败，未知状态 " + JSON.stringify(lli1li1l));
+        break;
+    }
+  } else {
+    console.log("收获失败 " + JSON.stringify($.gotCouponForFarmRes));
+  }
+}
+async function myCardInfoForFarm() {
+  const i1lI11l = arguments.callee.name.toString();
+  $.myCardInfoRes = await request(i1lI11l, {
+    version: 5,
+    channel: 1
+  });
+}
+async function userMyCardForFarm(iiIllli) {
+  const li1liIiI = arguments.callee.name.toString();
+  $.userMyCardRes = await request(li1liIiI, {
+    cardType: iiIllli
+  });
+}
+async function waterGoodForFarm() {
+  $.waterResult = {};
+  const IIlIii = arguments.callee.name.toString();
+  $.waterResult = await request(IIlIii);
+}
+async function gotStageAwardForFarm(iiIlI111) {
+  $.gotStageAwardForFarmRes = await request("gotStageAwardForFarm", {
+    type: iiIlI111
+  });
+}
+async function initForFarm() {
+  const ll1illlI = arguments.callee.name.toString();
+  let i1Iiill = "106.475" + Math.floor(Math.random() * 899 + 100),
+    li11l1i1 = "29.503" + Math.floor(Math.random() * 899 + 100);
+  $.farmInfo = await request(ll1illlI, {
+    babelChannel: "522",
+    sid: "",
+    un_area: "",
+    version: 25,
+    channel: 1,
+    lat: li11l1i1,
+    lng: i1Iiill
+  });
+}
+async function gotCouponForFarm() {
+  const II1iiiil = {
+    version: 11,
+    channel: 3,
+    babelChannel: 0
+  };
+  $.gotCouponForFarmRes = await request("gotCouponForFarm", II1iiiil);
+}
+async function choiceGoodsForFarm(Ili111i1) {
+  const ll111iii = {
+    imageUrl: "",
+    nickName: "",
+    shareCode: "",
+    goodsType: Ili111i1,
+    type: "0",
+    version: 11,
+    channel: 3,
+    babelChannel: 0
+  };
+  $.choiceGoodsForFarmRes = await request("choiceGoodsForFarm", ll111iii);
+}
+async function taskUrl(IIlliili, lIlI1ll1 = {}) {
+  let I11I1li = "";
+  const lIi1ii1I = appidMap[IIlliili];
+  if (!lIi1ii1I) {
+    I11I1li = "https://api.m.jd.com/client.action?functionId=" + IIlliili + "&body=" + encodeURIComponent(JSON.stringify(lIlI1ll1)) + "&appid=wh5";
+  } else {
+    const IliiIii = await H5st.getH5st({
+      appId: lIi1ii1I,
+      appid: "signed_wh5",
+      body: lIlI1ll1,
+      client: "iOS",
+      clientVersion: "12.2.0",
+      functionId: IIlliili,
+      cookie: cookie,
+      ua: $.UA,
+      version: "4.2",
+      t: true
+    });
+    I11I1li = "https://api.m.jd.com/client.action?" + IliiIii.params;
   }
   return {
-    "url": lI1iii,
-    "headers": {
-      "Host": "api.m.jd.com",
-      "Accept": "*/*",
-      "Origin": "https://carry.m.jd.com",
+    url: I11I1li,
+    headers: {
+      Host: "api.m.jd.com",
+      Accept: "*/*",
+      Origin: "https://carry.m.jd.com",
       "Accept-Encoding": "gzip,deflate,br",
       "User-Agent": $.UA,
       "Accept-Language": "zh-CN,zh-Hans;q=0.9",
-      "Referer": "https://carry.m.jd.com/",
+      Referer: "https://carry.m.jd.com/",
       "x-requested-with": "com.jingdong.app.mall",
-      "Cookie": IIlIl
+      Cookie: cookie
     },
-    "timeout": 10000
+    timeout: 10000
   };
 }
-async function IllIli(lI1iil, lIilll) {
-  try {
-    let IIliil = new ll1II({
-      "appId": lI1iil,
-      "appid": "signed_wh5",
-      "clientVersion": lIilll?.["clientVersion"],
-      "client": lIilll?.["client"],
-      "pin": $.UserName,
-      "ua": $.UA,
-      "version": "4.1"
-    });
-    return await IIliil.genAlgo(), body = await IIliil.genUrlParams(lIilll.functionId, lIilll.body), body;
-  } catch (ll1liI) {}
-}
-function ii1Ii(lI1iiI, i11lII = "qwertyuiopasdfghjklzxcvbnm") {
-  let ll1li1 = "";
-  for (let I1iii1 = 0; I1iii1 < lI1iiI; I1iii1++) {
-    ll1li1 += i11lII[Math.floor(Math.random() * i11lII.length)];
-  }
-  return ll1li1;
-}
-function ii1Il(iIiii1, ll1lil) {
-  let I1Illl = {
-      "appId": iIiii1,
-      ...ll1lil,
-      "ua": $.UA,
-      "pin": $.UserName
-    },
-    ll1lii = {
-      "url": "http://kr.kingran.cf/h5st",
-      "body": JSON.stringify(I1Illl),
-      "headers": {
-        "Content-Type": "application/json"
-      },
-      "timeout": 30000
-    };
-  return new Promise(async i11lI1 => {
-    $.post(ll1lii, (ilIIiI, lIl1ii, lIl1il) => {
-      let Ii1l11 = "";
-      try {
-        if (ilIIiI) console.log("" + JSON.stringify(ilIIiI)), console.log($.name + " getH5st API请求失败，请检查网路重试");else {
-          lIl1il = JSON.parse(lIl1il);
-          if (typeof lIl1il === "object" && lIl1il && lIl1il.body) {
-            if (lIl1il.body) Ii1l11 = lIl1il.body || "";
-          } else lIl1il.code == 400 ? console.log("\n" + lIl1il.msg) : console.log("\n可能连接不上接口，请检查网络");
+function request(l1II1i1i, ilI1i11I = {}, Iiilil11 = 1000) {
+  return new Promise(iiI1iili => {
+    setTimeout(async () => {
+      $.get(await taskUrl(l1II1i1i, ilI1i11I), (IillIIil, I1iII1Ii, I1IlliI1) => {
+        try {
+          IillIIil ? (console.log("\n东东农场: API查询请求失败 ‼️‼️"), console.log(String(IillIIil)), console.log("functionId：" + l1II1i1i), $.logErr(IillIIil)) : safeGet(I1IlliI1) && (I1IlliI1 = JSON.parse(I1IlliI1));
+        } catch (ilI1l1iI) {
+          $.logErr(ilI1l1iI, I1iII1Ii);
+        } finally {
+          iiI1iili(I1IlliI1);
         }
-      } catch (IliIlI) {
-        $.logErr(IliIlI, lIl1ii);
-      } finally {
-        i11lI1(Ii1l11);
-      }
-    });
+      });
+    }, Iiilil11);
   });
 }
-function l1iII(i1111l) {
-  if (typeof i1111l == "string") {
-    try {
-      return JSON.parse(i1111l);
-    } catch (i1111I) {
-      return console.log(i1111I), $.msg($.name, "", "请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie"), [];
+function safeGet(Ii1iiIll) {
+  if (!Ii1iiIll) {
+    console.log("京东服务器返回数据为空");
+    return false;
+  }
+  try {
+    if (typeof JSON.parse(Ii1iiIll) == "object") {
+      return true;
     }
+  } catch (l1l1i1iI) {
+    console.log(l1l1i1iI);
+    return false;
   }
 }
+const appidMap = {
+  initForFarm: "8a2af",
+  taskInitForFarm: "fcb5a",
+  browseAdTaskForFarm: "53f09",
+  firstWaterTaskForFarm: "0cf1e",
+  waterFriendGotAwardForFarm: "d08ff",
+  ddnc_getTreasureBoxAward: "67dfc",
+  totalWaterTaskForFarm: "102f5",
+  gotThreeMealForFarm: "57b30",
+  waterGoodForFarm: "0c010",
+  choiceGoodsForFarm: "5f4ca",
+  gotCouponForFarm: "b1515",
+  gotStageAwardForFarm: "81591",
+  followVenderForBrand: "71547",
+  gotWaterGoalTaskForFarm: "c901b",
+  gotNewUserTaskForFarm: "de8f8",
+  orderTaskGotWaterForFarm: "eed5c",
+  clockInForFarm: "32b94",
+  clockInFollowForFarm: "4a0b4",
+  waterFriendForFarm: "673a0",
+  awardFirstFriendForFarm: "9b655",
+  awardInviteFriendForFarm: "2b5ca",
+  awardCallOrInviteFriendForFarm: "b0b03",
+  userMyCardForFarm: "86ba5",
+  getCallUserCardForFarm: "2ca57",
+  deleteFriendForFarm: "eaf91",
+  gotLowFreqWaterForFarm: "8172b",
+  getFullCollectionReward: "5c767",
+  getOrderPayLotteryWater: "ef089",
+  receiveStageEnergy: "15507",
+  exchangeGood: "52963",
+  farmAssistInit: "92354",
+  myCardInfoForFarm: "157b6",
+  gotPopFirstPurchaseTaskForFarm: "d432f",
+  limitWaterInitForFarm: "6bdc2",
+  ddnc_surpriseModal: "e81c1",
+  friendInitForFarm: "a5a9c",
+  clockInInitForFarm: "08dc3",
+  guideTaskAward: "59bc4",
+  signForFarm: "32b94",
+  gotNewUserTaskForFarm: "de8f8"
+};

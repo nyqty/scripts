@@ -15,7 +15,8 @@ export jd_cxjhelp_jddh="true" // 京东转赚红包兑换红包，默认关闭
 更新转赚红包 上限兑换红包
 更新单独兑换红包变量，避免兑换失败一直请求
 更新此次活动到期时间
-更新京东版提现金
+更新提现金活动 白号才有 黑号无
+
 
 [task_local]
 #抽现金抽奖提现
@@ -23,439 +24,559 @@ export jd_cxjhelp_jddh="true" // 京东转赚红包兑换红包，默认关闭
 
 const Env=require('./utils/Env.js');
 const $ = new Env("抽现金抽奖提现");
-const IIiliI1 = $.isNode() ? require("./jdCookie") : "",
-  ililili1 = require("./function/h5st41.js"),
-  il1Ili11 = require("./function/jdCommon");
-let Il111l = [],
-  ll1i1lli = "";
+
+const IlilIIII = $.isNode() ? require("./jdCookie") : "",
+  liIl1iii = require("./function/h5st41.js"),
+  IllllIl = require("./function/jdCommon");
+let III11lI1 = [],
+  lli1iii = "";
 $.krtyhot = false;
-let liIIlll = ["3orGfh1YkwNLksxOcN8zWQ", "Wvzc_VpNTlSkiQdHT8r7QA"],
-  iIlIlIII = ["京东转赚红包", "特价抽现金"],
-  Il11iill = process.env.jd_cxjhelp_tjdh ? process.env.jd_cxjhelp_tjdh : "false",
-  I1iil = process.env.jd_cxjhelp_jddh ? process.env.jd_cxjhelp_jddh : "false",
-  liIIIl11 = "",
-  l1ilii1i = process.env.jd_cxjhelp_num ? process.env.jd_cxjhelp_num : "1";
+let lil11il = ["3orGfh1YkwNLksxOcN8zWQ", "EcuVpjGGfccY3Ic_1ni83w", "Wvzc_VpNTlSkiQdHT8r7QA"],
+  lII1lI = ["京东转赚红包", "邀好友得红包", "特价抽现金"],
+  l1llliii = process.env.jd_cxjhelp_tjdh ? process.env.jd_cxjhelp_tjdh : "false",
+  l1llIili = process.env.jd_cxjhelp_jddh ? process.env.jd_cxjhelp_jddh : "false",
+  IiiiIl = "",
+  iiI1IlIi = process.env.jd_cxjhelp_num ? process.env.jd_cxjhelp_num : "1";
 if ($.isNode()) {
-  Object.keys(IIiliI1).forEach(ii11Ii1 => {
-    Il111l.push(IIiliI1[ii11Ii1]);
+  Object.keys(IlilIIII).forEach(II1IlI1I => {
+    III11lI1.push(IlilIIII[II1IlI1I]);
   });
-  if (process.env.JD_DEBUG && process.env.JD_DEBUG === "false") console.log = () => {};
-} else Il111l = [$.getdata("CookieJD"), $.getdata("CookieJD2"), ...IIlilI($.getdata("CookiesJD") || "[]").map(liii1II => liii1II.cookie)].filter(I1i1Ii1l => !!I1i1Ii1l);
+  if (process.env.JD_DEBUG && process.env.JD_DEBUG === "false") {
+    console.log = () => {};
+  }
+} else {
+  III11lI1 = [$.getdata("CookieJD"), $.getdata("CookieJD2"), ...ilIlIiiI($.getdata("CookiesJD") || "[]").map(IIIiIlII => IIIiIlII.cookie)].filter(IIill11 => !!IIill11);
+}
 !(async () => {
-  if (!Il111l[0]) {
+  if (!III11lI1[0]) {
     $.msg($.name, "【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取", "https://bean.m.jd.com/bean/signIndex.action", {
       "open-url": "https://bean.m.jd.com/bean/signIndex.action"
     });
     return;
   }
-  console.log("当前设置特价兑换红包：" + Il11iill);
-  console.log("当前设置转赚兑换红包：" + I1iil);
-  for (let iIi1Ii1l = 0; iIi1Ii1l < Il111l.length; iIi1Ii1l++) {
-    if (Il111l[iIi1Ii1l]) {
-      ll1i1lli = Il111l[iIi1Ii1l];
-      $.UserName = decodeURIComponent(ll1i1lli.match(/pt_pin=([^; ]+)(?=;?)/) && ll1i1lli.match(/pt_pin=([^; ]+)(?=;?)/)[1]);
-      $.index = iIi1Ii1l + 1;
+  console.log("当前设置特价兑换红包：" + l1llliii);
+  console.log("当前设置转赚兑换红包：" + l1llIili);
+  for (let lIIiIll1 = 0; lIIiIll1 < III11lI1.length; lIIiIll1++) {
+    if (III11lI1[lIIiIll1]) {
+      lli1iii = III11lI1[lIIiIll1];
+      $.UserName = decodeURIComponent(lli1iii.match(/pt_pin=([^; ]+)(?=;?)/) && lli1iii.match(/pt_pin=([^; ]+)(?=;?)/)[1]);
+      $.index = lIIiIll1 + 1;
       $.canUseCoinAmount = 0;
       console.log("");
       console.log("\n******开始【京东账号" + $.index + "】" + ($.nickName || $.UserName) + "******\n");
-      $.UA = il1Ili11.genUA($.UserName);
-      for (let lllIIllI = 0; lllIIllI < liIIlll.length; lllIIllI++) {
-        liIIIl11 = liIIlll[lllIIllI];
-        appName = iIlIlIII[lllIIllI];
-        console.log("\n开始第" + (lllIIllI + 1) + "个活动：" + appName + "\n");
-        await liii1ilI();
+      $.UA = IllllIl.genUA($.UserName);
+      for (let lIi1lI = 0; lIi1lI < lil11il.length; lIi1lI++) {
+        IiiiIl = lil11il[lIi1lI];
+        appName = lII1lI[lIi1lI];
+        console.log("\n开始第" + (lIi1lI + 1) + "个活动：" + appName + "\n");
+        await IlIiilII();
         await $.wait(2000);
       }
     }
   }
-})().catch(Il11iII => {
-  $.log("", "❌ " + $.name + ", 失败! 原因: " + Il11iII + "!", "");
+})().catch(iiiIlill => {
+  $.log("", "❌ " + $.name + ", 失败! 原因: " + iiiIlill + "!", "");
 }).finally(() => {
   $.done();
 });
-async function liii1ilI() {
+async function IlIiilII() {
   $.txhot = false;
   $.inviteFissionReceivehot = false;
+  $.stateEnd = false;
+  $.nologin = false;
+  $.cashVoKR = false;
   $.hbnums = 0;
   $.xjnums = 0;
-  await l11lllli();
-  if ($.prizeNum > 0) for (m = 1; $.prizeNum--; m++) {
-    console.log("进行第" + m + "次抽奖");
-    await I1iiIlii();
-    await $.wait(parseInt(Math.random() * 2000 + 3000, 10));
+  await il11I11i();
+  if (!$.nologin) {
+    if ($.prizeNum > 0) {
+      for (m = 1; $.prizeNum--; m++) {
+        console.log("进行第" + m + "次抽奖");
+        await lIiIlI1();
+        await $.wait(parseInt(Math.random() * 2000 + 3000, 10));
+        $.cashVoKR && !$.stateEnd && !$.inviteFissionReceivehot && IiiiIl == "EcuVpjGGfccY3Ic_1ni83w" && (await IiIllill(), await $.wait(parseInt(Math.random() * 1000 + 2000, 10)));
+      }
+    }
+    console.log("\n当前设置轮询提现页数：" + iiI1IlIi);
+    for (let ilIil1il = 0; ilIil1il < iiI1IlIi; ilIil1il++) {
+      $.pageNum = ilIil1il + 1;
+      console.log("\n开始轮询提现" + $.pageNum + "页");
+      await lilllll($.pageNum);
+      await $.wait(parseInt(Math.random() * 2000 + 3000, 10));
+      if ($.txhot) {
+        break;
+      }
+    }
   }
-  console.log("\n当前设置轮询提现页数：" + l1ilii1i);
-  for (let I1IIIl = 0; I1IIIl < l1ilii1i; I1IIIl++) {
-    $.pageNum = I1IIIl + 1;
-    console.log("\n开始轮询提现" + $.pageNum + "页");
-    await lIii($.pageNum);
-    await $.wait(parseInt(Math.random() * 2000 + 3000, 10));
-    if ($.txhot) break;
-  }
 }
-async function I1iiIlii() {
-  return new Promise(async l11ii1 => {
-    let IIillI = {
-      "ts": Date.now(),
-      "ridx": -1,
-      "hdid": ll1iiI(43) + "=",
-      "cipher": {},
-      "appname": "wegame",
-      "version": "1.0.0",
-      "ciphertype": 5
+async function lIiIlI1() {
+  return new Promise(async Iiilllii => {
+    let Ii1IlII1 = {
+      ts: Date.now(),
+      ridx: -1,
+      hdid: lIiii1li(43) + "=",
+      cipher: {},
+      appname: "wegame",
+      version: "1.0.0",
+      ciphertype: 5
     };
-    const ii1iIIil = {
-        "functionId": "inviteFissionDrawPrize",
-        "appid": "activities_platform",
-        "clientVersion": "10.1.0",
-        "client": "ios",
-        "body": {
-          "linkId": liIIIl11,
-          "lbs": JSON.stringify(IIillI)
+    const illll1II = {
+        functionId: "inviteFissionDrawPrize",
+        appid: "activities_platform",
+        clientVersion: "10.1.0",
+        client: "ios",
+        body: {
+          linkId: IiiiIl,
+          lbs: JSON.stringify(Ii1IlII1)
         }
       },
-      i1iIi1Ii = await iI1i1i11("c02c6", ii1iIIil);
-    let Iiilii11 = {
-      "url": "https://api.m.jd.com/api?functionId=inviteFissionDrawPrize&" + i1iIi1Ii,
-      "headers": {
-        "Referer": "https://pro.m.jd.com/jdlite/active/23CeE8ZXA4uFS9M9mTjtta9T4S5x/index.html",
-        "origin": "https://pro.m.jd.com",
+      illIl11l = await iIIllllI("c02c6", illll1II);
+    let Ili1li1i = {
+      url: "https://api.m.jd.com/api?functionId=inviteFissionDrawPrize&" + illIl11l,
+      headers: {
+        Referer: "https://pro.m.jd.com/jdlite/active/23CeE8ZXA4uFS9M9mTjtta9T4S5x/index.html",
+        origin: "https://pro.m.jd.com",
         "User-Agent": $.UA,
-        "Cookie": ll1i1lli
+        Cookie: lli1iii
       },
-      "timeout": 30 * 1000
+      timeout: 30000
     };
-    $.get(Iiilii11, async (Ill1Iili, i11il1l, I1i11lii) => {
+    $.get(Ili1li1i, async (lili111, iiIi11iI, Il1i1l) => {
       try {
-        if (Ill1Iili) console.log("" + JSON.stringify(Ill1Iili));else {
-          I1i11lii = JSON.parse(I1i11lii);
-          if (I1i11lii) {
-            if (I1i11lii.code == 0 && I1i11lii.success == true) {
-              if (I1i11lii.data) {
-                if (I1i11lii?.["data"]?.["prizeType"] == 4) $.xjprizeValue = I1i11lii?.["data"]?.["prizeValue"] || 0, $.xjnum = ($.xjprizeValue * 100 + $.xjnums * 100) / 100, $.xjnums = ii1iliIl($.xjnum), console.log("抽中现金：" + $.xjprizeValue + " 🎁 总现金：" + $.xjnums + " 🎁|总红包：" + $.hbnums + " 🧧");else {
-                  if (I1i11lii?.["data"]?.["prizeType"] == 2) $.hbprizeValue = I1i11lii?.["data"]?.["prizeValue"] || 0, $.hbnum = ($.hbprizeValue * 100 + $.hbnums * 100) / 100, $.hbnums = ii1iliIl($.hbnum), console.log("抽中红包：" + $.hbprizeValue + " 🧧 总现金：" + $.xjnums + " 🎁|总红包：" + $.hbnums + " 🧧");else {
-                    if (I1i11lii?.["data"]?.["prizeType"] == 1) console.log("抽中垃圾卷  🗑️");else {
-                      if (I1i11lii?.["data"]?.["prizeType"] == 6) console.log("抽中惊喜大礼包  🗑️");else {
-                        if (I1i11lii?.["data"]?.["prizeType"] == 0) console.log("抽中未知  🎁");else {
-                          console.log(JSON.stringify(I1i11lii?.["data"]));
-                        }
-                      }
-                    }
-                  }
-                }
-                !$.inviteFissionReceivehot && liIIIl11 == "3orGfh1YkwNLksxOcN8zWQ" && (await $.wait(parseInt(Math.random() * 1000 + 2000, 10)), await IIli1iI());
-              }
-            } else I1i11lii.code == 2000 && I1i11lii.msg == "活动火爆" ? console.log("不多说了，乌漆嘛黑") : (console.log(I1i11lii.errMsg), I1i11lii.errMsg.includes("火爆") && $.prizeNum++);
-          }
-        }
-      } catch (liIiiilI) {
-        $.logErr(liIiiilI, i11il1l);
-      } finally {
-        l11ii1();
-      }
-    });
-  });
-}
-async function IIli1iI() {
-  return new Promise(async Il1Il1i => {
-    const iIli11ll = {
-        "functionId": "inviteFissionReceive",
-        "appid": "activities_platform",
-        "clientVersion": "10.1.0",
-        "client": "ios",
-        "body": {
-          "linkId": liIIIl11
-        }
-      },
-      IIIilI1I = await iI1i1i11("b8469", iIli11ll);
-    let IlIli1I1 = {
-      "url": "https://api.m.jd.com/?functionId=inviteFissionReceive&" + IIIilI1I,
-      "headers": {
-        "Referer": "https://pro.m.jd.com/jdlite/active/23CeE8ZXA4uFS9M9mTjtta9T4S5x/index.html",
-        "origin": "https://pro.m.jd.com",
-        "User-Agent": $.UA,
-        "Cookie": ll1i1lli
-      },
-      "timeout": 30 * 1000
-    };
-    $.get(IlIli1I1, async (ll1I1lIl, li1i1I1l, Ii11l1i) => {
-      try {
-        if (ll1I1lIl) console.log("" + JSON.stringify(ll1I1lIl));else {
-          Ii11l1i = JSON.parse(Ii11l1i);
-          if (Ii11l1i) {
-            if (Ii11l1i.code == 0 && Ii11l1i.success == true) console.log("仅差 " + Ii11l1i?.["data"]?.["leftAmount"] + " 提现金可提现 " + Ii11l1i?.["data"]?.["amount"] + " 元,进度值：" + Ii11l1i?.["data"]?.["rate"] + " %"), Ii11l1i?.["data"]?.["state"] == 3 && console.log("已成功获得 " + Ii11l1i?.["data"]?.["amount"] + " 元提现金，快去提现吧！");else {
-              if (Ii11l1i.code == 80209 && Ii11l1i.errMsg == "活动太火爆，请稍候重试") console.log("当期额外提现任务已做过，跳过"), $.inviteFissionReceivehot = true;else Ii11l1i.code == 80208 && Ii11l1i.errMsg == "活动太火爆，请稍候重试" ? console.log("初始赠送次数不进行提现金抽奖，跳过") : console.log(Ii11l1i.errMsg);
-            }
-          }
-        }
-      } catch (iiiII1ll) {
-        $.logErr(iiiII1ll, li1i1I1l);
-      } finally {
-        Il1Il1i();
-      }
-    });
-  });
-}
-async function l11lllli() {
-  return new Promise(async IillI1l => {
-    const Illii1iI = {
-        "functionId": "inviteFissionHome",
-        "appid": "activities_platform",
-        "clientVersion": "10.1.0",
-        "client": "ios",
-        "body": {
-          "linkId": liIIIl11,
-          "inviter": ""
-        }
-      },
-      iiiIiII1 = await iI1i1i11("eb67b", Illii1iI);
-    let lI1IlII1 = {
-      "url": "https://api.m.jd.com/?functionId=inviteFissionHome&" + iiiIiII1,
-      "headers": {
-        "Referer": "https://pro.m.jd.com/jdlite/active/23CeE8ZXA4uFS9M9mTjtta9T4S5x/index.html",
-        "origin": "https://pro.m.jd.com",
-        "User-Agent": $.UA,
-        "Cookie": ll1i1lli
-      },
-      "timeout": 30 * 1000
-    };
-    $.post(lI1IlII1, async (I11ii1iI, Iii1ilIi, Ii1llI11) => {
-      try {
-        if (I11ii1iI) console.log("" + JSON.stringify(I11ii1iI));else {
-          Ii1llI11 = JSON.parse(Ii1llI11);
-          if (Ii1llI11) {
-            if (Ii1llI11.code == 0 && Ii1llI11.success == true) {
-              var Il1lI11I = new Date().valueOf();
-              $.drawPrizeNum = Ii1llI11.data.drawPrizeNum || 0;
-              $.prizeNum = Ii1llI11.data.prizeNum || 0;
-              $.countDownTime = Ii1llI11.data.countDownTime || 0;
-              countDownTime = Il1lI11I + $.countDownTime;
-              let il1lIii1 = Ii1llI11.data.inviter || "";
-              const lI1lI1I = $.time("yyyy-MM-dd HH:mm:ss", countDownTime);
-              liIIIl11 == "3orGfh1YkwNLksxOcN8zWQ" && ($.cashVo = Ii1llI11.data.cashVo || "", console.log("限时额外提现金：\n已有 " + $.cashVo?.["amount"] + " 提现金，仅差 " + $.cashVo?.["leftAmount"] + " 提现金可提现 " + $.cashVo?.["totalAmount"] + " 元,进度值：" + $.cashVo?.["rate"] + " %\n"));
-              console.log("到期时间：" + lI1lI1I + "\n助力码：" + il1lIii1 + "\n已抽奖次数：" + $.drawPrizeNum + "\n剩余抽奖次数：" + $.prizeNum);
-            } else Ii1llI11.code == 2000 && Ii1llI11.errMsg == "活动火爆" ? console.log("不多说了，乌漆嘛黑") : console.log(Ii1llI11.errMsg);
-          }
-        }
-      } catch (liIiiIl) {
-        $.logErr(liIiiIl, Iii1ilIi);
-      } finally {
-        IillI1l();
-      }
-    });
-  });
-}
-async function lIii(IiiiiIIi) {
-  return new Promise(async iilliI11 => {
-    const lIl1i1Il = {
-        "functionId": "superRedBagList",
-        "appid": "activities_platform",
-        "clientVersion": "10.1.0",
-        "client": "ios",
-        "body": {
-          "linkId": liIIIl11,
-          "pageNum": IiiiiIIi,
-          "pageSize": 100,
-          "business": "fission"
-        }
-      },
-      l11llIil = await iI1i1i11("f2b1d", lIl1i1Il);
-    let ill11lI1 = {
-      "url": "https://api.m.jd.com/?" + l11llIil,
-      "headers": {
-        "Referer": "https://pro.m.jd.com/jdlite/active/23CeE8ZXA4uFS9M9mTjtta9T4S5x/index.html",
-        "origin": "https://pro.m.jd.com",
-        "User-Agent": $.UA,
-        "Cookie": ll1i1lli
-      },
-      "timeout": 30 * 1000
-    };
-    $.get(ill11lI1, async (llliilli, liilllll, iiilllll) => {
-      try {
-        if (llliilli) console.log("" + JSON.stringify(llliilli));else {
-          iiilllll = JSON.parse(iiilllll);
-          if (iiilllll) {
-            if (iiilllll.code == 0 && iiilllll.success == true) {
-              const IliiiI1l = (iiilllll.data.items || []).filter(lI111il => lI111il.prizeType === 4 && lI111il.state === 0 || lI111il.state === 2);
-              for (let ll11I of IliiiI1l) {
-                console.log("抽现金抽奖提现，去提现" + ll11I.amount + "现金");
-                await li1IlIII(ll11I.id, ll11I.poolBaseId, ll11I.prizeGroupId, ll11I.prizeBaseId);
-                await $.wait(parseInt(Math.random() * 2000 + 4000, 10));
-                if ($.txhot) {
-                  console.log("抽现金抽奖提现失败，当月额度已满");
-                  break;
-                }
-              }
-            } else console.log("抽现金抽奖提现查询奖品：异常:" + JSON.stringify(iiilllll));
-          }
-        }
-      } catch (Il11iI1) {
-        $.logErr(Il11iI1, liilllll);
-      } finally {
-        iilliI11();
-      }
-    });
-  });
-}
-async function li1IlIII(l11ii1lI, iI1iI1il, IIl11iI, Il11Il1i) {
-  return new Promise(async ii1ili11 => {
-    const iIIiiili = {
-        "linkId": liIIIl11,
-        "businessSource": "NONE",
-        "base": {
-          "prizeType": 4,
-          "business": "fission",
-          "id": l11ii1lI,
-          "poolBaseId": iI1iI1il,
-          "prizeGroupId": IIl11iI,
-          "prizeBaseId": Il11Il1i
-        }
-      },
-      iI11iI1i = {
-        "url": "https://api.m.jd.com",
-        "body": "functionId=apCashWithDraw&body=" + escape(JSON.stringify(iIIiiili)) + "&_t=" + +new Date() + "&appid=activities_platform",
-        "headers": {
-          "Referer": "https://pro.m.jd.com/jdlite/active/23CeE8ZXA4uFS9M9mTjtta9T4S5x/index.html",
-          "origin": "https://pro.m.jd.com",
-          "User-Agent": $.UA,
-          "Cookie": ll1i1lli
-        },
-        "timeout": 30 * 1000
-      };
-    $.post(iI11iI1i, async (lii1l11l, iIIilili, li1lli1I) => {
-      try {
-        if (lii1l11l) {
-          console.log("" + JSON.stringify(lii1l11l));
-          console.log($.name + " API请求失败，请检查网路重试");
+        if (lili111) {
+          console.log("" + JSON.stringify(lili111));
         } else {
-          if (iI1II1l(li1lli1I)) {
-            li1lli1I = $.toObj(li1lli1I);
-            if (li1lli1I.code === 0) {
-              if (li1lli1I.data.status === "310") console.log("提现现金成功！");else {
-                console.log("提现现金：失败:" + li1lli1I.data.message);
-                if (li1lli1I.data.message.includes("上限")) {
-                  if (Il11iill == "true" && liIIIl11 == "Wvzc_VpNTlSkiQdHT8r7QA") await ll11Iili(l11ii1lI, iI1iI1il, IIl11iI, Il11Il1i);else I1iil == "true" && liIIIl11 == "3orGfh1YkwNLksxOcN8zWQ" ? await ll11Iili(l11ii1lI, iI1iI1il, IIl11iI, Il11Il1i) : $.txhot = true;
-                } else {
-                  if (li1lli1I.data.message.includes("已存在状态")) await $.wait(parseInt(Math.random() * 2000 + 5000, 10)), await li1IlIII(l11ii1lI, iI1iI1il, IIl11iI, Il11Il1i);else (li1lli1I.data.message.includes("未绑定微信") || li1lli1I.data.message.includes("绑定手机号")) && ($.txhot = true);
+          Il1i1l = JSON.parse(Il1i1l);
+          if (Il1i1l) {
+            if (Il1i1l.code == 0 && Il1i1l.success == true) {
+              if (Il1i1l.data) {
+                $.prizeType = Il1i1l?.["data"]?.["prizeType"];
+                switch ($.prizeType) {
+                  case 0:
+                    console.log("抽中未知  🎁");
+                    break;
+                  case 1:
+                    console.log("抽中垃圾卷  🗑️");
+                    break;
+                  case 2:
+                    $.hbprizeValue = Il1i1l?.["data"]?.["prizeValue"] || 0;
+                    $.hbnum = ($.hbprizeValue * 100 + $.hbnums * 100) / 100;
+                    $.hbnums = iliIiIi($.hbnum);
+                    console.log("抽中红包：" + $.hbprizeValue + " 🧧 总现金：" + $.xjnums + " 🎁|总红包：" + $.hbnums + " 🧧");
+                    break;
+                  case 4:
+                    $.xjprizeValue = Il1i1l?.["data"]?.["prizeValue"] || 0;
+                    $.xjnum = ($.xjprizeValue * 100 + $.xjnums * 100) / 100;
+                    $.xjnums = iliIiIi($.xjnum);
+                    console.log("抽中现金：" + $.xjprizeValue + " 🎁 总现金：" + $.xjnums + " 🎁|总红包：" + $.hbnums + " 🧧");
+                    break;
+                  case 6:
+                    console.log("抽中惊喜大礼包  🗑️");
+                    break;
+                  default:
+                    console.log("❌ 未知类型：（" + $.prizeType + "）暂不受本脚本支持，请联系作者进行反馈！");
                 }
               }
             } else {
-              console.log("提现现金：异常:" + JSON.stringify(li1lli1I));
+              Il1i1l.code == 2000 && Il1i1l.msg == "活动火爆" ? console.log("不多说了，乌漆嘛黑") : (console.log(Il1i1l.errMsg), Il1i1l.errMsg.includes("火爆") && $.prizeNum++);
             }
           }
         }
-      } catch (ilII1ill) {
-        $.logErr(ilII1ill, iIIilili);
+      } catch (liIil1ll) {
+        $.logErr(liIil1ll, iiIi11iI);
       } finally {
-        ii1ili11(li1lli1I);
+        Iiilllii();
       }
     });
   });
 }
-function ll11Iili(iliIIii1, l11il1, iliiIiII, i11Ii1I) {
-  return new Promise(lil1l1l1 => {
-    const ii1Iil11 = {
-        "linkId": liIIIl11,
-        "businessSource": "fission",
-        "business": "business",
-        "drawRecordId": iliIIii1,
-        "poolId": l11il1,
-        "prizeGroupId": iliiIiII,
-        "prizeId": i11Ii1I
+async function IiIllill() {
+  return new Promise(async Iiliil => {
+    const lIl1Iiii = {
+        functionId: "inviteFissionReceive",
+        appid: "activities_platform",
+        clientVersion: "10.1.0",
+        client: "ios",
+        body: {
+          linkId: IiiiIl
+        }
       },
-      lIII1I1I = {
-        "url": "https://api.m.jd.com",
-        "body": "functionId=apRecompenseDrawPrize&body=" + escape(JSON.stringify(ii1Iil11)) + "&_t=" + +new Date() + "&appid=activities_platform",
-        "headers": {
-          "Referer": "https://pro.m.jd.com/jdlite/active/23CeE8ZXA4uFS9M9mTjtta9T4S5x/index.html",
-          "origin": "https://pro.m.jd.com",
-          "User-Agent": $.UA,
-          "Cookie": ll1i1lli
-        },
-        "timeout": 30 * 1000
-      };
-    $.post(lIII1I1I, async (i1lliiiI, I1IIlI, i1lI11lI) => {
+      lII1111l = await iIIllllI("b8469", lIl1Iiii);
+    let i1IlllII = {
+      url: "https://api.m.jd.com/?functionId=inviteFissionReceive&" + lII1111l,
+      headers: {
+        Referer: "https://pro.m.jd.com/jdlite/active/23CeE8ZXA4uFS9M9mTjtta9T4S5x/index.html",
+        origin: "https://pro.m.jd.com",
+        "User-Agent": $.UA,
+        Cookie: lli1iii
+      },
+      timeout: 30000
+    };
+    $.get(i1IlllII, async (iliIill1, IlllIiil, IiilIIl1) => {
       try {
-        i1lliiiI ? (console.log("" + JSON.stringify(i1lliiiI)), console.log($.name + " API请求失败，请检查网路重试")) : iI1II1l(i1lI11lI) && (i1lI11lI = $.toObj(i1lI11lI), i1lI11lI.code == 0 ? console.log("兑换红包成功") : console.log("兑换红包失败:" + i1lI11lI.errMsg));
-      } catch (liiliIli) {
-        $.logErr(liiliIli, I1IIlI);
+        if (iliIill1) {
+          console.log("" + JSON.stringify(iliIill1));
+        } else {
+          IiilIIl1 = JSON.parse(IiilIIl1);
+          if (IiilIIl1) {
+            if (IiilIIl1.code == 0 && IiilIIl1.success == true) {
+              console.log("抽中提现金：" + (IiilIIl1?.["data"]?.["receiveList"][0]?.["amount"] || "未获得提现金") + " ,还需 " + IiilIIl1?.["data"]?.["leftAmount"] + " 提现金,进度值：" + IiilIIl1?.["data"]?.["rate"] + " %");
+              IiilIIl1?.["data"]?.["state"] == 3 && console.log("已成功获得 " + IiilIIl1?.["data"]?.["amount"] + " 元提现金，快去提现吧！");
+            } else {
+              if (IiilIIl1.code == 80209 && IiilIIl1.errMsg == "活动太火爆，请稍候重试") {
+                console.log("当期额外提现任务已完成，跳过");
+                $.inviteFissionReceivehot = true;
+              } else {
+                IiilIIl1.code == 80208 && IiilIIl1.errMsg == "活动太火爆，请稍候重试" ? console.log("未获得提现金," + IiilIIl1.errMsg) : console.log(IiilIIl1.errMsg);
+              }
+            }
+          }
+        }
+      } catch (Ii1i111I) {
+        $.logErr(Ii1i111I, IlllIiil);
       } finally {
-        lil1l1l1(i1lI11lI);
+        Iiliil();
       }
     });
   });
 }
-function ilil11I1(lIIll1ii) {
-  return lIIll1ii.then(ill1iIiI => {
-    return [null, ill1iIiI];
-  }).catch(iiIIiiII => [iiIIiiII]);
-}
-async function iI1i1i11(iiII1III, lI11ll11) {
-  try {
-    let l1i1iili = new ililili1({
-      "appId": iiII1III,
-      "appid": "activities_platform",
-      "clientVersion": lI11ll11?.["clientVersion"],
-      "client": lI11ll11?.["client"],
-      "pin": $.UserName,
-      "ua": $.UA,
-      "version": "4.1"
+async function il11I11i() {
+  return new Promise(async li1iIlll => {
+    const iiiiIII1 = {
+        functionId: "inviteFissionHome",
+        appid: "activities_platform",
+        clientVersion: "10.1.0",
+        client: "ios",
+        body: {
+          linkId: IiiiIl,
+          inviter: ""
+        }
+      },
+      i11IlIi = await iIIllllI("eb67b", iiiiIII1);
+    let il111ii1 = {
+      url: "https://api.m.jd.com/?functionId=inviteFissionHome&" + i11IlIi,
+      headers: {
+        Referer: "https://pro.m.jd.com/jdlite/active/23CeE8ZXA4uFS9M9mTjtta9T4S5x/index.html",
+        origin: "https://pro.m.jd.com",
+        "User-Agent": $.UA,
+        Cookie: lli1iii
+      },
+      timeout: 30000
+    };
+    $.post(il111ii1, async (iIIli111, I1i11I1I, lI1iIlil) => {
+      try {
+        if (iIIli111) {
+          console.log("" + JSON.stringify(iIIli111));
+        } else {
+          lI1iIlil = JSON.parse(lI1iIlil);
+          if (lI1iIlil) {
+            if (lI1iIlil.code == 0 && lI1iIlil.success == true) {
+              $.inviteFissionHome = lI1iIlil?.["data"] || [];
+              var i1Il11l = new Date().valueOf();
+              $.drawPrizeNum = $.inviteFissionHome?.["drawPrizeNum"] || 0;
+              $.prizeNum = $.inviteFissionHome?.["prizeNum"] || 0;
+              $.countDownTime = $.inviteFissionHome?.["countDownTime"] || 0;
+              countDownTime = i1Il11l + $.countDownTime;
+              let lIi111l = $.inviteFissionHome?.["inviter"] || "";
+              const liI111lI = $.time("yyyy-MM-dd HH:mm:ss", countDownTime);
+              if (IiiiIl == "EcuVpjGGfccY3Ic_1ni83w") {
+                $.cashVo = $.inviteFissionHome?.["cashVo"] || "";
+                if ($.cashVo) {
+                  $.cashVoKR = true;
+                  $.txjstate = $.inviteFissionHome?.["cashVo"]?.["state"] || 0;
+                  console.log("限时提现金：\n已有 " + $.cashVo?.["amount"] + " 提现金，仅差 " + $.cashVo?.["leftAmount"] + " 提现金可提现 " + $.cashVo?.["totalAmount"] + " 元,进度值：" + $.cashVo?.["rate"] + " %\n");
+                  switch ($.txjstate) {
+                    case 0:
+                    case 1:
+                    case 2:
+                      break;
+                    case 3:
+                      console.log("已成功获得限时提现金 " + $.cashVo?.["totalAmount"] + " 元，时间：" + $.cashVo?.["rewardRecord"]?.["createTime"] + "\n");
+                      $.stateEnd = true;
+                      break;
+                    default:
+                      console.log("❌ 未知类型：（" + $.txjstate + "）暂不受本脚本支持，请联系作者进行反馈！");
+                  }
+                }
+              }
+              console.log("到期时间：" + liI111lI + "\n助力码：" + lIi111l + "\n已抽奖次数：" + $.drawPrizeNum + "\n剩余抽奖次数：" + $.prizeNum);
+            } else {
+              if (lI1iIlil.code == 2000 && lI1iIlil.errMsg == "活动火爆") {
+                console.log("不多说了，乌漆嘛黑");
+              } else {
+                lI1iIlil.code == 1000 && lI1iIlil.errMsg == "未登录" ? (console.log(lI1iIlil.errMsg), $.nologin = true) : console.log(lI1iIlil.errMsg);
+              }
+            }
+          }
+        }
+      } catch (lI11lli1) {
+        $.logErr(lI11lli1, I1i11I1I);
+      } finally {
+        li1iIlll();
+      }
     });
-    return await l1i1iili.genAlgo(), body = await l1i1iili.genUrlParams(lI11ll11.functionId, lI11ll11.body), body;
-  } catch (i1ll1l1) {}
+  });
 }
-function ll1iiI(iIIl1i1i) {
-  iIIl1i1i = iIIl1i1i || 32;
-  let iIliiIIi = "0123456789abcdef",
-    ilIil1iI = iIliiIIi.length,
-    li1Ii1I = "";
-  for (let liIliil1 = 0; liIliil1 < iIIl1i1i; liIliil1++) li1Ii1I += iIliiIIi.charAt(Math.floor(Math.random() * ilIil1iI));
-  return li1Ii1I;
+async function lilllll(I1II111I) {
+  return new Promise(async i1llII1 => {
+    const i1iIil1l = {
+        functionId: "superRedBagList",
+        appid: "activities_platform",
+        clientVersion: "10.1.0",
+        client: "ios",
+        body: {
+          linkId: IiiiIl,
+          pageNum: I1II111I,
+          pageSize: 100,
+          business: "fission"
+        }
+      },
+      IIl1ilii = await iIIllllI("f2b1d", i1iIil1l);
+    let IliiiIIl = {
+      url: "https://api.m.jd.com/?" + IIl1ilii,
+      headers: {
+        Referer: "https://pro.m.jd.com/jdlite/active/23CeE8ZXA4uFS9M9mTjtta9T4S5x/index.html",
+        origin: "https://pro.m.jd.com",
+        "User-Agent": $.UA,
+        Cookie: lli1iii
+      },
+      timeout: 30000
+    };
+    $.get(IliiiIIl, async (lIllII1, iIlII, lliIlIii) => {
+      try {
+        if (lIllII1) {
+          console.log("" + JSON.stringify(lIllII1));
+        } else {
+          lliIlIii = JSON.parse(lliIlIii);
+          if (lliIlIii) {
+            if (lliIlIii.code == 0 && lliIlIii.success == true) {
+              const II1I1I = (lliIlIii.data.items || []).filter(IIililll => IIililll.prizeType === 4 && IIililll.state === 0 || IIililll.state === 2);
+              for (let Ii11l1il of II1I1I) {
+                console.log("抽现金抽奖提现，去提现" + Ii11l1il.amount + "现金");
+                await liIliiiI(Ii11l1il.id, Ii11l1il.poolBaseId, Ii11l1il.prizeGroupId, Ii11l1il.prizeBaseId);
+                await $.wait(parseInt(Math.random() * 2000 + 4000, 10));
+                if ($.txhot) {
+                  console.log("抽现金抽奖提现失败，" + $.apCashWithDrawmessage);
+                  break;
+                }
+              }
+            } else {
+              console.log("抽现金抽奖提现查询奖品：异常:" + JSON.stringify(lliIlIii));
+            }
+          }
+        }
+      } catch (liili1i1) {
+        $.logErr(liili1i1, iIlII);
+      } finally {
+        i1llII1();
+      }
+    });
+  });
 }
-function IIlilI(lIIIl1II) {
-  if (typeof lIIIl1II == "string") try {
-    return JSON.parse(lIIIl1II);
-  } catch (II1I1I11) {
-    return console.log(II1I1I11), $.msg($.name, "", "请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie"), [];
+async function liIliiiI(lIi1illI, I1llI1I1, liIlllI, l1lilll1) {
+  return new Promise(async Ill11111 => {
+    const IilI11i = {
+        linkId: IiiiIl,
+        businessSource: "NONE",
+        base: {
+          prizeType: 4,
+          business: "fission",
+          id: lIi1illI,
+          poolBaseId: I1llI1I1,
+          prizeGroupId: liIlllI,
+          prizeBaseId: l1lilll1
+        }
+      },
+      i1IilIii = {
+        url: "https://api.m.jd.com",
+        body: "functionId=apCashWithDraw&body=" + escape(JSON.stringify(IilI11i)) + "&_t=" + +new Date() + "&appid=activities_platform",
+        headers: {
+          Referer: "https://pro.m.jd.com/jdlite/active/23CeE8ZXA4uFS9M9mTjtta9T4S5x/index.html",
+          origin: "https://pro.m.jd.com",
+          "User-Agent": $.UA,
+          Cookie: lli1iii
+        },
+        timeout: 30000
+      };
+    $.post(i1IilIii, async (lil1il11, IllI1lll, I1Iili1I) => {
+      try {
+        if (lil1il11) {
+          console.log("" + JSON.stringify(lil1il11));
+          console.log($.name + " API请求失败，请检查网路重试");
+        } else {
+          if (lliiI1(I1Iili1I)) {
+            I1Iili1I = $.toObj(I1Iili1I);
+            if (I1Iili1I.code === 0) {
+              if (I1Iili1I.data.status === "310") {
+                console.log("提现现金成功！");
+              } else {
+                $.apCashWithDrawmessage = I1Iili1I?.["data"]?.["message"];
+                console.log("提现现金失败:" + $.apCashWithDrawmessage);
+                if ($.apCashWithDrawmessage.includes("上限")) {
+                  if (l1llliii == "true" && IiiiIl == "Wvzc_VpNTlSkiQdHT8r7QA") {
+                    await iiIIlII(lIi1illI, I1llI1I1, liIlllI, l1lilll1);
+                  } else {
+                    if (l1llIili == "true" && IiiiIl == "3orGfh1YkwNLksxOcN8zWQ") {
+                      await iiIIlII(lIi1illI, I1llI1I1, liIlllI, l1lilll1);
+                    } else {
+                      $.txhot = true;
+                    }
+                  }
+                } else {
+                  if ($.apCashWithDrawmessage.includes("已存在状态")) {
+                    await $.wait(parseInt(Math.random() * 2000 + 5000, 10));
+                    await liIliiiI(lIi1illI, I1llI1I1, liIlllI, l1lilll1);
+                  } else {
+                    ($.apCashWithDrawmessage.includes("未绑定微信") || $.apCashWithDrawmessage.includes("绑定手机号")) && ($.txhot = true);
+                  }
+                }
+              }
+            } else {
+              console.log("提现现金异常:" + JSON.stringify(I1Iili1I));
+            }
+          }
+        }
+      } catch (lilli1li) {
+        $.logErr(lilli1li, IllI1lll);
+      } finally {
+        Ill11111(I1Iili1I);
+      }
+    });
+  });
+}
+function iiIIlII(ilIiil1l, iliI1Il, lliIi1Il, iI1i1Ii1) {
+  return new Promise(I1IiI1li => {
+    const iiiIl1ii = {
+        linkId: IiiiIl,
+        businessSource: "fission",
+        business: "business",
+        drawRecordId: ilIiil1l,
+        poolId: iliI1Il,
+        prizeGroupId: lliIi1Il,
+        prizeId: iI1i1Ii1
+      },
+      ilI1i = {
+        url: "https://api.m.jd.com",
+        body: "functionId=apRecompenseDrawPrize&body=" + escape(JSON.stringify(iiiIl1ii)) + "&_t=" + +new Date() + "&appid=activities_platform",
+        headers: {
+          Referer: "https://pro.m.jd.com/jdlite/active/23CeE8ZXA4uFS9M9mTjtta9T4S5x/index.html",
+          origin: "https://pro.m.jd.com",
+          "User-Agent": $.UA,
+          Cookie: lli1iii
+        },
+        timeout: 30000
+      };
+    $.post(ilI1i, async (iliiiiIi, IiIllI1i, iiiIilll) => {
+      try {
+        if (iliiiiIi) {
+          console.log("" + JSON.stringify(iliiiiIi));
+          console.log($.name + " API请求失败，请检查网路重试");
+        } else {
+          if (lliiI1(iiiIilll)) {
+            iiiIilll = $.toObj(iiiIilll);
+            if (iiiIilll.code == 0) {
+              console.log("兑换红包成功");
+            } else {
+              console.log("兑换红包失败:" + iiiIilll.errMsg);
+            }
+          }
+        }
+      } catch (II1i1l1) {
+        $.logErr(II1i1l1, IiIllI1i);
+      } finally {
+        I1IiI1li(iiiIilll);
+      }
+    });
+  });
+}
+function IlI11ii(I1iiiiii) {
+  return I1iiiiii.then(I1Iill => {
+    return [null, I1Iill];
+  }).catch(iIilI1l1 => [iIilI1l1]);
+}
+async function iIIllllI(IiiilI, IiIlIiIl) {
+  try {
+    let IiIlI1Ii = new liIl1iii({
+      appId: IiiilI,
+      appid: "activities_platform",
+      clientVersion: IiIlIiIl?.["clientVersion"],
+      client: IiIlIiIl?.["client"],
+      pin: $.UserName,
+      ua: $.UA,
+      version: "4.1"
+    });
+    await IiIlI1Ii.genAlgo();
+    body = await IiIlI1Ii.genUrlParams(IiIlIiIl.functionId, IiIlIiIl.body);
+    return body;
+  } catch (I1lilIii) {}
+}
+function lIiii1li(IiIl1liI) {
+  IiIl1liI = IiIl1liI || 32;
+  let Il1llI1I = "0123456789abcdef",
+    I1lil1li = Il1llI1I.length,
+    l1lil = "";
+  for (let lI1ilii1 = 0; lI1ilii1 < IiIl1liI; lI1ilii1++) {
+    l1lil += Il1llI1I.charAt(Math.floor(Math.random() * I1lil1li));
+  }
+  return l1lil;
+}
+function ilIlIiiI(l11Iiil1) {
+  if (typeof l11Iiil1 == "string") {
+    try {
+      return JSON.parse(l11Iiil1);
+    } catch (I1II1l1) {
+      console.log(I1II1l1);
+      $.msg($.name, "", "请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie");
+      return [];
+    }
   }
 }
-function lll1i1Il(lI1IIIi1) {
-  return new Promise(IliIliII => {
-    const li1ii1il = {
-      "url": lI1IIIi1 + "?" + new Date(),
-      "timeout": 10000,
-      "headers": {
+function i1i1l111(lI1l11I) {
+  return new Promise(iI1ll11 => {
+    const ill1iIIi = {
+      url: lI1l11I + "?" + new Date(),
+      timeout: 10000,
+      headers: {
         "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1 Edg/87.0.4280.88"
       }
     };
-    $.get(li1ii1il, async (il1ili11, Illl1IIi, iiiIIli) => {
+    $.get(ill1iIIi, async (ilii1iI, IliI1l1l, I1ilIl1) => {
       try {
-        if (il1ili11) $.getAuthorCodeListerr = false;else {
-          if (iiiIIli) iiiIIli = JSON.parse(iiiIIli);
+        if (ilii1iI) {
+          $.getAuthorCodeListerr = false;
+        } else {
+          if (I1ilIl1) {
+            I1ilIl1 = JSON.parse(I1ilIl1);
+          }
           $.getAuthorCodeListerr = true;
         }
-      } catch (I1IiI11I) {
-        $.logErr(I1IiI11I, Illl1IIi);
-        iiiIIli = null;
+      } catch (Ii1llll1) {
+        $.logErr(Ii1llll1, IliI1l1l);
+        I1ilIl1 = null;
       } finally {
-        IliIliII(iiiIIli);
+        iI1ll11(I1ilIl1);
       }
     });
   });
 }
-function l1ii1i(ill1iiI, lII1iiI1) {
-  return Math.floor(Math.random() * (lII1iiI1 - ill1iiI)) + ill1iiI;
+function l1lIli1l(ill1l1II, iIliIIl1) {
+  return Math.floor(Math.random() * (iIliIIl1 - ill1l1II)) + ill1l1II;
 }
-function ii1iliIl(IIlIl11i) {
-  var lIIl1li = Number(IIlIl11i);
-  return !isNaN(parseFloat(lIIl1li)) && (lIIl1li = lIIl1li.toFixed(2)), lIIl1li;
+function iliIiIi(iIi1liii) {
+  var Ill11ilI = Number(iIi1liii);
+  if (!isNaN(parseFloat(Ill11ilI))) {
+    Ill11ilI = Ill11ilI.toFixed(2);
+  }
+  return Ill11ilI;
 }
-function iI1II1l(Ii11IIi1) {
+function lliiI1(ill1i1Il) {
   try {
-    if (typeof JSON.parse(Ii11IIi1) == "object") {
+    if (typeof JSON.parse(ill1i1Il) == "object") {
       return true;
     }
-  } catch (lillIi1i) {
-    return console.log(lillIi1i), console.log("京东服务器访问数据为空，请检查自身设备网络情况"), false;
+  } catch (I11liI1i) {
+    console.log(I11liI1i);
+    console.log("京东服务器访问数据为空，请检查自身设备网络情况");
+    return false;
   }
 }

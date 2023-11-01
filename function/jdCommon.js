@@ -2,8 +2,6 @@
 通用代码库
 new Env('jdCommon');
 */
-
-var version_ = "jsjiami.com.v7";
 const Ili1I1 = require("crypto-js/sha1"),
   lI1I1i = require("got");
 class liI1II {
@@ -503,4 +501,3 @@ class liI1II {
   }
 }
 module.exports = new liI1II();
-var version_ = "jsjiami.com.v7";

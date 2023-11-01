@@ -1,7 +1,6 @@
 /*
 new Env('getH5st');
 */
-var version_ = "jsjiami.com.v7";
 const lil1I1Il = require("jsdom");
 class IiII1Iil {
   constructor() {
@@ -300,4 +299,3 @@ class IiII1Iil {
   }
 }
 module.exports = new IiII1Iil();
-var version_ = "jsjiami.com.v7";
