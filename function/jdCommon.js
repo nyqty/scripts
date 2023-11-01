@@ -3,324 +3,504 @@
 new Env('jdCommon');
 */
 
-const Il1lilIl = require("crypto-js/sha1"),
-  i11l1il1 = require("got");
-class lIIIIli {
+var version_ = "jsjiami.com.v7";
+const Ili1I1 = require("crypto-js/sha1"),
+  lI1I1i = require("got");
+class liI1II {
   constructor() {
     this.ck = "";
     this.UserAgent = "";
     this.H5st = null;
   }
-  ["parseUrl"](i1iilIIi) {
+  parseUrl(i1Iii1) {
     try {
-      const liIlIlIl = new URL(i1iilIIi);
-      return liIlIlIl;
-    } catch (ili1iIli) {
+      const l1liii = new URL(i1Iii1);
+      return l1liii;
+    } catch (I1Ili1) {
       return {};
     }
   }
-  ["parseUrlParameter"](IliII1ll) {
+  parseUrlParameter(l1liil) {
     try {
-      const Il1I = this.parseUrl(IliII1ll),
-        Iii11lii = new URLSearchParams(Il1I?.["search"]),
-        ii1iIlIl = {};
-      for (const [IIIll11, ll1IIIi1] of Iii11lii) {
-        ii1iIlIl[IIIll11] = ll1IIIi1;
+      const lilI1l = this.parseUrl(l1liil),
+        l1liiI = new URLSearchParams(lilI1l?.["search"]),
+        I1iI1 = {};
+      for (const [lilI1i, Il1Ii] of l1liiI) {
+        I1iI1[lilI1i] = Il1Ii;
       }
-      return ii1iIlIl;
+      return I1iI1;
     } catch {
       return {};
     }
   }
-  ["getUrlParameter"](iIiiiIIi, iiiilIl1) {
+  getUrlParameter(Ii11i, i1llI) {
     try {
-      const ilIIII1I = new URL(iIiiiIIi),
-        l1IllIlI = ilIIII1I.searchParams.get(iiiilIl1);
-      return l1IllIlI || "";
+      const i1Iiii = this.parseUrl(Ii11i),
+        l1lIi = i1Iiii.searchParams.get(i1llI);
+      return l1lIi || "";
     } catch {
       return "";
     }
   }
-  ["objectToQueryString"](Iii1liII) {
-    const iI1IIli = [];
-    for (const lli11lil in Iii1liII) {
-      if (Iii1liII.hasOwnProperty(lli11lil)) {
-        const l1Iiliii = Iii1liII[lli11lil];
-        if (l1Iiliii !== undefined && l1Iiliii !== null) {
-          const Ii1illi = encodeURIComponent(lli11lil),
-            IIililll = encodeURIComponent(l1Iiliii);
-          iI1IIli.push(Ii1illi + "=" + IIililll);
+  objectToQueryString(IIlI1l) {
+    const IilIl = [];
+    for (const iilII1 in IIlI1l) {
+      if (IIlI1l.hasOwnProperty(iilII1)) {
+        const i1Iil1 = IIlI1l[iilII1];
+        if (i1Iil1 !== undefined && i1Iil1 !== null) {
+          const liI1Ii = encodeURIComponent(iilII1),
+            l1lil1 = encodeURIComponent(i1Iil1);
+          IilIl.push(liI1Ii + "=" + l1lil1);
         }
       }
     }
-    return iI1IIli.join("&");
+    return IilIl.join("&");
   }
-  ["getResponseCookie"](IiIIl1I, IillIl1) {
-    let l1lIIlii = "";
-    if (IiIIl1I.headers["set-cookie"]) {
-      for (let Il1llI1 of IiIIl1I.headers["set-cookie"]) {
-        l1lIIlii += Il1llI1.split(";")[0].split("=")[0] + "=" + Il1llI1.split(";")[0].split("=")[1] + "; ";
+  getResponseCookie(i1lil, I1iIl) {
+    let ili1l = "";
+    if (i1lil.headers["set-cookie"]) {
+      for (let i1IilI of i1lil.headers["set-cookie"]) {
+        ili1l += i1IilI.split(";")[0].split("=")[0] + "=" + i1IilI.split(";")[0].split("=")[1] + "; ";
       }
     } else {
-      IillIl1 && (l1lIIlii = IillIl1);
+      I1iIl && (ili1l = I1iIl);
     }
-    return l1lIIlii;
+    return ili1l;
   }
-  ["getCookieValue"](IilI11I1, ilI1l1ii) {
-    if (!IilI11I1 || !ilI1l1ii) return "";
-    var iiiil1i = new RegExp(ilI1l1ii + "=" + "([^;]*)" + ";"),
-      IIl1Ilil = iiiil1i.exec(IilI11I1);
-    return IIl1Ilil && IIl1Ilil[1] || "";
-  }
-  ["parseCookie"](Ili1ilIi) {
-    const l1llIilI = {},
-      IIilIiil = Ili1ilIi.split(";");
-    for (const i11IIII of IIilIiil) {
-      const [l1ii1iII, i1iIli1I] = i11IIII.trim().split("=");
-      l1llIilI[l1ii1iII] = i1iIli1I;
+  getCookieValue(ili1I, iilIIl) {
+    if (!ili1I || !iilIIl) {
+      return "";
     }
-    return l1llIilI;
+    var i1Iill = new RegExp(iilIIl + "=" + "([^;]*)" + ";"),
+      l1IiI = i1Iill.exec(ili1I);
+    return l1IiI && l1IiI[1] || "";
   }
-  ["genUuid"](i1l1II = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx", ii1iii1 = "0123456789abcdef") {
-    let iI11iI1I = "";
-    for (let IIiIlI of i1l1II) {
-      if (IIiIlI == "x") iI11iI1I += ii1iii1.charAt(Math.floor(Math.random() * ii1iii1.length));else IIiIlI == "X" ? iI11iI1I += ii1iii1.charAt(Math.floor(Math.random() * ii1iii1.length)).toUpperCase() : iI11iI1I += IIiIlI;
+  parseCookie(IiIiIi) {
+    const IIlI1I = {},
+      llIIIi = IiIiIi.split(";");
+    for (const IiIiIl of llIIIi) {
+      const [l1I1I1, I1Ilii] = IiIiIl.trim().split("=");
+      IIlI1I[l1I1I1] = I1Ilii;
     }
-    return iI11iI1I;
+    return IIlI1I;
   }
-  ["genEp"](iiiI1I1l, i1iIlI = "15.1.1") {
-    let ll1IiIii = {
-      "ciphertype": 5,
-      "cipher": {
-        "ud": this._base64Encode(Il1lilIl(iiiI1I1l).toString()),
-        "sv": this._base64Encode(i1iIlI),
-        "iad": ""
+  genUuid(l1Iii = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx", l1Iil = "0123456789abcdef") {
+    let III1Il = "";
+    for (let I1IliI of l1Iii) {
+      if (I1IliI == "x") {
+        III1Il += l1Iil.charAt(Math.floor(Math.random() * l1Iil.length));
+      } else {
+        I1IliI == "X" ? III1Il += l1Iil.charAt(Math.floor(Math.random() * l1Iil.length)).toUpperCase() : III1Il += I1IliI;
+      }
+    }
+    return III1Il;
+  }
+  genEp(iIIlil, IiIiI1 = "jd", iIIlii = "17.1") {
+    let IiIiI = {
+      ciphertype: 5,
+      cipher: {
+        ud: this._base64Encode(Ili1I1(iIIlil).toString()),
+        sv: this._base64Encode(iIIlii),
+        iad: ""
       },
-      "ts": Math.floor(Date.now() / 1000),
-      "hdid": "JM9F1ywUPwflvMIpYPok0tt5k9kW4ArJEU3lfLhxBqw=",
-      "version": "1.0.3",
-      "appname": "com.360buy.jdmobile",
-      "ridx": -1
+      ts: Math.floor(Date.now() / 1000),
+      hdid: "JM9F1ywUPwflvMIpYPok0tt5k9kW4ArJEU3lfLhxBqw=",
+      version: "1.0.3",
+      appname: IiIiI1 === "lite" ? "com.jd.jdmobilelite" : "com.360buy.jdmobile",
+      ridx: -1
     };
-    return JSON.stringify(ll1IiIii);
+    return JSON.stringify(IiIiI);
   }
-  ["genUA"](ii1i1111, iiIIllll = "jd", iiiI111 = {}) {
-    const lllliIl1 = {
-        "jd": {
-          "app": "jdapp",
-          "appBuild": "168858",
-          "client": "iPhone",
-          "clientVersion": "12.1.0"
+  genUA(liI11I, III1 = "jd") {
+    const l1iiIi = {
+        jd: {
+          app: "jdapp",
+          appBuild: "168919",
+          client: "iPhone",
+          clientVersion: "12.2.0"
         },
-        "lite": {
-          "app": "jdltapp",
-          "appBuild": "1247",
-          "client": "ios",
-          "clientVersion": "6.0.0"
+        lite: {
+          app: "jdltapp",
+          appBuild: "1490",
+          client: "iPhone",
+          clientVersion: "6.14.0"
         }
       },
-      lIIiiIi = iiiI111?.["ep"] ? iiiI111?.["ep"] : true,
-      li1IIIIi = iiiI111?.["client"] ? iiiI111?.["client"] : lllliIl1[iiIIllll].client,
-      II1II1i = iiiI111?.["clientVersion"] ? iiiI111?.["clientVersion"] : lllliIl1[iiIIllll].clientVersion,
-      iII1l1i = ["16.6", "16.5", "16.4", "16.3", "16.2", "16.1", "16.0", "15.6", "15.1", "14.5"],
-      iI11i111 = iII1l1i[Math.floor(Math.random() * iII1l1i.length)],
-      l11lI11I = "iPhone; CPU iPhone OS " + iI11i111.replace(".", "_") + " like Mac OS X",
-      li1I11ll = li1IIIIi === "apple" || li1IIIIi === "iPhone" ? "iPhone" : "android",
-      ilIl1I1i = this.genEp(ii1i1111, iI11i111),
-      li1llil1 = this.genUuid(),
-      IlI1IIll = [lllliIl1[iiIIllll].app, li1I11ll, II1II1i, "", "rn/" + li1llil1, "M/5.0", "appBuild/" + lllliIl1[iiIIllll].appBuild, "jdSupportDarkMode/0", "ef/1", lIIiiIi ? "ep/" + encodeURIComponent(ilIl1I1i) : "", "Mozilla/5.0 (" + l11lI11I + ") AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148", "supportJDSHWK/1", ""],
-      I1lIlIil = IlI1IIll.join(";");
-    return this.UserAgent = I1lIlIil, I1lIlIil;
+      lIIi1l = III1 === "lite" ? "lite" : "jd",
+      {
+        app: I1lI1i,
+        appBuild: illili,
+        client: iiiII1,
+        clientVersion: liI111
+      } = l1iiIi[lIIi1l],
+      IiIlI = ["17.1", "17.0.3", "17.0", "16.7", "16.6", "16.1", "16.0", "15.6"],
+      iIlI1i = IiIlI[Math.floor(Math.random() * IiIlI.length)],
+      iII1Il = "iPhone; CPU iPhone OS " + iIlI1i.replace(".", "_") + " like Mac OS X",
+      IIIliI = this.genEp(liI11I, lIIi1l, iIlI1i),
+      iII1Ii = this.genUuid(),
+      iIlI1l = [I1lI1i, iiiII1, liI111, "", "rn/" + iII1Ii, "M/5.0", "appBuild/" + illili, "jdSupportDarkMode/0", "ef/1", "ep/" + encodeURIComponent(IIIliI), "Mozilla/5.0 (" + iII1Il + ") AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148", "supportJDSHWK/1", ""],
+      llIill = iIlI1l.join(";");
+    if (this.ck) {
+      this.UserAgent = llIill;
+    }
+    return llIill;
   }
-  async ["loadH5st"]() {
+  genRandomString(l1IIil = 32, l1iiII = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-") {
+    const lIi1i1 = l1iiII.length;
+    let l1l11 = "";
+    for (var illill = 0; illill < l1IIil; illill++) {
+      l1l11 += l1iiII.charAt(Math.floor(Math.random() * lIi1i1));
+    }
+    return l1l11;
+  }
+  async loadH5st() {
     if (!this.H5st) {
       try {
         this.H5st = require(__dirname + "/krgetH5st");
-      } catch (IliIllii) {
+      } catch (l1IIli) {
         console.log("❌ H5st 加载失败");
       }
     }
   }
-  async ["getLoginStatus"](l1ll1i1 = this.ck) {
-    if (!l1ll1i1) {
-      return console.log("🚫 getLoginStatus 请求失败 ➜ 未设置Cookie"), undefined;
+  async getLoginStatus(iiiIIi = this.ck) {
+    if (!iiiIIi) {
+      console.log("🚫 getLoginStatus 请求失败 ➜ 未设置Cookie");
+      return undefined;
     }
-    let llillIIl = 0,
-      i11lIiIl = null;
-    const l1IiIlli = 1;
-    while (llillIIl < l1IiIlli) {
-      const Ii1Iil1 = "https://plogin.m.jd.com/cgi-bin/ml/islogin",
-        iIl1i1iI = {
-          "headers": {
-            "Accept": "*/*",
+    let l1IIll = 0,
+      iiiIIl = null;
+    const lIIi11 = 1;
+    while (l1IIll < lIIi11) {
+      const Ill1II = "https://plogin.m.jd.com/cgi-bin/ml/islogin",
+        llIili = {
+          headers: {
+            Accept: "*/*",
             "Accept-Encoding": "gzip, deflate, br",
             "Accept-Language": "zh-CN,zh-Hans;q=0.9",
-            "Connection": "keep-alive",
-            "Cookie": l1ll1i1,
-            "Host": "plogin.m.jd.com",
+            Connection: "keep-alive",
+            Cookie: iiiIIi,
+            Host: "plogin.m.jd.com",
             "User-Agent": this.UserAgent || "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1 Edg/116.0.0.0"
           },
-          "timeout": 10000
+          timeout: 30000
         };
       try {
-        const I11lIIi = await i11l1il1.post(Ii1Iil1, iIl1i1iI);
-        if (I11lIIi.body) try {
-          const iIIl1II1 = JSON.parse(I11lIIi.body);
-          if (iIIl1II1) {
-            if (iIIl1II1.islogin === "1") return true;else {
-              if (iIIl1II1.islogin === "0") {
-                return false;
+        const iIlI11 = await lI1I1i.post(Ill1II, llIili);
+        if (iIlI11.body) {
+          try {
+            const IIII = JSON.parse(iIlI11.body);
+            if (IIII) {
+              if (IIII.islogin === "1") {
+                return true;
+              } else {
+                if (IIII.islogin === "0") {
+                  return false;
+                }
               }
             }
+          } catch (iil111) {
+            iiiIIl = "🚫 getLoginStatus 处理响应数据失败 ➜ " + (iil111.message || iil111);
+            l1IIll++;
           }
-        } catch (lil11l1) {
-          i11lIiIl = "🚫 getLoginStatus 处理响应数据失败 ➜ " + (lil11l1.message || lil11l1);
-          llillIIl++;
-        } else i11lIiIl = "🚫 getLoginStatus 请求失败 ➜ 无响应数据", llillIIl++;
-      } catch (lllii111) {
-        i11lIiIl = "🚫 getLoginStatus 请求异常 ➜ " + (lllii111.message || lllii111);
-        llillIIl++;
+        } else {
+          iiiIIl = "🚫 getLoginStatus 请求失败 ➜ 无响应数据";
+          l1IIll++;
+        }
+      } catch (iiiIII) {
+        iiiIIl = "🚫 getLoginStatus 请求异常 ➜ " + (iiiIII.message || iiiIII);
+        l1IIll++;
       }
     }
-    return llillIIl >= l1IiIlli && console.log(i11lIiIl), undefined;
+    l1IIll >= lIIi11 && console.log(iiiIIl);
+    return undefined;
   }
-  async ["joinShopMember"](IIllI1lI, lillI1Ii = this.ck) {
-    if (!lillI1Ii) return console.log("🚫 joinShopMember 请求失败 ➜ 未设置Cookie"), undefined;
-    if (!IIllI1lI) return;
+  async joinShopMember(lIi1il, liI11i = this.ck) {
+    if (!liI11i) {
+      console.log("🚫 joinShopMember 请求失败 ➜ 未设置Cookie");
+      return undefined;
+    }
+    if (!lIi1il) {
+      return undefined;
+    }
     await this.loadH5st();
-    const ii1Il1I = "{\"venderId\":\"" + IIllI1lI + "\",\"shopId\":\"" + IIllI1lI + "\",\"bindByVerifyCodeFlag\":1,\"registerExtend\":{},\"writeChildFlag\":0,\"channel\":406}",
-      I1ii1llI = {
-        "appId": "27004",
-        "appid": "shopmember_m_jd_com",
-        "functionId": "bindWithVender",
-        "clientVersion": "9.2.0",
-        "client": "H5",
-        "body": JSON.parse(ii1Il1I),
-        "version": "3.1",
-        "ua": this.UserAgent || "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1 Edg/116.0.0.0"
-      },
-      lIli11i1 = await this.H5st.getH5st(I1ii1llI),
-      iI1liiii = "https://api.m.jd.com/client.action?" + lIli11i1.params,
-      Ii1II1ll = {
-        "headers": {
-          "Content-Type": "application/json;charset=utf-8",
-          "Origin": "https://api.m.jd.com",
-          "Host": "api.m.jd.com",
-          "accept": "*/*",
-          "User-Agent": this.UserAgent || "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1 Edg/116.0.0.0",
-          "Cookie": lillI1Ii
+    const illilI = {
+        appId: "27004",
+        appid: "shopmember_m_jd_com",
+        functionId: "bindWithVender",
+        clientVersion: "9.2.0",
+        client: "H5",
+        body: {
+          venderId: lIi1il,
+          shopId: lIi1il,
+          bindByVerifyCodeFlag: 1,
+          registerExtend: {},
+          writeChildFlag: 0,
+          channel: 102,
+          appid: "27004",
+          needSecurity: true,
+          bizId: "shopmember_m_jd_com"
         },
-        "timeout": 10000
+        version: "4.1",
+        t: true,
+        ua: this.UserAgent || "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1 Edg/116.0.0.0"
+      },
+      IiIli = await this.H5st.getH5st(illilI),
+      illil1 = IiIli.params + "&area=&uuid=88888",
+      IIIlii = "https://api.m.jd.com/client.action",
+      iil11I = {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          Origin: "https://pages.jd.com",
+          Host: "api.m.jd.com",
+          Accept: "*/*",
+          "User-Agent": this.UserAgent || "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1 Edg/116.0.0.0",
+          Cookie: liI11i
+        },
+        body: illil1,
+        timeout: 30000
       };
     try {
-      const iilII1il = await i11l1il1.get(iI1liiii, Ii1II1ll);
-      if (iilII1il.body) {
-        const IIl1111I = JSON.parse(iilII1il.body);
-        if (IIl1111I.success === true) {
-          if (IIl1111I.result && IIl1111I.result.giftInfo) for (let lIIili1 of IIl1111I.result?.["giftInfo"]?.["giftList"]) {
-            console.log(" >> 入会获得：" + lIIili1.discountString + lIIili1.prizeName + lIIili1.secondLineDesc);
+      const Ili111 = await lI1I1i.post(IIIlii, iil11I);
+      if (Ili111.body) {
+        const iiil11 = JSON.parse(Ili111.body);
+        if (iiil11.success === true) {
+          if (iiil11.result && iiil11.result?.["giftInfo"]) {
+            for (let llII1I of iiil11.result?.["giftInfo"]?.["giftList"]) {
+              console.log(" >> 入会获得：" + llII1I.discountString + llII1I.prizeName + llII1I.secondLineDesc);
+            }
           }
-          return true;
+          if (iiil11.message === "加入店铺会员成功") {
+            return true;
+          } else {
+            if (iiil11.message === "活动太火爆，请稍后再试") {
+              console.log("🚫 加入店铺会员失败 ➜ " + iiil11.message);
+              return undefined;
+            } else {
+              console.log("🚫 加入店铺会员失败 ➜ " + iiil11.message);
+              return false;
+            }
+          }
         } else {
-          if (IIl1111I.message) return console.log("🚫 加入店铺会员失败 ➜ " + IIl1111I.message), false;else console.log("🚫 加入店铺会员失败 ➜ " + JSON.stringify(IIl1111I));
+          if (iiil11.message) {
+            console.log("🚫 加入店铺会员失败 ➜ " + iiil11.message);
+            return false;
+          } else {
+            console.log("🚫 加入店铺会员失败 ➜ " + JSON.stringify(iiil11));
+          }
         }
-      } else console.log("🚫 bindWithVender API请求失败 ➜ 无响应数据");
-    } catch (li11ll1I) {
-      console.log("🚫 bindWithVender API在处理请求时遇到了错误 ➜ " + (li11ll1I.message || li11ll1I));
+      } else {
+        console.log("🚫 bindWithVender API请求失败 ➜ 无响应数据");
+      }
+    } catch (IlllI) {
+      console.log("🚫 bindWithVender API在处理请求时遇到了错误 ➜ " + (IlllI.message || IlllI));
     }
     return undefined;
   }
-  async ["getShopMemberStatus"](iIiIIII, iil11I = this.ck) {
-    if (!iil11I) return console.log("🚫 getShopMemberStatus 请求失败 ➜ 未设置Cookie"), undefined;
-    if (!iIiIIII) return;
+  async getShopMemberStatus(iliIl, ii1i11 = this.ck) {
+    if (!ii1i11) {
+      console.log("🚫 getShopMemberStatus 请求失败 ➜ 未设置Cookie");
+      return undefined;
+    }
+    if (!iliIl) {
+      return undefined;
+    }
     await this.loadH5st();
-    let lIi1iii1 = "{\"venderId\":\"" + iIiIIII + "\",\"channel\":406,\"payUpShop\":true}";
-    const iIlli1i1 = {
-        "appId": "27004",
-        "appid": "shopmember_m_jd_com",
-        "functionId": "getShopOpenCardInfo",
-        "clientVersion": "9.2.0",
-        "client": "H5",
-        "body": JSON.parse(lIi1iii1),
-        "version": "3.1",
-        "ua": this.UserAgent || "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1 Edg/116.0.0.0"
-      },
-      IIIIlI = await this.H5st.getH5st(iIlli1i1),
-      iI1Illi = "https://api.m.jd.com/client.action?" + IIIIlI.params,
-      ili1ili1 = {
-        "headers": {
-          "Content-Type": "application/json;charset=utf-8",
-          "Origin": "https://api.m.jd.com",
-          "Host": "api.m.jd.com",
-          "accept": "*/*",
-          "User-Agent": this.UserAgent || "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1 Edg/116.0.0.0",
-          "Cookie": iil11I
+    const liIlII = {
+        appId: "27004",
+        appid: "shopmember_m_jd_com",
+        functionId: "getShopOpenCardInfo",
+        clientVersion: "9.2.0",
+        client: "H5",
+        body: {
+          venderId: iliIl,
+          channel: 2,
+          payUpShop: true,
+          queryVersion: "10.5.2",
+          appid: "27004",
+          needSecurity: true,
+          bizId: "shopmember_m_jd_com"
         },
-        "timeout": 10000
+        version: "3.1",
+        ua: this.UserAgent || "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1 Edg/116.0.0.0"
+      },
+      Il1I = await this.H5st.getH5st(liIlII),
+      iii1i = "https://api.m.jd.com/client.action?" + Il1I.params,
+      iii1l = {
+        headers: {
+          "Content-Type": "application/json;charset=utf-8",
+          Origin: "https://api.m.jd.com",
+          Host: "api.m.jd.com",
+          accept: "*/*",
+          "User-Agent": this.UserAgent || "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1 Edg/116.0.0.0",
+          Cookie: ii1i11
+        },
+        timeout: 30000
       };
     try {
-      const Ill11il1 = await i11l1il1.get(iI1Illi, ili1ili1);
-      if (Ill11il1.body) {
-        const i111l1li = JSON.parse(Ill11il1.body);
-        if (i111l1li.success === true) {
-          console.log("去加入：" + (i111l1li.result.shopMemberCardInfo.venderCardName || "未知"));
-          openCardStatus = i111l1li.result?.["userInfo"]?.["openCardStatus"];
+      const llII1i = await lI1I1i.get(iii1i, iii1l);
+      if (llII1i.body) {
+        const illI1I = JSON.parse(llII1i.body);
+        if (illI1I.success === true) {
+          console.log("去加入：" + (illI1I.result.shopMemberCardInfo.venderCardName || "未知"));
+          openCardStatus = illI1I.result?.["userInfo"]?.["openCardStatus"];
           if (openCardStatus === 1) {
             return true;
-          } else return false;
-        } else i111l1li.message ? console.log("🚫 获取店铺会员状态异常 ➜ " + i111l1li.message) : console.log("🚫 获取店铺会员状态异常 ➜ " + JSON.stringify(i111l1li));
-      } else console.log("🚫 getShopOpenCardInfo API请求失败 ➜ 无响应数据");
-    } catch (lIllll1l) {
-      console.log("🚫 getShopOpenCardInfo API在处理请求时遇到了错误 ➜ " + (lIllll1l.message || lIllll1l));
+          } else {
+            return false;
+          }
+        } else {
+          illI1I.message ? console.log("🚫 获取店铺会员状态异常 ➜ " + illI1I.message) : console.log("🚫 获取店铺会员状态异常 ➜ " + JSON.stringify(illI1I));
+        }
+      } else {
+        console.log("🚫 getShopOpenCardInfo API请求失败 ➜ 无响应数据");
+      }
+    } catch (illI11) {
+      console.log("🚫 getShopOpenCardInfo API在处理请求时遇到了错误 ➜ " + (illI11.message || illI11));
     }
     return undefined;
   }
-  ["setCookie"](ll11IllI) {
-    this.ck = ll11IllI;
+  async concTask(ll11Ii = "3", ll11Il, i11lI) {
+    let iii1I = false,
+      iliII = 0,
+      ii1i1I = 0;
+    async function liIlI1(lIiIl, iiil1l) {
+      const Il1l = await i11lI(lIiIl, iiil1l);
+      if (Il1l) {
+        if (typeof Il1l === "boolean") {
+          iii1I = true;
+        } else {
+          typeof Il1l === "object" && Il1l?.["runEnd"] && (iii1I = true);
+        }
+      }
+      iliII--;
+      iillIl();
+    }
+    async function iillIl() {
+      while (iliII < ll11Ii && ll11Il.length > 0 && !iii1I) {
+        const Illll = ll11Il.shift();
+        iliII++;
+        ii1i1I++;
+        await liIlI1(Illll, ii1i1I);
+      }
+      iii1I && (await new Promise(iiil1i => {
+        const ilIIll = setInterval(() => {
+          iliII === 0 && (clearInterval(ilIIll), iiil1i());
+        }, 100);
+      }));
+    }
+    const IiIi1I = Math.min(ll11Il.length, ll11Ii),
+      iillIi = [];
+    for (let IliIi1 = 0; IliIi1 < IiIi1I; IliIi1++) {
+      const Iii1ll = ll11Il.shift();
+      iliII++;
+      ii1i1I++;
+      iillIi.push(liIlI1(Iii1ll, ii1i1I));
+    }
+    await Promise.all(iillIi);
+    iillIl();
+    await new Promise(liiiIl => {
+      const Iii1li = setInterval(() => {
+        if (iliII === 0 || iii1I) {
+          clearInterval(Iii1li);
+          liiiIl();
+        }
+      }, 100);
+    });
   }
-  ["unsetCookie"]() {
+  async concTaskNormal(IIiil1 = "3", l1IlII = 100, ii1i) {
+    let ii1l = false,
+      iIl1I = 0,
+      liIi = 0;
+    async function liIIlI(lIi1lI) {
+      const IIiiil = await ii1i(lIi1lI);
+      if (IIiiil) {
+        if (typeof IIiiil === "boolean") {
+          ii1l = true;
+        } else {
+          if (typeof IIiiil === "object") {
+            IIiiil?.["runEnd"] && (ii1l = true);
+          }
+        }
+      }
+      iIl1I--;
+      IliIil();
+    }
+    async function IliIil() {
+      while (iIl1I < IIiil1 && l1IlII > 0 && !ii1l) {
+        l1IlII--;
+        iIl1I++;
+        liIi++;
+        await liIIlI(liIi);
+      }
+      if (ii1l) {
+        await new Promise(i11Iil => {
+          const Ili11i = setInterval(() => {
+            iIl1I === 0 && (clearInterval(Ili11i), i11Iil());
+          }, 100);
+        });
+      }
+    }
+    const iliiIi = Math.min(l1IlII, IIiil1),
+      i11Ill = [];
+    for (let Il1iIi = 0; Il1iIi < iliiIi; Il1iIi++) {
+      l1IlII--;
+      iIl1I++;
+      liIi++;
+      i11Ill.push(liIIlI(liIi));
+    }
+    await Promise.all(i11Ill);
+    IliIil();
+    await new Promise(Iii1ii => {
+      const l1iiI1 = setInterval(() => {
+        (iIl1I === 0 || ii1l) && (clearInterval(l1iiI1), Iii1ii());
+      }, 100);
+    });
+  }
+  setCookie(Iii1il) {
+    this.ck = Iii1il;
+  }
+  unsetCookie() {
     this.ck = "";
     this.UserAgent = "";
   }
-  ["_utf8Encode"](liIi1Ii1) {
-    liIi1Ii1 = liIi1Ii1.replace(/rn/g, "n");
-    for (var iI11liii = 0; iI11liii < liIi1Ii1.length; iI11liii++) {
-      var Ilil1Iil = "",
-        Iii1ilii = liIi1Ii1.charCodeAt(iI11liii);
-      if (Iii1ilii < 128) Ilil1Iil += String.fromCharCode(Iii1ilii);else Iii1ilii > 127 && Iii1ilii < 2048 ? (Ilil1Iil += String.fromCharCode(Iii1ilii >> 6 | 192), Ilil1Iil += String.fromCharCode(Iii1ilii & 63 | 128)) : (Ilil1Iil += String.fromCharCode(Iii1ilii >> 12 | 224), Ilil1Iil += String.fromCharCode(Iii1ilii >> 6 & 63 | 128), Ilil1Iil += String.fromCharCode(Iii1ilii & 63 | 128));
-    }
-    return Ilil1Iil;
-  }
-  ["_base64Encode"](IlI1ll, lIIiil1l = "KLMNOPQRSTABCDEFGHIJUVWXYZabcdopqrstuvwxefghijklmnyz0123456789+/") {
-    var lili11ll = "",
-      IIil111l,
-      l11i1I1l,
-      ii11ll1l,
-      ii1liIil,
-      IliilIl,
-      IiliIi11,
-      IIIl1Ill,
-      iiIIIII = 0;
-    IlI1ll = this._utf8Encode(IlI1ll);
-    while (iiIIIII < IlI1ll.length) {
-      IIil111l = IlI1ll.charCodeAt(iiIIIII++);
-      l11i1I1l = IlI1ll.charCodeAt(iiIIIII++);
-      ii11ll1l = IlI1ll.charCodeAt(iiIIIII++);
-      ii1liIil = IIil111l >> 2;
-      IliilIl = (IIil111l & 3) << 4 | l11i1I1l >> 4;
-      IiliIi11 = (l11i1I1l & 15) << 2 | ii11ll1l >> 6;
-      IIIl1Ill = ii11ll1l & 63;
-      if (isNaN(l11i1I1l)) {
-        IiliIi11 = IIIl1Ill = 64;
+  _utf8Encode(lIi1li) {
+    lIi1li = lIi1li.replace(/rn/g, "n");
+    for (var Il1iIl = 0; Il1iIl < lIi1li.length; Il1iIl++) {
+      var lIi1ll = "",
+        l1IIiI = lIi1li.charCodeAt(Il1iIl);
+      if (l1IIiI < 128) {
+        lIi1ll += String.fromCharCode(l1IIiI);
       } else {
-        if (isNaN(ii11ll1l)) {
-          IIIl1Ill = 64;
-        }
+        l1IIiI > 127 && l1IIiI < 2048 ? (lIi1ll += String.fromCharCode(l1IIiI >> 6 | 192), lIi1ll += String.fromCharCode(l1IIiI & 63 | 128)) : (lIi1ll += String.fromCharCode(l1IIiI >> 12 | 224), lIi1ll += String.fromCharCode(l1IIiI >> 6 & 63 | 128), lIi1ll += String.fromCharCode(l1IIiI & 63 | 128));
       }
-      lili11ll = lili11ll + lIIiil1l.charAt(ii1liIil) + lIIiil1l.charAt(IliilIl) + lIIiil1l.charAt(IiliIi11) + lIIiil1l.charAt(IIIl1Ill);
     }
-    while (lili11ll.length % 4 > 1) lili11ll += "=";
-    return lili11ll;
+    return lIi1ll;
+  }
+  _base64Encode(iIiiIl, lIilIl = "KLMNOPQRSTABCDEFGHIJUVWXYZabcdopqrstuvwxefghijklmnyz0123456789+/") {
+    var ll1lIi = "";
+    var II1lI, ilIlil, Ii1IiI, IIll11, ll1lIl, I1IIl1, l1I1l1;
+    var lIi1i = 0;
+    iIiiIl = this._utf8Encode(iIiiIl);
+    while (lIi1i < iIiiIl.length) {
+      II1lI = iIiiIl.charCodeAt(lIi1i++);
+      ilIlil = iIiiIl.charCodeAt(lIi1i++);
+      Ii1IiI = iIiiIl.charCodeAt(lIi1i++);
+      IIll11 = II1lI >> 2;
+      ll1lIl = (II1lI & 3) << 4 | ilIlil >> 4;
+      I1IIl1 = (ilIlil & 15) << 2 | Ii1IiI >> 6;
+      l1I1l1 = Ii1IiI & 63;
+      if (isNaN(ilIlil)) {
+        I1IIl1 = l1I1l1 = 64;
+      } else {
+        isNaN(Ii1IiI) && (l1I1l1 = 64);
+      }
+      ll1lIi = ll1lIi + lIilIl.charAt(IIll11) + lIilIl.charAt(ll1lIl) + lIilIl.charAt(I1IIl1) + lIilIl.charAt(l1I1l1);
+    }
+    while (ll1lIi.length % 4 > 1) {
+      ll1lIi += "=";
+    }
+    return ll1lIi;
   }
 }
-module.exports = new lIIIIli();
+module.exports = new liI1II();
+var version_ = "jsjiami.com.v7";
