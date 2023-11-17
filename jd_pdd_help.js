@@ -23,7 +23,7 @@ cron:1 1 1 1 *
 
 const Env=require('./utils/Env.js');
 const $ = new Env('PDD特价转盘助力')
-
+var version_ = "jsjiami.com.v7";
 const IlI1l1 = require("./jdCookie"),
   liIliI = require("./function/sendJDNotify"),
   llii1I = require("./function/jdCommon"),
@@ -488,3 +488,4 @@ function iI1lII() {
     });
   });
 }
+var version_ = "jsjiami.com.v7";

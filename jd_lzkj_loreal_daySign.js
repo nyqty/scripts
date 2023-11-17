@@ -16,87 +16,97 @@ cron:1 1 1 1 *
 
 const Env=require('./utils/Env.js');
 const $ = new Env('签到有礼（超级无线）')
-const ililil = require("./jdCookie"),
-  ii1i1ll = require("./function/jdCommon"),
-  liIli11i = require("./function/sendJDNotify"),
-  lili1IIi = require("./function/krgetToken"),
+var version_ = "jsjiami.com.v7";
+const llliIl = require("./jdCookie"),
+  iliIli = require("./function/jdCommon"),
+  illliI = require("./function/sendJDNotify"),
+  ii1III = require("./function/krgetToken"),
   {
-    loreal_savePrize: IiIIil1
+    wuxianDefense: i11iIl
+  } = require("./function/jdCrypto"),
+  {
+    loreal_savePrize: ll11ll
   } = require("./function/krsavePrize"),
-  iIli1lli = process.env.jd_lzkj_loreal_daySign_url || "",
-  IiiIlII1 = process.env.jd_lzkj_loreal_daySign_opencard === "true",
-  lIIlil1 = process.env.jd_lzkj_loreal_daySign_break === "true",
-  lIili11l = process.env.jd_lzkj_loreal_daySign_Notify === "true";
-let l1Ii1iil = "",
-  llIililI = "";
-const iI1iIiII = Object.keys(ililil).map(Il1Ili11 => ililil[Il1Ili11]).filter(i1l1ilIl => i1l1ilIl);
-!iI1iIiII[0] && ($.msg($.name, "【提示】请先获取Cookie"), process.exit(1));
+  l11iIl = process.env.jd_lzkj_loreal_daySign_url || "",
+  i11iIi = process.env.jd_lzkj_loreal_daySign_opencard === "true",
+  IIIIll = process.env.jd_lzkj_loreal_daySign_break === "true",
+  liiiii = process.env.jd_lzkj_loreal_daySign_Notify === "true";
+let II1I = "",
+  lI1111 = "";
+const Ilil1 = Object.keys(llliIl).map(llIii => llliIl[llIii]).filter(IIiiI1 => IIiiI1);
+!Ilil1[0] && ($.msg($.name, "【提示】请先获取Cookie"), process.exit(1));
 !(async () => {
-  if (!iIli1lli) {
+  if (!l11iIl) {
     console.log("⚠ 请先定义必要的环境变量后再运行脚本");
     return;
   }
-  const IlilIiII = ii1i1ll.parseUrl(iIli1lli);
-  if (!IlilIiII) {
+  const ii1IIl = iliIli.parseUrl(l11iIl);
+  if (!ii1IIl) {
     console.log("⚠ 请填写格式正确的链接");
     return;
   }
-  $.activityUrl = iIli1lli;
-  $.activityId = ii1i1ll.getUrlParameter(iIli1lli, "activityId");
-  $.activityType = ii1i1ll.getUrlParameter(iIli1lli, "activityType");
-  $.hostname = IlilIiII.hostname;
-  $.pathname = IlilIiII.pathname;
-  let illlliIi = "";
+  $.activityUrl = l11iIl;
+  $.activityId = iliIli.getUrlParameter(l11iIl, "activityId");
+  $.activityType = iliIli.getUrlParameter(l11iIl, "activityType");
+  $.hostname = ii1IIl.hostname;
+  $.pathname = ii1IIl.pathname;
+  let ii1IIi = "";
   if ($.hostname) {
-    if ($.hostname.includes("lorealjdcampaign-rc")) illlliIi = "apps/interact";else {
-      if ($.hostname.includes("lzkj")) {
-        illlliIi = $.pathname.replace(/\/index$/, "");
-      }
+    if ($.hostname.includes("lorealjdcampaign-rc")) {
+      ii1IIi = "apps/interact";
+    } else {
+      $.hostname.includes("lzkj") && (ii1IIi = $.pathname.replace(/\/index$/, ""));
     }
     $.baseUrl = "https://" + $.hostname;
-    $.newbaseUrl = "https://" + $.hostname + "/" + illlliIi;
+    $.newbaseUrl = "https://" + $.hostname + "/" + ii1IIi;
     $.origin = $.baseUrl;
   }
-  if (!$.activityId || !illlliIi || !$.hostname) {
+  if (!$.activityId || !ii1IIi || !$.hostname) {
     console.log("⚠ 请填写格式正确的变量");
     return;
   }
-  liIli11i.config({
-    "title": $.name
+  illliI.config({
+    title: $.name
   });
   console.log("活动入口：" + $.activityUrl);
-  for (let II1lii11 = 0; II1lii11 < iI1iIiII.length; II1lii11++) {
-    $.index = II1lii11 + 1;
-    l1Ii1iil = iI1iIiII[II1lii11];
-    llIililI = iI1iIiII[II1lii11];
-    ii1i1ll.setCookie(llIililI);
-    $.UserName = decodeURIComponent(ii1i1ll.getCookieValue(l1Ii1iil, "pt_pin"));
-    $.UA = ii1i1ll.genUA($.UserName);
-    $.UUID = ii1i1ll.genUuid("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+  for (let Ilili = 0; Ilili < Ilil1.length; Ilili++) {
+    $.index = Ilili + 1;
+    II1I = Ilil1[Ilili];
+    lI1111 = Ilil1[Ilili];
+    iliIli.setCookie(lI1111);
+    $.UserName = decodeURIComponent(iliIli.getCookieValue(II1I, "pt_pin"));
+    $.UA = iliIli.genUA($.UserName);
+    $.UUID = iliIli.genUuid("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
     $.te = Math.floor(Math.random() * 9000) + 1000;
-    $.message = liIli11i.create($.index, $.UserName);
+    $.message = illliI.create($.index, $.UserName);
     $.nickName = "";
     console.log("\n******开始【京东账号" + $.index + "】" + ($.nickName || $.UserName) + "******\n");
-    await i1ll1lli();
-    ii1i1ll.unsetCookie();
-    if ($.outFlag || $.runEnd) break;
+    await IliII1();
+    iliIli.unsetCookie();
+    if ($.outFlag || $.runEnd) {
+      break;
+    }
   }
-  lIili11l && liIli11i.getMessage() && (liIli11i.updateContent(liIli11i.content + ("\n【活动地址】" + $.activityUrl)), await liIli11i.push());
-})().catch(lll1iI1l => $.logErr(lll1iI1l)).finally(() => $.done());
-async function i1ll1lli() {
+  liiiii && illliI.getMessage() && (illliI.updateContent(illliI.content + ("\n【活动地址】" + $.activityUrl)), await illliI.push());
+})().catch(I1ll1I => $.logErr(I1ll1I)).finally(() => $.done());
+async function IliII1() {
   try {
     $.skipRun = false;
     $.token = "";
     $.pinToken = "";
-    if ($.runEnd || $.outFlag) return;
-    $.jdToken = await lili1IIi(llIililI, $.baseUrl);
+    if ($.runEnd || $.outFlag) {
+      return;
+    }
+    $.jdToken = await ii1III(lI1111, $.baseUrl);
     if (!$.jdToken) {
       console.log("获取 Token 失败！");
       $.message.fix("获取[Token]失败");
       return;
     }
-    await IlIIlII("login");
-    if ($.runEnd || $.outFlag || $.skipRun) return;
+    await i1I1I("login");
+    if ($.runEnd || $.outFlag || $.skipRun) {
+      return;
+    }
     if (!$.token) {
       console.log("未能获取用户鉴权信息！");
       $.message.fix("未能获取用户鉴权信息");
@@ -106,15 +116,32 @@ async function i1ll1lli() {
     if ($.joinCode) {
       switch ($.joinCode) {
         case "1004":
-          await IlIIlII("follow"), await $.wait(500);
+          await i1I1I("follow");
+          await $.wait(500);
+          await i1I1I("login");
+          if ($.runEnd || $.outFlag || $.skipRun) {
+            return;
+          }
+          await $.wait(500);
           break;
         case "1005":
+          await i1I1I("follow");
+          await $.wait(500);
+          await i1I1I("login");
+          if ($.runEnd || $.outFlag || $.skipRun) {
+            return;
+          }
+          await $.wait(500);
         case "1006":
-          $.joinCode !== "1005" && (await IlIIlII("follow"));
-          if (IiiIlII1) {
-            const IIlI1i11 = await ii1i1ll.joinShopMember($.venderId);
-            if (IIlI1i11) {
+          if (i11iIi) {
+            const liliil = await iliIli.joinShopMember($.venderId);
+            if (liliil) {
               console.log("加入店铺会员成功");
+              await i1I1I("login");
+              if ($.runEnd || $.outFlag || $.skipRun) {
+                return;
+              }
+              await $.wait(500);
             } else {
               console.log("加入店铺会员失败，活动仅限店铺会员参与哦~");
               $.message.fix("加入店铺会员失败，活动仅限店铺会员参与");
@@ -134,15 +161,19 @@ async function i1ll1lli() {
           }
           break;
       }
-      if ($.runEnd || $.outFlag || $.skipRun) return;
+      if ($.runEnd || $.outFlag || $.skipRun) {
+        return;
+      }
     } else {
-      if ($.runEnd || $.outFlag || $.skipRun) return;
+      if ($.runEnd || $.outFlag || $.skipRun) {
+        return;
+      }
       console.log("未能获取用户活动状态");
       $.message.fix("未能获取用户活动状态");
       return;
     }
     if ($.hostname.includes("lzkj") && $.pathname.includes("/prod/cc/interactsaas")) {
-      await IlIIlII("initPinToken");
+      await i1I1I("initPinToken");
       if (!$.pinToken) {
         console.log("获取 pinToken 失败！");
         $.message.fix("获取[pinToken]失败");
@@ -150,364 +181,454 @@ async function i1ll1lli() {
       }
       await $.wait(500);
     }
-    if ($.runEnd || $.outFlag || $.skipRun) return;
+    if ($.runEnd || $.outFlag || $.skipRun) {
+      return;
+    }
     if ($.index === 1) {
-      await IlIIlII("basicInfo");
-      if ($.runEnd || $.outFlag || $.skipRun) return;
+      await i1I1I("basicInfo");
+      if ($.runEnd || $.outFlag || $.skipRun) {
+        return;
+      }
       switch ($.activityType) {
         case "10023":
         case "10040":
           break;
         case "":
-          console.log("未能获取活动类型"), $.message.fix("未能获取活动类型"), $.runEnd = true;
+          console.log("未能获取活动类型");
+          $.message.fix("未能获取活动类型");
+          $.runEnd = true;
           return;
         default:
-          console.log("❌ 当前活动类型（" + $.activityType + "）暂不受本脚本支持，请联系作者进行反馈！"), $.message.fix("活动类型（" + $.activityType + "）不受支持"), $.runEnd = true;
+          console.log("❌ 当前活动类型（" + $.activityType + "）暂不受本脚本支持，请联系作者进行反馈！");
+          $.message.fix("活动类型（" + $.activityType + "）不受支持");
+          $.runEnd = true;
           return;
       }
-      if ($.runEnd || $.outFlag) return;
+      if ($.runEnd || $.outFlag) {
+        return;
+      }
       await $.wait(500);
     }
-    await IlIIlII("activity");
+    await i1I1I("activity");
     await $.wait(500);
-    if ($.runEnd || $.outFlag || $.skipRun) return;
+    if ($.runEnd || $.outFlag || $.skipRun) {
+      return;
+    }
     if ($.index === 1) {
-      await IlIIlII("drawPrize");
+      await i1I1I("drawPrize");
       await $.wait(500);
-      if ($.runEnd || $.outFlag || $.skipRun) return;
-      let iI1l1llI = false,
-        I1liIll = "";
-      for (let iiI1Illl = 0; iiI1Illl < $.prizeInfo.length; iiI1Illl++) {
-        const I1IIlii1 = $.prizeInfo[iiI1Illl],
-          IIllI1 = I1IIlii1.prizeName,
-          lIll1llI = I1IIlii1.leftNum,
-          lii1iIII = I1IIlii1.prizeType,
-          ili1ll1i = $.activityContent?.["signPiize"][iiI1Illl]["signNumber"];
-        lIll1llI >= 1 && (iI1l1llI = true);
-        I1liIll += "  签到" + ili1ll1i + "天，" + IIllI1 + (lii1iIII === 5 ? "[专享价]" : lii1iIII === 3 ? "[实物]" : "") + "，" + (lIll1llI >= 1 ? "剩余" + lIll1llI + "件" : "已发完") + "\n";
+      if ($.runEnd || $.outFlag || $.skipRun) {
+        return;
       }
-      console.log(($.shopName ? "店铺名称：" + $.shopName + "\n" : "") + "店铺链接：https://shop.m.jd.com/?venderId=" + $.venderId + "\n活动奖品：\n" + I1liIll);
-      liIli11i.updateContent(liIli11i.content + (($.shopName && "\n【店铺名称】" + $.shopName) + "\n【活动奖品】\n" + I1liIll));
-      const ilIiIl1i = $.time("yyyy-MM-dd HH:mm", $.actStartTime),
-        ilIil1l = $.time("yyyy-MM-dd HH:mm", $.actEndTime);
+      let iIiiii = false,
+        ilIlIi = "";
+      for (let ll1llI = 0; ll1llI < $.prizeInfo.length; ll1llI++) {
+        const l1lI11 = $.prizeInfo[ll1llI],
+          lI1iii = l1lI11.prizeName,
+          i11lIi = l1lI11.leftNum,
+          ll1ll1 = l1lI11.prizeType,
+          lilil1 = $.activityContent?.["signPiize"][ll1llI]["signNumber"];
+        i11lIi >= 1 && (iIiiii = true);
+        ilIlIi += "  签到" + lilil1 + "天，" + lI1iii + (ll1ll1 === 5 ? "[专享价]" : ll1ll1 === 3 ? "[实物]" : "") + "，" + (i11lIi >= 1 ? "剩余" + i11lIi + "件" : "已发完") + "\n";
+      }
+      console.log(($.shopName && "店铺名称：#" + $.shopName + "\n") + "店铺链接：https://shop.m.jd.com/?venderId=" + $.venderId + "\n活动奖品：\n" + ilIlIi);
+      illliI.updateContent(illliI.content + (($.shopName && "\n【店铺名称】#" + $.shopName) + "\n【活动奖品】\n" + ilIlIi));
+      const ilIlIl = $.time("yyyy-MM-dd HH:mm", $.actStartTime),
+        l1lI1I = $.time("yyyy-MM-dd HH:mm", $.actEndTime);
       switch ($.actStatus) {
         case 0:
-          const ilI1Illl = Date.now();
-          if ($.actStartTime && ilI1Illl < $.actStartTime) {
-            console.log("活动将在 " + ilIiIl1i + " 开始，晚点再来吧~");
-            $.message.fix("活动尚未开始，开始时间：" + ilIiIl1i);
+          const I1iiii = Date.now();
+          if ($.actStartTime && I1iiii < $.actStartTime) {
+            console.log("活动将在 " + ilIlIl + " 开始，晚点再来吧~");
+            $.message.fix("活动尚未开始，开始时间：" + ilIlIl);
             $.runEnd = true;
             return;
           }
-          if ($.actEndTime && ilI1Illl > $.actEndTime) {
-            console.log("活动已于 " + ilIil1l + " 结束，下次早点来吧~");
-            $.message.fix("活动已结束，结束时间：" + ilIil1l);
+          if ($.actEndTime && I1iiii > $.actEndTime) {
+            console.log("活动已于 " + l1lI1I + " 结束，下次早点来吧~");
+            $.message.fix("活动已结束，结束时间：" + l1lI1I);
             $.runEnd = true;
             return;
           }
           break;
         case 1:
-          console.log("活动将在 " + ilIiIl1i + " 开始，晚点再来吧~"), $.message.fix("活动尚未开始，开始时间：" + ilIiIl1i), $.runEnd = true;
+          console.log("活动将在 " + ilIlIl + " 开始，晚点再来吧~");
+          $.message.fix("活动尚未开始，开始时间：" + ilIlIl);
+          $.runEnd = true;
           return;
         case 2:
-          console.log("活动已于 " + ilIil1l + " 结束，下次早点来吧~"), $.message.fix("活动已结束，结束时间：" + ilIil1l), $.runEnd = true;
+          console.log("活动已于 " + l1lI1I + " 结束，下次早点来吧~");
+          $.message.fix("活动已结束，结束时间：" + l1lI1I);
+          $.runEnd = true;
           return;
         default:
-          if ($.actStatus) {
-            console.log("未知活动状态 " + $.actStatus);
-            $.message.fix("未知活动状态 " + $.actStatus);
-            $.runEnd = true;
-          }
+          $.actStatus && (console.log("未知活动状态 " + $.actStatus), $.message.fix("未知活动状态 " + $.actStatus), $.runEnd = true);
           break;
       }
-      if (!iI1l1llI) {
+      if (!iIiiii) {
         console.log("奖品已全部发完了，下次早点来吧~");
         $.message.fix("奖品已发完");
         $.runEnd = true;
         return;
       }
     }
-    if ($.runEnd || $.outFlag || $.skipRun) return;
-    const i1iIiII = $.activityContent?.["signNum"],
-      llllii1l = $.activityContent?.["continuityNum"],
-      l11iIill = $.activityContent?.["sign"];
-    if (llllii1l > 0 || i1iIiII > 0) {
-      console.log("当前连续签到 " + llllii1l + " 天，累计签到 " + i1iIiII + " 天\n");
+    if ($.runEnd || $.outFlag || $.skipRun) {
+      return;
     }
-    l11iIill ? (await IlIIlII("getSignClick"), await $.wait(500)) : console.log("今天已经签过了，明天再来吧~");
-  } catch (ll1iIl1l) {
-    console.log("❌ 脚本运行遇到了错误\n" + ll1iIl1l);
+    const l1I1Ii = $.activityContent?.["signNum"],
+      IIlili = $.activityContent?.["continuityNum"],
+      IIlill = $.activityContent?.["sign"];
+    (IIlili > 0 || l1I1Ii > 0) && console.log("当前连续签到 " + IIlili + " 天，累计签到 " + l1I1Ii + " 天\n");
+    IIlill ? (await i1I1I("getSignClick"), await $.wait(500)) : console.log("今天已经签过了，明天再来吧~");
+  } catch (lI1iiI) {
+    console.log("❌ 脚本运行遇到了错误\n" + lI1iiI);
   }
 }
-async function IIll1I1(illliliI, lIi1IiI1) {
+async function l1iIi1(i11lII, iIIlli) {
   try {
-    switch (illliliI) {
+    switch (i11lII) {
       case "login":
-        if (lIi1IiI1.resp_code === 0 && lIi1IiI1.data) $.token = lIi1IiI1?.["data"]?.["token"], $.joinInfo = lIi1IiI1?.["data"]?.["joinInfo"], $.openCardUrl = $.joinInfo?.["openCardUrl"], $.shopId = lIi1IiI1?.["data"]?.["shopId"], $.venderId = ii1i1ll.getUrlParameter($.openCardUrl, "venderId"), $.shopName = lIi1IiI1?.["data"]?.["shopName"], $.joinCode = $.joinInfo?.["joinCodeInfo"]?.["joinCode"], $.joinDes = $.joinInfo?.["joinCodeInfo"]?.["joinDes"];else lIi1IiI1.resp_msg ? (console.log(illliliI + " " + lIi1IiI1.resp_msg), $.message.fix(lIi1IiI1.resp_msg), $.skipRun = true) : console.log("❓" + illliliI + " " + JSON.stringify(lIi1IiI1));
+        if (iIIlli.resp_code === 0 && iIIlli.data) {
+          $.token = iIIlli?.["data"]?.["token"];
+          $.joinInfo = iIIlli?.["data"]?.["joinInfo"];
+          $.openCardUrl = $.joinInfo?.["openCardUrl"];
+          $.shopId = iIIlli?.["data"]?.["shopId"];
+          $.venderId = iliIli.getUrlParameter($.openCardUrl, "venderId");
+          $.shopName = iIIlli?.["data"]?.["shopName"];
+          $.joinCode = $.joinInfo?.["joinCodeInfo"]?.["joinCode"];
+          $.joinDes = $.joinInfo?.["joinCodeInfo"]?.["joinDes"];
+        } else {
+          iIIlli.resp_msg ? (console.log(i11lII + " " + iIIlli.resp_msg), $.message.fix(iIIlli.resp_msg), $.skipRun = true) : console.log("❓" + i11lII + " " + JSON.stringify(iIIlli));
+        }
         break;
       case "follow":
-        if (lIi1IiI1.resp_code === 0) {} else lIi1IiI1.resp_msg ? (console.log(illliliI + " " + lIi1IiI1.resp_msg), $.message.fix(lIi1IiI1.resp_msg), $.skipRun = true) : console.log("❓" + illliliI + " " + JSON.stringify(lIi1IiI1));
-        break;
-      case "initPinToken":
-        if (lIi1IiI1.resp_code === 0 && lIi1IiI1.data) {
-          lIi1IiI1 = JSON.parse(lIi1IiI1.data);
-          if (lIi1IiI1.resp_code === 0 && lIi1IiI1.data) $.pinToken = lIi1IiI1?.["data"]?.["pinToken"], $.encryptPin = lIi1IiI1?.["data"]?.["encryptPin"];else {
-            if (lIi1IiI1.resp_code === 1000) console.log(illliliI + " " + lIi1IiI1.resp_msg), $.message.fix(lIi1IiI1.resp_msg), $.skipRun = true;else lIi1IiI1.resp_msg ? (console.log(illliliI + " " + lIi1IiI1.resp_msg), $.message.fix(lIi1IiI1.resp_msg), $.skipRun = true) : (console.log("❓" + illliliI + " " + JSON.stringify(lIi1IiI1)), $.skipRun = true);
-          }
-        } else console.log("❓" + illliliI + " " + JSON.stringify(lIi1IiI1));
-        break;
-      case "basicInfo":
-        if (lIi1IiI1.resp_code === 0 && lIi1IiI1.data) $.actStartTime = lIi1IiI1.data?.["startTime"], $.actEndTime = lIi1IiI1.data?.["endTime"], $.actStatus = lIi1IiI1.data?.["actStatus"], !$.activityType && ($.activityType = String(lIi1IiI1.data?.["actType"] || ""));else {
-          if (lIi1IiI1.resp_msg) console.log(illliliI + " " + lIi1IiI1.resp_msg), $.message.fix(lIi1IiI1.resp_msg);else {
-            console.log("❓" + illliliI + " " + JSON.stringify(lIi1IiI1));
+        if (!(iIIlli.resp_code === 0)) {
+          if (iIIlli.resp_msg) {
+            console.log(i11lII + " " + iIIlli.resp_msg);
+            $.message.fix(iIIlli.resp_msg);
+            $.skipRun = true;
+          } else {
+            console.log("❓" + i11lII + " " + JSON.stringify(iIIlli));
           }
         }
         break;
-      case "activity":
-        if (lIi1IiI1.resp_code === 0 && lIi1IiI1.data) $.activityContent = lIi1IiI1.data;else {
-          if (lIi1IiI1.resp_msg) {
-            console.log(illliliI + " " + lIi1IiI1.resp_msg);
-            $.message.fix(lIi1IiI1.resp_msg);
-            $.skipRun = true;
-            for (let iiIII1ii of ["未开始", "结束", "不存在", "不在"]) {
-              if (lIi1IiI1.resp_msg.includes(iiIII1ii)) {
-                $.runEnd = true;
-                break;
+      case "initPinToken":
+        if (iIIlli.resp_code === 0 && iIIlli.data) {
+          iIIlli = JSON.parse(iIIlli.data);
+          if (iIIlli.resp_code === 0 && iIIlli.data) {
+            $.pinToken = iIIlli?.["data"]?.["pinToken"];
+            $.encryptPin = iIIlli?.["data"]?.["encryptPin"];
+          } else {
+            if (iIIlli.resp_code === 1000) {
+              console.log(i11lII + " " + iIIlli.resp_msg);
+              $.message.fix(iIIlli.resp_msg);
+              $.skipRun = true;
+            } else {
+              if (iIIlli.resp_msg) {
+                console.log(i11lII + " " + iIIlli.resp_msg);
+                $.message.fix(iIIlli.resp_msg);
+                $.skipRun = true;
+              } else {
+                console.log("❓" + i11lII + " " + JSON.stringify(iIIlli));
+                $.skipRun = true;
               }
             }
+          }
+        } else {
+          console.log("❓" + i11lII + " " + JSON.stringify(iIIlli));
+        }
+        break;
+      case "basicInfo":
+        if (iIIlli.resp_code === 0 && iIIlli.data) {
+          $.actStartTime = iIIlli.data?.["startTime"];
+          $.actEndTime = iIIlli.data?.["endTime"];
+          $.actStatus = iIIlli.data?.["actStatus"];
+          !$.activityType && ($.activityType = String(iIIlli.data?.["actType"] || ""));
+        } else {
+          iIIlli.resp_msg ? (console.log(i11lII + " " + iIIlli.resp_msg), $.message.fix(iIIlli.resp_msg)) : console.log("❓" + i11lII + " " + JSON.stringify(iIIlli));
+        }
+        break;
+      case "activity":
+        if (iIIlli.resp_code === 0 && iIIlli.data) {
+          $.activityContent = iIIlli.data;
+        } else {
+          if (iIIlli.resp_msg) {
+            console.log(i11lII + " " + iIIlli.resp_msg);
+            $.message.fix(iIIlli.resp_msg);
+            $.skipRun = true;
+            if (["未开始", "结束", "不存在", "不在"].some(iiI1li => iIIlli.resp_msg.includes(iiI1li))) {
+              $.runEnd = true;
+            }
           } else {
-            console.log("❓" + illliliI + " " + JSON.stringify(lIi1IiI1));
+            console.log("❓" + i11lII + " " + JSON.stringify(iIIlli));
             $.skipRun = true;
           }
         }
         break;
       case "drawPrize":
-        if (lIi1IiI1.resp_code === 0) $.prizeInfo = lIi1IiI1?.["data"]?.["prizeInfo"] || [];else {
-          if (lIi1IiI1.resp_msg) {
-            console.log(illliliI + " " + lIi1IiI1.resp_msg);
-            for (let iiIlll1i of ["未开始", "结束", "不存在", "不在"]) {
-              if (lIi1IiI1.resp_msg.includes(iiIlll1i)) {
-                $.runEnd = true;
-                break;
-              }
+        if (iIIlli.resp_code === 0) {
+          $.prizeInfo = iIIlli?.["data"]?.["prizeInfo"] || [];
+        } else {
+          if (iIIlli.resp_msg) {
+            console.log(i11lII + " " + iIIlli.resp_msg);
+            if (["未开始", "结束", "不存在", "不在"].some(iiI1ll => iIIlli.resp_msg.includes(iiI1ll))) {
+              $.runEnd = true;
             }
-            $.message.fix(lIi1IiI1.resp_msg);
-          } else console.log("❓" + illliliI + " " + JSON.stringify(lIi1IiI1));
+            $.message.fix(iIIlli.resp_msg);
+          } else {
+            console.log("❓" + i11lII + " " + JSON.stringify(iIIlli));
+          }
         }
         break;
       case "getSignClick":
-        if (lIi1IiI1.resp_code === 0) {
-          const iIl1111l = lIi1IiI1.data;
-          if (iIl1111l) {
+        if (iIIlli.resp_code === 0) {
+          const iIiill = iIIlli.data;
+          if (iIiill) {
             process.stdout.write("签到成功 ➜ ");
-            switch (iIl1111l.prizeType) {
+            switch (iIiill.prizeType) {
               case 1:
-                console.log("🎉 " + iIl1111l.prizeName + " 🐶"), $.message.insert(iIl1111l.prizeName + "🐶");
+                console.log("🎉 " + iIiill.prizeName + " 🐶");
+                $.message.insert(iIiill.prizeName + "🐶");
                 break;
               case 2:
-                console.log("🗑️ 优惠券"), $.message.insert("🗑️ 优惠券");
+                console.log("🗑️ 优惠券");
+                $.message.insert("🗑️ 优惠券");
                 break;
               case 3:
-                const lliIil = lIi1IiI1.data.addressId,
-                  i1I1ii1 = iIl1111l.prizeName;
-                console.log("🎉 恭喜获得实物~"), console.log("奖品名称：" + i1I1ii1);
-                if (iIl1111l.showImg) console.log("预览图片：" + iIl1111l.showImg);
-                const lI1l1III = {
-                    "baseUrl": $.baseUrl,
-                    "newbaseUrl": $.newbaseUrl,
-                    "cookie": llIililI,
-                    "ua": $.UA,
-                    "token": $.token,
-                    "prizeName": i1I1ii1,
-                    "orderCode": lliIil
+                const Ii1IIl = iIIlli.data.addressId,
+                  l111I = iIiill.prizeName;
+                console.log("🎉 恭喜获得实物~");
+                console.log("奖品名称：" + l111I);
+                if (iIiill.showImg) {
+                  console.log("预览图片：" + iIiill.showImg);
+                }
+                const ll1lli = {
+                    baseUrl: $.baseUrl,
+                    newbaseUrl: $.newbaseUrl,
+                    cookie: lI1111,
+                    ua: $.UA,
+                    token: $.token,
+                    prizeName: l111I,
+                    orderCode: Ii1IIl
                   },
-                  il11lI11 = await IiIIil1(lI1l1III);
-                !lIili11l && il11lI11 && (await liIli11i.sendNotify($.name + "中奖通知", "【京东账号" + $.index + "】" + $.nickName + "\n抽中实物 " + i1I1ii1 + "，已成功自动登记收货地址\n\n" + $.activityUrl));
-                $.message.insert(i1I1ii1 + "(" + (il11lI11 ? "已填地址" : "未填地址") + ")🎁");
+                  ll1lll = await ll11ll(ll1lli);
+                !liiiii && ll1lll && (await illliI.sendNotify($.name + "中奖通知", "【京东账号" + $.index + "】" + $.nickName + "\n抽中实物 " + l111I + "，已成功自动登记收货地址\n\n" + $.activityUrl));
+                $.message.insert(l111I + "(" + (ll1lll ? "已填地址" : "未填地址") + ")🎁");
                 break;
               case 4:
               case 11:
-                console.log("🗑️ " + iIl1111l.prizeName + " 🎟️"), $.message.insert("🗑️ " + iIl1111l.prizeName + " 🎟️");
+                console.log("🗑️ " + iIiill.prizeName + " 🎟️");
+                $.message.insert("🗑️ " + iIiill.prizeName + " 🎟️");
                 break;
               case 5:
-                console.log("🗑️ 专享价"), $.message.insert("🗑️ 专享价");
+                console.log("🗑️ 专享价");
+                $.message.insert("🗑️ 专享价");
                 break;
               case 6:
-                console.log("🎉 " + iIl1111l.prizeName + " 🧧"), $.message.insert("🎉 " + iIl1111l.prizeName + " 🧧");
+                console.log("🎉 " + iIiill.prizeName + " 🧧");
+                $.message.insert("🎉 " + iIiill.prizeName + " 🧧");
                 break;
               case 7:
               case 8:
               case 9:
               case 10:
               case 12:
-                console.log("🎉 恭喜获得" + iIl1111l.prizeName + " 🎁"), $.message.insert("🎉 恭喜获得" + iIl1111l.prizeName + " 🎁");
-                !lIili11l && (await liIli11i.sendNotify($.name + "中奖通知", "【京东账号" + $.index + "】" + $.nickName + "\n抽中 " + iIl1111l.prizeName + "\n\n" + $.activityUrl));
+                console.log("🎉 恭喜获得" + iIiill.prizeName + " 🎁");
+                $.message.insert("🎉 恭喜获得" + iIiill.prizeName + " 🎁");
+                !liiiii && (await illliI.sendNotify($.name + "中奖通知", "【京东账号" + $.index + "】" + $.nickName + "\n抽中 " + iIiill.prizeName + "\n\n" + $.activityUrl));
                 break;
               default:
-                console.log(iIl1111l);
+                console.log(iIiill);
                 break;
             }
           } else {
             console.log("签到成功");
           }
         } else {
-          if (lIi1IiI1.resp_msg) {
-            console.log(illliliI + " " + lIi1IiI1.resp_msg);
-            for (let lli1IIl1 of ["未开始", "结束", "不存在", "不在"]) {
-              if (lIi1IiI1.resp_msg.includes(lli1IIl1)) {
-                $.runEnd = true;
-                break;
-              }
+          if (iIIlli.resp_msg) {
+            if (["未开始", "结束", "不存在", "不在"].some(Il1II => iIIlli.resp_msg.includes(Il1II))) {
+              $.runEnd = true;
             }
-            $.message.fix(lIi1IiI1.resp_msg);
+            console.log(iIIlli.resp_msg);
+            $.message.fix(iIIlli.resp_msg);
           } else {
-            console.log("❓" + illliliI + " " + JSON.stringify(lIi1IiI1));
+            console.log("❓" + i11lII + " " + JSON.stringify(iIIlli));
           }
         }
         break;
     }
-  } catch (iIlIlI11) {
-    console.log("❌ 未能正确处理 " + illliliI + " 请求响应 " + (iIlIlI11.message || iIlIlI11));
+  } catch (I1iill) {
+    console.log("❌ 未能正确处理 " + i11lII + " 请求响应 " + (I1iill.message || I1iill));
   }
 }
-async function IlIIlII(lIlllIIl) {
-  if ($.runEnd || $.outFlag) return;
-  let li11Ii11 = $.newbaseUrl,
-    lIIllilI = {},
-    l11I1Ill = "POST";
-  switch (lIlllIIl) {
+async function i1I1I(i1lli) {
+  if ($.runEnd || $.outFlag) {
+    return;
+  }
+  let lIl1li = $.newbaseUrl,
+    Il1I1 = {},
+    lIilii = {},
+    lIilil = "POST";
+  switch (i1lli) {
     case "login":
-      li11Ii11 += "/api/user-info/login", lIIllilI = {
-        "status": "1",
-        "activityId": $.activityId,
-        "tokenPin": $.jdToken,
-        "source": "01",
-        "shareUserId": $.shareUserId || "",
-        "uuid": $.UUID
+      lIl1li += "/api/user-info/login";
+      Il1I1 = {
+        status: "1",
+        activityId: $.activityId,
+        tokenPin: $.jdToken,
+        source: "01",
+        shareUserId: $.shareUserId || "",
+        uuid: $.UUID
       };
       break;
     case "follow":
-      li11Ii11 += "/api/task/followShop/follow";
+      lIl1li += "/api/task/followShop/follow";
       break;
     case "initPinToken":
-      l11I1Ill = "GET", li11Ii11 += "/api/user-info/initPinToken?status=1&activityId=" + $.activityId + "&jdToken=" + $.jdToken + "&source=01&shareUserId=" + ($.shareUserId || "") + "&uuid=" + $.UUID + "&clientTime=" + Date.now() + "&shopId=" + $.shopId;
+      lIilil = "GET";
+      lIl1li += "/api/user-info/initPinToken?status=1&activityId=" + $.activityId + "&jdToken=" + $.jdToken + "&source=01&shareUserId=" + ($.shareUserId || "") + "&uuid=" + $.UUID + "&clientTime=" + Date.now() + "&shopId=" + $.shopId;
       break;
     case "basicInfo":
-      li11Ii11 += "/api/active/basicInfo", lIIllilI = {
-        "activityId": $.activityId
+      lIl1li += "/api/active/basicInfo";
+      Il1I1 = {
+        activityId: $.activityId
       };
       break;
     case "activity":
-      li11Ii11 += "/api/task/daySign/activity";
+      lIl1li += "/api/task/daySign/activity";
       break;
     case "drawPrize":
-      li11Ii11 += "/api/prize/drawPrize";
+      lIl1li += "/api/prize/drawPrize";
       break;
     case "getSignClick":
-      li11Ii11 += "/api/task/daySign/getSignClick";
+      lIl1li += "/api/task/daySign/getSignClick";
       break;
     default:
-      console.log("❌ 未知请求 " + lIlllIIl);
+      console.log("❌ 未知请求 " + i1lli);
       return;
   }
-  const i11lilil = {
-    "url": li11Ii11,
-    "headers": {
-      "Accept": "application/json, text/plain, */*",
+  const lIl1ll = lIilil === "POST" && $.pathname.includes("/prod/cc/interactsaas") && i11iIl.isDefenseApi(lIl1li.replace($.newbaseUrl, "").split("?")[0]);
+  lIl1ll && (Il1I1.actId = $.activityId, lIilii = {
+    ecyText: i11iIl.encrypt(Il1I1, $.pinToken, $.te)
+  });
+  const Ii111 = {
+    url: lIl1li,
+    headers: {
+      Accept: "application/json, text/plain, */*",
       "Accept-Encoding": "gzip, deflate, br",
       "Accept-Language": "zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7,en-GB;q=0.6",
-      "Connection": "keep-alive",
+      Connection: "keep-alive",
       "Content-Type": "application/json;charset=UTF-8",
-      "Cookie": "IsvToken=" + $.jdToken + "; " + ($.pinToken ? ";pToken=" + $.pinToken : "") + ($.te ? ";te=" + $.te : ""),
-      "Host": $.hostname,
-      "Origin": $.origin,
-      "Referer": $.activityUrl,
+      Cookie: "IsvToken=" + $.jdToken + "; " + ($.pinToken ? ";pToken=" + $.pinToken : "") + ($.te ? ";te=" + $.te : ""),
+      Host: $.hostname,
+      Origin: $.origin,
+      Referer: $.activityUrl,
       "Sec-Fetch-Dest": "empty",
       "Sec-Fetch-Mode": "cors",
       "Sec-Fetch-Site": "same-origin",
       "User-Agent": $.UA
     },
-    "body": JSON.stringify(lIIllilI),
-    "timeout": 30000
+    body: JSON.stringify(lIl1ll ? lIilii : Il1I1),
+    timeout: 30000
   };
-  $.token && (i11lilil.headers.token = $.token);
-  l11I1Ill === "GET" && (delete i11lilil.body, delete i11lilil.headers["Content-Type"]);
-  const IiI1Iii = 5;
-  let i1111lii = 0,
-    Illi1ll = null,
-    Illill1 = false;
-  while (i1111lii < IiI1Iii) {
-    if (i1111lii > 0) {
-      await $.wait(1000);
-    }
+  $.token && (Ii111.headers.token = $.token);
+  lIilil === "GET" && (delete Ii111.body, delete Ii111.headers["Content-Type"]);
+  const Ii1III = 5;
+  let ilIIi1 = 0,
+    l111i = null,
+    l111l = false;
+  while (ilIIi1 < Ii1III) {
+    ilIIi1 > 0 && (await $.wait(1000));
     const {
-      err: Iil1l1l1,
-      res: li1lIii1,
-      data: liIIIiiI
-    } = await i1lIi1lI(i11lilil, l11I1Ill);
-    if (Iil1l1l1) {
-      if (typeof Iil1l1l1 === "string" && Iil1l1l1.includes("Timeout awaiting 'request'")) Illi1ll = lIlllIIl + " 请求超时，请检查网络重试";else {
-        const IiiiI11 = li1lIii1?.["statusCode"];
-        if (IiiiI11) {
-          if ([403, 493].includes(IiiiI11)) Illi1ll = lIlllIIl + " 请求失败，IP被限制（Response code " + IiiiI11 + "）", Illill1 = true;else [400, 404].includes(IiiiI11) ? Illi1ll = lIlllIIl + " 请求配置参数错误，请联系开发者进行反馈（Response code " + IiiiI11 + "）" : Illi1ll = lIlllIIl + " 请求失败（Response code " + IiiiI11 + "）";
-        } else Illi1ll = lIlllIIl + " 请求失败 => " + (Iil1l1l1.message || Iil1l1l1);
-      }
-      i1111lii++;
-    } else {
-      const l11liii1 = ii1i1ll.getResponseCookie(li1lIii1),
-        IIIliI1i = false;
-      if (IIIliI1i) {
-        console.log("\n---------------------------------------------------\n");
-        console.log("🔧 " + lIlllIIl + " 响应Body => " + (liIIIiiI || "无") + "\n");
-        console.log("🔧 " + lIlllIIl + " 响应Cookie => " + (l11liii1 || "无") + "\n");
-        console.log("🔧 " + lIlllIIl + " 请求参数");
-        console.log(i11lilil);
-        console.log("\n---------------------------------------------------\n");
-      }
-      if (!["accessLog", "accessLogWithAD"].includes(lIlllIIl)) try {
-        const Ii1IiIiI = JSON.parse(liIIIiiI);
-        IIll1I1(lIlllIIl, Ii1IiIiI);
-        break;
-      } catch (i11IIl1) {
-        Illi1ll = "❌ " + lIlllIIl + " 接口响应数据解析失败: " + i11IIl1.message;
-        console.log("🚫 " + lIlllIIl + " => " + String(liIIIiiI || "无响应数据"));
-        IIIliI1i && (console.log("\n---------------------------------------------------\n"), console.log(activityCookie), console.log("\n---------------------------------------------------\n"));
-        i1111lii++;
+      err: l1lII,
+      res: lilI1l,
+      data: l1liiI
+    } = await llIil(Ii111, lIilil);
+    if (l1lII) {
+      if (typeof l1lII === "string" && l1lII.includes("Timeout awaiting 'request'")) {
+        l111i = i1lli + " 请求超时，请检查网络重试";
       } else {
-        break;
+        const Ii11i = lilI1l?.["statusCode"];
+        if (Ii11i) {
+          if ([403, 493].includes(Ii11i)) {
+            l111i = i1lli + " 请求失败，IP被限制（Response code " + Ii11i + "）";
+            l111l = true;
+          } else {
+            if ([400, 404].includes(Ii11i)) {
+              l111i = i1lli + " 请求配置参数错误，请联系开发者进行反馈（Response code " + Ii11i + "）";
+            } else {
+              [500].includes(Ii11i) && lIl1ll ? Ii111.body = JSON.stringify({
+                ecyText: i11iIl.encrypt(Il1I1, $.pinToken, $.te)
+              }) : l111i = i1lli + " 请求失败（Response code " + Ii11i + "）";
+            }
+          }
+        } else {
+          l111i = i1lli + " 请求失败 => " + (l1lII.message || l1lII);
+        }
       }
-      Illill1 = false;
+      ilIIi1++;
+    } else {
+      const Ii1l1i = iliIli.getResponseCookie(lilI1l),
+        l1lIl = false;
+      l1lIl && (console.log("\n---------------------------------------------------\n"), console.log("🔧 " + i1lli + " 响应Body => " + (l1liiI || "无") + "\n"), console.log("🔧 " + i1lli + " 响应Cookie => " + (Ii1l1i || "无") + "\n"), console.log("🔧 " + i1lli + " 请求参数"), console.log(Ii111), console.log("\n---------------------------------------------------\n"));
+      switch (i1lli) {
+        case "initPinToken":
+          const Ii1l1l = iliIli.getCookieValue(Ii1l1i, "te");
+          Ii1l1l && ($.te = Ii1l1l);
+          break;
+      }
+      if (l1liiI) {
+        try {
+          const i1Iiil = JSON.parse(l1liiI);
+          l1iIi1(i1lli, i1Iiil);
+          break;
+        } catch (l1lili) {
+          l111i = "❌ " + i1lli + " 接口响应数据解析失败: " + l1lili.message;
+          console.log("🚫 " + i1lli + " => " + String(l1liiI));
+          ilIIi1++;
+        }
+      } else {
+        lIl1ll && (Ii111.body = JSON.stringify({
+          ecyText: i11iIl.encrypt(Il1I1, $.pinToken, $.te)
+        }));
+        l111i = "❌ " + i1lli + " 接口无响应数据";
+        ilIIi1++;
+      }
+      l111l = false;
     }
   }
-  i1111lii >= IiI1Iii && (console.log(Illi1ll), Illill1 && !lIIlil1 && ($.outFlag = true, $.message && $.message.fix(Illi1ll)));
+  ilIIi1 >= Ii1III && (console.log(l111i), l111l && !IIIIll && ($.outFlag = true, $.message && $.message.fix(l111i)));
 }
-async function i1lIi1lI(i1i1I1ii, Iiii1iI = "POST") {
-  if (Iiii1iI === "POST") return new Promise(async il1iil => {
-    $.post(i1i1I1ii, (l1IlIIll, l1I1IIll, IililiIl) => {
-      il1iil({
-        "err": l1IlIIll,
-        "res": l1I1IIll,
-        "data": IililiIl
+async function llIil(iilIIi, I1iII = "POST") {
+  if (I1iII === "POST") {
+    return new Promise(async l1lilI => {
+      $.post(iilIIi, (IilII, ili1l, i1lii) => {
+        l1lilI({
+          err: IilII,
+          res: ili1l,
+          data: i1lii
+        });
       });
     });
-  });else {
-    if (Iiii1iI === "GET") {
-      return new Promise(async iiilIll1 => {
-        $.get(i1i1I1ii, (i1ll11il, Ii11li11, i11I1l11) => {
-          iiilIll1({
-            "err": i1ll11il,
-            "res": Ii11li11,
-            "data": i11I1l11
+  } else {
+    if (I1iII === "GET") {
+      return new Promise(async I1iIi => {
+        $.get(iilIIi, (lilI11, Ili1II, ili1i) => {
+          I1iIi({
+            err: lilI11,
+            res: Ili1II,
+            data: ili1i
           });
         });
       });
     } else {
-      const li1IiIli = "不支持的请求方法";
+      const l1Ii1 = "不支持的请求方法";
       return {
-        "err": li1IiIli,
-        "res": null,
-        "data": null
+        err: l1Ii1,
+        res: null,
+        data: null
       };
     }
   }
 }
+var version_ = "jsjiami.com.v7";

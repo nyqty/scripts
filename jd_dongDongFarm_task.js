@@ -3,6 +3,8 @@
 
 种植，任务，浇水  暂无助力
 
+更新 农场成熟后重新种植，需自行填写种植ID
+
 环境变量：
 jd_dongDongFarm_plantSkuId // 需要种植的作物ID，详见脚本打印
 jd_dongDongFarm_Notify // 是否推送通知（true/false），默认不推送
@@ -22,106 +24,101 @@ cron:45 2-22/6 * * *
 
 const Env=require('./utils/Env.js');
 const $ = new Env('新东东农场任务')
-
-const I1IllI = require("./jdCookie"),
-  IIlI11 = require("./function/sendJDNotify"),
-  iIIll1 = require("./function/jdCommon"),
-  llIIII = require("./function/krgetH5st"),
-  ilI11I = process.env.jd_dongDongFarm_plantSkuId || "",
-  ili1I = process.env.jd_dongDongFarm_Notify === "true",
-  iilIIl = "LCH-fV7hSnChB-6i5f4ayw",
-  i1Iili = {
+var version_ = "jsjiami.com.v7";
+const iIIliI = require("./jdCookie"),
+  IiIil = require("./function/sendJDNotify"),
+  IiIii = require("./function/jdCommon"),
+  iill1l = require("./function/krgetH5st"),
+  IiIiII = process.env.jd_dongDongFarm_plantSkuId || "",
+  iill1i = process.env.jd_dongDongFarm_Notify === "true",
+  l1Il1 = "LCH-fV7hSnChB-6i5f4ayw",
+  iill11 = {
     1: "水滴"
   },
-  i1Iill = process.env.JD_Farm_PROXY_OPEN === "true",
-  l1IiI = process.env.JD_Farm_PROXY_TUNNRL,
-  l1lill = process.env.JD_Farm_PROXY_URL,
-  i1li1 = process.env.JD_Farm_NO_PROXY || "*.kingran.cf,127.0.0.1,*.baidu.com";
-let iIIllI = "",
-  I1Ill1 = 0,
-  ili11 = false;
-if (i1Iill) {
-  ili11 = true;
+  I1IliI = process.env.JD_Farm_PROXY_OPEN === "true",
+  III1II = process.env.JD_Farm_PROXY_TUNNRL,
+  l1I1II = process.env.JD_Farm_PROXY_URL,
+  iIIlil = process.env.JD_Farm_NO_PROXY || "*.kingran.cf,127.0.0.1,*.baidu.com";
+let IiIiI1 = "",
+  iIIlii = 0,
+  llIII1 = false;
+if (I1IliI) {
+  llIII1 = true;
   try {
     require("global-agent/bootstrap");
-    if (l1lill) {
+    if (l1I1II) {
       console.log("\n☑️ API地址代理已开启：");
-      console.log("☑️ 代理地址为：" + l1lill + "\n");
-      let iIIliI = /[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+\.?/g;
-      global.GLOBAL_AGENT.NO_PROXY = iIIliI.exec(l1lill)[0] + "," + i1li1;
+      console.log("☑️ 代理地址为：" + l1I1II + "\n");
+      let iiiII1 = /[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+\.?/g;
+      global.GLOBAL_AGENT.NO_PROXY = iiiII1.exec(l1I1II)[0] + "," + iIIlil;
     } else {
-      l1IiI ? (global.GLOBAL_AGENT.HTTP_PROXY = l1IiI, global.GLOBAL_AGENT.NO_PROXY = "" + i1li1, console.log("\n☑️ 代理池代理已开启："), console.log("☑️ 代理地址为：" + global.GLOBAL_AGENT.HTTP_PROXY + "\n")) : (console.log("\n⚠️ 当前检测到已开启代理，但未填写代理地址变量"), console.log("⚠ 代理池变量：export JD_JF_PROXY_TUNNRL='http://ip:port'"), console.log("⚠ API地址变量：export JD_JF_PROXY_URL='http://api.xxx.xxx'\n"));
+      III1II ? (global.GLOBAL_AGENT.HTTP_PROXY = III1II, global.GLOBAL_AGENT.NO_PROXY = "" + iIIlil, console.log("\n☑️ 代理池代理已开启："), console.log("☑️ 代理地址为：" + global.GLOBAL_AGENT.HTTP_PROXY + "\n")) : (console.log("\n⚠️ 当前检测到已开启代理，但未填写代理地址变量"), console.log("⚠ 代理池变量：export JD_JF_PROXY_TUNNRL='http://ip:port'"), console.log("⚠ API地址变量：export JD_JF_PROXY_URL='http://api.xxx.xxx'\n"));
     }
-  } catch (IiIil) {
+  } catch (liI111) {
     console.log("\n请安装global-agent依赖，才能启用代理！");
     console.log("\n安装命令：npm install global-agent\n");
-    ili11 = false;
+    llIII1 = false;
   }
 } else {
   console.log("\n⚠ 检测当前模式未开启代理：");
   console.log("⚠ 开启代理变量：export JD_Farm_PROXY_OPEN='true' \n");
 }
-let IiIiIi = "";
-const llIIIl = Object.keys(I1IllI).map(IiIii => I1IllI[IiIii]).filter(iill1l => iill1l);
-!llIIIl[0] && ($.msg($.name, "【提示】请先获取Cookie"), process.exit(1));
+let IiIiI = "";
+const iill1I = Object.keys(iIIliI).map(IiIlI => iIIliI[IiIlI]).filter(iIlI1i => iIlI1i);
+!iill1I[0] && ($.msg($.name, "【提示】请先获取Cookie"), process.exit(1));
 !(async () => {
-  IIlI11.config({
+  IiIil.config({
     title: $.name
   });
-  for (let l1iiIi = 0; l1iiIi < llIIIl.length; l1iiIi++) {
-    $.index = l1iiIi + 1;
-    IiIiIi = llIIIl[l1iiIi];
-    iIIll1.setCookie(IiIiIi);
-    $.UserName = decodeURIComponent(iIIll1.getCookieValue(IiIiIi, "pt_pin"));
-    $.UA = iIIll1.genUA($.UserName);
-    $.message = IIlI11.create($.index, $.UserName);
+  for (let IiIl1 = 0; IiIl1 < iill1I.length; IiIl1++) {
+    $.index = IiIl1 + 1;
+    IiIiI = iill1I[IiIl1];
+    IiIii.setCookie(IiIiI);
+    $.UserName = decodeURIComponent(IiIii.getCookieValue(IiIiI, "pt_pin"));
+    $.UA = IiIii.genUA($.UserName);
+    $.message = IiIil.create($.index, $.UserName);
     $.nickName = "";
     $.retry = 0;
     console.log("\n******开始【京东账号" + $.index + "】" + ($.nickName || $.UserName) + "******\n");
-    i1Iill && ili11 && l1lill && (I1Ill1 % 10 == 0 && (await III1Il(), global.GLOBAL_AGENT.HTTP_PROXY = "http://" + iIIllI), console.log("📶 " + iIIllI), I1Ill1++);
-    await IIlI1I();
-    iIIll1.unsetCookie();
+    I1IliI && llIII1 && l1I1II && (iIIlii % 10 == 0 && (await illili(), global.GLOBAL_AGENT.HTTP_PROXY = "http://" + IiIiI1), console.log("📶 " + IiIiI1), iIIlii++);
+    await Illi1();
+    IiIii.unsetCookie();
     if ($.runEnd) {
       break;
     }
     await $.wait(3000);
   }
-  ili1I && IIlI11.getMessage() && (IIlI11.updateContent(IIlI11.content + "\n"), await IIlI11.push());
-})().catch(iiiII1 => $.logErr(iiiII1)).finally(() => $.done());
-async function IIlI1I() {
+  iill1i && IiIil.getMessage() && (IiIil.updateContent(IiIil.content + "\n"), await IiIil.push());
+})().catch(l1IIli => $.logErr(l1IIli)).finally(() => $.done());
+async function Illi1() {
   $.canWatering = true;
   $.hotproxy = false;
   try {
-    const I1I1Il = await iIIll1.getLoginStatus(IiIiIi);
-    if (!I1I1Il && typeof I1I1Il !== undefined) {
-      console.log("账号无效");
-      $.message.fix("账号无效");
-      return;
-    }
-    await l1Iil("farm_home");
+    $.farm_home = "";
+    await lIIi1l("farm_home");
     if ($.farm_home.bizCode === 0) {
-      const l1l1I = $.farm_home?.["result"]?.["treeFullStage"],
-        iIlI1I = $.farm_home?.["result"]?.["waterTips"] || "",
-        I1I1Ii = $.farm_home?.["result"]?.["skuName"];
-      switch (l1l1I) {
+      const iil11I = $.farm_home?.["result"]?.["treeFullStage"],
+        iII1II = $.farm_home?.["result"]?.["waterTips"] || "",
+        IiIll = $.farm_home?.["result"]?.["skuName"];
+      switch (iil11I) {
         case 0:
           console.log("当前尚未种植，可种植的商品如下：\n");
-          await l1Iil("farm_tree_board");
-          const IiIl1 = $.farm_tree_board?.["farmTreeLevels"];
-          if (IiIl1.length) {
-            for (let IIIl of IiIl1) {
-              const IIIi = IIIl.farmLevelTrees,
-                l1IIli = IIIl.needDays;
-              for (let iII1I1 = 0; iII1I1 < IIIi.length; iII1I1++) {
-                const iiiIIi = IIIi[iII1I1].skuName,
-                  lIi1iI = IIIi[iII1I1].uid;
-                console.log(iiiIIi + "（最快成熟需要" + l1IIli + "天）\n种植变量ID：" + lIi1iI + "\n");
+          await lIIi1l("farm_tree_board");
+          const llIilI = $.farm_tree_board?.["farmTreeLevels"];
+          if (llIilI.length) {
+            for (let I1I1I1 of llIilI) {
+              const IIIlil = I1I1I1.farmLevelTrees,
+                Ili111 = I1I1I1.needDays;
+              for (let Il11 = 0; Il11 < IIIlil.length; Il11++) {
+                const llII1I = IIIlil[Il11].skuName,
+                  ilI1II = IIIlil[Il11].uid;
+                console.log(llII1I + "（最快成熟需要" + Ili111 + "天）\n种植变量ID：" + ilI1II + "\n");
               }
             }
-            if (ilI11I) {
+            if (IiIiII) {
               $.plantSuccess = false;
-              console.log("\n已填写种植ID[" + ilI11I + "]，现在去种植~");
-              await l1Iil("farm_plant_tree");
+              console.log("\n已填写种植ID[" + IiIiII + "]，现在去种植~");
+              await lIIi1l("farm_plant_tree");
               if ($.plantSuccess) {
                 break;
               }
@@ -139,19 +136,49 @@ async function IIlI1I() {
         case 2:
         case 3:
         case 4:
-          console.log("🌳 " + I1I1Ii + "\n🌳 当前进度：" + iIlI1I + "\n");
-          $.message.fix("🌳 " + I1I1Ii + "\n🌳 当前进度：" + iIlI1I + "\n");
+          console.log("🌳 " + IiIll + "\n🌳 当前进度：" + iII1II + "\n");
+          $.message.fix("🌳 " + IiIll + "\n🌳 当前进度：" + iII1II + "\n");
           break;
         case 5:
-          console.log("🎉 种植的 “" + I1I1Ii + "” 可以收获啦~");
-          $.message.fix("🎉 种植的 “" + I1I1Ii + "” 可以收获啦~");
-          return;
+          console.log("🎉 种植的 “" + IiIll + "” 可以收获啦~");
+          $.message.fix("🎉 种植的 “" + IiIll + "” 可以收获啦~");
+          console.log("\n重新种植，可种植的商品如下：\n");
+          await lIIi1l("farm_tree_board");
+          const IlliI = $.farm_tree_board?.["farmTreeLevels"];
+          if (IlliI.length) {
+            for (let IlllI of IlliI) {
+              const ll11II = IlllI.farmLevelTrees,
+                liIlII = IlllI.level,
+                Il1I = IlllI.needDays;
+              for (let iii1i = 0; iii1i < ll11II.length; iii1i++) {
+                const iii1l = ll11II[iii1i].skuName,
+                  iliIi = ll11II[iii1i].uid;
+                console.log(iii1l + "（等级" + liIlII + "最快成熟需要" + Il1I + "天）\n种植变量ID：" + iliIi + "\n");
+              }
+            }
+            if (IiIiII) {
+              $.plantSuccess = false;
+              console.log("\n已填写种植ID[" + IiIiII + "]，现在去种植~");
+              await lIIi1l("farm_plant_tree");
+              if ($.plantSuccess) {
+                break;
+              }
+            } else {
+              console.log("未填写种植ID，请先填写后再次运行~");
+              $.message.fix("未填写种植商品id变量，请先填写后再运行~");
+              return;
+            }
+          } else {
+            console.log("没有可种植的作物：" + JSON.stringify($.farm_tree_board));
+            return;
+          }
+          break;
       }
-      await llIIIi();
-      await IiIiIl();
-      await I1Ilil();
-      await I1Ilii();
-      await IiIiIl();
+      await l1iiIl();
+      await lIIi1i();
+      await liI11I();
+      await l1IIl1();
+      await lIIi1i();
     } else {
       switch ($.farm_home?.["bizCode"]) {
         case -1001:
@@ -164,22 +191,22 @@ async function IIlI1I() {
             break;
           }
       }
-      $.retry < 1 && ($.retry++, console.log("等待5秒后重试,第:" + $.retry + "次"), await $.wait(5000), await IIlI1I());
+      $.retry < 1 && ($.retry++, console.log("等待5秒后重试,第:" + $.retry + "次"), await $.wait(5000), await Illi1());
     }
-  } catch (liI11l) {
-    console.log(liI11l.message);
+  } catch (IiIi1l) {
+    console.log(IiIi1l.message);
   }
 }
-async function llIIIi() {
-  await l1Iil("dongDongFarmSignHome");
-  const I1I1II = $.dongDongFarmSignHome?.["signInFlag"] || 0;
-  switch (I1I1II) {
+async function l1iiIl() {
+  await lIIi1l("dongDongFarmSignHome");
+  const illI1I = $.dongDongFarmSignHome?.["signInFlag"] || 0;
+  switch (illI1I) {
     case 0:
       {
         console.log("去做任务 \"每日签到\"");
-        await l1Iil("dongDongFarmSignIn");
+        await lIIi1l("dongDongFarmSignIn");
         await $.wait(1000);
-        await l1Iil("dongDongFarmSignHome");
+        await lIIi1l("dongDongFarmSignHome");
         break;
       }
     case 1:
@@ -188,26 +215,26 @@ async function llIIIi() {
       }
     default:
       {
-        console.log(I1I1II);
+        console.log(illI1I);
         break;
       }
   }
 }
-async function IiIiIl() {
-  let iIlI11 = false;
-  await l1Iil("farm_task_list");
-  let IIII = $.farm_task_list?.["taskList"] || [];
-  for (let iil11I of IIII) {
-    const IiIll = iil11I?.["taskStatus"];
-    if (IiIll === 3) {
+async function lIIi1i() {
+  let ii1i1I = false;
+  await lIIi1l("farm_task_list");
+  let liIlI1 = $.farm_task_list?.["taskList"] || [];
+  for (let ii1i1l of liIlI1) {
+    const iillII = ii1i1l?.["taskStatus"];
+    if (iillII === 3) {
       continue;
     }
-    const llIilI = iil11I?.["mainTitle"];
-    $.taskId = iil11I?.["taskId"];
-    $.taskSourceUrl = iil11I?.["taskSourceUrl"];
-    $.taskType = iil11I?.["taskType"];
-    $.taskInsert = iil11I?.["taskInsert"];
-    switch (IiIll) {
+    const Illli = ii1i1l?.["mainTitle"];
+    $.taskId = ii1i1l?.["taskId"];
+    $.taskSourceUrl = ii1i1l?.["taskSourceUrl"];
+    $.taskType = ii1i1l?.["taskType"];
+    $.taskInsert = ii1i1l?.["taskInsert"];
+    switch (iillII) {
       case 1:
         {
           switch ($.taskType) {
@@ -218,19 +245,19 @@ async function IiIiIl() {
             case "BROWSE_PRODUCT":
             default:
               {
-                if (iil11I.taskSourceUrl) {
-                  iIlI11 = true;
-                  console.log("去做任务 \"" + llIilI + "\"");
-                  await l1Iil("farm_do_task");
+                if (ii1i1l.taskSourceUrl) {
+                  ii1i1I = true;
+                  console.log("去做任务 \"" + Illli + "\"");
+                  await lIIi1l("farm_do_task");
                   await $.wait(3000);
                 } else {
-                  iIlI11 = true;
-                  await l1Iil("farm_task_detail");
+                  ii1i1I = true;
+                  await lIIi1l("farm_task_detail");
                   await $.wait(3000);
-                  const I1I1I1 = $.farm_task_detail?.["taskDetaiList"] || [],
-                    IIIlil = I1I1I1[0];
-                  console.log("去做任务 \"" + llIilI + "\"");
-                  IIIlil ? ($.taskSourceUrl = IIIlil.itemId, $.taskInsert = IIIlil.taskInsert, await l1Iil("farm_do_task"), await $.wait(3000)) : console.log("> 任务失败，没有获取到任务ID");
+                  const ilI1I1 = $.farm_task_detail?.["taskDetaiList"] || [],
+                    liIlIi = ilI1I1[0];
+                  console.log("去做任务 \"" + Illli + "\"");
+                  liIlIi ? ($.taskSourceUrl = liIlIi.itemId, $.taskInsert = liIlIi.taskInsert, await lIIi1l("farm_do_task"), await $.wait(3000)) : console.log("> 任务失败，没有获取到任务ID");
                 }
                 break;
               }
@@ -239,47 +266,47 @@ async function IiIiIl() {
         }
       case 2:
         {
-          console.log("去领取 \"" + llIilI + "\" 任务奖励");
-          await l1Iil("farm_task_receive_award");
+          console.log("去领取 \"" + Illli + "\" 任务奖励");
+          await lIIi1l("farm_task_receive_award");
           await $.wait(3000);
           break;
         }
       default:
-        console.log("任务 \"" + iil11I.mainTitle + "\" 状态未知：" + iil11I.taskStatus);
+        console.log("任务 \"" + ii1i1l.mainTitle + "\" 状态未知：" + ii1i1l.taskStatus);
         break;
     }
   }
-  if (iIlI11) {
-    await l1Iil("farm_task_list");
-    IIII = $.farm_task_list?.["taskList"] || [];
-    for (let llII1I of IIII) {
-      const ilI1II = llII1I.mainTitle;
-      $.taskId = llII1I.taskId;
-      $.taskSourceUrl = llII1I.taskSourceUrl;
-      $.taskType = llII1I.taskType;
-      $.taskInsert = llII1I.taskInsert;
-      llII1I.taskStatus === 2 && (console.log("去领取 \"" + ilI1II + "\" 任务奖励"), await l1Iil("farm_task_receive_award"), await $.wait(3000));
+  if (ii1i1I) {
+    await lIIi1l("farm_task_list");
+    liIlI1 = $.farm_task_list?.["taskList"] || [];
+    for (let i11ii of liIlI1) {
+      const iiil1l = i11ii.mainTitle;
+      $.taskId = i11ii.taskId;
+      $.taskSourceUrl = i11ii.taskSourceUrl;
+      $.taskType = i11ii.taskType;
+      $.taskInsert = i11ii.taskInsert;
+      i11ii.taskStatus === 2 && (console.log("去领取 \"" + iiil1l + "\" 任务奖励"), await lIIi1l("farm_task_receive_award"), await $.wait(3000));
     }
   }
   console.log("");
 }
-async function I1Ilil() {
+async function liI11I() {
   $.farm_assist_init_info_hot = true;
-  await l1Iil("farm_assist_init_info");
+  await lIIi1l("farm_assist_init_info");
   if ($.farm_assist_init_info_hot) {
-    const iii1l = $.farm_assist_init_info?.["result"]?.["assistStageList"] || [];
-    for (let iiil1I of iii1l) {
-      $.assistNum = iiil1I?.["assistNum"];
-      $.stage = iiil1I?.["stage"];
-      $.waterEnergy = iiil1I?.["waterEnergy"];
-      switch (iiil1I?.["stageStaus"]) {
+    const Iii1lI = $.farm_assist_init_info?.["result"]?.["assistStageList"] || [];
+    for (let liiiIi of Iii1lI) {
+      $.assistNum = liiiIi?.["assistNum"];
+      $.stage = liiiIi?.["stage"];
+      $.waterEnergy = liiiIi?.["waterEnergy"];
+      switch (liiiIi?.["stageStaus"]) {
         case 1:
           console.log("助力人数未满 [" + $.assistNum + "人助力],请继续邀请吧！");
           break;
         case 2:
           console.log("助力人数已满 [" + $.assistNum + "人助力],现在去领取 [" + $.waterEnergy + "水滴] 奖励！");
           await $.wait(1500);
-          await l1Iil("farm_assist_receive_award");
+          await lIIi1l("farm_assist_receive_award");
           await $.wait(1500);
           break;
         case 3:
@@ -288,7 +315,7 @@ async function I1Ilil() {
           break;
         default:
           {
-            console.log("[未知状态]:" + iiil1I?.["stageStaus"]);
+            console.log("[未知状态]:" + liiiIi?.["stageStaus"]);
             $.hotproxy = true;
             break;
           }
@@ -296,9 +323,9 @@ async function I1Ilil() {
     }
   }
 }
-function l1I1I1(llII11, lIiI1) {
-  if (lIiI1 === "100" || lIiI1 === 100) {
-    switch (llII11) {
+function III1(I1liil, IliIi1) {
+  if (IliIi1 === "100" || IliIi1 === 100) {
+    switch (I1liil) {
       case 1:
         return "果树发芽了";
       case 2:
@@ -311,21 +338,21 @@ function l1I1I1(llII11, lIiI1) {
         return "果树成熟了，快去收获吧~";
     }
   } else {
-    const ilI1Il = 100 - lIiI1 + "%";
-    switch (llII11) {
+    const IIiil1 = 100 - IliIi1 + "%";
+    switch (I1liil) {
       case 1:
-        return "距离长大还有" + ilI1Il;
+        return "距离长大还有" + IIiil1;
       case 2:
-        return "距离开花还有" + ilI1Il;
+        return "距离开花还有" + IIiil1;
       case 3:
-        return "距离结果还有" + ilI1Il;
+        return "距离结果还有" + IIiil1;
       case 4:
-        return "距离收获还有" + ilI1Il;
+        return "距离收获还有" + IIiil1;
     }
   }
 }
-async function I1Ilii() {
-  await l1Iil("farm_home");
+async function l1IIl1() {
+  await lIIi1l("farm_home");
   $.bottleWater = $.farm_home?.["result"]?.["bottleWater"];
   $.canFastWater = $.farm_home?.["result"]?.["canFastWater"] || false;
   console.log("\n当前剩余水滴：" + ($.bottleWater || 0) + "g💧");
@@ -334,231 +361,241 @@ async function I1Ilii() {
       console.log("可以快速浇水了");
       break;
     } else {
-      await l1Iil("farm_water");
+      await lIIi1l("farm_water");
       await $.wait(3000);
     }
   }
 }
-async function l1Iii(iii11, iliI1) {
+async function l1iiIi(ilIIlI, liiiI1) {
   try {
-    switch (iii11) {
+    switch (ilIIlI) {
       case "farm_home":
-        if (iliI1.code === 0 && iliI1.data?.["bizCode"] === 0) {
-          $.farm_home = iliI1.data;
+        if (liiiI1.code === 0 && liiiI1.data?.["bizCode"] === 0) {
+          $.farm_home = liiiI1.data;
         } else {
-          if (iliI1.data?.["bizMsg"]) {
-            $.farm_home = iliI1.data;
+          if (liiiI1.data?.["bizMsg"]) {
+            $.farm_home = liiiI1.data;
           } else {
-            if (iliI1.errMsg) {
+            if (liiiI1.errMsg) {
               $.hotproxy = true;
-              console.log(iliI1.code + "-" + iliI1.errMsg);
+              console.log(liiiI1.code + "-" + liiiI1.errMsg);
             } else {
-              iliI1.msg ? ($.hotproxy = true, console.log(iliI1.code + "-" + iliI1.msg)) : console.log("❓" + iii11 + " " + JSON.stringify(iliI1));
+              if (liiiI1.msg) {
+                $.hotproxy = true;
+                console.log(liiiI1.code + "-" + liiiI1.msg);
+              } else {
+                console.log("❓" + ilIIlI + " " + JSON.stringify(liiiI1));
+              }
             }
           }
         }
         break;
       case "farm_tree_board":
-        if (iliI1.code === 0 && iliI1.data?.["bizCode"] === 0) {
-          $.farm_tree_board = iliI1.data?.["result"];
+        if (liiiI1.code === 0 && liiiI1.data?.["bizCode"] === 0) {
+          $.farm_tree_board = liiiI1.data?.["result"];
         } else {
-          if (iliI1.data?.["bizMsg"]) {
+          if (liiiI1.data?.["bizMsg"]) {
             $.hotproxy = true;
-            console.log(iliI1.code + "-" + iliI1.data?.["bizMsg"]);
+            console.log(liiiI1.code + "-" + liiiI1.data?.["bizMsg"]);
           } else {
-            if (iliI1.errMsg) {
+            if (liiiI1.errMsg) {
               $.hotproxy = true;
-              console.log(iliI1.code + "-" + iliI1.errMsg);
+              console.log(liiiI1.code + "-" + liiiI1.errMsg);
             } else {
-              iliI1.msg ? ($.hotproxy = true, console.log(iliI1.code + "-" + iliI1.msg)) : console.log("❓" + iii11 + " " + JSON.stringify(iliI1));
+              liiiI1.msg ? ($.hotproxy = true, console.log(liiiI1.code + "-" + liiiI1.msg)) : console.log("❓" + ilIIlI + " " + JSON.stringify(liiiI1));
             }
           }
         }
         break;
       case "farm_plant_tree":
-        if (iliI1.code === 0 && iliI1.data?.["bizCode"] === 0) {
+        if (liiiI1.code === 0 && liiiI1.data?.["bizCode"] === 0) {
           $.plantSuccess = true;
           console.log("种植成功\n");
         } else {
-          if (iliI1.data?.["bizMsg"]) {
+          if (liiiI1.data?.["bizMsg"]) {
             $.plantSuccess = false;
-            console.log("种植失败：" + iliI1.data?.["bizMsg"]);
+            console.log("种植失败：" + liiiI1.data?.["bizMsg"]);
           } else {
-            iliI1.message ? ($.plantSuccess = false, console.log("种植失败：" + iliI1.message)) : ($.plantSuccess = false, console.log("❓" + iii11 + " " + JSON.stringify(iliI1)));
+            liiiI1.message ? ($.plantSuccess = false, console.log("种植失败：" + liiiI1.message)) : ($.plantSuccess = false, console.log("❓" + ilIIlI + " " + JSON.stringify(liiiI1)));
           }
         }
         break;
       case "farm_water":
-        if (iliI1.code === 0 && iliI1.data?.["bizCode"] === 0) {
-          let IIiilI = iliI1.data?.["result"],
+        if (liiiI1.code === 0 && liiiI1.data?.["bizCode"] === 0) {
+          let Iii1l1 = liiiI1.data?.["result"],
             {
-              currentProcess: I1lii1,
-              updateStage: ilIIlI,
-              treeFullStage: liiiI1,
-              finished: iIl11,
-              waterNum: ii1I,
+              currentProcess: iIlil1,
+              updateStage: l1IIi1,
+              treeFullStage: IIiii1,
+              finished: IlilII,
+              waterNum: iIII1,
               stagePrize = null
-            } = IIiilI;
-          $.bottleWater = IIiilI?.["bottleWater"];
-          $.canFastWater = IIiilI?.["canFastWater"];
-          let i11Ili = stagePrize?.["map"](liII => liII.value + "水滴") || [];
-          if (ilIIlI) {
-            let ii11 = "已浇水" + ii1I + "g，" + l1I1I1(liiiI1, 100);
-            if (i11Ili.length) {
-              ii11 += "，奖励" + i11Ili.join(", ");
+            } = Iii1l1;
+          $.bottleWater = Iii1l1?.["bottleWater"];
+          $.canFastWater = Iii1l1?.["canFastWater"];
+          let I1lil1 = stagePrize?.["map"](iIlilI => iIlilI.value + "水滴") || [];
+          if (l1IIi1) {
+            let i11Ii1 = "已浇水" + iIII1 + "g，" + III1(IIiii1, 100);
+            if (I1lil1.length) {
+              i11Ii1 += "，奖励" + I1lil1.join(", ");
             }
-            console.log(ii11);
+            console.log(i11Ii1);
           } else {
-            console.log("已浇水" + ii1I + "g，" + l1I1I1(liiiI1, I1lii1));
+            console.log("已浇水" + iIII1 + "g，" + III1(IIiii1, iIlil1));
           }
-          iIl11 && ($.canWatering = false, console.log("已浇水" + ii1I + "g，" + l1I1I1(5, 100)));
+          IlilII && ($.canWatering = false, console.log("已浇水" + iIII1 + "g，" + III1(5, 100)));
         } else {
-          if (iliI1.message) {
+          if (liiiI1.message) {
             $.canWatering = false;
-            console.log(iliI1.message);
+            console.log(liiiI1.message);
           } else {
-            iliI1.data?.["bizMsg"] ? ($.canWatering = false, console.log(iliI1.data?.["bizMsg"])) : console.log("❓" + iii11 + " " + JSON.stringify(iliI1));
+            liiiI1.data?.["bizMsg"] ? ($.canWatering = false, console.log(liiiI1.data?.["bizMsg"])) : console.log("❓" + ilIIlI + " " + JSON.stringify(liiiI1));
           }
         }
         break;
       case "farm_task_list":
-        if (iliI1.code === 0 && iliI1.data?.["bizCode"] === 0) {
-          $.farm_task_list = iliI1.data?.["result"];
+        if (liiiI1.code === 0 && liiiI1.data?.["bizCode"] === 0) {
+          $.farm_task_list = liiiI1.data?.["result"];
         } else {
-          if (iliI1.data?.["bizMsg"]) {
+          if (liiiI1.data?.["bizMsg"]) {
             $.hotproxy = true;
-            console.log(iliI1.code + "-" + iliI1.data?.["bizMsg"]);
+            console.log(liiiI1.code + "-" + liiiI1.data?.["bizMsg"]);
           } else {
-            if (iliI1.errMsg) {
+            if (liiiI1.errMsg) {
               $.hotproxy = true;
-              console.log(iliI1.code + "-" + iliI1.errMsg);
+              console.log(liiiI1.code + "-" + liiiI1.errMsg);
             } else {
-              iliI1.msg ? ($.hotproxy = true, console.log(iliI1.code + "-" + iliI1.msg)) : console.log("❓" + iii11 + " " + JSON.stringify(iliI1));
+              liiiI1.msg ? ($.hotproxy = true, console.log(liiiI1.code + "-" + liiiI1.msg)) : console.log("❓" + ilIIlI + " " + JSON.stringify(liiiI1));
             }
           }
         }
         break;
       case "farm_task_detail":
-        if (iliI1.code === 0 && iliI1.data?.["bizCode"] === 0) {
-          $.farm_task_detail = iliI1.data?.["result"];
+        if (liiiI1.code === 0 && liiiI1.data?.["bizCode"] === 0) {
+          $.farm_task_detail = liiiI1.data?.["result"];
         } else {
-          if (iliI1.data?.["bizMsg"]) {
+          if (liiiI1.data?.["bizMsg"]) {
             $.hotproxy = true;
-            console.log(iliI1.code + "-" + iliI1.data?.["bizMsg"]);
+            console.log(liiiI1.code + "-" + liiiI1.data?.["bizMsg"]);
           } else {
-            if (iliI1.errMsg) {
+            if (liiiI1.errMsg) {
               $.hotproxy = true;
-              console.log(iliI1.code + "-" + iliI1.errMsg);
+              console.log(liiiI1.code + "-" + liiiI1.errMsg);
             } else {
-              iliI1.msg ? ($.hotproxy = true, console.log(iliI1.code + "-" + iliI1.msg)) : console.log("❓" + iii11 + " " + JSON.stringify(iliI1));
+              liiiI1.msg ? ($.hotproxy = true, console.log(liiiI1.code + "-" + liiiI1.msg)) : console.log("❓" + ilIIlI + " " + JSON.stringify(liiiI1));
             }
           }
         }
         break;
       case "farm_assist_init_info":
-        if (iliI1.code === 0 && iliI1.data?.["bizCode"] === 0) {
-          $.farm_assist_init_info = iliI1.data;
+        if (liiiI1.code === 0 && liiiI1.data?.["bizCode"] === 0) {
+          $.farm_assist_init_info = liiiI1.data;
         } else {
-          if (iliI1.data?.["bizMsg"]) {
+          if (liiiI1.data?.["bizMsg"]) {
             $.hotproxy = true;
             $.farm_assist_init_info_hot = false;
           } else {
-            if (iliI1.errMsg) {
+            if (liiiI1.errMsg) {
               $.hotproxy = true;
-              console.log(iliI1.code + "-" + iliI1.errMsg);
+              console.log(liiiI1.code + "-" + liiiI1.errMsg);
             } else {
-              iliI1.msg ? ($.hotproxy = true, console.log(iliI1.code + "-" + iliI1.msg)) : console.log("❓" + iii11 + " " + JSON.stringify(iliI1));
+              liiiI1.msg ? ($.hotproxy = true, console.log(liiiI1.code + "-" + liiiI1.msg)) : console.log("❓" + ilIIlI + " " + JSON.stringify(liiiI1));
             }
           }
         }
         break;
       case "farm_assist_receive_award":
-        if (iliI1.code === 0 && iliI1.data?.["bizCode"] === 0) {
-          console.log("领取[" + $.assistNum + "人助力]奖励: " + (iliI1.data?.["result"]?.["amount"] || 0) + "水滴");
+        if (liiiI1.code === 0 && liiiI1.data?.["bizCode"] === 0) {
+          console.log("领取[" + $.assistNum + "人助力]奖励: " + (liiiI1.data?.["result"]?.["amount"] || 0) + "水滴");
         } else {
-          if (iliI1.data?.["bizMsg"]) {
+          if (liiiI1.data?.["bizMsg"]) {
             $.hotproxy = true;
-            console.log(iliI1.code + "-" + iliI1.data?.["bizMsg"]);
+            console.log(liiiI1.code + "-" + liiiI1.data?.["bizMsg"]);
           } else {
-            if (iliI1.errMsg) {
+            if (liiiI1.errMsg) {
               $.hotproxy = true;
-              console.log(iliI1.code + "-" + iliI1.errMsg);
+              console.log(liiiI1.code + "-" + liiiI1.errMsg);
             } else {
-              iliI1.msg ? ($.hotproxy = true, console.log(iliI1.code + "-" + iliI1.msg)) : console.log("❓" + iii11 + " " + JSON.stringify(iliI1));
+              if (liiiI1.msg) {
+                $.hotproxy = true;
+                console.log(liiiI1.code + "-" + liiiI1.msg);
+              } else {
+                console.log("❓" + ilIIlI + " " + JSON.stringify(liiiI1));
+              }
             }
           }
         }
         break;
       case "farm_do_task":
-        if (iliI1.code === 0 && iliI1.data?.["bizCode"] === 0) {
+        if (liiiI1.code === 0 && liiiI1.data?.["bizCode"] === 0) {
           console.log("> 任务完成");
         } else {
-          if (iliI1.data?.["bizMsg"]) {
+          if (liiiI1.data?.["bizMsg"]) {
             $.hotproxy = true;
-            console.log("> 任务失败 " + iliI1.data.bizMsg);
+            console.log("> 任务失败 " + liiiI1.data.bizMsg);
           } else {
-            iliI1.errMsg ? console.log("> 任务失败 " + iliI1.errMsg) : console.log("> 任务失败 " + iii11 + " " + JSON.stringify(iliI1));
+            liiiI1.errMsg ? console.log("> 任务失败 " + liiiI1.errMsg) : console.log("> 任务失败 " + ilIIlI + " " + JSON.stringify(liiiI1));
           }
         }
         break;
       case "farm_task_receive_award":
-        if (iliI1.code === 0 && iliI1.data?.["bizCode"] === 0) {
-          let IlilI1 = iliI1.data?.["result"]?.["taskAward"]?.["map"](iIIIi => "" + iIIIi.awardValue + (i1Iili[iIIIi.awardType] || "[type=" + awardType + "]"));
-          console.log("> 领取成功，获得 - " + IlilI1.join(", "));
+        if (liiiI1.code === 0 && liiiI1.data?.["bizCode"] === 0) {
+          let I1IIl1 = liiiI1.data?.["result"]?.["taskAward"]?.["map"](l1I1l1 => "" + l1I1l1.awardValue + (iill11[l1I1l1.awardType] || "[type=" + awardType + "]"));
+          console.log("> 领取成功，获得 - " + I1IIl1.join(", "));
         } else {
-          if (iliI1.errMsg) {
+          if (liiiI1.errMsg) {
             $.hotproxy = true;
-            console.log("> 领取失败 " + iliI1.errMsg);
+            console.log("> 领取失败 " + liiiI1.errMsg);
           } else {
-            if (iliI1.data?.["bizMsg"]) {
-              console.log("> 领取失败 " + iliI1.data?.["bizMsg"]);
-            } else {
-              console.log("> 领取失败 " + iii11 + " " + JSON.stringify(iliI1));
-            }
+            liiiI1.data?.["bizMsg"] ? console.log("> 领取失败 " + liiiI1.data?.["bizMsg"]) : console.log("> 领取失败 " + ilIIlI + " " + JSON.stringify(liiiI1));
           }
         }
         break;
       case "dongDongFarmSignHome":
-        if (iliI1.code === 0 && iliI1.data) {
-          $.dongDongFarmSignHome = iliI1.data;
+        if (liiiI1.code === 0 && liiiI1.data) {
+          $.dongDongFarmSignHome = liiiI1.data;
         } else {
-          if (iliI1.errMsg) {
+          if (liiiI1.errMsg) {
             $.hotproxy = true;
-            console.log(iliI1.errMsg);
+            console.log(liiiI1.errMsg);
           } else {
-            iliI1.data?.["bizMsg"] ? console.log(iliI1.data?.["bizMsg"]) : console.log("❓" + iii11 + " " + JSON.stringify(iliI1));
+            liiiI1.data?.["bizMsg"] ? console.log(liiiI1.data?.["bizMsg"]) : console.log("❓" + ilIIlI + " " + JSON.stringify(liiiI1));
           }
         }
         break;
       case "dongDongFarmSignIn":
-        if (iliI1.code === 0 && iliI1.data) {
-          console.log("> 签到成功，获得奖励 - " + iliI1.data?.["prizeConfigName"]);
+        if (liiiI1.code === 0 && liiiI1.data) {
+          console.log("> 签到成功，获得奖励 - " + liiiI1.data?.["prizeConfigName"]);
         } else {
-          if (iliI1.errMsg) {
+          if (liiiI1.errMsg) {
             $.hotproxy = true;
-            console.log("> 签到失败 " + iliI1.errMsg);
+            console.log("> 签到失败 " + liiiI1.errMsg);
           } else {
-            iliI1.data?.["bizMsg"] ? console.log("> 签到失败 " + iliI1.data?.["bizMsg"]) : console.log("> 签到失败 " + iii11 + " " + JSON.stringify(iliI1));
+            if (liiiI1.data?.["bizMsg"]) {
+              console.log("> 签到失败 " + liiiI1.data?.["bizMsg"]);
+            } else {
+              console.log("> 签到失败 " + ilIIlI + " " + JSON.stringify(liiiI1));
+            }
           }
         }
         break;
     }
-  } catch (l1IlIl) {
-    console.log("❌ 未能正确处理 " + iii11 + " 请求响应 " + (l1IlIl.message || l1IlIl));
+  } catch (iIIIii) {
+    console.log("❌ 未能正确处理 " + ilIIlI + " 请求响应 " + (iIIIii.message || iIIIii));
   }
 }
-async function l1Iil(liIIli) {
+async function lIIi1l(li11ii) {
   if ($.runEnd || $.outFlag) {
     return;
   }
-  let liIl = "",
-    llli11 = "",
-    Ili11l = "POST",
-    I1lill = "",
-    I1lili = {};
-  switch (liIIli) {
+  let li1i1 = "",
+    I1iiIl = "",
+    liliII = "POST",
+    lI1iIl = "",
+    iIiiII = {};
+  switch (li11ii) {
     case "farm_home":
-      I1lili = {
+      iIiiII = {
         appId: "c57f6",
         functionId: "farm_home",
         appid: "signed_wh5",
@@ -571,12 +608,12 @@ async function l1Iil(liIIli) {
         ua: $.UA,
         t: true
       };
-      I1lill = await llIIII.getH5st(I1lili);
-      liIl = "https://api.m.jd.com/client.action";
-      llli11 = "" + I1lill.params;
+      lI1iIl = await iill1l.getH5st(iIiiII);
+      li1i1 = "https://api.m.jd.com/client.action";
+      I1iiIl = "" + lI1iIl.params;
       break;
     case "farm_tree_board":
-      I1lili = {
+      iIiiII = {
         appId: "c57f6",
         functionId: "farm_tree_board",
         appid: "signed_wh5",
@@ -589,12 +626,12 @@ async function l1Iil(liIIli) {
         ua: $.UA,
         t: true
       };
-      I1lill = await llIIII.getH5st(I1lili);
-      liIl = "https://api.m.jd.com/client.action";
-      llli11 = "" + I1lill.params;
+      lI1iIl = await iill1l.getH5st(iIiiII);
+      li1i1 = "https://api.m.jd.com/client.action";
+      I1iiIl = "" + lI1iIl.params;
       break;
     case "farm_plant_tree":
-      I1lili = {
+      iIiiII = {
         appId: "c57f6",
         functionId: "farm_plant_tree",
         appid: "signed_wh5",
@@ -602,18 +639,18 @@ async function l1Iil(liIIli) {
         client: "ios",
         body: {
           version: 1,
-          uid: ilI11I
+          uid: IiIiII
         },
         version: "4.2",
         ua: $.UA,
         t: true
       };
-      I1lill = await llIIII.getH5st(I1lili);
-      liIl = "https://api.m.jd.com/client.action";
-      llli11 = "" + I1lill.params;
+      lI1iIl = await iill1l.getH5st(iIiiII);
+      li1i1 = "https://api.m.jd.com/client.action";
+      I1iiIl = "" + lI1iIl.params;
       break;
     case "farm_water":
-      I1lili = {
+      iIiiII = {
         appId: "28981",
         functionId: "farm_water",
         appid: "signed_wh5",
@@ -627,12 +664,12 @@ async function l1Iil(liIIli) {
         ua: $.UA,
         t: true
       };
-      I1lill = await llIIII.getH5st(I1lili);
-      liIl = "https://api.m.jd.com/client.action";
-      llli11 = "" + I1lill.params;
+      lI1iIl = await iill1l.getH5st(iIiiII);
+      li1i1 = "https://api.m.jd.com/client.action";
+      I1iiIl = "" + lI1iIl.params;
       break;
     case "farm_assist_init_info":
-      I1lili = {
+      iIiiII = {
         appId: "c57f6",
         functionId: "farm_assist_init_info",
         appid: "signed_wh5",
@@ -646,12 +683,12 @@ async function l1Iil(liIIli) {
         ua: $.UA,
         t: true
       };
-      I1lill = await llIIII.getH5st(I1lili);
-      liIl = "https://api.m.jd.com/client.action";
-      llli11 = "" + I1lill.params;
+      lI1iIl = await iill1l.getH5st(iIiiII);
+      li1i1 = "https://api.m.jd.com/client.action";
+      I1iiIl = "" + lI1iIl.params;
       break;
     case "farm_task_list":
-      I1lili = {
+      iIiiII = {
         appId: "c57f6",
         functionId: "farm_task_list",
         appid: "signed_wh5",
@@ -665,12 +702,12 @@ async function l1Iil(liIIli) {
         ua: $.UA,
         t: true
       };
-      I1lill = await llIIII.getH5st(I1lili);
-      liIl = "https://api.m.jd.com/client.action";
-      llli11 = "" + I1lill.params;
+      lI1iIl = await iill1l.getH5st(iIiiII);
+      li1i1 = "https://api.m.jd.com/client.action";
+      I1iiIl = "" + lI1iIl.params;
       break;
     case "farm_task_detail":
-      I1lili = {
+      iIiiII = {
         appId: "c57f6",
         functionId: "farm_task_detail",
         appid: "signed_wh5",
@@ -686,12 +723,12 @@ async function l1Iil(liIIli) {
         ua: $.UA,
         t: true
       };
-      I1lill = await llIIII.getH5st(I1lili);
-      liIl = "https://api.m.jd.com/client.action";
-      llli11 = "" + I1lill.params;
+      lI1iIl = await iill1l.getH5st(iIiiII);
+      li1i1 = "https://api.m.jd.com/client.action";
+      I1iiIl = "" + lI1iIl.params;
       break;
     case "farm_do_task":
-      I1lili = {
+      iIiiII = {
         appId: "28981",
         functionId: "farm_do_task",
         appid: "signed_wh5",
@@ -709,12 +746,12 @@ async function l1Iil(liIIli) {
         ua: $.UA,
         t: true
       };
-      I1lill = await llIIII.getH5st(I1lili);
-      liIl = "https://api.m.jd.com/client.action";
-      llli11 = "" + I1lill.params;
+      lI1iIl = await iill1l.getH5st(iIiiII);
+      li1i1 = "https://api.m.jd.com/client.action";
+      I1iiIl = "" + lI1iIl.params;
       break;
     case "farm_task_receive_award":
-      I1lili = {
+      iIiiII = {
         appId: "33e0f",
         functionId: "farm_task_receive_award",
         appid: "signed_wh5",
@@ -730,12 +767,12 @@ async function l1Iil(liIIli) {
         ua: $.UA,
         t: true
       };
-      I1lill = await llIIII.getH5st(I1lili);
-      liIl = "https://api.m.jd.com/client.action";
-      llli11 = "" + I1lill.params;
+      lI1iIl = await iill1l.getH5st(iIiiII);
+      li1i1 = "https://api.m.jd.com/client.action";
+      I1iiIl = "" + lI1iIl.params;
       break;
     case "farm_assist_receive_award":
-      I1lili = {
+      iIiiII = {
         appId: "c4332",
         functionId: "farm_assist_receive_award",
         appid: "signed_wh5",
@@ -748,60 +785,60 @@ async function l1Iil(liIIli) {
         ua: $.UA,
         t: true
       };
-      I1lill = await llIIII.getH5st(I1lili);
-      liIl = "https://api.m.jd.com/client.action";
-      llli11 = "" + I1lill.params;
+      lI1iIl = await iill1l.getH5st(iIiiII);
+      li1i1 = "https://api.m.jd.com/client.action";
+      I1iiIl = "" + lI1iIl.params;
       break;
     case "dongDongFarmSignHome":
-      I1lili = {
+      iIiiII = {
         appId: "deba1",
         functionId: "dongDongFarmSignHome",
         appid: "activities_platform",
         clientVersion: "12.2.0",
         client: "ios",
         body: {
-          linkId: iilIIl
+          linkId: l1Il1
         },
         version: "4.2",
         ua: $.UA,
         t: true
       };
-      I1lill = await llIIII.getH5st(I1lili);
-      liIl = "https://api.m.jd.com/api";
-      llli11 = "" + I1lill.params;
+      lI1iIl = await iill1l.getH5st(iIiiII);
+      li1i1 = "https://api.m.jd.com/api";
+      I1iiIl = "" + lI1iIl.params;
       break;
     case "dongDongFarmSignIn":
-      I1lili = {
+      iIiiII = {
         appId: "65f9d",
         functionId: "dongDongFarmSignIn",
         appid: "activities_platform",
         clientVersion: "12.2.0",
         client: "ios",
         body: {
-          linkId: iilIIl
+          linkId: l1Il1
         },
         version: "4.2",
         ua: $.UA,
         t: true
       };
-      I1lill = await llIIII.getH5st(I1lili);
-      liIl = "https://api.m.jd.com/api";
-      llli11 = "" + I1lill.params;
+      lI1iIl = await iill1l.getH5st(iIiiII);
+      li1i1 = "https://api.m.jd.com/api";
+      I1iiIl = "" + lI1iIl.params;
       break;
     default:
-      console.log("❌ 未知请求 " + liIIli);
+      console.log("❌ 未知请求 " + li11ii);
       return;
   }
-  llli11 += "&screen=428*0&wqDefault=false";
-  const i11Iil = {
-    url: liIl,
+  I1iiIl += "&screen=428*0&wqDefault=false";
+  const ilIll1 = {
+    url: li1i1,
     headers: {
       Accept: "application/json, text/plain, */*",
       "Accept-Encoding": "gzip, deflate, br",
       "Accept-Language": "zh-cn",
       Connection: "keep-alive",
       "Content-Type": "application/x-www-form-urlencoded",
-      Cookie: IiIiIi,
+      Cookie: IiIiI,
       Host: "api.m.jd.com",
       Referer: "https://h5.m.jd.com/",
       "X-Referer-Page": "https://h5.m.jd.com/pb/015686010/Bc9WX7MpCW7nW9QjZ5N3fFeJXMH/index.html",
@@ -809,130 +846,120 @@ async function l1Iil(liIIli) {
       "x-rp-client": "h5_1.0.0",
       "User-Agent": $.UA
     },
-    body: llli11,
+    body: I1iiIl,
     timeout: 30000
   };
-  Ili11l === "GET" && (delete i11Iil.body, delete i11Iil.headers["Content-Type"]);
-  if (i1Iill && ili11) {
-    if (l1lill) {
+  liliII === "GET" && (delete ilIll1.body, delete ilIll1.headers["Content-Type"]);
+  if (I1IliI && llIII1) {
+    if (l1I1II) {
       if ($.hotproxy) {
-        await III1Il();
-        global.GLOBAL_AGENT.HTTP_PROXY = "http://" + iIIllI;
-        I1Ill1 = 0;
+        await illili();
+        global.GLOBAL_AGENT.HTTP_PROXY = "http://" + IiIiI1;
+        iIIlii = 0;
         $.hotproxy = false;
-        console.log("📶 " + iIIllI);
+        console.log("📶 " + IiIiI1);
       }
-      I1Ill1++;
+      iIIlii++;
     }
   }
-  const i11Iii = 1;
-  let Ili11i = 0,
-    Il1iI1 = null,
-    IIIllI = false;
-  while (Ili11i < i11Iii) {
-    if (Ili11i > 0) {
-      await $.wait(1000);
-    }
+  const I1IIil = 1;
+  let I1IIii = 0,
+    iIIIlI = null,
+    li11i1 = false;
+  while (I1IIii < I1IIil) {
+    I1IIii > 0 && (await $.wait(1000));
     const {
-      err: ilIlil,
-      res: Ii1IiI,
-      data: IIll11
-    } = await III1Ii(i11Iil, Ili11l);
-    if (ilIlil) {
-      if (typeof ilIlil === "string" && ilIlil.includes("Timeout awaiting 'request'")) {
-        Il1iI1 = liIIli + " 请求超时，请检查网络重试";
+      err: Ii1lIl,
+      res: iIIIiI,
+      data: li1iI
+    } = await I1lI1i(ilIll1, liliII);
+    if (Ii1lIl) {
+      if (typeof Ii1lIl === "string" && Ii1lIl.includes("Timeout awaiting 'request'")) {
+        iIIIlI = li11ii + " 请求超时，请检查网络重试";
       } else {
-        const l1I1l1 = Ii1IiI?.["statusCode"];
-        if (l1I1l1) {
-          if ([403, 493].includes(l1I1l1)) {
-            Il1iI1 = liIIli + " 请求失败，IP被限制（Response code " + l1I1l1 + "）";
+        const II1ll = iIIIiI?.["statusCode"];
+        if (II1ll) {
+          if ([403, 493].includes(II1ll)) {
+            iIIIlI = li11ii + " 请求失败，IP被限制（Response code " + II1ll + "）";
             $.hotproxy = true;
-            IIIllI = true;
+            li11i1 = true;
           } else {
-            if ([400, 404].includes(l1I1l1)) {
-              $.hotproxy = true;
-              Il1iI1 = liIIli + " 请求配置参数错误，请联系开发者进行反馈（Response code " + l1I1l1 + "）";
-            } else {
-              $.hotproxy = true;
-              Il1iI1 = liIIli + " 请求失败（Response code " + l1I1l1 + "）";
-            }
+            [400, 404].includes(II1ll) ? ($.hotproxy = true, iIIIlI = li11ii + " 请求配置参数错误，请联系开发者进行反馈（Response code " + II1ll + "）") : ($.hotproxy = true, iIIIlI = li11ii + " 请求失败（Response code " + II1ll + "）");
           }
         } else {
           $.hotproxy = true;
-          Il1iI1 = liIIli + " 请求失败 => " + (ilIlil.message || ilIlil);
+          iIIIlI = li11ii + " 请求失败 => " + (Ii1lIl.message || Ii1lIl);
         }
       }
-      Ili11i++;
+      I1IIii++;
     } else {
-      const lIi1l = false;
+      const i1Ill = false;
       try {
-        const I1iiIi = JSON.parse(IIll11);
-        l1Iii(liIIli, I1iiIi);
+        const Ii1Ili = JSON.parse(li1iI);
+        l1iiIi(li11ii, Ii1Ili);
         break;
-      } catch (li1i1) {
-        Il1iI1 = "❌ " + liIIli + " 接口响应数据解析失败: " + li1i1.message;
-        console.log("🚫 " + liIIli + " => " + String(IIll11 || "无响应数据"));
-        lIi1l && (console.log("\n---------------------------------------------------\n"), console.log(activityCookie), console.log("\n---------------------------------------------------\n"));
-        Ili11i++;
+      } catch (IIiI11) {
+        iIIIlI = "❌ " + li11ii + " 接口响应数据解析失败: " + IIiI11.message;
+        console.log("🚫 " + li11ii + " => " + String(li1iI || "无响应数据"));
+        i1Ill && (console.log("\n---------------------------------------------------\n"), console.log(activityCookie), console.log("\n---------------------------------------------------\n"));
+        I1IIii++;
       }
-      IIIllI = false;
+      li11i1 = false;
     }
   }
-  if (Ili11i >= i11Iii) {
-    console.log(Il1iI1);
-    IIIllI && ($.outFlag = true, $.message && $.message.fix(Il1iI1));
-  }
+  I1IIii >= I1IIil && (console.log(iIIIlI), li11i1 && ($.outFlag = true, $.message && $.message.fix(iIIIlI)));
 }
-async function III1Ii(IIll1i, lI1iII = "POST") {
-  if (lI1iII === "POST") {
-    return new Promise(async I1iiI1 => {
-      $.post(IIll1i, (lIiIi1, li11l1, IIlIIl) => {
-        I1iiI1({
-          err: lIiIi1,
-          res: li11l1,
-          data: IIlIIl
+async function I1lI1i(IIlIII, i1Iil = "POST") {
+  if (i1Iil === "POST") {
+    return new Promise(async IIlIIi => {
+      $.post(IIlIII, (iliiil, li11ll, i1Il1) => {
+        IIlIIi({
+          err: iliiil,
+          res: li11ll,
+          data: i1Il1
         });
       });
     });
   } else {
-    if (lI1iII === "GET") {
-      return new Promise(async I1IIiI => {
-        $.get(IIll1i, (ilIli1, li11lI, l1I1ll) => {
-          I1IIiI({
-            err: ilIli1,
-            res: li11lI,
-            data: l1I1ll
+    if (i1Iil === "GET") {
+      return new Promise(async IIiI1i => {
+        $.get(IIlIII, (ilIllI, I1IIli, Il1I1i) => {
+          IIiI1i({
+            err: ilIllI,
+            res: I1IIli,
+            data: Il1I1i
           });
         });
       });
     } else {
-      const li1ii = "不支持的请求方法";
+      const lIilI1 = "不支持的请求方法";
       return {
-        err: li1ii,
+        err: lIilI1,
         res: null,
         data: null
       };
     }
   }
 }
-function III1Il() {
-  return new Promise(async ll1lI1 => {
+function illili() {
+  return new Promise(async I1IIll => {
     $.get({
-      url: l1lill,
+      url: l1I1II,
       timeout: {
         request: 5000
       }
-    }, (liii11, lIiIii) => {
-      if (lIiIii) {
+    }, (i1Ii1, lIilII) => {
+      if (lIilII) {
         try {
-          let Il1I11 = /((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})){3}:[1-9]\d*/g,
-            lIl1II = Il1I11.exec(lIiIii.body);
-          iIIllI = lIl1II[0];
-          global.GLOBAL_AGENT.HTTP_PROXY = "http://" + iIIllI;
-        } catch (Ii1Ili) {} finally {
-          ll1lI1();
+          let ilIlli = /((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})){3}:[1-9]\d*/g,
+            I1IIlI = ilIlli.exec(lIilII.body);
+          IiIiI1 = I1IIlI[0];
+          global.GLOBAL_AGENT.HTTP_PROXY = "http://" + IiIiI1;
+        } catch (ilIlll) {} finally {
+          I1IIll();
         }
       }
     });
   });
 }
+var version_ = "jsjiami.com.v7";
