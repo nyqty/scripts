@@ -22,149 +22,151 @@ cron:1 1 1 1 *
 
 const Env=require('./utils/Env.js');
 const $ = new Env('欢乐淘金(发财挖宝)助力')
-var version_ = "jsjiami.com.v7";
-const ili1Ii = require("./jdCookie"),
-  Iilll1 = require("./function/sendJDNotify"),
-  ll11I = require("./function/jdCommon"),
-  iIi1I = require("./function/krgetH5st"),
-  liIIl = process.env.JD_FCWB_Notify === "true",
-  IlI1lI = process.env.JD_FCWB_InviterId || "",
-  liIIi = process.env.JD_FCWB_NUM,
-  IilllI = "cNAsHasSnzWTAtWhIQR4dA",
-  iI1lIi = process.env.JD_FCWB_PROXY_OPEN === "true",
-  l1lllI = process.env.JD_FCWB_PROXY_TUNNRL,
-  llliIi = process.env.JD_FCWB_PROXY_URL,
-  i1lIli = process.env.JD_FCWB_NO_PROXY || "*.kingran.cf,127.0.0.1,*.baidu.com";
-let i1lIll = "",
-  ll11ii = 0;
-const liIlii = "2";
-let llii1l = parseInt(liIlii) * 1000;
-iI1lIi && (l1lllI || llliIi) && (llii1l = 100);
+const IIIlII = require("./jdCookie"),
+  iiIiI1 = require("./function/sendJDNotify"),
+  ili1Il = require("./function/jdCommon"),
+  ili1Ii = require("./function/krgetH5st"),
+  Iilll1 = process.env.JD_FCWB_Notify === "true",
+  ll11I = process.env.JD_FCWB_InviterId || "",
+  iIi1I = process.env.JD_FCWB_NUM,
+  liIIl = "Bn1VWXtvgTv5ewPoMR-X8A",
+  IlI1lI = process.env.JD_FCWB_PROXY_OPEN === "true",
+  liIIi = process.env.JD_FCWB_PROXY_TUNNRL,
+  IilllI = process.env.JD_FCWB_PROXY_URL,
+  iI1lIi = process.env.JD_FCWB_NO_PROXY || "*.kingran.cf,127.0.0.1,*.baidu.com";
+let l1lllI = "",
+  llliIi = 0;
+const i1lIli = "2";
+let i1lIll = parseInt(i1lIli) * 1000;
+IlI1lI && (liIIi || IilllI) && (i1lIll = 100);
 $.helpnum = 0;
 $.FCWBEnd = false;
-let liIlil = false;
-if (iI1lIi) {
-  liIlil = true;
+let ll11ii = false;
+if (IlI1lI) {
+  ll11ii = true;
   try {
     require("global-agent/bootstrap");
-    if (llliIi) {
+    if (IilllI) {
       console.log("\n☑️ API地址代理已开启：");
-      console.log("☑️ 代理地址为：" + llliIi + "\n");
-      let llii11 = /[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+\.?/g;
-      global.GLOBAL_AGENT.NO_PROXY = llii11.exec(llliIi)[0] + "," + i1lIli;
+      console.log("☑️ 代理地址为：" + IilllI + "\n");
+      let ll11lI = /[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+\.?/g;
+      global.GLOBAL_AGENT.NO_PROXY = ll11lI.exec(IilllI)[0] + "," + iI1lIi;
     } else {
-      l1lllI ? (global.GLOBAL_AGENT.HTTP_PROXY = l1lllI, global.GLOBAL_AGENT.NO_PROXY = "" + i1lIli, console.log("\n☑️ 代理池代理已开启："), console.log("☑️ 代理地址为：" + global.GLOBAL_AGENT.HTTP_PROXY + "\n")) : (console.log("\n⚠️ 当前检测到已开启代理，但未填写代理地址变量"), console.log("⚠ 代理池变量：export JD_FCWB_PROXY_TUNNRL='http://ip:port'"), console.log("⚠ API地址变量：export JD_FCWB_PROXY_URL='http://api.xxx.xxx'\n"));
+      liIIi ? (global.GLOBAL_AGENT.HTTP_PROXY = liIIi, global.GLOBAL_AGENT.NO_PROXY = "" + iI1lIi, console.log("\n☑️ 代理池代理已开启："), console.log("☑️ 代理地址为：" + global.GLOBAL_AGENT.HTTP_PROXY + "\n")) : (console.log("\n⚠️ 当前检测到已开启代理，但未填写代理地址变量"), console.log("⚠ 代理池变量：export JD_FCWB_PROXY_TUNNRL='http://ip:port'"), console.log("⚠ API地址变量：export JD_FCWB_PROXY_URL='http://api.xxx.xxx'\n"));
     }
-  } catch (Iillli) {
+  } catch (llliI1) {
     console.log("\n请安装global-agent依赖，才能启用代理！");
     console.log("\n安装命令：npm install global-agent\n");
-    liIlil = false;
+    ll11ii = false;
   }
 } else {
   console.log("\n⚠ 检测当前模式未开启代理：");
   console.log("⚠ 开启代理变量：export JD_FCWB_PROXY_OPEN='true' \n");
 }
-let llii1i = "";
-const ll11il = Object.keys(ili1Ii).map(ll11l1 => ili1Ii[ll11l1]).filter(ll111 => ll111);
-!ll11il[0] && ($.msg($.name, "【提示】请先获取Cookie"), process.exit(1));
+let liIlii = "";
+const llii1l = Object.keys(IIIlII).map(liIII => IIIlII[liIII]).filter(llii11 => llii11);
+!llii1l[0] && ($.msg($.name, "【提示】请先获取Cookie"), process.exit(1));
 !(async () => {
-  liIIi ? console.log("❖ 已填写指定人数变量，指定人数 [" + liIIi + "]") : console.log("❖ 未填写指定人数变量，默认全车助力");
-  if (IlI1lI) {
-    let III111 = IlI1lI.split("&");
-    $.zdinviter = III111[0];
-    $.zdinviteCode = III111[1];
+  iIi1I ? console.log("❖ 已填写指定人数变量，指定人数 [" + iIi1I + "]") : console.log("❖ 未填写指定人数变量，默认全车助力");
+  if (ll11I) {
+    let iI1lI1 = ll11I.split("&");
+    $.zdinviter = iI1lI1[0];
+    $.zdinviteCode = iI1lI1[1];
     console.log("❖ 已填写指定助力变量，开始助力 [" + $.zdinviteCode + "]");
   } else {
     console.log("❖ 未填写指定助力变量，开始助力账号[1]");
   }
-  Iilll1.config({
+  iiIiI1.config({
     title: $.name
   });
-  for (let liIll1 = 0; liIll1 < ll11il.length; liIll1++) {
-    $.index = liIll1 + 1;
-    llii1i = ll11il[liIll1];
-    ll11I.setCookie(llii1i);
-    $.UserName = decodeURIComponent(ll11I.getCookieValue(llii1i, "pt_pin"));
-    $.UA = ll11I.genUA($.UserName);
-    $.message = Iilll1.create($.index, $.UserName);
+  for (let IlI1li = 0; IlI1li < llii1l.length; IlI1li++) {
+    $.index = IlI1li + 1;
+    liIlii = llii1l[IlI1li];
+    ili1Il.setCookie(liIlii);
+    $.UserName = decodeURIComponent(ili1Il.getCookieValue(liIlii, "pt_pin"));
+    $.UA = ili1Il.genUA($.UserName);
+    $.message = iiIiI1.create($.index, $.UserName);
     $.nickName = "";
     console.log("\n******开始【京东账号" + $.index + "】" + ($.nickName || $.UserName) + "******\n");
-    iI1lIi && liIlil && llliIi && (ll11ii % 5 == 0 && (await liIII(), global.GLOBAL_AGENT.HTTP_PROXY = "http://" + i1lIll), console.log("📶 " + i1lIll), ll11ii++);
-    await iI1lIl();
-    ll11I.unsetCookie();
+    IlI1lI && ll11ii && IilllI && (llliIi % 5 == 0 && (await Iil1(), global.GLOBAL_AGENT.HTTP_PROXY = "http://" + l1lllI), console.log("📶 " + l1lllI), llliIi++);
+    await liIlil();
+    ili1Il.unsetCookie();
     if ($.FCWBEnd || $.runEnd) {
       break;
     }
-    await $.wait(parseInt(llii1l * 1 + 100, 10));
+    await $.wait(parseInt(i1lIll * 1 + 100, 10));
   }
-  liIIl && Iilll1.getMessage() && (Iilll1.updateContent(Iilll1.content + "\n"), await Iilll1.push());
-})().catch(I1I1ll => $.logErr(I1I1ll)).finally(() => $.done());
-async function iI1lIl() {
+  if (Iilll1 && iiIiI1.getMessage()) {
+    iiIiI1.updateContent(iiIiI1.content + "\n");
+    await iiIiI1.push();
+  }
+})().catch(III111 => $.logErr(III111)).finally(() => $.done());
+async function liIlil() {
   $.canWatering = true;
   $.hotproxy = false;
   try {
-    if (IlI1lI) {
-      await Iili($.zdinviteCode, $.zdinviter);
+    if (ll11I) {
+      await ll11il($.zdinviteCode, $.zdinviter);
     } else {
       if ($.index == 1) {
         console.log("⏺️ 账号[1]获取助力信息");
-        await iiIiII();
+        await llii1i();
         if ($.runEnd) {
           return;
         }
       } else {
-        await Iili($.myinviteCode, $.markedPin);
+        await ll11il($.myinviteCode, $.markedPin);
       }
     }
-  } catch (illlii) {
-    console.log(illlii.message);
+  } catch (l1i1l) {
+    console.log(l1i1l.message);
   }
 }
-async function iiIiII() {
+async function llii1i() {
   $.happyDigHome = "";
   $.happyDigHelpList = "";
-  await Iil1("happyDigHome");
+  await iiIiII("happyDigHome");
   if ($.runEnd) {
     return;
   }
-  await $.wait(parseInt(llii1l * 1 + 100, 10));
-  await Iil1("happyDigHelpList");
-  await $.wait(parseInt(llii1l * 1 + 100, 10));
+  await $.wait(parseInt(i1lIll * 1 + 100, 10));
+  await iiIiII("happyDigHelpList");
+  await $.wait(parseInt(i1lIll * 1 + 100, 10));
   if ($.happyDigHome?.["markedPin"]) {
     $.myinviteCode = $.happyDigHome?.["inviteCode"];
     $.markedPin = $.happyDigHome?.["markedPin"];
     $.personNum = $.happyDigHelpList?.["personNum"] || 0;
-    const l1l1Ii = new Date().valueOf(),
-      IIIIlI = $.happyDigHome?.["leftTime"] + l1l1Ii,
-      l1i11l = $.time("yyyy-MM-dd HH:mm:ss", IIIIlI);
-    console.log("⏺️ 已开启活动，结束时间：" + l1i11l + "\n⏺️ 已有助力人数：" + $.personNum + "\n⏺️ 助力码：" + $.markedPin + "&" + $.myinviteCode);
+    const l1i11i = new Date().valueOf(),
+      l11iI1 = $.happyDigHome?.["leftTime"] + l1i11i,
+      IliiI = $.time("yyyy-MM-dd HH:mm:ss", l11iI1);
+    console.log("⏺️ 已开启活动，结束时间：" + IliiI + "\n⏺️ 已有助力人数：" + $.personNum + "\n⏺️ 助力码：" + $.markedPin + "&" + $.myinviteCode);
   } else {
     console.log("⏺️ 未能正确获取到助力码，退出执行！");
     $.runEnd = true;
   }
 }
-async function Iili(liiil1, lllII) {
-  $.inviteCode = liiil1;
-  $.inviter = lllII;
-  await Iil1("happyDigHelp");
+async function ll11il(I1lIII, liIlll) {
+  $.inviteCode = I1lIII;
+  $.inviter = liIlll;
+  await iiIiII("happyDigHelp");
 }
-async function iIi11(l11iII, l1i11i) {
+async function iI1lIl(I1iI1I, illll1) {
   try {
-    switch (l11iII) {
+    switch (I1iI1I) {
       case "happyDigHelp":
-        if (l1i11i?.["code"] === 0 && l1i11i?.["success"] === true) {
+        if (illll1?.["code"] === 0 && illll1?.["success"] === true) {
           $.hotproxy = false;
-          $.happyDigHelp = l1i11i;
+          $.happyDigHelp = illll1;
           switch ($.happyDigHelp?.["success"]) {
             case false:
-              console.log("❎ " + l1i11i.code + "-" + l1i11i.errMsg);
+              console.log("❎ " + illll1.code + "-" + illll1.errMsg);
               break;
             case true:
-              if (IlI1lI) {
+              if (ll11I) {
                 $.helpnum++;
                 console.log("✅ 助力成功 [" + $.helpnum + "]");
-                if (liIIi) {
-                  if (liIIi <= $.helpnum) {
+                if (iIi1I) {
+                  if (iIi1I <= $.helpnum) {
                     console.log("✅ 当前助力已达到指定助力人数，退出！");
                     $.FCWBEnd = true;
                     return;
@@ -173,8 +175,8 @@ async function iIi11(l11iII, l1i11i) {
               } else {
                 $.personNum++;
                 console.log("✅ 助力成功 [" + $.personNum + "]");
-                if (liIIi) {
-                  if (liIIi <= $.personNum) {
+                if (iIi1I) {
+                  if (iIi1I <= $.personNum) {
                     console.log("✅ 当前助力已达到指定助力人数，退出！");
                     $.FCWBEnd = true;
                     return;
@@ -190,89 +192,89 @@ async function iIi11(l11iII, l1i11i) {
               }
           }
         } else {
-          if (l1i11i.data?.["bizMsg"]) {
-            console.log("> " + l1i11i.code + "-" + l1i11i.errMsg);
+          if (illll1.data?.["bizMsg"]) {
+            console.log("> " + illll1.code + "-" + illll1.errMsg);
           } else {
-            if (l1i11i.errMsg) {
-              console.log("> " + l1i11i.code + "-" + l1i11i.errMsg);
+            if (illll1.errMsg) {
+              console.log("> " + illll1.code + "-" + illll1.errMsg);
             } else {
-              if (l1i11i.msg) {
-                console.log("> " + l1i11i.code + "-" + l1i11i.msg);
+              if (illll1.msg) {
+                console.log("> " + illll1.code + "-" + illll1.msg);
               } else {
-                console.log("❓" + l11iII + " " + JSON.stringify(l1i11i));
+                console.log("❓" + I1iI1I + " " + JSON.stringify(illll1));
               }
             }
           }
         }
         break;
       case "happyDigHome":
-        if (l1i11i?.["code"] === 0 && l1i11i?.["success"] === true) {
+        if (illll1?.["code"] === 0 && illll1?.["success"] === true) {
           $.hotproxy = false;
-          $.happyDigHome = l1i11i.data;
+          $.happyDigHome = illll1.data;
         } else {
-          if (l1i11i.data?.["bizMsg"]) {
-            console.log("> " + l1i11i.code + "-" + l1i11i.data?.["bizMsg"] + "}");
+          if (illll1.data?.["bizMsg"]) {
+            console.log("> " + illll1.code + "-" + illll1.data?.["bizMsg"] + "}");
           } else {
-            if (l1i11i.errMsg) {
+            if (illll1.errMsg) {
               $.runEnd = true;
-              console.log("> " + l1i11i.code + "-" + l1i11i.errMsg);
+              console.log("> " + illll1.code + "-" + illll1.errMsg);
             } else {
-              l1i11i.msg ? console.log("> " + l1i11i.code + "-" + l1i11i.msg) : console.log("❓" + l11iII + " " + JSON.stringify(l1i11i));
+              illll1.msg ? console.log("> " + illll1.code + "-" + illll1.msg) : console.log("❓" + I1iI1I + " " + JSON.stringify(illll1));
             }
           }
         }
         break;
       case "happyDigHelpList":
-        if (l1i11i?.["code"] === 0 && l1i11i?.["success"] === true) {
+        if (illll1?.["code"] === 0 && illll1?.["success"] === true) {
           $.hotproxy = false;
-          $.happyDigHelpList = l1i11i.data;
+          $.happyDigHelpList = illll1.data;
         } else {
-          if (l1i11i.data?.["bizMsg"]) {
-            console.log("> " + l1i11i.code + "-" + l1i11i.data?.["bizMsg"]);
+          if (illll1.data?.["bizMsg"]) {
+            console.log("> " + illll1.code + "-" + illll1.data?.["bizMsg"]);
           } else {
-            if (l1i11i.errMsg) {
+            if (illll1.errMsg) {
               $.runEnd = true;
-              console.log("> " + l1i11i.code + "-" + l1i11i.errMsg);
+              console.log("> " + illll1.code + "-" + illll1.errMsg);
             } else {
-              l1i11i.msg ? console.log("> " + l1i11i.code + "-" + l1i11i.msg) : console.log("❓" + l11iII + " " + JSON.stringify(l1i11i));
+              illll1.msg ? console.log("> " + illll1.code + "-" + illll1.msg) : console.log("❓" + I1iI1I + " " + JSON.stringify(illll1));
             }
           }
         }
         break;
     }
-  } catch (llIil) {
-    console.log("❌ 未能正确处理 " + l11iII + " 请求响应 " + (llIil.message || llIil));
+  } catch (i1I1I) {
+    console.log("❌ 未能正确处理 " + I1iI1I + " 请求响应 " + (i1I1I.message || i1I1I));
   }
 }
-async function Iil1(llIii) {
+async function iiIiII(llIil) {
   if ($.runEnd) {
     return;
   }
-  let IIIIi1 = "",
-    ii1IIl = "",
-    ii1IIi = "GET",
-    I1ll1l = "",
-    I1ll1i = {};
-  switch (llIii) {
+  let IIiiI1 = "",
+    IIIIi1 = "",
+    ii1IIl = "GET",
+    ii1IIi = "",
+    I1ll1l = {};
+  switch (llIil) {
     case "happyDigHome":
-      I1ll1i = {
+      I1ll1l = {
         appId: "ce6c2",
         functionId: "happyDigHome",
         appid: "activities_platform",
         clientVersion: "12.2.0",
         client: "ios",
         body: {
-          linkId: IilllI
+          linkId: liIIl
         },
         version: "4.2",
         ua: $.UA,
         t: true
       };
-      I1ll1l = await iIi1I.getH5st(I1ll1i);
-      IIIIi1 = "https://api.m.jd.com/api?" + I1ll1l.params;
+      ii1IIi = await ili1Ii.getH5st(I1ll1l);
+      IIiiI1 = "https://api.m.jd.com/api?" + ii1IIi.params;
       break;
     case "happyDigHelpList":
-      I1ll1i = {
+      I1ll1l = {
         appId: "02f8d",
         functionId: "happyDigHelpList",
         appid: "activities_platform",
@@ -281,24 +283,24 @@ async function Iil1(llIii) {
         body: {
           pageNum: 1,
           pageSize: 50,
-          linkId: IilllI
+          linkId: liIIl
         },
         version: "4.2",
         ua: $.UA,
         t: true
       };
-      I1ll1l = await iIi1I.getH5st(I1ll1i);
-      IIIIi1 = "https://api.m.jd.com/api?" + I1ll1l.params;
+      ii1IIi = await ili1Ii.getH5st(I1ll1l);
+      IIiiI1 = "https://api.m.jd.com/api?" + ii1IIi.params;
       break;
     case "happyDigHelp":
-      I1ll1i = {
+      I1ll1l = {
         appId: "8dd95",
         functionId: "happyDigHelp",
         appid: "activities_platform",
         clientVersion: "12.2.0",
         client: "ios",
         body: {
-          linkId: IilllI,
+          linkId: liIIl,
           inviter: $.inviter,
           inviteCode: $.inviteCode
         },
@@ -306,22 +308,22 @@ async function Iil1(llIii) {
         ua: $.UA,
         t: true
       };
-      I1ll1l = await iIi1I.getH5st(I1ll1i);
-      IIIIi1 = "https://api.m.jd.com/api?" + I1ll1l.params;
+      ii1IIi = await ili1Ii.getH5st(I1ll1l);
+      IIiiI1 = "https://api.m.jd.com/api?" + ii1IIi.params;
       break;
     default:
-      console.log("❌ 未知请求 " + llIii);
+      console.log("❌ 未知请求 " + llIil);
       return;
   }
-  const i11iII = {
-    url: IIIIi1,
+  const I1ll1i = {
+    url: IIiiI1,
     headers: {
       Accept: "application/json, text/plain, */*",
       "Accept-Encoding": "gzip, deflate, br",
       "Accept-Language": "zh-cn",
       Connection: "keep-alive",
       "Content-Type": "application/x-www-form-urlencoded",
-      Cookie: llii1i,
+      Cookie: liIlii,
       Host: "api.m.jd.com",
       Referer: "https://pro.m.jd.com/mall/active/3BwUqhLsJYrHP4qgAgDDJGrSVngK/index.html",
       "X-Referer-Page": "https://pro.m.jd.com/mall/active/3BwUqhLsJYrHP4qgAgDDJGrSVngK/index.html",
@@ -329,119 +331,119 @@ async function Iil1(llIii) {
       "x-rp-client": "h5_1.0.0",
       "User-Agent": $.UA
     },
-    body: ii1IIl,
+    body: IIIIi1,
     timeout: 20000
   };
-  ii1IIi === "GET" && (delete i11iII.body, delete i11iII.headers["Content-Type"]);
-  const lI1Ii1 = 1;
-  let i1I11 = 0,
-    I1I1i1 = null,
-    i1I1l = false;
-  while (i1I11 < lI1Ii1) {
-    if (i1I11 > 0) {
-      await $.wait(1000);
-    }
+  ii1IIl === "GET" && (delete I1ll1i.body, delete I1ll1i.headers["Content-Type"]);
+  const i11iII = 1;
+  let lI1Ii1 = 0,
+    i1I11 = null,
+    I1I1i1 = false;
+  while (lI1Ii1 < i11iII) {
+    lI1Ii1 > 0 && (await $.wait(1000));
     const {
-      err: ii1l1I,
-      res: lI1lII,
-      data: lIill1
-    } = await ll11lI(i11iII, ii1IIi);
-    if (ii1l1I) {
-      if (typeof ii1l1I === "string" && ii1l1I.includes("Timeout awaiting 'request'")) {
-        I1I1i1 = llIii + " 请求超时，请检查网络重试";
+      err: lI1lII,
+      res: lIill1,
+      data: iiI1i1
+    } = await Iili(I1ll1i, ii1IIl);
+    if (lI1lII) {
+      if (typeof lI1lII === "string" && lI1lII.includes("Timeout awaiting 'request'")) {
+        i1I11 = llIil + " 请求超时，请检查网络重试";
       } else {
-        const ilIlII = lI1lII?.["statusCode"];
-        if (ilIlII) {
-          if ([403, 493].includes(ilIlII)) {
-            I1I1i1 = llIii + " 请求失败，IP被限制（Response code " + ilIlII + "）";
+        const IllllI = lIill1?.["statusCode"];
+        if (IllllI) {
+          if ([403, 493].includes(IllllI)) {
+            i1I11 = llIil + " 请求失败，IP被限制（Response code " + IllllI + "）";
             $.hotproxy = true;
-            i1I1l = true;
+            I1I1i1 = true;
           } else {
-            [400, 404].includes(ilIlII) ? ($.hotproxy = true, I1I1i1 = llIii + " 请求配置参数错误，请联系开发者进行反馈（Response code " + ilIlII + "）") : ($.hotproxy = true, I1I1i1 = llIii + " 请求失败（Response code " + ilIlII + "）");
+            [400, 404].includes(IllllI) ? ($.hotproxy = true, i1I11 = llIil + " 请求配置参数错误，请联系开发者进行反馈（Response code " + IllllI + "）") : ($.hotproxy = true, i1I11 = llIil + " 请求失败（Response code " + IllllI + "）");
           }
         } else {
           $.hotproxy = true;
-          I1I1i1 = llIii + " 请求失败 => " + (ii1l1I.message || ii1l1I);
+          i1I11 = llIil + " 请求失败 => " + (lI1lII.message || lI1lII);
         }
       }
-      i1I11++;
+      lI1Ii1++;
     } else {
-      const l1I1Ii = false;
+      const liliii = false;
       try {
-        const liliil = JSON.parse(lIill1);
-        iIi11(llIii, liliil);
+        const ilIlIi = JSON.parse(iiI1i1);
+        iI1lIl(llIil, ilIlIi);
         break;
-      } catch (I1iil1) {
-        I1I1i1 = "❌ " + llIii + " 接口响应数据解析失败: " + I1iil1.message;
-        console.log("🚫 " + llIii + " => " + String(lIill1 || "无响应数据"));
-        l1I1Ii && (console.log("\n---------------------------------------------------\n"), console.log("\n---------------------------------------------------\n"));
-        i1I11++;
+      } catch (ilIlIl) {
+        i1I11 = "❌ " + llIil + " 接口响应数据解析失败: " + ilIlIl.message;
+        console.log("🚫 " + llIil + " => " + String(iiI1i1 || "无响应数据"));
+        liliii && (console.log("\n---------------------------------------------------\n"), console.log("\n---------------------------------------------------\n"));
+        lI1Ii1++;
       }
-      i1I1l = false;
+      I1I1i1 = false;
     }
-    if (iI1lIi && liIlil) {
-      if (llliIi) {
-        $.hotproxy && (await liIII(), global.GLOBAL_AGENT.HTTP_PROXY = "http://" + i1lIll, ll11ii = 0, $.hotproxy = false, console.log("📶 " + i1lIll));
-        ll11ii++;
+    if (IlI1lI && ll11ii) {
+      if (IilllI) {
+        $.hotproxy && (await Iil1(), global.GLOBAL_AGENT.HTTP_PROXY = "http://" + l1lllI, llliIi = 0, $.hotproxy = false, console.log("📶 " + l1lllI));
+        llliIi++;
       }
     }
   }
-  i1I11 >= lI1Ii1 && (console.log(I1I1i1), i1I1l && ($.outFlag = true, $.message && $.message.fix(I1I1i1)));
+  if (lI1Ii1 >= i11iII) {
+    console.log(i1I11);
+    I1I1i1 && ($.outFlag = true, $.message && $.message.fix(i1I11));
+  }
 }
-async function ll11lI(iIiilI, iIiiil = "POST") {
-  if (iIiiil === "POST") {
-    return new Promise(async lIilli => {
-      $.post(iIiilI, (Illll1, lI1iil, lIilll) => {
-        lIilli({
-          err: Illll1,
-          res: lI1iil,
-          data: lIilll
+async function Iili(lI1iil, lIilll = "POST") {
+  if (lIilll === "POST") {
+    return new Promise(async i11lII => {
+      $.post(lI1iil, (lilii1, iIiii1, ll1lil) => {
+        i11lII({
+          err: lilii1,
+          res: iIiii1,
+          data: ll1lil
         });
       });
     });
   } else {
-    if (iIiiil === "GET") {
-      return new Promise(async ilI11i => {
-        $.get(iIiilI, (lI1iiI, i11lII, iIIlli) => {
-          ilI11i({
-            err: lI1iiI,
-            res: i11lII,
-            data: iIIlli
+    if (lIilll === "GET") {
+      return new Promise(async I1Illl => {
+        $.get(lI1iil, (ll1lii, li11, ilIlI1) => {
+          I1Illl({
+            err: ll1lii,
+            res: li11,
+            data: ilIlI1
           });
         });
       });
     } else {
-      const iIIlll = "不支持的请求方法";
+      const IIlilI = "不支持的请求方法";
       return {
-        err: iIIlll,
+        err: IIlilI,
         res: null,
         data: null
       };
     }
   }
 }
-function llliI1(I1iiiI, iiI1il) {
-  return Math.floor(Math.random() * (iiI1il - I1iiiI)) + I1iiiI;
+function iIi11(Illlll, Illlli) {
+  return Math.floor(Math.random() * (Illlli - Illlll)) + Illlll;
 }
-function liIII() {
-  return new Promise(async llli1l => {
+function Iil1() {
+  return new Promise(async liliiI => {
     $.get({
-      url: llliIi,
+      url: IilllI,
       timeout: {
         request: 5000
       }
-    }, (IIliiI, i1111l) => {
-      if (i1111l) {
+    }, (ilIIiI, lIl1ii) => {
+      if (lIl1ii) {
         try {
-          let ilIIii = /((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})){3}:[1-9]\d*/g,
-            l1111 = ilIIii.exec(i1111l.body);
-          i1lIll = l1111[0];
-          global.GLOBAL_AGENT.HTTP_PROXY = "http://" + i1lIll;
-        } catch (lIl1l1) {} finally {
-          llli1l();
+          let lIl1il = /((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})){3}:[1-9]\d*/g,
+            Ii1l11 = lIl1il.exec(lIl1ii.body);
+          l1lllI = Ii1l11[0];
+          global.GLOBAL_AGENT.HTTP_PROXY = "http://" + l1lllI;
+        } catch (IIlii1) {} finally {
+          liliiI();
         }
       }
     });
   });
 }
-var version_ = "jsjiami.com.v7";

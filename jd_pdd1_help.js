@@ -23,7 +23,6 @@ cron:1 1 1 1 *
 
 const Env=require('./utils/Env.js');
 const $ = new Env('PDD转赚红包助力')
-var version_ = "jsjiami.com.v7";
 const Iili = require("./jdCookie"),
   iIi11 = require("./function/sendJDNotify"),
   Iil1 = require("./function/jdCommon"),
@@ -498,4 +497,3 @@ function ili1II() {
     });
   });
 }
-var version_ = "jsjiami.com.v7";

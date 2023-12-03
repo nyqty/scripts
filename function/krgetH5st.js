@@ -1,8 +1,9 @@
 /*
 new Env('getH5st');
 */
-const lil1I1Il = require("jsdom");
-class IiII1Iil {
+const iIiilI = require("fs"),
+  iIiiil = require("jsdom");
+class iIiiii {
   constructor() {
     this.domWindow3_1 = null;
     this.domWindow3_1_UA = null;
@@ -11,291 +12,280 @@ class IiII1Iil {
     this.domWindow4_2 = null;
     this.domWindow4_2_UA = null;
   }
-  async _sleep(i1iIl11l) {
-    return new Promise((II1iiI11, ilIl1lI) => {
+  async _sleep(l1lI1I) {
+    return new Promise((lilil1, lIilli) => {
       setTimeout(() => {
-        II1iiI11(i1iIl11l);
-      }, i1iIl11l);
+        lilil1(l1lI1I);
+      }, l1lI1I);
     });
   }
-  async _loadH5Sdk(IIlIIIl1, lI1IIl1l) {
+  async _loadH5Sdk(Illll1, lI1iil) {
     const {
-      JSDOM: l11Ii1i1
-    } = lil1I1Il;
-    let i11lI1ll = new lil1I1Il.ResourceLoader({
-        userAgent: lI1IIl1l
+      JSDOM: iIiiiI
+    } = iIiiil;
+    let ilI11i = new iIiiil.ResourceLoader({
+        userAgent: lI1iil
       }),
-      l1Il1I = new lil1I1Il.VirtualConsole(),
-      i1i1ii = {
+      ilI11l = new iIiiil.VirtualConsole(),
+      li1I = {
         url: "http://localhost",
-        userAgent: lI1IIl1l,
+        userAgent: lI1iil,
         runScripts: "dangerously",
-        resources: i11lI1ll,
+        resources: ilI11i,
         includeNodeLocations: true,
         storageQuota: 1000000000,
         pretendToBeVisual: true,
-        virtualConsole: l1Il1I
+        virtualConsole: ilI11l
       },
-      l1i1li1I = "";
-    switch (IIlIIIl1) {
+      IIliil = "";
+    switch (Illll1) {
       case "3.1":
-        l1i1li1I = "v3_0.1.3";
+        IIliil = "<script>" + iIiilI.readFileSync(__dirname + "/assets/h5_3_1_src.js", "utf-8") + "</script>";
         break;
       case "4.1":
-        l1i1li1I = "v3_0.1.8";
+        IIliil = "<script>" + iIiilI.readFileSync(__dirname + "/assets/h5_4_1_src.js", "utf-8") + "</script>";
         break;
       case "4.2":
-        l1i1li1I = "v3_0.1.9";
+        IIliil = "<script>" + iIiilI.readFileSync(__dirname + "/assets/h5_4_2_src.js", "utf-8") + "</script>";
         break;
     }
-    const iI1liil = new l11Ii1i1("<body>\n    <script src=\"https://storage.360buyimg.com/webcontainer/js_security_" + l1i1li1I + ".js\"></script>\n</body>", i1i1ii);
+    const ll1liI = new iIiiiI("<body>\n    " + IIliil + "\n</body>", li1I);
     do {
       await this._sleep(100);
-    } while (!iI1liil.window.ParamsSign);
-    switch (IIlIIIl1) {
+    } while (!ll1liI.window.ParamsSign);
+    switch (Illll1) {
       case "3.1":
-        this.domWindow3_1 = iI1liil.window;
+        this.domWindow3_1 = ll1liI.window;
         break;
       case "4.1":
-        this.domWindow4_1 = iI1liil.window;
+        this.domWindow4_1 = ll1liI.window;
         break;
       case "4.2":
-        this.domWindow4_2 = iI1liil.window;
+        this.domWindow4_2 = ll1liI.window;
         break;
     }
   }
-  async _signWaap(II1IillI, liIiiI1i, il1IIli) {
-    const iIIIlil = new il1IIli.ParamsSign({
-      appId: II1IillI,
+  async _signWaap(iIIlli, ll1li1, iIIlll) {
+    const iiI1il = new iIIlll.ParamsSign({
+      appId: iIIlli,
       preRequest: false,
-      debug: true,
+      debug: false,
       onSign({
-        code: l1IIlIIi,
-        message: iiiI1II,
-        data: lIil1il
+        code: I1Illl,
+        message: ll1lii,
+        data: li11
       }) {},
       onRequestTokenRemotely({
-        code: Iili1iIl,
-        message: liiiIili
+        code: ilIlI1,
+        message: I1Illi
       }) {},
       onRequestToken({
-        code: lllii111,
-        message: il1llI11
+        code: IIlilI,
+        message: Illlll
       }) {}
     });
-    let lllI11l1 = {
-      appid: liIiiI1i.appid,
-      body: this._SHA256(JSON.stringify(liIiiI1i.body)).toString(),
-      client: liIiiI1i.client,
-      clientVersion: liIiiI1i.clientVersion,
-      functionId: liIiiI1i.functionId
+    let iiI1ii = {
+      appid: ll1li1.appid,
+      body: this._SHA256(JSON.stringify(ll1li1.body)).toString(),
+      client: ll1li1.client,
+      clientVersion: ll1li1.clientVersion,
+      functionId: ll1li1.functionId
     };
-    liIiiI1i?.["t"] && (lllI11l1.t = liIiiI1i.t);
-    let lIIii1ll = await iIIIlil.sign(lllI11l1);
-    if (!lIIii1ll?.["h5st"]) {
-      console.log("❌ getH5st 签名生成失败");
-    }
-    return lIIii1ll?.["h5st"] || "";
+    ll1li1?.["t"] && (iiI1ii.t = ll1li1.t);
+    let I1iii1 = await iiI1il.sign(iiI1ii);
+    (!I1iii1?.["h5st"] || I1iii1.h5st === "null") && (console.log("❌ getH5st 签名生成失败"), I1iii1.h5st = "");
+    return I1iii1?.["h5st"] || "";
   }
-  async getH5st(l1llIllI) {
-    let lilIil1I = {
-      ...l1llIllI,
+  async getH5st(llli1l) {
+    let llli1i = {
+      ...llli1l,
       h5st: "",
       params: ""
     };
     try {
-      if (!(typeof l1llIllI === "object" && l1llIllI !== null)) {
+      if (!(typeof llli1l === "object" && llli1l !== null)) {
         console.log("❌ getH5st 传入参数有误");
-        return lilIil1I;
+        return llli1i;
       } else {
-        const il1IIii1 = ["appId", "appid", "body", "client", "clientVersion", "functionId"],
-          Iliiiii1 = il1IIii1.filter(Iili1l11 => !l1llIllI[Iili1l11]);
-        if (Iliiiii1.length > 0) {
-          console.log("❌ getH5st 传入参数有误，缺少必要参数：" + Iliiiii1.join(", "));
-          return lilIil1I;
+        const lIilii = ["appId", "appid", "body", "client", "clientVersion", "functionId"],
+          lIilil = lIilii.filter(lIl1ll => !llli1l[lIl1ll]);
+        if (lIilil.length > 0) {
+          console.log("❌ getH5st 传入参数有误，缺少必要参数：" + lIilil.join(", "));
+          return llli1i;
         }
       }
-      switch (l1llIllI?.["version"]) {
+      switch (llli1l?.["version"]) {
         case "3.1":
         case "4.1":
         case "4.2":
           break;
         default:
-          l1llIllI.version = "4.1";
+          llli1l.version = "4.1";
           break;
       }
       const {
-          appId: iIiiI11,
-          appid: III1I1ll,
-          body: llii1iii,
-          client: li1iIill,
-          clientVersion: iilI1ili,
-          functionId: I1liil1i,
-          version: iIiIi1ll
-        } = l1llIllI,
-        Ii1l1iII = "jdapp;android;11.8.0;;;M/5.0;appBuild/98730;ef/1;ep/%7B%22hdid%22%3A%22JM9F1ywUPwflvMIpYPok0tt5k9kW4ArJEU3lfLhxBqw%3D%22%2C%22ts%22%3A1684847465219%2C%22ridx%22%3A-1%2C%22cipher%22%3A%7B%22sv%22%3A%22CJO%3D%22%2C%22ad%22%3A%22DJdtZNdtZNY1DJYmCJDuCq%3D%3D%22%2C%22od%22%3A%22DwO5DJrtZwG5ZNCyDJu3ZK%3D%3D%22%2C%22ov%22%3A%22CzK%3D%22%2C%22ud%22%3A%22DJdtZNdtZNY1DJYmCJDuCq%3D%3D%22%7D%2C%22ciphertype%22%3A5%2C%22version%22%3A%221.2.0%22%2C%22appname%22%3A%22com.jingdong.app.mall%22%7D;jdSupportDarkMode/0;Mozilla/5.0 (Linux; Android 11; Redmi K20 Pro Build/RKQ1.200826.002; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/113.0.5672.77 Mobile Safari/537.36",
-        illII11I = l1llIllI?.["ua"] || Ii1l1iII;
-      switch (iIiIi1ll) {
+          appId: lililI,
+          appid: lI1ill,
+          body: Illlii,
+          client: lI1ili,
+          clientVersion: Il1II,
+          functionId: i1lll,
+          version: Ii11I
+        } = llli1l,
+        I1iill = Math.floor(Date.now() / 1000),
+        i1lli = "jdapp;iPhone;12.2.0;;rn/a5e53b61-94a0-da77-7e2f-fda45564911e;M/5.0;appBuild/168919;jdSupportDarkMode/0;ef/1;ep/%7B%22ciphertype%22%3A5%2C%22cipher%22%3A%7B%22ud%22%3A%22DG%3D%3D%22%2C%22sv%22%3A%22CG%3D%3D%22%2C%22iad%22%3A%22%22%7D%2C%22ts%22%3A" + I1iill + "%2C%22hdid%22%3A%22JM9F1ywUPwflvMIpYPok0tt5k9kW4ArJEU3lfLhxBqw%3D%22%2C%22version%22%3A%221.0.3%22%2C%22appname%22%3A%22com.360buy.jdmobile%22%2C%22ridx%22%3A-1%7D;Mozilla/5.0 (iPhone; CPU iPhone OS 17_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1;",
+        i11111 = llli1l?.["ua"] || i1lli;
+      switch (Ii11I) {
         case "3.1":
-          if (!this.domWindow3_1 || this.domWindow3_1_UA && this.domWindow3_1_UA !== illII11I) {
-            await this._loadH5Sdk(iIiIi1ll, illII11I);
-            this.domWindow3_1_UA = illII11I;
-          }
+          (!this.domWindow3_1 || this.domWindow3_1_UA && this.domWindow3_1_UA !== i11111) && (await this._loadH5Sdk(Ii11I, i11111), this.domWindow3_1_UA = i11111);
           break;
         case "4.1":
-          (!this.domWindow4_1 || this.domWindow4_1_UA && this.domWindow4_1_UA !== illII11I) && (await this._loadH5Sdk(iIiIi1ll, illII11I), this.domWindow4_1_UA = illII11I);
+          (!this.domWindow4_1 || this.domWindow4_1_UA && this.domWindow4_1_UA !== i11111) && (await this._loadH5Sdk(Ii11I, i11111), this.domWindow4_1_UA = i11111);
           break;
         case "4.2":
-          (!this.domWindow4_2 || this.domWindow4_2_UA && this.domWindow4_2_UA !== illII11I) && (await this._loadH5Sdk(iIiIi1ll, illII11I), this.domWindow4_2_UA = illII11I);
+          (!this.domWindow4_2 || this.domWindow4_2_UA && this.domWindow4_2_UA !== i11111) && (await this._loadH5Sdk(Ii11I, i11111), this.domWindow4_2_UA = i11111);
           break;
       }
-      l1llIllI?.["t"] && typeof l1llIllI.t === "boolean" ? (l1llIllI.t = Date.now(), lilIil1I.t = l1llIllI.t) : l1llIllI.t = "";
-      lilIil1I.params = "functionId=" + I1liil1i + "&body=" + encodeURIComponent(JSON.stringify(llii1iii)) + (l1llIllI?.["t"] ? "&t=" + l1llIllI.t : "") + "&appid=" + III1I1ll + "&client=" + li1iIill + "&clientVersion=" + iilI1ili + "&h5st=";
-      let lllllli = "";
-      switch (iIiIi1ll) {
+      llli1l?.["t"] && typeof llli1l.t === "boolean" ? (llli1l.t = Date.now(), llli1i.t = llli1l.t) : llli1l.t = "";
+      llli1i.params = "functionId=" + i1lll + "&body=" + encodeURIComponent(JSON.stringify(Illlii)) + (llli1l?.["t"] ? "&t=" + llli1l.t : "") + "&appid=" + lI1ill + "&client=" + lI1ili + "&clientVersion=" + Il1II + "&h5st=";
+      let lIl1li = "";
+      switch (Ii11I) {
         case "3.1":
-          lllllli = await this._signWaap(iIiiI11, l1llIllI, this.domWindow3_1);
+          lIl1li = await this._signWaap(lililI, llli1l, this.domWindow3_1);
           break;
         case "4.1":
-          lllllli = await this._signWaap(iIiiI11, l1llIllI, this.domWindow4_1);
+          lIl1li = await this._signWaap(lililI, llli1l, this.domWindow4_1);
           break;
         case "4.2":
-          lllllli = await this._signWaap(iIiiI11, l1llIllI, this.domWindow4_2);
+          lIl1li = await this._signWaap(lililI, llli1l, this.domWindow4_2);
           break;
       }
-      lilIil1I.h5st = lllllli || "";
-      lilIil1I.params += lllllli || "";
-      return lilIil1I;
-    } catch (liiI1lII) {
-      console.log("❌ getH5st 遇到了错误 " + (liiI1lII.message || liiI1lII));
+      llli1i.h5st = lIl1li || "";
+      llli1i.params += lIl1li || "";
+      return llli1i;
+    } catch (l111l) {
+      console.log("❌ getH5st 遇到了错误 " + (l111l.message || l111l));
     }
-    return lilIil1I;
+    return llli1i;
   }
-  _SHA256(lIlIl1lI) {
-    var Ii11ili1 = 8,
-      Ii1i11i = 0;
-    function i1l1Ii1I(li1iilii, i1i11llI) {
-      var iIIIIiI1 = (li1iilii & 65535) + (i1i11llI & 65535),
-        iIii1ii1 = (li1iilii >> 16) + (i1i11llI >> 16) + (iIIIIiI1 >> 16);
-      return iIii1ii1 << 16 | iIIIIiI1 & 65535;
+  _SHA256(Ii1II1) {
+    var IliIli = 8,
+      lI1ilI = 0;
+    function IllliI(Ili111, Il11) {
+      var iiil11 = (Ili111 & 65535) + (Il11 & 65535),
+        llII1I = (Ili111 >> 16) + (Il11 >> 16) + (iiil11 >> 16);
+      return llII1I << 16 | iiil11 & 65535;
     }
-    function lIIiil(i11IIIil, lIII1lIi) {
-      return i11IIIil >>> lIII1lIi | i11IIIil << 32 - lIII1lIi;
+    function IliIll(ilI1II, iillI1) {
+      return ilI1II >>> iillI1 | ilI1II << 32 - iillI1;
     }
-    function ll11l1i1(liIilI1l, I1l1lIIi) {
-      return liIilI1l >>> I1l1lIIi;
+    function iIiili(ll11II, liIlII) {
+      return ll11II >>> liIlII;
     }
-    function l1llIil(l1I1111l, I1ll1, i1illIi) {
-      return l1I1111l & I1ll1 ^ ~l1I1111l & i1illIi;
+    function lilill(ii1i1I, liIlI1, iillIl) {
+      return ii1i1I & liIlI1 ^ ~ii1i1I & iillIl;
     }
-    function ili111Il(lIiillI1, iiI1IIii, i1iiiiI1) {
-      return lIiillI1 & iiI1IIii ^ lIiillI1 & i1iiiiI1 ^ iiI1IIii & i1iiiiI1;
+    function IilI1(IiIi1I, iillIi, iii11) {
+      return IiIi1I & iillIi ^ IiIi1I & iii11 ^ iillIi & iii11;
     }
-    function IiI1III1(lll1lii1) {
-      return lIIiil(lll1lii1, 2) ^ lIIiil(lll1lii1, 13) ^ lIIiil(lll1lii1, 22);
+    function l1lI1(iliI1) {
+      return IliIll(iliI1, 2) ^ IliIll(iliI1, 13) ^ IliIll(iliI1, 22);
     }
-    function iiiI11iI(I1Illlll) {
-      return lIIiil(I1Illlll, 6) ^ lIIiil(I1Illlll, 11) ^ lIIiil(I1Illlll, 25);
+    function Ili1I1(i11iI) {
+      return IliIll(i11iI, 6) ^ IliIll(i11iI, 11) ^ IliIll(i11iI, 25);
     }
-    function Iil1illl(l11l1iII) {
-      return lIIiil(l11l1iII, 7) ^ lIIiil(l11l1iII, 18) ^ ll11l1i1(l11l1iII, 3);
+    function lI1I1i(ii1i1l) {
+      return IliIll(ii1i1l, 7) ^ IliIll(ii1i1l, 18) ^ iIiili(ii1i1l, 3);
     }
-    function l1l1IIII(I1iIII1l) {
-      return lIIiil(I1iIII1l, 17) ^ lIIiil(I1iIII1l, 19) ^ ll11l1i1(I1iIII1l, 10);
+    function liI1II(liIlIi) {
+      return IliIll(liIlIi, 17) ^ IliIll(liIlIi, 19) ^ iIiili(liIlIi, 10);
     }
-    function i11iIiI1(iiiI1IiI, Iii1Iil1) {
-      var IlllIi1 = new Array(1116352408, 1899447441, 3049323471, 3921009573, 961987163, 1508970993, 2453635748, 2870763221, 3624381080, 310598401, 607225278, 1426881987, 1925078388, 2162078206, 2614888103, 3248222580, 3835390401, 4022224774, 264347078, 604807628, 770255983, 1249150122, 1555081692, 1996064986, 2554220882, 2821834349, 2952996808, 3210313671, 3336571891, 3584528711, 113926993, 338241895, 666307205, 773529912, 1294757372, 1396182291, 1695183700, 1986661051, 2177026350, 2456956037, 2730485921, 2820302411, 3259730800, 3345764771, 3516065817, 3600352804, 4094571909, 275423344, 430227734, 506948616, 659060556, 883997877, 958139571, 1322822218, 1537002063, 1747873779, 1955562222, 2024104815, 2227730452, 2361852424, 2428436474, 2756734187, 3204031479, 3329325298),
-        I11iiI = new Array(1779033703, 3144134277, 1013904242, 2773480762, 1359893119, 2600822924, 528734635, 1541459225),
-        l1Ii111I = new Array(64),
-        IiIi1I,
-        I1iii1iI,
-        iiIi1ilI,
-        i11l11I,
-        iI1I1iiI,
-        il1lii11,
-        IIII1ili,
-        I1lIll1i,
-        IlI1Iii1,
-        li1iiIi1,
-        lliIIll1,
-        lIll11;
-      iiiI1IiI[Iii1Iil1 >> 5] |= 128 << 24 - Iii1Iil1 % 32;
-      iiiI1IiI[(Iii1Iil1 + 64 >> 9 << 4) + 15] = Iii1Iil1;
-      for (var IlI1Iii1 = 0; IlI1Iii1 < iiiI1IiI.length; IlI1Iii1 += 16) {
-        IiIi1I = I11iiI[0];
-        I1iii1iI = I11iiI[1];
-        iiIi1ilI = I11iiI[2];
-        i11l11I = I11iiI[3];
-        iI1I1iiI = I11iiI[4];
-        il1lii11 = I11iiI[5];
-        IIII1ili = I11iiI[6];
-        I1lIll1i = I11iiI[7];
-        for (var li1iiIi1 = 0; li1iiIi1 < 64; li1iiIi1++) {
-          if (li1iiIi1 < 16) {
-            l1Ii111I[li1iiIi1] = iiiI1IiI[li1iiIi1 + IlI1Iii1];
+    function i1Iii1(I1lI1l, i11ii) {
+      var lIiIi = new Array(1116352408, 1899447441, 3049323471, 3921009573, 961987163, 1508970993, 2453635748, 2870763221, 3624381080, 310598401, 607225278, 1426881987, 1925078388, 2162078206, 2614888103, 3248222580, 3835390401, 4022224774, 264347078, 604807628, 770255983, 1249150122, 1555081692, 1996064986, 2554220882, 2821834349, 2952996808, 3210313671, 3336571891, 3584528711, 113926993, 338241895, 666307205, 773529912, 1294757372, 1396182291, 1695183700, 1986661051, 2177026350, 2456956037, 2730485921, 2820302411, 3259730800, 3345764771, 3516065817, 3600352804, 4094571909, 275423344, 430227734, 506948616, 659060556, 883997877, 958139571, 1322822218, 1537002063, 1747873779, 1955562222, 2024104815, 2227730452, 2361852424, 2428436474, 2756734187, 3204031479, 3329325298),
+        Il1i = new Array(1779033703, 3144134277, 1013904242, 2773480762, 1359893119, 2600822924, 528734635, 1541459225),
+        lIiIl = new Array(64),
+        iiil1l,
+        Il1l,
+        ll11I1,
+        Illll,
+        iiil1i,
+        ilIIli,
+        ilIIll,
+        iIliil,
+        IIiill,
+        liIIii,
+        Iii1lI,
+        I1liii;
+      I1lI1l[i11ii >> 5] |= 128 << 24 - i11ii % 32;
+      I1lI1l[(i11ii + 64 >> 9 << 4) + 15] = i11ii;
+      for (var IIiill = 0; IIiill < I1lI1l.length; IIiill += 16) {
+        iiil1l = Il1i[0];
+        Il1l = Il1i[1];
+        ll11I1 = Il1i[2];
+        Illll = Il1i[3];
+        iiil1i = Il1i[4];
+        ilIIli = Il1i[5];
+        ilIIll = Il1i[6];
+        iIliil = Il1i[7];
+        for (var liIIii = 0; liIIii < 64; liIIii++) {
+          if (liIIii < 16) {
+            lIiIl[liIIii] = I1lI1l[liIIii + IIiill];
           } else {
-            l1Ii111I[li1iiIi1] = i1l1Ii1I(i1l1Ii1I(i1l1Ii1I(l1l1IIII(l1Ii111I[li1iiIi1 - 2]), l1Ii111I[li1iiIi1 - 7]), Iil1illl(l1Ii111I[li1iiIi1 - 15])), l1Ii111I[li1iiIi1 - 16]);
+            lIiIl[liIIii] = IllliI(IllliI(IllliI(liI1II(lIiIl[liIIii - 2]), lIiIl[liIIii - 7]), lI1I1i(lIiIl[liIIii - 15])), lIiIl[liIIii - 16]);
           }
-          lliIIll1 = i1l1Ii1I(i1l1Ii1I(i1l1Ii1I(i1l1Ii1I(I1lIll1i, iiiI11iI(iI1I1iiI)), l1llIil(iI1I1iiI, il1lii11, IIII1ili)), IlllIi1[li1iiIi1]), l1Ii111I[li1iiIi1]);
-          lIll11 = i1l1Ii1I(IiI1III1(IiIi1I), ili111Il(IiIi1I, I1iii1iI, iiIi1ilI));
-          I1lIll1i = IIII1ili;
-          IIII1ili = il1lii11;
-          il1lii11 = iI1I1iiI;
-          iI1I1iiI = i1l1Ii1I(i11l11I, lliIIll1);
-          i11l11I = iiIi1ilI;
-          iiIi1ilI = I1iii1iI;
-          I1iii1iI = IiIi1I;
-          IiIi1I = i1l1Ii1I(lliIIll1, lIll11);
+          Iii1lI = IllliI(IllliI(IllliI(IllliI(iIliil, Ili1I1(iiil1i)), lilill(iiil1i, ilIIli, ilIIll)), lIiIi[liIIii]), lIiIl[liIIii]);
+          I1liii = IllliI(l1lI1(iiil1l), IilI1(iiil1l, Il1l, ll11I1));
+          iIliil = ilIIll;
+          ilIIll = ilIIli;
+          ilIIli = iiil1i;
+          iiil1i = IllliI(Illll, Iii1lI);
+          Illll = ll11I1;
+          ll11I1 = Il1l;
+          Il1l = iiil1l;
+          iiil1l = IllliI(Iii1lI, I1liii);
         }
-        I11iiI[0] = i1l1Ii1I(IiIi1I, I11iiI[0]);
-        I11iiI[1] = i1l1Ii1I(I1iii1iI, I11iiI[1]);
-        I11iiI[2] = i1l1Ii1I(iiIi1ilI, I11iiI[2]);
-        I11iiI[3] = i1l1Ii1I(i11l11I, I11iiI[3]);
-        I11iiI[4] = i1l1Ii1I(iI1I1iiI, I11iiI[4]);
-        I11iiI[5] = i1l1Ii1I(il1lii11, I11iiI[5]);
-        I11iiI[6] = i1l1Ii1I(IIII1ili, I11iiI[6]);
-        I11iiI[7] = i1l1Ii1I(I1lIll1i, I11iiI[7]);
+        Il1i[0] = IllliI(iiil1l, Il1i[0]);
+        Il1i[1] = IllliI(Il1l, Il1i[1]);
+        Il1i[2] = IllliI(ll11I1, Il1i[2]);
+        Il1i[3] = IllliI(Illll, Il1i[3]);
+        Il1i[4] = IllliI(iiil1i, Il1i[4]);
+        Il1i[5] = IllliI(ilIIli, Il1i[5]);
+        Il1i[6] = IllliI(ilIIll, Il1i[6]);
+        Il1i[7] = IllliI(iIliil, Il1i[7]);
       }
-      return I11iiI;
+      return Il1i;
     }
-    function i1Ii1Ili(lIIiIII) {
-      var IIIliilI = Array(),
-        IIll111i = (1 << Ii11ili1) - 1;
-      for (var I1I1llIl = 0; I1I1llIl < lIIiIII.length * Ii11ili1; I1I1llIl += Ii11ili1) {
-        IIIliilI[I1I1llIl >> 5] |= (lIIiIII.charCodeAt(I1I1llIl / Ii11ili1) & IIll111i) << 24 - I1I1llIl % 32;
+    function l1liii(IliIi1) {
+      var liiiIl = Array(),
+        liIIiI = (1 << IliIli) - 1;
+      for (var Iii1li = 0; Iii1li < IliIi1.length * IliIli; Iii1li += IliIli) {
+        liiiIl[Iii1li >> 5] |= (IliIi1.charCodeAt(Iii1li / IliIli) & liIIiI) << 24 - Iii1li % 32;
       }
-      return IIIliilI;
+      return liiiIl;
     }
-    function IIl11I(IIl1ll1l) {
-      IIl1ll1l = IIl1ll1l.replace(/\r\n/g, "\n");
-      var lll1iil = "";
-      for (var llIIiI1 = 0; llIIiI1 < IIl1ll1l.length; llIIiI1++) {
-        var IIiliI = IIl1ll1l.charCodeAt(llIIiI1);
-        if (IIiliI < 128) {
-          lll1iil += String.fromCharCode(IIiliI);
+    function I1Ili1(IIiilI) {
+      IIiilI = IIiilI.replace(/\r\n/g, "\n");
+      var ilIIlI = "";
+      for (var liiiI1 = 0; liiiI1 < IIiilI.length; liiiI1++) {
+        var iIl11 = IIiilI.charCodeAt(liiiI1);
+        if (iIl11 < 128) {
+          ilIIlI += String.fromCharCode(iIl11);
         } else {
-          if (IIiliI > 127 && IIiliI < 2048) {
-            lll1iil += String.fromCharCode(IIiliI >> 6 | 192);
-            lll1iil += String.fromCharCode(IIiliI & 63 | 128);
-          } else {
-            lll1iil += String.fromCharCode(IIiliI >> 12 | 224);
-            lll1iil += String.fromCharCode(IIiliI >> 6 & 63 | 128);
-            lll1iil += String.fromCharCode(IIiliI & 63 | 128);
-          }
+          iIl11 > 127 && iIl11 < 2048 ? (ilIIlI += String.fromCharCode(iIl11 >> 6 | 192), ilIIlI += String.fromCharCode(iIl11 & 63 | 128)) : (ilIIlI += String.fromCharCode(iIl11 >> 12 | 224), ilIIlI += String.fromCharCode(iIl11 >> 6 & 63 | 128), ilIIlI += String.fromCharCode(iIl11 & 63 | 128));
         }
       }
-      return lll1iil;
+      return ilIIlI;
     }
-    function i1IiliI(I1l11III) {
-      var iIIliiI1 = Ii1i11i ? "0123456789ABCDEF" : "0123456789abcdef",
-        iIiIIII = "";
-      for (var iiII1lIl = 0; iiII1lIl < I1l11III.length * 4; iiII1lIl++) {
-        iIiIIII += iIIliiI1.charAt(I1l11III[iiII1lIl >> 2] >> (3 - iiII1lIl % 4) * 8 + 4 & 15) + iIIliiI1.charAt(I1l11III[iiII1lIl >> 2] >> (3 - iiII1lIl % 4) * 8 & 15);
+    function l1liil(ii11) {
+      var liIIil = lI1ilI ? "0123456789ABCDEF" : "0123456789abcdef",
+        liI1 = "";
+      for (var IliIiI = 0; IliIiI < ii11.length * 4; IliIiI++) {
+        liI1 += liIIil.charAt(ii11[IliIiI >> 2] >> (3 - IliIiI % 4) * 8 + 4 & 15) + liIIil.charAt(ii11[IliIiI >> 2] >> (3 - IliIiI % 4) * 8 & 15);
       }
-      return iIiIIII;
+      return liI1;
     }
-    lIlIl1lI = IIl11I(lIlIl1lI);
-    return i1IiliI(i11iIiI1(i1Ii1Ili(lIlIl1lI), lIlIl1lI.length * Ii11ili1));
+    Ii1II1 = I1Ili1(Ii1II1);
+    return l1liil(i1Iii1(l1liii(Ii1II1), Ii1II1.length * IliIli));
   }
 }
-module.exports = new IiII1Iil();
+module.exports = new iIiiii();
